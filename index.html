@@ -318,9 +318,9 @@ body { font-family:'Plus Jakarta Sans',sans-serif; background:var(--bg); color:v
 
 /* ── RESPONSIVE ── */
 @media (max-width: 768px) {
-  .layout { height:auto; min-height:100vh; overflow:visible; }
-  .sidebar { display:none; }
-  .topbar { display:none; }
+  .layout { height:auto; min-height:100vh; overflow:visible; flex-direction:column; }
+  .sidebar { display:none !important; width:0; }
+  .topbar { display:none !important; }
   .mobile-header { display:flex; }
   .bottom-nav { display:flex; }
   .main { overflow-y:visible; padding-bottom:80px; }
