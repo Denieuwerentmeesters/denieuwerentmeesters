@@ -283,6 +283,107 @@ body { font-family:'Plus Jakarta Sans',sans-serif; background:var(--bg); color:v
 ::-webkit-scrollbar-track { background:transparent; }
 ::-webkit-scrollbar-thumb { background:var(--border); border-radius:3px; }
 
+/* ── BOTTOM NAV (mobile only) ── */
+.bottom-nav {
+  display:none;
+  position:fixed; bottom:0; left:0; right:0;
+  background:var(--white); border-top:1px solid var(--border);
+  padding:8px 4px calc(8px + env(safe-area-inset-bottom));
+  z-index:100;
+  justify-content:space-around;
+}
+.bn-item {
+  display:flex; flex-direction:column; align-items:center; gap:3px;
+  padding:6px 10px; border-radius:10px; cursor:pointer; min-width:52px;
+  transition:all .15s; color:var(--text-3); font-size:10px; font-weight:600;
+  border:none; background:transparent;
+}
+.bn-item.active { color:var(--primary); }
+.bn-item.active svg { stroke:var(--primary); }
+.bn-dot {
+  position:absolute; top:4px; right:4px; width:6px; height:6px;
+  background:var(--red); border-radius:50%; border:1.5px solid #fff;
+}
+.bn-icon-wrap { position:relative; }
+
+/* ── MOBILE HEADER ── */
+.mobile-header {
+  display:none;
+  background:var(--white); border-bottom:1px solid var(--border);
+  padding:14px 16px; align-items:center; gap:12px; flex-shrink:0;
+}
+.mobile-logo { display:flex; align-items:center; gap:8px; flex:1; }
+.mobile-title { font-size:15px; font-weight:700; color:var(--text); }
+.mobile-sub { font-size:11px; color:var(--text-2); }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  .layout { height:auto; min-height:100vh; overflow:visible; }
+  .sidebar { display:none; }
+  .topbar { display:none; }
+  .mobile-header { display:flex; }
+  .bottom-nav { display:flex; }
+  .main { overflow-y:visible; padding-bottom:80px; }
+  .content { padding:16px; }
+  .page-title { font-size:18px; }
+  .page-sub { font-size:12px; }
+  .page-actions { flex-wrap:wrap; }
+  .page-actions .btn { flex:1; justify-content:center; }
+
+  /* Grids → single column */
+  .kpi-grid { grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px; }
+  .grid-2 { grid-template-columns:1fr; }
+  .grid-3-2 { grid-template-columns:1fr; }
+  .grid-2-3 { grid-template-columns:1fr; }
+  .grid-3 { grid-template-columns:1fr; }
+
+  /* KPI cards smaller */
+  .kpi { padding:14px; }
+  .kpi-value { font-size:24px; }
+  .kpi-label { font-size:11px; }
+  .kpi-delta { font-size:11px; }
+  .kpi-arrow { display:none; }
+
+  /* Cards */
+  .card { padding:14px; border-radius:12px; margin-bottom:12px; }
+  .card-header { margin-bottom:12px; }
+
+  /* Map smaller on mobile */
+  .map-area { height:150px; }
+
+  /* Subsidy cards */
+  .subsidy { padding:12px; }
+  .match-badge { width:42px; height:42px; font-size:11px; }
+  .subsidy-name { font-size:13px; }
+
+  /* Chips scroll horizontally */
+  .chips { flex-wrap:nowrap; overflow-x:auto; padding-bottom:4px; }
+  .chips::-webkit-scrollbar { display:none; }
+  .theme-chip { white-space:nowrap; flex-shrink:0; }
+
+  /* Agenda */
+  .ag-day { font-size:18px; }
+  .ag-date { width:36px; }
+
+  /* Alert */
+  .alert { font-size:12px; padding:10px 12px; }
+
+  /* Doc grid → 2 cols */
+  .doc-grid { grid-template-columns:1fr 1fr; }
+
+  /* Network svg smaller */
+  #network-svg { height:160px; }
+
+  /* Tags on small screens */
+  .row-meta { display:none; }
+}
+
+@media (max-width: 420px) {
+  .kpi-grid { grid-template-columns:1fr 1fr; }
+  .doc-grid { grid-template-columns:1fr; }
+  .page-actions .btn-ghost { display:none; }
+}
+
 </style>
 </head>
 <body>
@@ -364,6 +465,53 @@ body { font-family:'Plus Jakarta Sans',sans-serif; background:var(--bg); color:v
     </div>
   </div>
 </aside>
+
+<!-- ═══ MOBILE HEADER ═══ -->
+<div class="mobile-header">
+  <div class="mobile-logo">
+    <div class="logo-mark" style="width:30px;height:30px;border-radius:8px">
+      <svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"/><path d="M9 21V12h6v9" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"/></svg>
+    </div>
+    <div>
+      <div class="mobile-title">Gunterstein</div>
+      <div class="mobile-sub">Breukelen · Stichtse Vecht</div>
+    </div>
+  </div>
+  <div class="icon-btn" style="flex-shrink:0">
+    <svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9" stroke="#6B7280" stroke-width="1.8"/><path d="M13.73 21a2 2 0 01-3.46 0" stroke="#6B7280" stroke-width="1.8"/></svg>
+    <span class="notif-dot"></span>
+  </div>
+</div>
+
+<!-- ═══ BOTTOM NAV ═══ -->
+<nav class="bottom-nav">
+  <button class="bn-item active" onclick="nav('overview',null);setMobileNav(this)">
+    <div class="bn-icon-wrap"><svg width="20" height="20" fill="none" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.8"/><rect x="14" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.8"/><rect x="3" y="14" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.8"/><rect x="14" y="14" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.8"/></svg></div>
+    Overzicht
+  </button>
+  <button class="bn-item" onclick="nav('subsidie',null);setMobileNav(this)">
+    <div class="bn-icon-wrap">
+      <svg width="20" height="20" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="5" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/></svg>
+      <span class="bn-dot"></span>
+    </div>
+    Subsidies
+  </button>
+  <button class="bn-item" onclick="nav('berichten',null);setMobileNav(this)">
+    <div class="bn-icon-wrap">
+      <svg width="20" height="20" fill="none" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" stroke="currentColor" stroke-width="1.8"/><polyline points="22,6 12,13 2,6" stroke="currentColor" stroke-width="1.8"/></svg>
+      <span class="bn-dot"></span>
+    </div>
+    Berichten
+  </button>
+  <button class="bn-item" onclick="nav('agenda',null);setMobileNav(this)">
+    <div class="bn-icon-wrap"><svg width="20" height="20" fill="none" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" stroke-width="1.8"/><line x1="16" y1="2" x2="16" y2="6" stroke="currentColor" stroke-width="1.8"/><line x1="8" y1="2" x2="8" y2="6" stroke="currentColor" stroke-width="1.8"/><line x1="3" y1="10" x2="21" y2="10" stroke="currentColor" stroke-width="1.8"/></svg></div>
+    Agenda
+  </button>
+  <button class="bn-item" onclick="nav('contracten',null);setMobileNav(this)">
+    <div class="bn-icon-wrap"><svg width="20" height="20" fill="none" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2" stroke="currentColor" stroke-width="1.8"/><rect x="9" y="3" width="6" height="4" rx="1" stroke="currentColor" stroke-width="1.8"/><line x1="9" y1="12" x2="15" y2="12" stroke="currentColor" stroke-width="1.8"/><line x1="9" y1="16" x2="13" y2="16" stroke="currentColor" stroke-width="1.8"/></svg></div>
+    Meer
+  </button>
+</nav>
 
 <!-- ═══ MAIN ═══ -->
 <div class="main">
@@ -991,6 +1139,10 @@ body { font-family:'Plus Jakarta Sans',sans-serif; background:var(--bg); color:v
 </div><!-- /layout -->
 
 <script>
+function setMobileNav(el) {
+  document.querySelectorAll('.bn-item').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+}
 function nav(id, el) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
