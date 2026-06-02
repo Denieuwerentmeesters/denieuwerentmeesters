@@ -412,6 +412,10 @@ body { font-family:'Plus Jakarta Sans',sans-serif; background:var(--bg); color:v
       <svg class="nav-icon" fill="none" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.8"/><rect x="14" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.8"/><rect x="3" y="14" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.8"/><rect x="14" y="14" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.8"/></svg>
       Overzicht
     </div>
+    <div class="nav-item" onclick="nav('landgoed',this)">
+      <svg class="nav-icon" fill="none" viewBox="0 0 24 24"><path d="M3 21h18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M5 21V10l7-5 7 5v11" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><rect x="9" y="13" width="6" height="8" stroke="currentColor" stroke-width="1.8"/><path d="M3 21l9-15 9 15" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" opacity=".3"/></svg>
+      Landgoed
+    </div>
     <div class="nav-item" onclick="nav('documenten',this)">
       <svg class="nav-icon" fill="none" viewBox="0 0 24 24"><path d="M13 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9l-7-7z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M13 2v7h7" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
       Documenten
@@ -443,8 +447,17 @@ body { font-family:'Plus Jakarta Sans',sans-serif; background:var(--bg); color:v
       <svg class="nav-icon" fill="none" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" stroke-width="1.8"/><line x1="16" y1="2" x2="16" y2="6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><line x1="8" y1="2" x2="8" y2="6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><line x1="3" y1="10" x2="21" y2="10" stroke="currentColor" stroke-width="1.8"/></svg>
       Agenda &amp; Events
     </div>
+    <div class="nav-item" onclick="nav('taken',this)">
+      <svg class="nav-icon" fill="none" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M8 11l3 3 5-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Taken
+      <span class="nav-badge urgent">4</span>
+    </div>
 
     <div class="nav-label" style="margin-top:6px">Beheer</div>
+    <div class="nav-item" onclick="nav('financieel',this)">
+      <svg class="nav-icon" fill="none" viewBox="0 0 24 24"><path d="M12 2v20M17 6H9.5a3.5 3.5 0 100 7h5a3.5 3.5 0 110 7H6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Financieel
+    </div>
     <div class="nav-item" onclick="nav('contracten',this)">
       <svg class="nav-icon" fill="none" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2" stroke="currentColor" stroke-width="1.8"/><rect x="9" y="3" width="6" height="4" rx="1" stroke="currentColor" stroke-width="1.8"/><line x1="9" y1="12" x2="15" y2="12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><line x1="9" y1="16" x2="13" y2="16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
       Contracten
