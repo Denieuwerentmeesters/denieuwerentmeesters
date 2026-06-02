@@ -486,8 +486,8 @@ searchInput.addEventListener('keydown', (e) => {
 // ══════════════════════════════════════════════════════════
 function bboxParam() {
   const b = map.getBounds();
-  // Volgorde: minx,miny,maxx,maxy,EPSG:4326 → west,south,east,north,EPSG:4326
-  return `${b.getWest()},${b.getSouth()},${b.getEast()},${b.getNorth()},EPSG:4326`;
+  // WFS 2.0.0 + EPSG:4326 = axis-order lat,lon → south,west,north,east,EPSG:4326
+  return `${b.getSouth()},${b.getWest()},${b.getNorth()},${b.getEast()},EPSG:4326`;
 }
 
 // PDOK feature-ID extractors (props verschillen per service)
