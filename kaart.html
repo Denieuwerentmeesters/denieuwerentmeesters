@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kaart — Landgoedbeheer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+:root {
+  --bg: #F1F3F6;
+  --white: #FFFFFF;
+  --primary: #1B3A28;
+  --primary-mid: #2A5C3F;
+  --primary-light: #EAF0EC;
+  --primary-muted: #C8D9CC;
+  --text: #111827;
+  --text-2: #6B7280;
+  --text-3: #9CA3AF;
+  --border: #E5E7EB;
+  --red: #DC2626;
+  --red-light: #FEF2F2;
+  --amber: #F59E0B;
+  --amber-light: #FFFBEB;
+  --green: #22C55E;
+  --grey: #9CA3AF;
+  --orange: #EA580C;
+  --blue: #1E40AF;
+  --blue-light: #EFF6FF;
+  --radius: 14px;
+  --radius-sm: 8px;
+  --card-shadow: 0 1px 3px rgba(0,0,0,.06), 0 2px 8px rgba(0,0,0,.04);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html, body { height:100%; }
+body { font-family:'Plus Jakarta Sans', sans-serif; background:var(--bg); color:var(--text); font-size:14px; overflow:hidden; }
+
+/* ── HEADER ── */
+.header {
+  position:fixed; top:0; left:0; right:0; height:60px; z-index:1000;
+  background:var(--white); border-bottom:1px solid var(--border);
+  display:flex; align-items:center; gap:16px; padding:0 20px;
+}
+.header-back {
+  display:inline-flex; align-items:center; gap:6px;
+  font-size:13px; font-weight:600; color:var(--primary);
+  text-decoration:none; padding:8px 12px; border-radius:8px;
+  transition:background .15s;
+}
+.header-back:hover { background:var(--primary-light); }
+.header-title {
+  font-size:15px; font-weight:700; color:var(--text);
+  display:flex; align-items:center; gap:8px;
+}
+.header-title .dot { width:8px; height:8px; border-radius:50%; background:var(--primary); }
+
+/* ── SEARCH ── */
+.search-wrap { position:relative; flex:1; max-width:420px; }
+.search-input {
+  width:100%; padding:9px 14px 9px 38px; border-radius:9px;
+  border:1px solid var(--border); background:#F9FAFB;
+  font-family:inherit; font-size:13.5px; color:var(--text);
+  outline:none; transition:border-color .15s, background .15s;
+}
+.search-input:focus { border-color:var(--primary-mid); background:#fff; }
+.search-icon {
+  position:absolute; left:12px; top:50%; transform:translateY(-50%);
+  width:16px; height:16px; opacity:.4; pointer-events:none;
+}
+.search-dropdown {
+  position:absolute; top:calc(100% + 4px); left:0; right:0;
+  background:#fff; border:1px solid var(--border); border-radius:10px;
+  box-shadow:var(--card-shadow); max-height:300px; overflow-y:auto;
+  display:none; z-index:1001;
+}
+.search-dropdown.open { display:block; }
+.search-result {
+  padding:10px 14px; cursor:pointer; font-size:13px;
+  border-bottom:1px solid var(--border); color:var(--text);
+}
+.search-result:last-child { border-bottom:none; }
+.search-result:hover { background:var(--primary-light); }
+.search-result .sr-type {
+  font-size:11px; color:var(--text-2); margin-top:2px; text-transform:uppercase; letter-spacing:.5px;
+}
+.search-empty { padding:12px 14px; font-size:12.5px; color:var(--text-2); }
+
+/* ── MAP ── */
+#map {
+  position:fixed; top:60px; left:0; right:0; bottom:0; z-index:1;
+}
+.map-status {
+  position:fixed; bottom:18px; left:18px; z-index:500;
+  background:rgba(255,255,255,.95); border:1px solid var(--border);
+  border-radius:8px; padding:8px 12px; font-size:12px; color:var(--text-2);
+  box-shadow:var(--card-shadow); pointer-events:none;
+  opacity:0; transition:opacity .15s;
+}
+.map-status.show { opacity:1; }
+.map-legend {
+  position:fixed; bottom:18px; right:18px; z-index:500;
+  background:rgba(255,255,255,.96); border:1px solid var(--border);
+  border-radius:10px; padding:10px 12px; font-size:12px;
+  box-shadow:var(--card-shadow);
+}
+.map-legend h4 { font-size:11px; text-transform:uppercase; letter-spacing:.6px; color:var(--text-2); margin-bottom:6px; }
+.legend-row { display:flex; align-items:center; gap:8px; padding:2px 0; }
+.legend-sw { width:14px; height:14px; border-radius:3px; border:1px solid rgba(0,0,0,.15); }
+
+/* ── SIDEPANEL ── */
+.sidepanel {
+  position:fixed; top:60px; right:0; bottom:0; width:400px; z-index:900;
+  background:#fff; border-left:1px solid var(--border);
+  transform:translateX(420px); transition:transform .25s ease;
+  display:flex; flex-direction:column;
+  box-shadow:-4px 0 16px rgba(0,0,0,.05);
+}
+.sidepanel.open { transform:translateX(0); }
+.sp-header {
+  padding:16px 20px; border-bottom:1px solid var(--border);
+  display:flex; align-items:center; gap:10px;
+}
+.sp-type-badge {
+  font-size:10px; font-weight:700; letter-spacing:.6px; text-transform:uppercase;
+  padding:3px 8px; border-radius:6px;
+}
+.sp-type-badge.perceel { background:#DCFCE7; color:#166534; }
+.sp-type-badge.gebouw { background:#FFEDD5; color:#9A3412; }
+.sp-title { font-size:15px; font-weight:700; color:var(--text); flex:1; }
+.sp-close {
+  border:none; background:transparent; cursor:pointer;
+  width:32px; height:32px; border-radius:8px;
+  display:flex; align-items:center; justify-content:center;
+  color:var(--text-2); font-size:18px;
+}
+.sp-close:hover { background:var(--bg); color:var(--text); }
+.sp-body { flex:1; overflow-y:auto; padding:18px 20px; }
+.sp-meta {
+  background:var(--bg); border-radius:10px; padding:12px 14px; margin-bottom:18px;
+}
+.sp-meta-row { display:flex; justify-content:space-between; gap:12px; padding:4px 0; font-size:12.5px; }
+.sp-meta-row .label { color:var(--text-2); }
+.sp-meta-row .value { color:var(--text); font-weight:600; text-align:right; }
+
+.sp-form label { display:block; font-size:12px; font-weight:600; color:var(--text-2); margin-bottom:5px; margin-top:14px; }
+.sp-form label:first-child { margin-top:0; }
+.sp-form input[type="text"],
+.sp-form input[type="date"],
+.sp-form select,
+.sp-form textarea {
+  width:100%; padding:8px 11px; border:1px solid var(--border); border-radius:8px;
+  font-family:inherit; font-size:13px; color:var(--text); background:#fff;
+  outline:none;
+}
+.sp-form input:focus, .sp-form select:focus, .sp-form textarea:focus { border-color:var(--primary-mid); }
+.sp-form textarea { min-height:70px; resize:vertical; }
+
+.sp-section { margin-top:18px; padding-top:14px; border-top:1px dashed var(--border); }
+.sp-section h4 { font-size:12px; font-weight:700; color:var(--text); text-transform:uppercase; letter-spacing:.5px; margin-bottom:10px; }
+.sp-list { display:flex; flex-direction:column; gap:8px; }
+.sp-list-row {
+  background:var(--bg); border-radius:8px; padding:8px 10px;
+  display:grid; gap:6px;
+}
+.sp-list-row.history-row { grid-template-columns: 140px 1fr 28px; align-items:center; }
+.sp-list-row.action-row { grid-template-columns: 1fr 1fr 28px; align-items:center; }
+.sp-list-row .full { grid-column:1 / -1; }
+.sp-list-row input[type="text"], .sp-list-row input[type="date"], .sp-list-row select {
+  padding:6px 8px; font-size:12px; border:1px solid var(--border); border-radius:6px;
+  background:#fff; font-family:inherit;
+}
+.sp-list-row .del-btn {
+  width:28px; height:28px; border:none; background:transparent; cursor:pointer;
+  color:var(--red); font-size:16px; border-radius:6px;
+}
+.sp-list-row .del-btn:hover { background:var(--red-light); }
+.sp-add-btn {
+  margin-top:8px; padding:7px 12px; border:1px dashed var(--border); border-radius:8px;
+  background:transparent; cursor:pointer; font-size:12px; color:var(--primary-mid);
+  font-family:inherit; font-weight:600;
+}
+.sp-add-btn:hover { background:var(--primary-light); border-color:var(--primary-mid); }
+
+.sp-footer {
+  padding:14px 20px; border-top:1px solid var(--border);
+  display:flex; align-items:center; gap:10px;
+  background:#fff;
+}
+.btn-primary {
+  padding:9px 16px; border:none; border-radius:8px; cursor:pointer;
+  background:var(--primary); color:#fff; font-family:inherit; font-size:13px; font-weight:600;
+  transition:background .15s;
+}
+.btn-primary:hover { background:var(--primary-mid); }
+.btn-ghost {
+  padding:9px 14px; border:1px solid var(--border); border-radius:8px; cursor:pointer;
+  background:#fff; color:var(--text); font-family:inherit; font-size:13px; font-weight:500;
+}
+.btn-ghost:hover { background:var(--bg); }
+.sp-toast {
+  margin-left:auto; font-size:12px; color:var(--green); font-weight:600;
+  opacity:0; transition:opacity .2s;
+}
+.sp-toast.show { opacity:1; }
+
+/* Leaflet popup overrides */
+.leaflet-popup-content { font-family:'Plus Jakarta Sans', sans-serif; font-size:12.5px; }
+
+.priority-laag { color:var(--text-2); }
+.priority-normaal { color:var(--text); }
+.priority-hoog { color:var(--amber); }
+.priority-urgent { color:var(--red); font-weight:700; }
+</style>
+</head>
+<body>
+
+<!-- ══ HEADER ══ -->
+<div class="header">
+  <a href="index.html" class="header-back">
+    <svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    Dashboard
+  </a>
+  <div class="header-title"><span class="dot"></span>Kaart</div>
+  <div class="search-wrap">
+    <svg class="search-icon" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="m20 20-3-3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    <input type="search" id="searchInput" class="search-input" placeholder="Zoek adres of plaatsnaam (PDOK)" autocomplete="off">
+    <ul class="search-dropdown" id="searchDropdown"></ul>
+  </div>
+</div>
+
+<!-- ══ MAP ══ -->
+<div id="map"></div>
+
+<div class="map-status" id="mapStatus"></div>
+
+<div class="map-legend">
+  <h4>Legenda</h4>
+  <div class="legend-row"><span class="legend-sw" style="background:#22C55E"></span>Pacht/conditie OK</div>
+  <div class="legend-row"><span class="legend-sw" style="background:#F59E0B"></span>Aandacht (&lt;1jr / redelijk)</div>
+  <div class="legend-row"><span class="legend-sw" style="background:#DC2626"></span>Verlopen / matig-slecht</div>
+  <div class="legend-row"><span class="legend-sw" style="background:#9CA3AF"></span>Niet ingevuld</div>
+</div>
+
+<!-- ══ SIDEPANEL ══ -->
+<aside class="sidepanel" id="sidepanel" aria-hidden="true">
+  <div class="sp-header">
+    <span class="sp-type-badge" id="spBadge">—</span>
+    <div class="sp-title" id="spTitle">—</div>
+    <button class="sp-close" id="spClose" aria-label="Sluiten">×</button>
+  </div>
+  <div class="sp-body" id="spBody">
+    <!-- gevuld door JS -->
+  </div>
+  <div class="sp-footer">
+    <button class="btn-primary" id="spSave">Opslaan</button>
+    <button class="btn-ghost" id="spCancel">Annuleren</button>
+    <span class="sp-toast" id="spToast">Opgeslagen</span>
+  </div>
+</aside>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+'use strict';
+
+// ══════════════════════════════════════════════════════════
+// Config
+// ══════════════════════════════════════════════════════════
+const CENTER = [52.197, 5.005];      // Vechtstreek / Vreeland — buurt Gunterstein
+const DEFAULT_ZOOM = 15;
+const MIN_ZOOM_PERCEEL = 14;
+const MIN_ZOOM_GEBOUW = 15;
+const WFS_DEBOUNCE_MS = 500;
+const SEARCH_DEBOUNCE_MS = 300;
+
+const PDOK_LOCATIE = 'https://api.pdok.nl/bzk/locatieserver/search/v3_1/free';
+const PDOK_BRK = 'https://service.pdok.nl/kadaster/kadastralekaart/wfs/v5_0';
+const PDOK_BAG = 'https://service.pdok.nl/lv/bag/wfs/v2_0';
+
+const COLOR = {
+  green: '#22C55E',
+  amber: '#F59E0B',
+  red: '#DC2626',
+  grey: '#9CA3AF',
+};
+
+const STROKE = {
+  perceel: '#16A34A',
+  gebouw: '#C2410C',
+};
+
+// ══════════════════════════════════════════════════════════
+// Utils
+// ══════════════════════════════════════════════════════════
+function debounce(fn, ms) {
+  let t;
+  return (...args) => {
+    clearTimeout(t);
+    t = setTimeout(() => fn(...args), ms);
+  };
+}
+
+function escapeHtml(s) {
+  if (s == null) return '';
+  return String(s)
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#039;');
+}
+
+function showStatus(msg, ttlMs = 2000) {
+  const el = document.getElementById('mapStatus');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(showStatus._t);
+  showStatus._t = setTimeout(() => el.classList.remove('show'), ttlMs);
+}
+
+function lsGet(key) {
+  try {
+    const raw = localStorage.getItem(key);
+    return raw ? JSON.parse(raw) : null;
+  } catch (e) {
+    console.warn('localStorage parse error', key, e);
+    return null;
+  }
+}
+
+function lsSet(key, obj) {
+  try {
+    localStorage.setItem(key, JSON.stringify({ ...obj, updated_at: new Date().toISOString() }));
+    return true;
+  } catch (e) {
+    alert('Opslaan mislukt: ' + e.message);
+    return false;
+  }
+}
+
+// ══════════════════════════════════════════════════════════
+// Kleur-functies (kleur-decisietabel)
+// ══════════════════════════════════════════════════════════
+function perceelColor(kadastraalId) {
+  const data = lsGet('perceel_' + kadastraalId);
+  if (!data) return COLOR.grey;
+  if (!data.pachter || !data.pachter.trim()) return COLOR.red;
+  if (!data.einddatum) return COLOR.red;
+  const end = new Date(data.einddatum);
+  if (isNaN(end.getTime())) return COLOR.red;
+  const now = new Date();
+  if (end < now) return COLOR.red;
+  const oneYearOut = new Date();
+  oneYearOut.setFullYear(oneYearOut.getFullYear() + 1);
+  if (end < oneYearOut) return COLOR.amber;
+  return COLOR.green;
+}
+
+function gebouwColor(pandId) {
+  const data = lsGet('gebouw_' + pandId);
+  if (!data || !data.conditie) return COLOR.grey;
+  switch (data.conditie) {
+    case 'uitstekend':
+    case 'goed':      return COLOR.green;
+    case 'redelijk':  return COLOR.amber;
+    case 'matig':
+    case 'slecht':    return COLOR.red;
+    default:          return COLOR.grey;
+  }
+}
+
+function perceelStyle(feature) {
+  const id = perceelId(feature);
+  return {
+    color: STROKE.perceel,
+    weight: 1.2,
+    fillColor: perceelColor(id),
+    fillOpacity: 0.35,
+  };
+}
+
+function gebouwStyle(feature) {
+  const id = gebouwId(feature);
+  return {
+    color: STROKE.gebouw,
+    weight: 1.4,
+    fillColor: gebouwColor(id),
+    fillOpacity: 0.55,
+  };
+}
+
+// ══════════════════════════════════════════════════════════
+// Map setup (U1)
+// ══════════════════════════════════════════════════════════
+const map = L.map('map', { zoomControl: true }).setView(CENTER, DEFAULT_ZOOM);
+
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  maxZoom: 19,
+  attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> · Geo-data: <a href="https://www.pdok.nl">PDOK</a>',
+}).addTo(map);
+
+// Lagen leeg initialiseren — gevuld via bbox-loaders (U3, U4)
+const perceelLayer = L.geoJSON(null, {
+  style: perceelStyle,
+  onEachFeature: (feature, layer) => {
+    layer.on('click', () => openSidepanel('perceel', feature, layer));
+  },
+}).addTo(map);
+
+const gebouwLayer = L.geoJSON(null, {
+  style: gebouwStyle,
+  onEachFeature: (feature, layer) => {
+    layer.on('click', () => openSidepanel('gebouw', feature, layer));
+  },
+}).addTo(map);
+
+// Z-order: panden boven percelen (klik registreert op bovenste)
+gebouwLayer.bringToFront();
+
+// ══════════════════════════════════════════════════════════
+// PDOK Locatieserver zoek (U2)
+// ══════════════════════════════════════════════════════════
+const searchInput = document.getElementById('searchInput');
+const searchDropdown = document.getElementById('searchDropdown');
+
+const doSearch = debounce(async (q) => {
+  if (!q || q.length < 2) {
+    searchDropdown.classList.remove('open');
+    searchDropdown.innerHTML = '';
+    return;
+  }
+  try {
+    const url = `${PDOK_LOCATIE}?q=${encodeURIComponent(q)}&rows=5`;
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    const docs = (data && data.response && data.response.docs) || [];
+    if (docs.length === 0) {
+      searchDropdown.innerHTML = '<li class="search-empty">Geen resultaten</li>';
+      searchDropdown.classList.add('open');
+      return;
+    }
+    searchDropdown.innerHTML = docs.map((d) => {
+      const m = /POINT\(([0-9.\-]+)\s+([0-9.\-]+)\)/.exec(d.centroide_ll || '');
+      if (!m) return '';
+      const lon = parseFloat(m[1]);
+      const lat = parseFloat(m[2]);
+      return `<li class="search-result" data-lat="${lat}" data-lon="${lon}">
+        <div>${escapeHtml(d.weergavenaam || '—')}</div>
+        <div class="sr-type">${escapeHtml(d.type || '')}</div>
+      </li>`;
+    }).join('');
+    searchDropdown.classList.add('open');
+  } catch (e) {
+    searchDropdown.innerHTML = `<li class="search-empty">Fout bij zoeken: ${escapeHtml(e.message)}</li>`;
+    searchDropdown.classList.add('open');
+  }
+}, SEARCH_DEBOUNCE_MS);
+
+searchInput.addEventListener('input', (e) => doSearch(e.target.value.trim()));
+searchDropdown.addEventListener('click', (e) => {
+  const li = e.target.closest('.search-result');
+  if (!li) return;
+  const lat = parseFloat(li.dataset.lat);
+  const lon = parseFloat(li.dataset.lon);
+  if (!isNaN(lat) && !isNaN(lon)) {
+    map.setView([lat, lon], 16);
+    searchDropdown.classList.remove('open');
+    searchInput.value = li.querySelector('div').textContent;
+  }
+});
+document.addEventListener('click', (e) => {
+  if (!searchInput.contains(e.target) && !searchDropdown.contains(e.target)) {
+    searchDropdown.classList.remove('open');
+  }
+});
+searchInput.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    searchDropdown.classList.remove('open');
+    searchInput.blur();
+  }
+});
+
+// ══════════════════════════════════════════════════════════
+// BBox helpers
+// ══════════════════════════════════════════════════════════
+function bboxParam() {
+  const b = map.getBounds();
+  // Volgorde: minx,miny,maxx,maxy,EPSG:4326 → west,south,east,north,EPSG:4326
+  return `${b.getWest()},${b.getSouth()},${b.getEast()},${b.getNorth()},EPSG:4326`;
+}
+
+// PDOK feature-ID extractors (props verschillen per service)
+function perceelId(feature) {
+  const p = feature.properties || {};
+  return (
+    p.identificatieLokaalID ||
+    p.identificatie ||
+    p.akrKadastraleGemeenteCode ||
+    p.perceelnummer && (p.kadastraleGemeenteWaarde + '-' + p.sectie + '-' + p.perceelnummer) ||
+    feature.id ||
+    JSON.stringify(p).slice(0, 50)
+  );
+}
+
+function perceelLabel(feature) {
+  const p = feature.properties || {};
+  if (p.kadastraleGemeenteWaarde && p.sectie && p.perceelnummer) {
+    return `${p.kadastraleGemeenteWaarde} ${p.sectie} ${p.perceelnummer}`;
+  }
+  return p.identificatieLokaalID || p.identificatie || 'Perceel';
+}
+
+function perceelOppervlakte(feature) {
+  const p = feature.properties || {};
+  return p.kadastraleGrootteWaarde || p.grootte || p.oppervlakte || null;
+}
+
+function gebouwId(feature) {
+  const p = feature.properties || {};
+  return p.identificatie || feature.id || JSON.stringify(p).slice(0, 50);
+}
+
+function gebouwBouwjaar(feature) {
+  const p = feature.properties || {};
+  return p.bouwjaar || p.oorspronkelijkBouwjaar || null;
+}
+
+function gebouwGebruiksdoel(feature) {
+  const p = feature.properties || {};
+  const g = p.gebruiksdoel;
+  if (Array.isArray(g)) return g.join(', ');
+  return g || null;
+}
+
+function gebouwOppervlakte(feature) {
+  const p = feature.properties || {};
+  return p.oppervlakte_min || p.oppervlakte_max || p.oppervlakte || null;
+}
+
+// ══════════════════════════════════════════════════════════
+// BRK perceel-laag (U3)
+// ══════════════════════════════════════════════════════════
+async function loadPercelen() {
+  if (map.getZoom() < MIN_ZOOM_PERCEEL) {
+    perceelLayer.clearLayers();
+    return;
+  }
+  const url = `${PDOK_BRK}?service=WFS&version=2.0.0&request=GetFeature` +
+    `&typeNames=kadastralekaartv5:Perceel&outputFormat=application/json` +
+    `&srsName=EPSG:4326&bbox=${bboxParam()}&count=500`;
+  try {
+    showStatus('Percelen laden…');
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('BRK HTTP ' + res.status);
+    const data = await res.json();
+    perceelLayer.clearLayers();
+    perceelLayer.addData(data);
+    const n = (data.features || []).length;
+    showStatus(`${n} percelen geladen`);
+  } catch (e) {
+    console.warn('Perceel-fetch faalde', e);
+    showStatus('Percelen ophalen mislukt');
+  }
+}
+
+// ══════════════════════════════════════════════════════════
+// BAG pand-laag (U4)
+// ══════════════════════════════════════════════════════════
+async function loadGebouwen() {
+  if (map.getZoom() < MIN_ZOOM_GEBOUW) {
+    gebouwLayer.clearLayers();
+    return;
+  }
+  const url = `${PDOK_BAG}?service=WFS&version=2.0.0&request=GetFeature` +
+    `&typeNames=bag:pand&outputFormat=application/json` +
+    `&srsName=EPSG:4326&count=200&bbox=${bboxParam()}`;
+  try {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('BAG HTTP ' + res.status);
+    const data = await res.json();
+    gebouwLayer.clearLayers();
+    gebouwLayer.addData(data);
+    gebouwLayer.bringToFront();
+  } catch (e) {
+    console.warn('BAG-fetch faalde', e);
+  }
+}
+
+const refreshLayers = debounce(() => {
+  loadPercelen();
+  loadGebouwen();
+}, WFS_DEBOUNCE_MS);
+
+map.on('moveend', refreshLayers);
+map.whenReady(() => refreshLayers());
+
+// ══════════════════════════════════════════════════════════
+// Sidepanel (U5, U6, U7)
+// ══════════════════════════════════════════════════════════
+const sidepanel = document.getElementById('sidepanel');
+const spBadge = document.getElementById('spBadge');
+const spTitle = document.getElementById('spTitle');
+const spBody = document.getElementById('spBody');
+const spClose = document.getElementById('spClose');
+const spCancel = document.getElementById('spCancel');
+const spSave = document.getElementById('spSave');
+const spToast = document.getElementById('spToast');
+
+// Active state
+let active = null;
+// { type: 'perceel'|'gebouw', id, feature, layer, draft: {...} }
+
+function closeSidepanel() {
+  sidepanel.classList.remove('open');
+  sidepanel.setAttribute('aria-hidden', 'true');
+  active = null;
+}
+
+spClose.addEventListener('click', closeSidepanel);
+spCancel.addEventListener('click', closeSidepanel);
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && sidepanel.classList.contains('open')) closeSidepanel();
+});
+
+function flashToast() {
+  spToast.classList.add('show');
+  clearTimeout(flashToast._t);
+  flashToast._t = setTimeout(() => spToast.classList.remove('show'), 1600);
+}
+
+function openSidepanel(type, feature, layer) {
+  if (type === 'perceel') {
+    const id = perceelId(feature);
+    const stored = lsGet('perceel_' + id) || {};
+    active = {
+      type, id, feature, layer,
+      draft: {
+        grondgebruik: stored.grondgebruik || '',
+        pachter: stored.pachter || '',
+        einddatum: stored.einddatum || '',
+        subsidie: stored.subsidie || '',
+        opmerkingen: stored.opmerkingen || '',
+      },
+    };
+    spBadge.textContent = 'Perceel';
+    spBadge.className = 'sp-type-badge perceel';
+    spTitle.textContent = perceelLabel(feature);
+    renderPerceelBody(feature, active.draft);
+  } else if (type === 'gebouw') {
+    const id = gebouwId(feature);
+    const stored = lsGet('gebouw_' + id) || {};
+    active = {
+      type, id, feature, layer,
+      draft: {
+        naam: stored.naam || '',
+        conditie: stored.conditie || '',
+        inspectie: stored.inspectie || '',
+        history: Array.isArray(stored.history) ? stored.history.map(r => ({ ...r })) : [],
+        actions: Array.isArray(stored.actions) ? stored.actions.map(r => ({ ...r })) : [],
+        opmerkingen: stored.opmerkingen || '',
+      },
+    };
+    spBadge.textContent = 'Gebouw';
+    spBadge.className = 'sp-type-badge gebouw';
+    spTitle.textContent = active.draft.naam || ('Pand ' + id);
+    renderGebouwBody(feature, active.draft);
+  }
+  sidepanel.classList.add('open');
+  sidepanel.setAttribute('aria-hidden', 'false');
+}
+
+function metaRow(label, value) {
+  if (value == null || value === '') return '';
+  return `<div class="sp-meta-row"><span class="label">${escapeHtml(label)}</span><span class="value">${escapeHtml(value)}</span></div>`;
+}
+
+function renderPerceelBody(feature, draft) {
+  const id = perceelId(feature);
+  const opp = perceelOppervlakte(feature);
+  const meta = [
+    metaRow('Kadastraal ID', id),
+    metaRow('Aanduiding', perceelLabel(feature)),
+    metaRow('Oppervlakte (m²)', opp),
+  ].join('');
+
+  spBody.innerHTML = `
+    <div class="sp-meta">${meta || '<div class="sp-meta-row"><span class="label">Geen PDOK-metadata beschikbaar</span></div>'}</div>
+    <form class="sp-form" id="spForm" onsubmit="return false;">
+      <label for="f-grondgebruik">Grondgebruik</label>
+      <select id="f-grondgebruik">
+        <option value="">— kies —</option>
+        <option value="bos">Bos</option>
+        <option value="natuur">Natuur</option>
+        <option value="agrarisch">Agrarisch</option>
+        <option value="water">Water</option>
+        <option value="erf">Erf</option>
+        <option value="overig">Overig</option>
+      </select>
+
+      <label for="f-pachter">Pachter</label>
+      <input type="text" id="f-pachter" placeholder="Naam pachter">
+
+      <label for="f-einddatum">Pacht einddatum</label>
+      <input type="date" id="f-einddatum">
+
+      <label for="f-subsidie">Subsidieregeling</label>
+      <select id="f-subsidie">
+        <option value="">— kies —</option>
+        <option value="SNL">SNL</option>
+        <option value="ANLb">ANLb</option>
+        <option value="geen">Geen</option>
+        <option value="onbekend">Onbekend</option>
+      </select>
+
+      <label for="f-opmerkingen">Opmerkingen</label>
+      <textarea id="f-opmerkingen" placeholder="Vrije tekst"></textarea>
+    </form>
+  `;
+
+  // Pre-fill (DOM-properties, geen innerHTML — voorkomt XSS)
+  document.getElementById('f-grondgebruik').value = draft.grondgebruik;
+  document.getElementById('f-pachter').value = draft.pachter;
+  document.getElementById('f-einddatum').value = draft.einddatum;
+  document.getElementById('f-subsidie').value = draft.subsidie;
+  document.getElementById('f-opmerkingen').value = draft.opmerkingen;
+}
+
+function renderGebouwBody(feature, draft) {
+  const id = gebouwId(feature);
+  const meta = [
+    metaRow('Pand ID', id),
+    metaRow('Bouwjaar', gebouwBouwjaar(feature)),
+    metaRow('Gebruiksdoel', gebouwGebruiksdoel(feature)),
+    metaRow('Oppervlakte (m²)', gebouwOppervlakte(feature)),
+  ].join('');
+
+  spBody.innerHTML = `
+    <div class="sp-meta">${meta || '<div class="sp-meta-row"><span class="label">Geen BAG-metadata beschikbaar</span></div>'}</div>
+    <form class="sp-form" id="spForm" onsubmit="return false;">
+      <label for="g-naam">Naam / omschrijving</label>
+      <input type="text" id="g-naam" placeholder="Bijv. Koetshuis, Schuur Noord">
+
+      <label for="g-conditie">Conditie</label>
+      <select id="g-conditie">
+        <option value="">— kies —</option>
+        <option value="uitstekend">Uitstekend</option>
+        <option value="goed">Goed</option>
+        <option value="redelijk">Redelijk</option>
+        <option value="matig">Matig</option>
+        <option value="slecht">Slecht</option>
+      </select>
+
+      <label for="g-inspectie">Laatste inspectiedatum</label>
+      <input type="date" id="g-inspectie">
+
+      <div class="sp-section">
+        <h4>Onderhoudshistorie</h4>
+        <div class="sp-list" id="historyList"></div>
+        <button type="button" class="sp-add-btn" id="addHistoryBtn">+ Regel toevoegen</button>
+      </div>
+
+      <div class="sp-section">
+        <h4>Actiepunten</h4>
+        <div class="sp-list" id="actionList"></div>
+        <button type="button" class="sp-add-btn" id="addActionBtn">+ Taak toevoegen</button>
+      </div>
+
+      <label for="g-opmerkingen" style="margin-top:18px">Opmerkingen</label>
+      <textarea id="g-opmerkingen" placeholder="Vrije tekst"></textarea>
+    </form>
+  `;
+
+  document.getElementById('g-naam').value = draft.naam;
+  document.getElementById('g-conditie').value = draft.conditie;
+  document.getElementById('g-inspectie').value = draft.inspectie;
+  document.getElementById('g-opmerkingen').value = draft.opmerkingen;
+
+  renderHistory();
+  renderActions();
+
+  document.getElementById('addHistoryBtn').addEventListener('click', () => {
+    syncGebouwDraft();
+    active.draft.history.push({ datum: '', omschrijving: '' });
+    renderHistory();
+  });
+  document.getElementById('addActionBtn').addEventListener('click', () => {
+    syncGebouwDraft();
+    active.draft.actions.push({ titel: '', prioriteit: 'normaal', status: 'open' });
+    renderActions();
+  });
+}
+
+function renderHistory() {
+  const list = document.getElementById('historyList');
+  list.innerHTML = '';
+  active.draft.history.forEach((row, idx) => {
+    const div = document.createElement('div');
+    div.className = 'sp-list-row history-row';
+    div.innerHTML = `
+      <input type="date" data-field="datum" data-idx="${idx}">
+      <input type="text" data-field="omschrijving" data-idx="${idx}" placeholder="Wat is er gedaan?">
+      <button type="button" class="del-btn" data-del-history="${idx}" aria-label="Verwijder">×</button>
+    `;
+    div.querySelector('[data-field="datum"]').value = row.datum || '';
+    div.querySelector('[data-field="omschrijving"]').value = row.omschrijving || '';
+    list.appendChild(div);
+  });
+  list.querySelectorAll('[data-del-history]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      syncGebouwDraft();
+      const i = parseInt(btn.dataset.delHistory, 10);
+      active.draft.history.splice(i, 1);
+      renderHistory();
+    });
+  });
+}
+
+function renderActions() {
+  const list = document.getElementById('actionList');
+  list.innerHTML = '';
+  active.draft.actions.forEach((row, idx) => {
+    const div = document.createElement('div');
+    div.className = 'sp-list-row action-row';
+    div.innerHTML = `
+      <input class="full" type="text" data-afield="titel" data-aidx="${idx}" placeholder="Taak / actiepunt">
+      <select data-afield="prioriteit" data-aidx="${idx}" class="priority-${row.prioriteit || 'normaal'}">
+        <option value="laag">Laag</option>
+        <option value="normaal">Normaal</option>
+        <option value="hoog">Hoog</option>
+        <option value="urgent">Urgent</option>
+      </select>
+      <select data-afield="status" data-aidx="${idx}">
+        <option value="open">Open</option>
+        <option value="in_behandeling">In behandeling</option>
+        <option value="gereed">Gereed</option>
+      </select>
+      <button type="button" class="del-btn" data-del-action="${idx}" aria-label="Verwijder">×</button>
+    `;
+    div.querySelector('[data-afield="titel"]').value = row.titel || '';
+    div.querySelector('[data-afield="prioriteit"]').value = row.prioriteit || 'normaal';
+    div.querySelector('[data-afield="status"]').value = row.status || 'open';
+    list.appendChild(div);
+  });
+  list.querySelectorAll('[data-del-action]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      syncGebouwDraft();
+      const i = parseInt(btn.dataset.delAction, 10);
+      active.draft.actions.splice(i, 1);
+      renderActions();
+    });
+  });
+}
+
+// Lees DOM-values terug in draft (vóór re-render, zodat focus-verlies geen data kost)
+function syncPerceelDraft() {
+  if (!active || active.type !== 'perceel') return;
+  active.draft.grondgebruik = document.getElementById('f-grondgebruik').value;
+  active.draft.pachter = document.getElementById('f-pachter').value;
+  active.draft.einddatum = document.getElementById('f-einddatum').value;
+  active.draft.subsidie = document.getElementById('f-subsidie').value;
+  active.draft.opmerkingen = document.getElementById('f-opmerkingen').value;
+}
+
+function syncGebouwDraft() {
+  if (!active || active.type !== 'gebouw') return;
+  active.draft.naam = document.getElementById('g-naam').value;
+  active.draft.conditie = document.getElementById('g-conditie').value;
+  active.draft.inspectie = document.getElementById('g-inspectie').value;
+  active.draft.opmerkingen = document.getElementById('g-opmerkingen').value;
+  // Lees historie rows
+  document.querySelectorAll('#historyList .sp-list-row').forEach((row, idx) => {
+    if (!active.draft.history[idx]) return;
+    active.draft.history[idx].datum = row.querySelector('[data-field="datum"]').value;
+    active.draft.history[idx].omschrijving = row.querySelector('[data-field="omschrijving"]').value;
+  });
+  document.querySelectorAll('#actionList .sp-list-row').forEach((row, idx) => {
+    if (!active.draft.actions[idx]) return;
+    active.draft.actions[idx].titel = row.querySelector('[data-afield="titel"]').value;
+    active.draft.actions[idx].prioriteit = row.querySelector('[data-afield="prioriteit"]').value;
+    active.draft.actions[idx].status = row.querySelector('[data-afield="status"]').value;
+  });
+}
+
+// Save handler
+spSave.addEventListener('click', () => {
+  if (!active) return;
+  if (active.type === 'perceel') {
+    syncPerceelDraft();
+    if (lsSet('perceel_' + active.id, active.draft)) {
+      // Recolor: alleen de specifieke layer
+      if (active.layer) active.layer.setStyle(perceelStyle(active.feature));
+      flashToast();
+    }
+  } else if (active.type === 'gebouw') {
+    syncGebouwDraft();
+    if (lsSet('gebouw_' + active.id, active.draft)) {
+      if (active.layer) active.layer.setStyle(gebouwStyle(active.feature));
+      spTitle.textContent = active.draft.naam || ('Pand ' + active.id);
+      flashToast();
+    }
+  }
+});
+</script>
+</body>
+</html>
