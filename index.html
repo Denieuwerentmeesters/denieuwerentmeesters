@@ -412,6 +412,10 @@ body { font-family:'Plus Jakarta Sans',sans-serif; background:var(--bg); color:v
       <svg class="nav-icon" fill="none" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.8"/><rect x="14" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.8"/><rect x="3" y="14" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.8"/><rect x="14" y="14" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.8"/></svg>
       Overzicht
     </div>
+    <div class="nav-item" onclick="nav('landgoed',this)">
+      <svg class="nav-icon" fill="none" viewBox="0 0 24 24"><path d="M3 21h18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M5 21V10l7-5 7 5v11" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><rect x="9" y="13" width="6" height="8" stroke="currentColor" stroke-width="1.8"/><path d="M3 21l9-15 9 15" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" opacity=".3"/></svg>
+      Landgoed
+    </div>
     <div class="nav-item" onclick="nav('documenten',this)">
       <svg class="nav-icon" fill="none" viewBox="0 0 24 24"><path d="M13 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9l-7-7z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M13 2v7h7" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
       Documenten
@@ -443,8 +447,17 @@ body { font-family:'Plus Jakarta Sans',sans-serif; background:var(--bg); color:v
       <svg class="nav-icon" fill="none" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" stroke-width="1.8"/><line x1="16" y1="2" x2="16" y2="6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><line x1="8" y1="2" x2="8" y2="6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><line x1="3" y1="10" x2="21" y2="10" stroke="currentColor" stroke-width="1.8"/></svg>
       Agenda &amp; Events
     </div>
+    <div class="nav-item" onclick="nav('taken',this)">
+      <svg class="nav-icon" fill="none" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M8 11l3 3 5-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Taken
+      <span class="nav-badge urgent">4</span>
+    </div>
 
     <div class="nav-label" style="margin-top:6px">Beheer</div>
+    <div class="nav-item" onclick="nav('financieel',this)">
+      <svg class="nav-icon" fill="none" viewBox="0 0 24 24"><path d="M12 2v20M17 6H9.5a3.5 3.5 0 100 7h5a3.5 3.5 0 110 7H6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Financieel
+    </div>
     <div class="nav-item" onclick="nav('contracten',this)">
       <svg class="nav-icon" fill="none" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2" stroke="currentColor" stroke-width="1.8"/><rect x="9" y="3" width="6" height="4" rx="1" stroke="currentColor" stroke-width="1.8"/><line x1="9" y1="12" x2="15" y2="12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><line x1="9" y1="16" x2="13" y2="16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
       Contracten
@@ -539,17 +552,14 @@ body { font-family:'Plus Jakarta Sans',sans-serif; background:var(--bg); color:v
     <!-- ══ OVERZICHT ══ -->
     <div class="page active" id="page-overview">
       <div class="page-header">
-        <div class="page-title">Landgoed Gunterstein</div>
-        <div class="page-sub">115 ha · NSW-gerangschikt · Rijksmonument 508234 · Breukelen, Stichtse Vecht</div>
+        <div class="page-title">Goedemorgen, Lara</div>
+        <div class="page-sub">Operationeel dagoverzicht · Vrijdag 29 mei 2026 · Gunterstein</div>
         <div class="page-actions">
-          <button class="btn btn-primary btn-sm" onclick="nav('subsidie',null)">
-            <svg width="13" height="13" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" stroke="#fff" stroke-width="2"/><circle cx="12" cy="12" r="5" stroke="#fff" stroke-width="2"/><circle cx="12" cy="12" r="1.5" fill="#fff"/></svg>
-            Subsidieradar openen
-          </button>
-          <button class="btn btn-ghost btn-sm">
-            <svg width="13" height="13" fill="none" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          <button class="btn btn-primary btn-sm" onclick="nav('taken',null)">
+            <svg width="13" height="13" fill="none" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>
             Taak toevoegen
           </button>
+          <button class="btn btn-ghost btn-sm" onclick="nav('subsidie',null)">Subsidieradar openen</button>
         </div>
       </div>
 
@@ -559,32 +569,29 @@ body { font-family:'Plus Jakarta Sans',sans-serif; background:var(--bg); color:v
       </div>
 
       <div class="kpi-grid">
-        <div class="kpi featured">
-          <div class="kpi-arrow"><svg width="12" height="12" fill="none" viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10" stroke="rgba(255,255,255,.6)" stroke-width="2" stroke-linecap="round"/></svg></div>
-          <div class="kpi-label">Oppervlakte landgoed</div>
-          <div class="kpi-value">115 ha</div>
-          <div class="kpi-delta">Bos · weiland · park · water</div>
-        </div>
-        <div class="kpi">
+        <div class="kpi" onclick="nav('taken',null)" style="cursor:pointer">
           <div class="kpi-arrow"><svg width="12" height="12" fill="none" viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round"/></svg></div>
-          <div class="kpi-label">Rijksmonumenten</div>
-          <div class="kpi-value">2</div>
-          <div class="kpi-delta up">
-            <svg width="11" height="11" fill="none" viewBox="0 0 24 24"><path d="M5 10l7-7 7 7M12 3v18" stroke="#16A34A" stroke-width="2" stroke-linecap="round"/></svg>
-            Kasteel + Klein Boomrijk
-          </div>
+          <div class="kpi-label">Mijn open taken</div>
+          <div class="kpi-value">7</div>
+          <div class="kpi-delta danger">1 urgent · 2 vervallen</div>
         </div>
-        <div class="kpi">
+        <div class="kpi" onclick="nav('agenda',null)" style="cursor:pointer">
           <div class="kpi-arrow"><svg width="12" height="12" fill="none" viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round"/></svg></div>
-          <div class="kpi-label">Actieve subsidies</div>
-          <div class="kpi-value">€ 54k</div>
-          <div class="kpi-delta warn">SIM + SNL + ANLb · 2026</div>
-        </div>
-        <div class="kpi">
-          <div class="kpi-arrow"><svg width="12" height="12" fill="none" viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round"/></svg></div>
-          <div class="kpi-label">Openstaande taken</div>
+          <div class="kpi-label">Agenda · komende 7 dgn</div>
           <div class="kpi-value">4</div>
-          <div class="kpi-delta danger">2 urgent · 2 normaal</div>
+          <div class="kpi-delta">Bestuur, dakinspectie, FPG, NVR</div>
+        </div>
+        <div class="kpi" onclick="nav('berichten',null)" style="cursor:pointer">
+          <div class="kpi-arrow"><svg width="12" height="12" fill="none" viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round"/></svg></div>
+          <div class="kpi-label">Berichten ongelezen</div>
+          <div class="kpi-value">3</div>
+          <div class="kpi-delta warn">1 pachter · 1 RVO · 1 rentmeester</div>
+        </div>
+        <div class="kpi" onclick="nav('financieel',null)" style="cursor:pointer">
+          <div class="kpi-arrow"><svg width="12" height="12" fill="none" viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round"/></svg></div>
+          <div class="kpi-label">Te betalen deze week</div>
+          <div class="kpi-value">€ 2.140</div>
+          <div class="kpi-delta danger">1 factuur vervallen</div>
         </div>
       </div>
 
@@ -595,7 +602,10 @@ body { font-family:'Plus Jakarta Sans',sans-serif; background:var(--bg); color:v
               <div class="card-title">Kaart — Vechtstreek</div>
               <div class="card-sub">Zandpad 48 · 3621 NE · Breukelen</div>
             </div>
-            <button class="btn btn-ghost btn-sm">Volledig scherm</button>
+            <div style="display:flex;gap:8px;align-items:center">
+              <span class="tag tag-amber" style="font-size:10.5px">Interactieve versie volgt</span>
+              <button class="btn btn-ghost btn-sm">Volledig scherm</button>
+            </div>
           </div>
           <div class="map-area">
             <svg viewBox="0 0 520 190" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
@@ -646,43 +656,150 @@ body { font-family:'Plus Jakarta Sans',sans-serif; background:var(--bg); color:v
           </div>
         </div>
 
+        <div>
+          <div class="card" style="margin-bottom:16px">
+            <div class="card-header"><div class="card-title">Mijn taken — top 3</div><span class="card-link" onclick="nav('taken',null)">Alle taken</span></div>
+            <div class="row">
+              <div class="row-icon ri-red"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="#DC2626" stroke-width="1.8"/><line x1="12" y1="8" x2="12" y2="12" stroke="#DC2626" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="16" r="1" fill="#DC2626"/></svg></div>
+              <div class="row-body"><div class="row-title">Pachtcontract Hof van Gunterstein — herziening starten</div><div class="row-desc">Juridisch · contract verloopt 1 jan 2027</div></div>
+              <div class="row-meta"><span class="tag tag-red">Urgent</span></div>
+            </div>
+            <div class="row">
+              <div class="row-icon ri-amber"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="#B45309" stroke-width="1.8"/><path d="M12 8v4l3 3" stroke="#B45309" stroke-width="1.8" stroke-linecap="round"/></svg></div>
+              <div class="row-body"><div class="row-title">Factuur Van Dongen Inspectie betalen</div><div class="row-desc">€ 2.140 · vervallen 14 dgn</div></div>
+              <div class="row-meta"><span class="tag tag-amber">Vervallen</span></div>
+            </div>
+            <div class="row">
+              <div class="row-icon ri-amber"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" stroke="#B45309" stroke-width="1.8"/></svg></div>
+              <div class="row-body"><div class="row-title">Concept agenda bestuursvergadering versturen</div><div class="row-desc">11 juni · halfjaarrapportage bijvoegen</div></div>
+              <div class="row-meta"><span class="tag tag-amber">Deze wk</span></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header"><div class="card-title">Agenda — komende 7 dagen</div><span class="card-link" onclick="nav('agenda',null)">Volledige agenda</span></div>
+            <div class="agenda-row" style="padding:10px 0">
+              <div class="ag-date"><div class="ag-day">5</div><div class="ag-month">Jun</div></div>
+              <div class="ag-bar amber"></div>
+              <div class="ag-content"><div class="ag-title">Overleg Hof van Gunterstein</div><div class="ag-detail">14:00 · waterpeil slootkant</div></div>
+            </div>
+            <div class="agenda-row" style="padding:10px 0">
+              <div class="ag-date"><div class="ag-day">11</div><div class="ag-month">Jun</div></div>
+              <div class="ag-bar green"></div>
+              <div class="ag-content"><div class="ag-title">Bestuursvergadering Gunterstein</div><div class="ag-detail">10:00 · Kasteel</div></div>
+            </div>
+            <div class="agenda-row" style="padding:10px 0">
+              <div class="ag-date"><div class="ag-day">12</div><div class="ag-month">Jun</div></div>
+              <div class="ag-bar blue"></div>
+              <div class="ag-content"><div class="ag-title">FPG Themadag — Pachtwet 2028</div><div class="ag-detail">Wageningen</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ LANDGOED ══ -->
+    <div class="page" id="page-landgoed">
+      <div class="page-header">
+        <div class="page-title">Landgoed Gunterstein</div>
+        <div class="page-sub">Identiteit, oppervlakte, monumenten en kadaster · Breukelen, Stichtse Vecht</div>
+        <div class="page-actions">
+          <button class="btn btn-ghost btn-sm">Profiel bewerken</button>
+          <button class="btn btn-ghost btn-sm">Kadasterkaart openen</button>
+        </div>
+      </div>
+
+      <div class="kpi-grid">
+        <div class="kpi featured">
+          <div class="kpi-arrow"><svg width="12" height="12" fill="none" viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10" stroke="rgba(255,255,255,.6)" stroke-width="2" stroke-linecap="round"/></svg></div>
+          <div class="kpi-label">Oppervlakte landgoed</div>
+          <div class="kpi-value">115 ha</div>
+          <div class="kpi-delta">Bos · weiland · park · water</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-arrow"><svg width="12" height="12" fill="none" viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round"/></svg></div>
+          <div class="kpi-label">Rijksmonumenten</div>
+          <div class="kpi-value">2</div>
+          <div class="kpi-delta">Kasteel (508234) + Klein Boomrijk (508260)</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-arrow"><svg width="12" height="12" fill="none" viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round"/></svg></div>
+          <div class="kpi-label">NSW-status</div>
+          <div class="kpi-value">Actief</div>
+          <div class="kpi-delta">Gerangschikt sinds 2017 · 40 dgn openstelling</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-arrow"><svg width="12" height="12" fill="none" viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round"/></svg></div>
+          <div class="kpi-label">Kadasterpercelen</div>
+          <div class="kpi-value">23</div>
+          <div class="kpi-delta">Gemeente Breukelen sectie A &amp; B</div>
+        </div>
+      </div>
+
+      <div class="grid-3-2">
         <div class="card">
-          <div class="card-header"><div class="card-title">Recente activiteit</div><span class="card-link">Alles bekijken</span></div>
-          <div class="row">
-            <div class="row-icon ri-amber">
-              <svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" stroke="#B45309" stroke-width="1.8"/><polyline points="22,6 12,13 2,6" stroke="#B45309" stroke-width="1.8"/></svg>
+          <div class="card-header"><div class="card-title">Oppervlakteverdeling</div><span class="card-link">Verdeling exporteren</span></div>
+          <div style="display:flex;flex-direction:column;gap:14px;margin-top:4px">
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:5px"><span style="font-weight:600">Bos &amp; laanstructuur</span><span style="color:var(--text-2)">56 ha · 49%</span></div>
+              <div class="progress" style="height:8px"><div class="progress-fill pf-green" style="width:49%"></div></div>
             </div>
-            <div class="row-body"><div class="row-title">E-mail van Hof van Gunterstein</div><div class="row-desc">Vraag over melding waterpeil slootkant</div></div>
-            <div class="row-meta">1u</div>
-          </div>
-          <div class="row">
-            <div class="row-icon ri-green">
-              <svg width="16" height="16" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" stroke="#1B3A28" stroke-width="1.8"/><circle cx="12" cy="12" r="1.5" fill="#1B3A28"/></svg>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:5px"><span style="font-weight:600">Weiland (pacht)</span><span style="color:var(--text-2)">38 ha · 33%</span></div>
+              <div class="progress" style="height:8px"><div class="progress-fill" style="width:33%;background:#8AB58A"></div></div>
             </div>
-            <div class="row-body"><div class="row-title">SIM-subsidie match gevonden</div><div class="row-desc">Kasteel restauratie — 89% match · deadline sept.</div></div>
-            <div class="row-meta">Gisteren</div>
-          </div>
-          <div class="row">
-            <div class="row-icon ri-blue">
-              <svg width="16" height="16" fill="none" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" stroke="#1E40AF" stroke-width="1.8"/><line x1="3" y1="10" x2="21" y2="10" stroke="#1E40AF" stroke-width="1.8"/><line x1="8" y1="2" x2="8" y2="6" stroke="#1E40AF" stroke-width="1.8"/><line x1="16" y1="2" x2="16" y2="6" stroke="#1E40AF" stroke-width="1.8"/></svg>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:5px"><span style="font-weight:600">Park &amp; tuinen</span><span style="color:var(--text-2)">14 ha · 12%</span></div>
+              <div class="progress" style="height:8px"><div class="progress-fill" style="width:12%;background:#B45309"></div></div>
             </div>
-            <div class="row-body"><div class="row-title">NVR-bijeenkomst toegevoegd</div><div class="row-desc">25 juni · Utrecht — pachtwet 2028</div></div>
-            <div class="row-meta">2d</div>
-          </div>
-          <div class="row">
-            <div class="row-icon ri-red">
-              <svg width="16" height="16" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="#DC2626" stroke-width="1.8"/><line x1="12" y1="8" x2="12" y2="12" stroke="#DC2626" stroke-width="1.8"/><circle cx="12" cy="16" r="1" fill="#DC2626"/></svg>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:5px"><span style="font-weight:600">Water (Vecht, vijvers, sloten)</span><span style="color:var(--text-2)">7 ha · 6%</span></div>
+              <div class="progress" style="height:8px"><div class="progress-fill" style="width:6%;background:#6BA8B8"></div></div>
             </div>
-            <div class="row-body"><div class="row-title">MJOP — dakinspectie Koetshuis</div><div class="row-desc">Keuring ingepland voor 18 juni</div></div>
-            <div class="row-meta">3d</div>
           </div>
-          <div class="row">
-            <div class="row-icon ri-green">
-              <svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4" stroke="#1B3A28" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="12" r="10" stroke="#1B3A28" stroke-width="1.8"/></svg>
-            </div>
-            <div class="row-body"><div class="row-title">ANLb-aanvraag ingediend</div><div class="row-desc">Weidevogelbeheer 2026 · RVO bevestigd</div></div>
-            <div class="row-meta">5d</div>
+        </div>
+
+        <div class="card">
+          <div class="card-header"><div class="card-title">Kadaster &amp; juridisch</div></div>
+          <div style="font-size:13px;line-height:1.9;color:var(--text)">
+            <div><strong>Gemeente</strong> · Stichtse Vecht (Breukelen)</div>
+            <div><strong>Kadastrale sectie</strong> · A nrs. 12, 14, 18-24, 31-40</div>
+            <div><strong>Kadastrale sectie</strong> · B nrs. 8, 9, 14</div>
+            <div><strong>Eigendomsvorm</strong> · Stichting Gunterstein</div>
+            <div><strong>NSW-rangschikking</strong> · Nr. 2017/UT-441</div>
+            <div><strong>Openstelling</strong> · 40 dagen/jaar (zo + feestdagen)</div>
           </div>
+          <div class="divider"></div>
+          <div style="font-size:12px;color:var(--text-2);line-height:1.5">Volledige perceelkaart en eigendomsakten beschikbaar in Documenten.</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><div class="card-title">Objecten op het landgoed</div><span class="card-link">Object toevoegen</span></div>
+        <div class="row">
+          <div class="row-icon ri-green"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path d="M3 21h18M5 21V10l7-5 7 5v11" stroke="#1B3A28" stroke-width="1.8" stroke-linejoin="round"/></svg></div>
+          <div class="row-body"><div class="row-title">Kasteel Gunterstein (1681)</div><div class="row-desc">Hoofdgebouw · 1.840 m² BVO · NEN 2767 cond. 3</div></div>
+          <div class="row-meta"><span class="tag tag-red">Rijksmonument 508234</span></div>
+        </div>
+        <div class="row">
+          <div class="row-icon ri-blue"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path d="M3 21h18M5 21V10l7-5 7 5v11" stroke="#1E40AF" stroke-width="1.8" stroke-linejoin="round"/></svg></div>
+          <div class="row-body"><div class="row-title">Klein Boomrijk</div><div class="row-desc">Voormalig koetsiershuis · 320 m² · recreatieverhuur zomerhuisje</div></div>
+          <div class="row-meta"><span class="tag tag-blue">Rijksmonument 508260</span></div>
+        </div>
+        <div class="row">
+          <div class="row-icon ri-amber"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" stroke="#B45309" stroke-width="1.8"/></svg></div>
+          <div class="row-body"><div class="row-title">Hof van Gunterstein</div><div class="row-desc">Boerderij + bedrijfsgebouwen · 75 ha · in pacht (regulier)</div></div>
+          <div class="row-meta"><span class="tag tag-amber">Gemeentelijk monument</span></div>
+        </div>
+        <div class="row">
+          <div class="row-icon ri-gray"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" stroke="#6B7280" stroke-width="1.8"/></svg></div>
+          <div class="row-body"><div class="row-title">Koetshuis</div><div class="row-desc">Bijgebouw kasteel · 420 m² · dakrenovatie 2026</div></div>
+          <div class="row-meta"><span class="tag tag-gray">Beeldbepalend</span></div>
+        </div>
+        <div class="row">
+          <div class="row-icon ri-gray"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" stroke="#6B7280" stroke-width="1.8"/></svg></div>
+          <div class="row-body"><div class="row-title">Oranjerie</div><div class="row-desc">Park · 110 m² · schilderwerk gepland Q4 2026</div></div>
+          <div class="row-meta"><span class="tag tag-gray">Beeldbepalend</span></div>
         </div>
       </div>
     </div>
@@ -1121,6 +1238,397 @@ body { font-family:'Plus Jakarta Sans',sans-serif; background:var(--bg); color:v
       </div>
     </div>
 
+    <!-- ══ TAKEN ══ -->
+    <div class="page" id="page-taken">
+      <div class="page-header">
+        <div class="page-title">Taken &amp; acties</div>
+        <div class="page-sub">Alle openstaande en afgeronde acties · per gebruiker en status</div>
+        <div class="page-actions">
+          <button class="btn btn-primary btn-sm">
+            <svg width="13" height="13" fill="none" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>
+            Taak toevoegen
+          </button>
+          <button class="btn btn-ghost btn-sm">Exporteer</button>
+        </div>
+      </div>
+
+      <div class="kpi-grid">
+        <div class="kpi">
+          <div class="kpi-label">Mijn open taken</div>
+          <div class="kpi-value">7</div>
+          <div class="kpi-delta danger">1 urgent · 2 vervallen</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">In behandeling</div>
+          <div class="kpi-value">3</div>
+          <div class="kpi-delta">Rentmeester &amp; aannemer</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">Deze week afgerond</div>
+          <div class="kpi-value">5</div>
+          <div class="kpi-delta up">
+            <svg width="11" height="11" fill="none" viewBox="0 0 24 24"><path d="M5 10l7-7 7 7M12 3v18" stroke="#16A34A" stroke-width="2" stroke-linecap="round"/></svg>
+            +2 t.o.v. vorige week
+          </div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">Totaal landgoed</div>
+          <div class="kpi-value">14</div>
+          <div class="kpi-delta">Alle gebruikers · open</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><div class="card-title">Filter</div><span class="card-link" onclick="resetTakenFilters()">Reset</span></div>
+        <div style="font-size:11px;font-weight:700;color:var(--text-3);letter-spacing:.6px;text-transform:uppercase;margin-bottom:6px">Gebruiker</div>
+        <div class="chips chips-user">
+          <button class="theme-chip active" data-filter="all">Iedereen</button>
+          <button class="theme-chip" data-filter="lara">Lara</button>
+          <button class="theme-chip" data-filter="jos">Jos K. (rentmeester)</button>
+          <button class="theme-chip" data-filter="hvg">Hof van Gunterstein</button>
+          <button class="theme-chip" data-filter="extern">Extern (aannemer)</button>
+        </div>
+        <div style="font-size:11px;font-weight:700;color:var(--text-3);letter-spacing:.6px;text-transform:uppercase;margin-bottom:6px;margin-top:8px">Status</div>
+        <div class="chips chips-status" style="margin-bottom:4px">
+          <button class="theme-chip active" data-filter="open">Open</button>
+          <button class="theme-chip" data-filter="in-behandeling">In behandeling</button>
+          <button class="theme-chip" data-filter="afgerond">Afgerond</button>
+          <button class="theme-chip" data-filter="all">Alle</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><div class="card-title">Taken · <span id="taken-count">13</span> zichtbaar</div><span class="card-link">Sorteren op deadline</span></div>
+
+        <div class="row taken-row" data-user="jos" data-status="open">
+          <div class="row-icon ri-red"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="#DC2626" stroke-width="1.8"/><line x1="12" y1="8" x2="12" y2="12" stroke="#DC2626" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="16" r="1" fill="#DC2626"/></svg></div>
+          <div class="row-body">
+            <div class="row-title">SIM-aanvraag Koetshuis indienen</div>
+            <div class="row-desc">Subsidie · deadline 30 sept · onderhoudsbeschrijving NEN 2767 toevoegen</div>
+          </div>
+          <div class="row-meta">
+            <div style="display:flex;align-items:center;gap:6px;justify-content:flex-end"><span class="av av-r" style="width:24px;height:24px;font-size:10px">JK</span><span style="font-size:11.5px;font-weight:600">Jos K.</span></div>
+            <div style="display:flex;gap:4px;justify-content:flex-end;margin-top:6px"><span class="tag tag-red">Urgent</span><span class="tag tag-gray">Open</span></div>
+          </div>
+        </div>
+
+        <div class="row taken-row" data-user="lara" data-status="open">
+          <div class="row-icon ri-red"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="#DC2626" stroke-width="1.8"/><line x1="12" y1="8" x2="12" y2="12" stroke="#DC2626" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="16" r="1" fill="#DC2626"/></svg></div>
+          <div class="row-body">
+            <div class="row-title">Pachtcontract Hof van Gunterstein — herziening starten</div>
+            <div class="row-desc">Juridisch · contract verloopt 1 jan 2027 · overleg met Jos K. agenderen</div>
+          </div>
+          <div class="row-meta">
+            <div style="display:flex;align-items:center;gap:6px;justify-content:flex-end"><span class="av av-p" style="width:24px;height:24px;font-size:10px">LQ</span><span style="font-size:11.5px;font-weight:600">Lara</span></div>
+            <div style="display:flex;gap:4px;justify-content:flex-end;margin-top:6px"><span class="tag tag-red">Urgent</span><span class="tag tag-gray">Open</span></div>
+          </div>
+        </div>
+
+        <div class="row taken-row" data-user="lara" data-status="open">
+          <div class="row-icon ri-amber"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="#B45309" stroke-width="1.8"/><path d="M12 8v4l3 3" stroke="#B45309" stroke-width="1.8" stroke-linecap="round"/></svg></div>
+          <div class="row-body">
+            <div class="row-title">Factuur Van Dongen Inspectie betalen</div>
+            <div class="row-desc">Financieel · F-2026-441 · vervallen 14 dgn · € 2.140</div>
+          </div>
+          <div class="row-meta">
+            <div style="display:flex;align-items:center;gap:6px;justify-content:flex-end"><span class="av av-p" style="width:24px;height:24px;font-size:10px">LQ</span><span style="font-size:11.5px;font-weight:600">Lara</span></div>
+            <div style="display:flex;gap:4px;justify-content:flex-end;margin-top:6px"><span class="tag tag-amber">Hoog</span><span class="tag tag-amber">Vervallen</span></div>
+          </div>
+        </div>
+
+        <div class="row taken-row" data-user="extern" data-status="in-behandeling">
+          <div class="row-icon ri-amber"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3-3a5 5 0 01-8.45 8.45l-5.8 5.8a2 2 0 01-2.83-2.83l5.8-5.8A5 5 0 0114.7 6.3z" stroke="#B45309" stroke-width="1.8"/></svg></div>
+          <div class="row-body">
+            <div class="row-title">Dakinspectie Koetshuis — uitvoering</div>
+            <div class="row-desc">Onderhoud · 18 juni · Van Dongen Inspectie · NEN 2767</div>
+          </div>
+          <div class="row-meta">
+            <div style="display:flex;align-items:center;gap:6px;justify-content:flex-end"><span class="av" style="width:24px;height:24px;font-size:10px;background:#6B7280">VD</span><span style="font-size:11.5px;font-weight:600">Extern</span></div>
+            <div style="display:flex;gap:4px;justify-content:flex-end;margin-top:6px"><span class="tag tag-amber">Hoog</span><span class="tag tag-blue">In behandeling</span></div>
+          </div>
+        </div>
+
+        <div class="row taken-row" data-user="hvg" data-status="open">
+          <div class="row-icon ri-amber"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" stroke="#B45309" stroke-width="1.8"/></svg></div>
+          <div class="row-body">
+            <div class="row-title">Waterpeil-voorstel slootkant Achterplaats indienen</div>
+            <div class="row-desc">Pacht · Hof van Gunterstein levert technisch voorstel · binnen 14 dgn</div>
+          </div>
+          <div class="row-meta">
+            <div style="display:flex;align-items:center;gap:6px;justify-content:flex-end"><span class="av av-a" style="width:24px;height:24px;font-size:10px">HG</span><span style="font-size:11.5px;font-weight:600">Hof v.G.</span></div>
+            <div style="display:flex;gap:4px;justify-content:flex-end;margin-top:6px"><span class="tag tag-amber">Normaal</span><span class="tag tag-gray">Open</span></div>
+          </div>
+        </div>
+
+        <div class="row taken-row" data-user="jos" data-status="open">
+          <div class="row-icon ri-blue"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" stroke="#1E40AF" stroke-width="1.8"/><line x1="3" y1="10" x2="21" y2="10" stroke="#1E40AF" stroke-width="1.8"/></svg></div>
+          <div class="row-body">
+            <div class="row-title">Reageren op waterpeil-melding</div>
+            <div class="row-desc">Pacht · Hof van Gunterstein · slootkant Achterplaats · binnen 5 dgn antwoorden</div>
+          </div>
+          <div class="row-meta">
+            <div style="display:flex;align-items:center;gap:6px;justify-content:flex-end"><span class="av av-r" style="width:24px;height:24px;font-size:10px">JK</span><span style="font-size:11.5px;font-weight:600">Jos K.</span></div>
+            <div style="display:flex;gap:4px;justify-content:flex-end;margin-top:6px"><span class="tag tag-amber">Normaal</span><span class="tag tag-gray">Open</span></div>
+          </div>
+        </div>
+
+        <div class="row taken-row" data-user="jos" data-status="open">
+          <div class="row-icon ri-blue"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" stroke="#1E40AF" stroke-width="1.8"/><circle cx="12" cy="12" r="5" stroke="#1E40AF" stroke-width="1.8"/></svg></div>
+          <div class="row-body">
+            <div class="row-title">SNL Vochtige Alluviale Bossen — aanvraag indienen</div>
+            <div class="row-desc">Subsidie · deadline 30 juni · 15 ha oeverzone Vecht · € 6.750</div>
+          </div>
+          <div class="row-meta">
+            <div style="display:flex;align-items:center;gap:6px;justify-content:flex-end"><span class="av av-r" style="width:24px;height:24px;font-size:10px">JK</span><span style="font-size:11.5px;font-weight:600">Jos K.</span></div>
+            <div style="display:flex;gap:4px;justify-content:flex-end;margin-top:6px"><span class="tag tag-amber">Hoog</span><span class="tag tag-gray">Open</span></div>
+          </div>
+        </div>
+
+        <div class="row taken-row" data-user="lara" data-status="in-behandeling">
+          <div class="row-icon ri-green"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" stroke="#1B3A28" stroke-width="1.8"/><line x1="16" y1="2" x2="16" y2="6" stroke="#1B3A28" stroke-width="1.8"/></svg></div>
+          <div class="row-body">
+            <div class="row-title">Concept agenda bestuursvergadering versturen</div>
+            <div class="row-desc">Bestuur · 11 juni vergadering · agenda + financiële halfjaarrapportage</div>
+          </div>
+          <div class="row-meta">
+            <div style="display:flex;align-items:center;gap:6px;justify-content:flex-end"><span class="av av-p" style="width:24px;height:24px;font-size:10px">LQ</span><span style="font-size:11.5px;font-weight:600">Lara</span></div>
+            <div style="display:flex;gap:4px;justify-content:flex-end;margin-top:6px"><span class="tag tag-gray">Normaal</span><span class="tag tag-blue">In behandeling</span></div>
+          </div>
+        </div>
+
+        <div class="row taken-row" data-user="jos" data-status="open">
+          <div class="row-icon ri-green"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7" stroke="#1B3A28" stroke-width="1.8"/><path d="M20 20l-3-3" stroke="#1B3A28" stroke-width="1.8"/></svg></div>
+          <div class="row-body">
+            <div class="row-title">VTA boomveiligheidskeuring Lindenlaan plannen</div>
+            <div class="row-desc">Onderhoud · 48 linde-exemplaren · jaarlijks · in te plannen aug–sept</div>
+          </div>
+          <div class="row-meta">
+            <div style="display:flex;align-items:center;gap:6px;justify-content:flex-end"><span class="av av-r" style="width:24px;height:24px;font-size:10px">JK</span><span style="font-size:11.5px;font-weight:600">Jos K.</span></div>
+            <div style="display:flex;gap:4px;justify-content:flex-end;margin-top:6px"><span class="tag tag-gray">Laag</span><span class="tag tag-gray">Open</span></div>
+          </div>
+        </div>
+
+        <div class="row taken-row" data-user="jos" data-status="open">
+          <div class="row-icon ri-gray"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" stroke="#6B7280" stroke-width="1.8"/></svg></div>
+          <div class="row-body">
+            <div class="row-title">NSW openstellingsregistratie 2025 controleren</div>
+            <div class="row-desc">Fiscaal · 40 dgn/jaar · vóór herijking 2026</div>
+          </div>
+          <div class="row-meta">
+            <div style="display:flex;align-items:center;gap:6px;justify-content:flex-end"><span class="av av-r" style="width:24px;height:24px;font-size:10px">JK</span><span style="font-size:11.5px;font-weight:600">Jos K.</span></div>
+            <div style="display:flex;gap:4px;justify-content:flex-end;margin-top:6px"><span class="tag tag-gray">Normaal</span><span class="tag tag-gray">Open</span></div>
+          </div>
+        </div>
+
+        <div class="row taken-row" data-user="lara" data-status="open">
+          <div class="row-icon ri-gray"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" stroke="#6B7280" stroke-width="1.8"/></svg></div>
+          <div class="row-body">
+            <div class="row-title">Herinnering visrechten Sportvisserij Utrecht</div>
+            <div class="row-desc">Financieel · factuur 8 wk oud · € 900 · aanmaning sturen</div>
+          </div>
+          <div class="row-meta">
+            <div style="display:flex;align-items:center;gap:6px;justify-content:flex-end"><span class="av av-p" style="width:24px;height:24px;font-size:10px">LQ</span><span style="font-size:11.5px;font-weight:600">Lara</span></div>
+            <div style="display:flex;gap:4px;justify-content:flex-end;margin-top:6px"><span class="tag tag-gray">Laag</span><span class="tag tag-gray">Open</span></div>
+          </div>
+        </div>
+
+        <div class="row taken-row" data-user="lara" data-status="afgerond" style="opacity:.65">
+          <div class="row-icon ri-green"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4" stroke="#1B3A28" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="12" r="10" stroke="#1B3A28" stroke-width="1.8"/></svg></div>
+          <div class="row-body">
+            <div class="row-title">ANLb-aanvraag 2026 indienen</div>
+            <div class="row-desc">Subsidie · Weidevogelbeheer · RVO bevestigd · afgerond 24 mei</div>
+          </div>
+          <div class="row-meta">
+            <div style="display:flex;align-items:center;gap:6px;justify-content:flex-end"><span class="av av-p" style="width:24px;height:24px;font-size:10px">LQ</span><span style="font-size:11.5px;font-weight:600">Lara</span></div>
+            <div style="display:flex;gap:4px;justify-content:flex-end;margin-top:6px"><span class="tag tag-green">Afgerond</span></div>
+          </div>
+        </div>
+
+        <div class="row taken-row" data-user="jos" data-status="afgerond" style="opacity:.65">
+          <div class="row-icon ri-green"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4" stroke="#1B3A28" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="12" r="10" stroke="#1B3A28" stroke-width="1.8"/></svg></div>
+          <div class="row-body">
+            <div class="row-title">Beheerplan SNL — actualisatie 2026</div>
+            <div class="row-desc">Subsidie · concept verstuurd naar provincie · afgerond 21 mei</div>
+          </div>
+          <div class="row-meta">
+            <div style="display:flex;align-items:center;gap:6px;justify-content:flex-end"><span class="av av-r" style="width:24px;height:24px;font-size:10px">JK</span><span style="font-size:11.5px;font-weight:600">Jos K.</span></div>
+            <div style="display:flex;gap:4px;justify-content:flex-end;margin-top:6px"><span class="tag tag-green">Afgerond</span></div>
+          </div>
+        </div>
+
+        <div id="taken-empty" style="display:none;padding:24px;text-align:center;color:var(--text-2);font-size:13px">Geen taken voor deze filter.</div>
+      </div>
+    </div>
+
+    <!-- ══ FINANCIEEL ══ -->
+    <div class="page" id="page-financieel">
+      <div class="page-header">
+        <div class="page-title">Financieel</div>
+        <div class="page-sub">Kasstroom, bank en debiteuren/crediteuren · Q2 2026</div>
+        <div class="page-actions">
+          <button class="btn btn-ghost btn-sm">Periode wisselen</button>
+          <button class="btn btn-ghost btn-sm">Exporteer naar boekhouding</button>
+        </div>
+      </div>
+
+      <div class="alert" style="background:var(--primary-light);color:var(--primary);border:1px solid var(--primary-muted)">
+        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" style="flex-shrink:0;margin-top:1px"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <div><strong>Banksaldo gesynchroniseerd via PSD2</strong> — ING (zakelijk) en Triodos (vermogen) · laatst bijgewerkt 2 uur geleden · automatische dagelijkse update om 06:00</div>
+      </div>
+
+      <div class="kpi-grid">
+        <div class="kpi">
+          <div class="kpi-arrow"><svg width="12" height="12" fill="none" viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round"/></svg></div>
+          <div class="kpi-label">Operationele kasstroom</div>
+          <div class="kpi-value">€ +12.450</div>
+          <div class="kpi-delta up">
+            <svg width="11" height="11" fill="none" viewBox="0 0 24 24"><path d="M5 10l7-7 7 7M12 3v18" stroke="#16A34A" stroke-width="2" stroke-linecap="round"/></svg>
+            YTD · 8% boven begroting
+          </div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-arrow"><svg width="12" height="12" fill="none" viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round"/></svg></div>
+          <div class="kpi-label">Onderhoud · besteed / budget</div>
+          <div class="kpi-value">€ 28k <span style="font-size:18px;color:var(--text-2);font-weight:500">/ € 45k</span></div>
+          <div class="progress" style="height:5px;margin:8px 0 6px"><div class="progress-fill pf-green" style="width:62%"></div></div>
+          <div class="kpi-delta">62% benut · H1 2026</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-arrow"><svg width="12" height="12" fill="none" viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round"/></svg></div>
+          <div class="kpi-label">Banksaldo totaal</div>
+          <div class="kpi-value">€ 87.320</div>
+          <div class="kpi-delta">ING € 24.110 · Triodos € 63.210</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-arrow"><svg width="12" height="12" fill="none" viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round"/></svg></div>
+          <div class="kpi-label">Nog te betalen</div>
+          <div class="kpi-value">€ 6.840</div>
+          <div class="kpi-delta warn">3 facturen · 1 vervallen</div>
+        </div>
+      </div>
+
+      <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr)">
+        <div class="kpi" style="grid-column:span 1">
+          <div class="kpi-arrow"><svg width="12" height="12" fill="none" viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round"/></svg></div>
+          <div class="kpi-label">Nog te ontvangen</div>
+          <div class="kpi-value">€ 14.200</div>
+          <div class="kpi-delta">Pacht Q3 + ANLb voorschot</div>
+        </div>
+        <div class="card" style="grid-column:span 3;padding:18px 20px">
+          <div class="card-header" style="margin-bottom:10px"><div class="card-title">Kasstroom 2026 — maandelijks (€ × 1.000)</div><span style="font-size:11px;color:var(--text-2)">Inkomsten vs uitgaven</span></div>
+          <svg viewBox="0 0 360 90" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:90px">
+            <line x1="0" y1="60" x2="360" y2="60" stroke="#E5E7EB" stroke-width="1"/>
+            <!-- inkomsten bars (groen) -->
+            <g fill="#1B3A28">
+              <rect x="6" y="22" width="14" height="38"/>
+              <rect x="36" y="30" width="14" height="30"/>
+              <rect x="66" y="15" width="14" height="45"/>
+              <rect x="96" y="35" width="14" height="25"/>
+              <rect x="126" y="20" width="14" height="40"/>
+              <rect x="156" y="28" width="14" height="32"/>
+            </g>
+            <!-- uitgaven bars (amber, omlaag) -->
+            <g fill="#B45309" opacity=".8">
+              <rect x="22" y="60" width="14" height="14"/>
+              <rect x="52" y="60" width="14" height="22"/>
+              <rect x="82" y="60" width="14" height="10"/>
+              <rect x="112" y="60" width="14" height="25"/>
+              <rect x="142" y="60" width="14" height="18"/>
+              <rect x="172" y="60" width="14" height="12"/>
+            </g>
+            <!-- maand labels -->
+            <g font-size="8" fill="#9CA3AF" font-family="Plus Jakarta Sans,sans-serif">
+              <text x="14" y="86" text-anchor="middle">jan</text>
+              <text x="44" y="86" text-anchor="middle">feb</text>
+              <text x="74" y="86" text-anchor="middle">mrt</text>
+              <text x="104" y="86" text-anchor="middle">apr</text>
+              <text x="134" y="86" text-anchor="middle">mei</text>
+              <text x="164" y="86" text-anchor="middle">jun</text>
+            </g>
+            <!-- legenda -->
+            <g font-size="9" font-family="Plus Jakarta Sans,sans-serif">
+              <rect x="210" y="14" width="9" height="9" fill="#1B3A28"/>
+              <text x="223" y="22" fill="#6B7280">Inkomsten (pacht, subsidie, verhuur)</text>
+              <rect x="210" y="32" width="9" height="9" fill="#B45309" opacity=".8"/>
+              <text x="223" y="40" fill="#6B7280">Uitgaven (onderhoud, beheer, verzekering)</text>
+            </g>
+          </svg>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header"><div class="card-title">Crediteuren — openstaand</div><span class="card-link">Alles · 7</span></div>
+          <div class="row">
+            <div class="row-icon ri-red"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="#DC2626" stroke-width="1.8"/><line x1="12" y1="8" x2="12" y2="12" stroke="#DC2626" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="16" r="1" fill="#DC2626"/></svg></div>
+            <div class="row-body"><div class="row-title">Van Dongen Inspectiebedrijf</div><div class="row-desc">F-2026-441 · vervaltermijn 14 dgn verstreken</div></div>
+            <div class="row-meta"><div style="font-weight:700;color:var(--text)">€ 2.140</div><span class="tag tag-red" style="margin-top:4px">Vervallen</span></div>
+          </div>
+          <div class="row">
+            <div class="row-icon ri-amber"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="#B45309" stroke-width="1.8"/><path d="M12 8v4l3 3" stroke="#B45309" stroke-width="1.8" stroke-linecap="round"/></svg></div>
+            <div class="row-body"><div class="row-title">Hoveniersbedrijf Vechtweide</div><div class="row-desc">F-2026-482 · vervalt over 6 dgn</div></div>
+            <div class="row-meta"><div style="font-weight:700;color:var(--text)">€ 1.880</div><span class="tag tag-amber" style="margin-top:4px">Bijna vervallen</span></div>
+          </div>
+          <div class="row">
+            <div class="row-icon ri-gray"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="14" rx="2" stroke="#6B7280" stroke-width="1.8"/><path d="M3 10h18" stroke="#6B7280" stroke-width="1.8"/></svg></div>
+            <div class="row-body"><div class="row-title">Verzekering Univé — opstal</div><div class="row-desc">F-2026-503 · vervalt 28 juni</div></div>
+            <div class="row-meta"><div style="font-weight:700;color:var(--text)">€ 1.420</div><span class="tag tag-gray" style="margin-top:4px">Open</span></div>
+          </div>
+          <div class="row">
+            <div class="row-icon ri-gray"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="14" rx="2" stroke="#6B7280" stroke-width="1.8"/><path d="M3 10h18" stroke="#6B7280" stroke-width="1.8"/></svg></div>
+            <div class="row-body"><div class="row-title">Energie · Vattenfall (kasteel)</div><div class="row-desc">F-2026-510 · vervalt 4 juli</div></div>
+            <div class="row-meta"><div style="font-weight:700;color:var(--text)">€ 1.400</div><span class="tag tag-gray" style="margin-top:4px">Open</span></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header"><div class="card-title">Debiteuren — openstaand</div><span class="card-link">Alles · 4</span></div>
+          <div class="row">
+            <div class="row-icon ri-green"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" stroke="#1B3A28" stroke-width="1.8"/></svg></div>
+            <div class="row-body"><div class="row-title">Hof van Gunterstein — pacht Q3</div><div class="row-desc">Factuur verzonden 1 juni · termijn 30 dgn</div></div>
+            <div class="row-meta"><div style="font-weight:700;color:var(--text)">€ 7.125</div><span class="tag tag-green" style="margin-top:4px">In termijn</span></div>
+          </div>
+          <div class="row">
+            <div class="row-icon ri-blue"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" stroke="#1E40AF" stroke-width="1.8"/></svg></div>
+            <div class="row-body"><div class="row-title">RVO — ANLb voorschot 2026</div><div class="row-desc">Beschikking ontvangen · uitbetaling juli</div></div>
+            <div class="row-meta"><div style="font-weight:700;color:var(--text)">€ 4.350</div><span class="tag tag-blue" style="margin-top:4px">Verwacht</span></div>
+          </div>
+          <div class="row">
+            <div class="row-icon ri-green"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" stroke="#1B3A28" stroke-width="1.8"/></svg></div>
+            <div class="row-body"><div class="row-title">Zomerhuisje Klein Boomrijk — augustus</div><div class="row-desc">Boeking · aanbetaling 50%</div></div>
+            <div class="row-meta"><div style="font-weight:700;color:var(--text)">€ 1.825</div><span class="tag tag-green" style="margin-top:4px">In termijn</span></div>
+          </div>
+          <div class="row">
+            <div class="row-icon ri-amber"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="#B45309" stroke-width="1.8"/><path d="M12 8v4l3 3" stroke="#B45309" stroke-width="1.8" stroke-linecap="round"/></svg></div>
+            <div class="row-body"><div class="row-title">Sportvisserij Utrecht — visrecht 2026</div><div class="row-desc">Factuur 8 wk oud · herinnering versturen</div></div>
+            <div class="row-meta"><div style="font-weight:700;color:var(--text)">€ 900</div><span class="tag tag-amber" style="margin-top:4px">Aanmanen</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><div class="card-title">Onderhoudsbudget 2026 — per object</div><span class="card-link">Begroting bewerken</span></div>
+        <div style="display:flex;flex-direction:column;gap:14px;margin-top:4px">
+          <div>
+            <div style="display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:5px"><span style="font-weight:600">Kasteel Gunterstein</span><span style="color:var(--text-2)">€ 14.200 / € 22.000 · 65%</span></div>
+            <div class="progress" style="height:8px"><div class="progress-fill pf-green" style="width:65%"></div></div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:5px"><span style="font-weight:600">Koetshuis (dakrenovatie)</span><span style="color:var(--text-2)">€ 8.400 / € 12.000 · 70%</span></div>
+            <div class="progress" style="height:8px"><div class="progress-fill pf-amber" style="width:70%"></div></div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:5px"><span style="font-weight:600">Klein Boomrijk</span><span style="color:var(--text-2)">€ 2.800 / € 5.500 · 51%</span></div>
+            <div class="progress" style="height:8px"><div class="progress-fill pf-green" style="width:51%"></div></div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:5px"><span style="font-weight:600">Park &amp; oranjerie</span><span style="color:var(--text-2)">€ 2.600 / € 5.500 · 47%</span></div>
+            <div class="progress" style="height:8px"><div class="progress-fill pf-green" style="width:47%"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- ══ ONDERHOUD ══ -->
     <div class="page" id="page-onderhoud">
       <div class="page-header"><div class="page-title">Onderhoud &amp; MJOP</div><div class="page-sub">Meerjarenonderhoudsplan gebouwen en groene elementen</div></div>
@@ -1166,8 +1674,45 @@ document.querySelectorAll('.theme-chip').forEach(chip => {
     const parent = this.closest('.chips');
     parent.querySelectorAll('.theme-chip').forEach(c => c.classList.remove('active'));
     this.classList.add('active');
+    if (parent.classList.contains('chips-user') || parent.classList.contains('chips-status')) {
+      filterTaken();
+    }
   });
 });
+
+function filterTaken() {
+  const userChip = document.querySelector('.chips-user .theme-chip.active');
+  const statusChip = document.querySelector('.chips-status .theme-chip.active');
+  const userVal = userChip ? userChip.getAttribute('data-filter') : 'all';
+  const statusVal = statusChip ? statusChip.getAttribute('data-filter') : 'all';
+  let visible = 0;
+  document.querySelectorAll('.taken-row').forEach(row => {
+    const u = row.getAttribute('data-user');
+    const s = row.getAttribute('data-status');
+    const userMatch = (userVal === 'all') || (u === userVal);
+    const statusMatch = (statusVal === 'all') || (s === statusVal);
+    const show = userMatch && statusMatch;
+    row.style.display = show ? '' : 'none';
+    if (show) visible++;
+  });
+  const cnt = document.getElementById('taken-count');
+  if (cnt) cnt.textContent = visible;
+  const empty = document.getElementById('taken-empty');
+  if (empty) empty.style.display = visible === 0 ? 'block' : 'none';
+}
+
+function resetTakenFilters() {
+  document.querySelectorAll('.chips-user .theme-chip').forEach(c => c.classList.remove('active'));
+  document.querySelectorAll('.chips-status .theme-chip').forEach(c => c.classList.remove('active'));
+  const allUser = document.querySelector('.chips-user .theme-chip[data-filter="all"]');
+  const openStatus = document.querySelector('.chips-status .theme-chip[data-filter="open"]');
+  if (allUser) allUser.classList.add('active');
+  if (openStatus) openStatus.classList.add('active');
+  filterTaken();
+}
+
+// initial filter pass (default: Iedereen + Open)
+filterTaken();
 </script>
 </body>
 </html>
