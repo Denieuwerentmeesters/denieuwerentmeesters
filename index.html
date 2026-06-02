@@ -595,67 +595,7 @@ body { font-family:'Plus Jakarta Sans',sans-serif; background:var(--bg); color:v
         </div>
       </div>
 
-      <div class="grid-3-2">
-        <div class="card">
-          <div class="card-header">
-            <div>
-              <div class="card-title">Kaart — Vechtstreek</div>
-              <div class="card-sub">Zandpad 48 · 3621 NE · Breukelen</div>
-            </div>
-            <div style="display:flex;gap:8px;align-items:center">
-              <span class="tag tag-amber" style="font-size:10.5px">Interactieve versie volgt</span>
-              <button class="btn btn-ghost btn-sm">Volledig scherm</button>
-            </div>
-          </div>
-          <div class="map-area">
-            <svg viewBox="0 0 520 190" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
-              <!-- Water patches -->
-              <ellipse cx="480" cy="40" rx="55" ry="35" fill="#93C5B8" opacity=".6"/>
-              <ellipse cx="460" cy="75" rx="40" ry="22" fill="#7BBBB0" opacity=".5"/>
-              <!-- Vecht river -->
-              <path d="M0 110 Q60 95 120 108 Q180 122 240 105 Q300 88 360 102 Q420 116 480 100 Q500 95 520 98" stroke="#6BA8B8" stroke-width="12" fill="none" opacity=".7"/>
-              <path d="M0 112 Q60 97 120 110 Q180 124 240 107 Q300 90 360 104 Q420 118 480 102 Q500 97 520 100" stroke="#85BCC8" stroke-width="6" fill="none" opacity=".6"/>
-              <!-- Forest patches -->
-              <ellipse cx="180" cy="60" rx="60" ry="30" fill="#5A8A5A" opacity=".4"/>
-              <ellipse cx="280" cy="45" rx="45" ry="22" fill="#4E7A4E" opacity=".35"/>
-              <ellipse cx="120" cy="140" rx="40" ry="18" fill="#5A8A5A" opacity=".35"/>
-              <!-- Meadows -->
-              <ellipse cx="350" cy="140" rx="65" ry="24" fill="#8AB58A" opacity=".4"/>
-              <!-- Laan (main avenue) -->
-              <line x1="220" y1="20" x2="220" y2="110" stroke="#3D6B3D" stroke-width="2.5" opacity=".8" stroke-dasharray="6,3"/>
-              <!-- Castle island -->
-              <ellipse cx="220" cy="110" rx="22" ry="14" fill="#2A5C3F" opacity=".3"/>
-              <ellipse cx="220" cy="110" rx="14" ry="9" fill="#1B3A28" opacity=".5"/>
-              <!-- Castle marker -->
-              <circle cx="220" cy="110" r="7" fill="#1B3A28" stroke="white" stroke-width="2"/>
-              <circle cx="220" cy="110" r="3" fill="white"/>
-              <!-- Pulse ring -->
-              <circle cx="220" cy="110" r="14" fill="none" stroke="#1B3A28" stroke-width="1.5" opacity=".4"/>
-              <!-- Boerderij marker -->
-              <circle cx="310" cy="130" r="5" fill="#B45309" stroke="white" stroke-width="1.5"/>
-              <!-- Klein Boomrijk marker -->
-              <circle cx="175" cy="92" r="5" fill="#1E40AF" stroke="white" stroke-width="1.5"/>
-              <!-- Labels -->
-              <rect x="228" y="100" width="86" height="18" rx="5" fill="white" opacity=".92"/>
-              <text x="271" y="113" text-anchor="middle" font-size="10" font-weight="700" fill="#1B3A28" font-family="Plus Jakarta Sans,sans-serif">Kasteel Gunterstein</text>
-              <rect x="130" y="73" width="70" height="16" rx="4" fill="white" opacity=".88"/>
-              <text x="165" y="85" text-anchor="middle" font-size="9" fill="#1E40AF" font-weight="600" font-family="Plus Jakarta Sans,sans-serif">Klein Boomrijk</text>
-              <!-- Vecht label -->
-              <text x="80" y="102" font-size="10" fill="#2D6B7A" font-weight="600" font-family="Plus Jakarta Sans,sans-serif" opacity=".9">Rivier de Vecht</text>
-              <!-- Compass -->
-              <circle cx="490" cy="160" r="14" fill="white" opacity=".85"/>
-              <text x="490" y="164" text-anchor="middle" font-size="11" font-weight="700" fill="#1B3A28" font-family="Plus Jakarta Sans,sans-serif">N</text>
-              <path d="M490 151 L493 157 L490 155 L487 157 Z" fill="#1B3A28"/>
-            </svg>
-          </div>
-          <div class="map-legend">
-            <div class="map-legend-item"><div class="legend-dot" style="background:#1B3A28"></div>Kasteel (1681)</div>
-            <div class="map-legend-item"><div class="legend-dot" style="background:#1E40AF"></div>Klein Boomrijk</div>
-            <div class="map-legend-item"><div class="legend-dot" style="background:#B45309"></div>Hof van Gunterstein</div>
-            <div class="map-legend-item"><div class="legend-dot" style="background:#6BA8B8"></div>Vecht</div>
-          </div>
-        </div>
-
+      <div class="grid-2">
         <div>
           <div class="card" style="margin-bottom:16px">
             <div class="card-header"><div class="card-title">Mijn taken — top 3</div><span class="card-link" onclick="nav('taken',null)">Alle taken</span></div>
@@ -705,10 +645,7 @@ body { font-family:'Plus Jakarta Sans',sans-serif; background:var(--bg); color:v
         <div class="page-sub">Identiteit, oppervlakte, monumenten en kadaster · Breukelen, Stichtse Vecht</div>
         <div class="page-actions">
           <button class="btn btn-ghost btn-sm">Profiel bewerken</button>
-          <a class="btn btn-primary btn-sm" href="kaart.html" style="text-decoration:none;display:inline-flex;align-items:center;gap:6px">
-            <svg width="14" height="14" fill="none" viewBox="0 0 24 24"><path d="M12 22s-7-7-7-13a7 7 0 1 1 14 0c0 6-7 13-7 13z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="12" cy="9" r="2.5" stroke="currentColor" stroke-width="2"/></svg>
-            Interactieve kaart openen
-          </a>
+          <button class="btn btn-ghost btn-sm">Kadasterkaart openen</button>
         </div>
       </div>
 

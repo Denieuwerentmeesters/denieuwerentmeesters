@@ -1,12 +1,20 @@
 ---
 title: "feat: Standalone kaart.html met PDOK perceel + BAG-pand layers"
-status: active
+status: abandoned
+abandoned: 2026-06-02
 created: 2026-06-02
 type: feat
 depth: standard
 origin: none (direct invocation)
 target_repo: denieuwerentmeesters
 ---
+
+> **Abandoned 2026-06-02.** Geïmplementeerd en live getest. PDOK BRK + BAG WFS-lagen
+> werkten, maar in de praktijk bleek de kaart te complex en te weinig toegevoegde
+> waarde te bieden in de huidige fase. `kaart.html` verwijderd; statische kaart-card
+> op Overzicht ook verwijderd. Plan blijft staan als referentie voor latere
+> heroverweging (mogelijk in combinatie met Supabase + multi-user).
+
 
 # feat: Standalone kaart.html met PDOK perceel + BAG-pand layers
 
