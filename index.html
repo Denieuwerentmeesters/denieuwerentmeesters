@@ -552,17 +552,14 @@ body { font-family:'Plus Jakarta Sans',sans-serif; background:var(--bg); color:v
     <!-- ══ OVERZICHT ══ -->
     <div class="page active" id="page-overview">
       <div class="page-header">
-        <div class="page-title">Landgoed Gunterstein</div>
-        <div class="page-sub">115 ha · NSW-gerangschikt · Rijksmonument 508234 · Breukelen, Stichtse Vecht</div>
+        <div class="page-title">Goedemorgen, Lara</div>
+        <div class="page-sub">Operationeel dagoverzicht · Vrijdag 29 mei 2026 · Gunterstein</div>
         <div class="page-actions">
-          <button class="btn btn-primary btn-sm" onclick="nav('subsidie',null)">
-            <svg width="13" height="13" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" stroke="#fff" stroke-width="2"/><circle cx="12" cy="12" r="5" stroke="#fff" stroke-width="2"/><circle cx="12" cy="12" r="1.5" fill="#fff"/></svg>
-            Subsidieradar openen
-          </button>
-          <button class="btn btn-ghost btn-sm">
-            <svg width="13" height="13" fill="none" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          <button class="btn btn-primary btn-sm" onclick="nav('taken',null)">
+            <svg width="13" height="13" fill="none" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>
             Taak toevoegen
           </button>
+          <button class="btn btn-ghost btn-sm" onclick="nav('subsidie',null)">Subsidieradar openen</button>
         </div>
       </div>
 
@@ -572,32 +569,29 @@ body { font-family:'Plus Jakarta Sans',sans-serif; background:var(--bg); color:v
       </div>
 
       <div class="kpi-grid">
-        <div class="kpi featured">
-          <div class="kpi-arrow"><svg width="12" height="12" fill="none" viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10" stroke="rgba(255,255,255,.6)" stroke-width="2" stroke-linecap="round"/></svg></div>
-          <div class="kpi-label">Oppervlakte landgoed</div>
-          <div class="kpi-value">115 ha</div>
-          <div class="kpi-delta">Bos · weiland · park · water</div>
-        </div>
-        <div class="kpi">
+        <div class="kpi" onclick="nav('taken',null)" style="cursor:pointer">
           <div class="kpi-arrow"><svg width="12" height="12" fill="none" viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round"/></svg></div>
-          <div class="kpi-label">Rijksmonumenten</div>
-          <div class="kpi-value">2</div>
-          <div class="kpi-delta up">
-            <svg width="11" height="11" fill="none" viewBox="0 0 24 24"><path d="M5 10l7-7 7 7M12 3v18" stroke="#16A34A" stroke-width="2" stroke-linecap="round"/></svg>
-            Kasteel + Klein Boomrijk
-          </div>
+          <div class="kpi-label">Mijn open taken</div>
+          <div class="kpi-value">7</div>
+          <div class="kpi-delta danger">1 urgent · 2 vervallen</div>
         </div>
-        <div class="kpi">
+        <div class="kpi" onclick="nav('agenda',null)" style="cursor:pointer">
           <div class="kpi-arrow"><svg width="12" height="12" fill="none" viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round"/></svg></div>
-          <div class="kpi-label">Actieve subsidies</div>
-          <div class="kpi-value">€ 54k</div>
-          <div class="kpi-delta warn">SIM + SNL + ANLb · 2026</div>
-        </div>
-        <div class="kpi">
-          <div class="kpi-arrow"><svg width="12" height="12" fill="none" viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round"/></svg></div>
-          <div class="kpi-label">Openstaande taken</div>
+          <div class="kpi-label">Agenda · komende 7 dgn</div>
           <div class="kpi-value">4</div>
-          <div class="kpi-delta danger">2 urgent · 2 normaal</div>
+          <div class="kpi-delta">Bestuur, dakinspectie, FPG, NVR</div>
+        </div>
+        <div class="kpi" onclick="nav('berichten',null)" style="cursor:pointer">
+          <div class="kpi-arrow"><svg width="12" height="12" fill="none" viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round"/></svg></div>
+          <div class="kpi-label">Berichten ongelezen</div>
+          <div class="kpi-value">3</div>
+          <div class="kpi-delta warn">1 pachter · 1 RVO · 1 rentmeester</div>
+        </div>
+        <div class="kpi" onclick="nav('financieel',null)" style="cursor:pointer">
+          <div class="kpi-arrow"><svg width="12" height="12" fill="none" viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round"/></svg></div>
+          <div class="kpi-label">Te betalen deze week</div>
+          <div class="kpi-value">€ 2.140</div>
+          <div class="kpi-delta danger">1 factuur vervallen</div>
         </div>
       </div>
 
@@ -608,7 +602,10 @@ body { font-family:'Plus Jakarta Sans',sans-serif; background:var(--bg); color:v
               <div class="card-title">Kaart — Vechtstreek</div>
               <div class="card-sub">Zandpad 48 · 3621 NE · Breukelen</div>
             </div>
-            <button class="btn btn-ghost btn-sm">Volledig scherm</button>
+            <div style="display:flex;gap:8px;align-items:center">
+              <span class="tag tag-amber" style="font-size:10.5px">Interactieve versie volgt</span>
+              <button class="btn btn-ghost btn-sm">Volledig scherm</button>
+            </div>
           </div>
           <div class="map-area">
             <svg viewBox="0 0 520 190" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
@@ -659,42 +656,43 @@ body { font-family:'Plus Jakarta Sans',sans-serif; background:var(--bg); color:v
           </div>
         </div>
 
-        <div class="card">
-          <div class="card-header"><div class="card-title">Recente activiteit</div><span class="card-link">Alles bekijken</span></div>
-          <div class="row">
-            <div class="row-icon ri-amber">
-              <svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" stroke="#B45309" stroke-width="1.8"/><polyline points="22,6 12,13 2,6" stroke="#B45309" stroke-width="1.8"/></svg>
+        <div>
+          <div class="card" style="margin-bottom:16px">
+            <div class="card-header"><div class="card-title">Mijn taken — top 3</div><span class="card-link" onclick="nav('taken',null)">Alle taken</span></div>
+            <div class="row">
+              <div class="row-icon ri-red"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="#DC2626" stroke-width="1.8"/><line x1="12" y1="8" x2="12" y2="12" stroke="#DC2626" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="16" r="1" fill="#DC2626"/></svg></div>
+              <div class="row-body"><div class="row-title">Pachtcontract Hof van Gunterstein — herziening starten</div><div class="row-desc">Juridisch · contract verloopt 1 jan 2027</div></div>
+              <div class="row-meta"><span class="tag tag-red">Urgent</span></div>
             </div>
-            <div class="row-body"><div class="row-title">E-mail van Hof van Gunterstein</div><div class="row-desc">Vraag over melding waterpeil slootkant</div></div>
-            <div class="row-meta">1u</div>
+            <div class="row">
+              <div class="row-icon ri-amber"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="#B45309" stroke-width="1.8"/><path d="M12 8v4l3 3" stroke="#B45309" stroke-width="1.8" stroke-linecap="round"/></svg></div>
+              <div class="row-body"><div class="row-title">Factuur Van Dongen Inspectie betalen</div><div class="row-desc">€ 2.140 · vervallen 14 dgn</div></div>
+              <div class="row-meta"><span class="tag tag-amber">Vervallen</span></div>
+            </div>
+            <div class="row">
+              <div class="row-icon ri-amber"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" stroke="#B45309" stroke-width="1.8"/></svg></div>
+              <div class="row-body"><div class="row-title">Concept agenda bestuursvergadering versturen</div><div class="row-desc">11 juni · halfjaarrapportage bijvoegen</div></div>
+              <div class="row-meta"><span class="tag tag-amber">Deze wk</span></div>
+            </div>
           </div>
-          <div class="row">
-            <div class="row-icon ri-green">
-              <svg width="16" height="16" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" stroke="#1B3A28" stroke-width="1.8"/><circle cx="12" cy="12" r="1.5" fill="#1B3A28"/></svg>
+
+          <div class="card">
+            <div class="card-header"><div class="card-title">Agenda — komende 7 dagen</div><span class="card-link" onclick="nav('agenda',null)">Volledige agenda</span></div>
+            <div class="agenda-row" style="padding:10px 0">
+              <div class="ag-date"><div class="ag-day">5</div><div class="ag-month">Jun</div></div>
+              <div class="ag-bar amber"></div>
+              <div class="ag-content"><div class="ag-title">Overleg Hof van Gunterstein</div><div class="ag-detail">14:00 · waterpeil slootkant</div></div>
             </div>
-            <div class="row-body"><div class="row-title">SIM-subsidie match gevonden</div><div class="row-desc">Kasteel restauratie — 89% match · deadline sept.</div></div>
-            <div class="row-meta">Gisteren</div>
-          </div>
-          <div class="row">
-            <div class="row-icon ri-blue">
-              <svg width="16" height="16" fill="none" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" stroke="#1E40AF" stroke-width="1.8"/><line x1="3" y1="10" x2="21" y2="10" stroke="#1E40AF" stroke-width="1.8"/><line x1="8" y1="2" x2="8" y2="6" stroke="#1E40AF" stroke-width="1.8"/><line x1="16" y1="2" x2="16" y2="6" stroke="#1E40AF" stroke-width="1.8"/></svg>
+            <div class="agenda-row" style="padding:10px 0">
+              <div class="ag-date"><div class="ag-day">11</div><div class="ag-month">Jun</div></div>
+              <div class="ag-bar green"></div>
+              <div class="ag-content"><div class="ag-title">Bestuursvergadering Gunterstein</div><div class="ag-detail">10:00 · Kasteel</div></div>
             </div>
-            <div class="row-body"><div class="row-title">NVR-bijeenkomst toegevoegd</div><div class="row-desc">25 juni · Utrecht — pachtwet 2028</div></div>
-            <div class="row-meta">2d</div>
-          </div>
-          <div class="row">
-            <div class="row-icon ri-red">
-              <svg width="16" height="16" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="#DC2626" stroke-width="1.8"/><line x1="12" y1="8" x2="12" y2="12" stroke="#DC2626" stroke-width="1.8"/><circle cx="12" cy="16" r="1" fill="#DC2626"/></svg>
+            <div class="agenda-row" style="padding:10px 0">
+              <div class="ag-date"><div class="ag-day">12</div><div class="ag-month">Jun</div></div>
+              <div class="ag-bar blue"></div>
+              <div class="ag-content"><div class="ag-title">FPG Themadag — Pachtwet 2028</div><div class="ag-detail">Wageningen</div></div>
             </div>
-            <div class="row-body"><div class="row-title">MJOP — dakinspectie Koetshuis</div><div class="row-desc">Keuring ingepland voor 18 juni</div></div>
-            <div class="row-meta">3d</div>
-          </div>
-          <div class="row">
-            <div class="row-icon ri-green">
-              <svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4" stroke="#1B3A28" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="12" r="10" stroke="#1B3A28" stroke-width="1.8"/></svg>
-            </div>
-            <div class="row-body"><div class="row-title">ANLb-aanvraag ingediend</div><div class="row-desc">Weidevogelbeheer 2026 · RVO bevestigd</div></div>
-            <div class="row-meta">5d</div>
           </div>
         </div>
       </div>
