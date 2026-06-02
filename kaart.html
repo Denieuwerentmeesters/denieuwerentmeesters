@@ -267,9 +267,9 @@ body { font-family:'Plus Jakarta Sans', sans-serif; background:var(--bg); color:
 // Config
 // ══════════════════════════════════════════════════════════
 const CENTER = [52.197, 5.005];      // Vechtstreek / Vreeland — buurt Gunterstein
-const DEFAULT_ZOOM = 15;
-const MIN_ZOOM_PERCEEL = 14;
-const MIN_ZOOM_GEBOUW = 15;
+const DEFAULT_ZOOM = 16;
+const MIN_ZOOM_PERCEEL = 16;
+const MIN_ZOOM_GEBOUW = 16;
 const WFS_DEBOUNCE_MS = 500;
 const SEARCH_DEBOUNCE_MS = 300;
 
@@ -369,6 +369,9 @@ function gebouwColor(pandId) {
   }
 }
 
+// Active selectie-tracking voor visuele highlight
+let activeLayer = null;
+
 function perceelStyle(feature) {
   const id = perceelId(feature);
   return {
@@ -389,6 +392,27 @@ function gebouwStyle(feature) {
   };
 }
 
+const HIGHLIGHT_STYLE = { color: '#1E40AF', weight: 3, fillOpacity: 0.55 };
+
+function restoreLayerStyle(layer) {
+  if (!layer || !layer.feature) return;
+  const type = layer._dnrType;
+  layer.setStyle(type === 'gebouw' ? gebouwStyle(layer.feature) : perceelStyle(layer.feature));
+}
+
+function highlightLayer(layer) {
+  if (activeLayer && activeLayer !== layer) restoreLayerStyle(activeLayer);
+  activeLayer = layer;
+  layer.setStyle(HIGHLIGHT_STYLE);
+  if (layer.bringToFront) layer.bringToFront();
+}
+
+function clearHighlight() {
+  if (!activeLayer) return;
+  restoreLayerStyle(activeLayer);
+  activeLayer = null;
+}
+
 // ══════════════════════════════════════════════════════════
 // Map setup (U1)
 // ══════════════════════════════════════════════════════════
@@ -403,14 +427,24 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 const perceelLayer = L.geoJSON(null, {
   style: perceelStyle,
   onEachFeature: (feature, layer) => {
-    layer.on('click', () => openSidepanel('perceel', feature, layer));
+    layer._dnrType = 'perceel';
+    layer.on('click', (e) => {
+      L.DomEvent.stopPropagation(e);
+      highlightLayer(layer);
+      openSidepanel('perceel', feature, layer);
+    });
   },
 }).addTo(map);
 
 const gebouwLayer = L.geoJSON(null, {
   style: gebouwStyle,
   onEachFeature: (feature, layer) => {
-    layer.on('click', () => openSidepanel('gebouw', feature, layer));
+    layer._dnrType = 'gebouw';
+    layer.on('click', (e) => {
+      L.DomEvent.stopPropagation(e);
+      highlightLayer(layer);
+      openSidepanel('gebouw', feature, layer);
+    });
   },
 }).addTo(map);
 
@@ -543,6 +577,7 @@ function gebouwOppervlakte(feature) {
 // ══════════════════════════════════════════════════════════
 async function loadPercelen() {
   if (map.getZoom() < MIN_ZOOM_PERCEEL) {
+    if (activeLayer && activeLayer._dnrType === 'perceel') activeLayer = null;
     perceelLayer.clearLayers();
     return;
   }
@@ -554,6 +589,7 @@ async function loadPercelen() {
     const res = await fetch(url);
     if (!res.ok) throw new Error('BRK HTTP ' + res.status);
     const data = await res.json();
+    if (activeLayer && activeLayer._dnrType === 'perceel') activeLayer = null;
     perceelLayer.clearLayers();
     perceelLayer.addData(data);
     const n = (data.features || []).length;
@@ -569,6 +605,7 @@ async function loadPercelen() {
 // ══════════════════════════════════════════════════════════
 async function loadGebouwen() {
   if (map.getZoom() < MIN_ZOOM_GEBOUW) {
+    if (activeLayer && activeLayer._dnrType === 'gebouw') activeLayer = null;
     gebouwLayer.clearLayers();
     return;
   }
@@ -579,6 +616,7 @@ async function loadGebouwen() {
     const res = await fetch(url);
     if (!res.ok) throw new Error('BAG HTTP ' + res.status);
     const data = await res.json();
+    if (activeLayer && activeLayer._dnrType === 'gebouw') activeLayer = null;
     gebouwLayer.clearLayers();
     gebouwLayer.addData(data);
     gebouwLayer.bringToFront();
@@ -614,6 +652,7 @@ let active = null;
 function closeSidepanel() {
   sidepanel.classList.remove('open');
   sidepanel.setAttribute('aria-hidden', 'true');
+  clearHighlight();
   active = null;
 }
 
@@ -888,14 +927,16 @@ spSave.addEventListener('click', () => {
   if (active.type === 'perceel') {
     syncPerceelDraft();
     if (lsSet('perceel_' + active.id, active.draft)) {
-      // Recolor: alleen de specifieke layer
-      if (active.layer) active.layer.setStyle(perceelStyle(active.feature));
+      // Bewaar achterliggende kleur in feature-style, behoud daarna blauwe highlight
+      restoreLayerStyle(active.layer);
+      if (activeLayer === active.layer) active.layer.setStyle(HIGHLIGHT_STYLE);
       flashToast();
     }
   } else if (active.type === 'gebouw') {
     syncGebouwDraft();
     if (lsSet('gebouw_' + active.id, active.draft)) {
-      if (active.layer) active.layer.setStyle(gebouwStyle(active.feature));
+      restoreLayerStyle(active.layer);
+      if (activeLayer === active.layer) active.layer.setStyle(HIGHLIGHT_STYLE);
       spTitle.textContent = active.draft.naam || ('Pand ' + active.id);
       flashToast();
     }
