@@ -1,0 +1,1658 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gunterstein — Landgoedbeheer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #F1F3F6;
+  --white: #FFFFFF;
+  --primary: #1B3A28;
+  --primary-mid: #2A5C3F;
+  --primary-light: #EAF0EC;
+  --primary-muted: #C8D9CC;
+  --text: #111827;
+  --text-2: #6B7280;
+  --text-3: #9CA3AF;
+  --border: #E5E7EB;
+  --red: #DC2626;
+  --red-light: #FEF2F2;
+  --amber: #B45309;
+  --amber-light: #FFFBEB;
+  --blue: #1E40AF;
+  --blue-light: #EFF6FF;
+  --card-shadow: 0 1px 3px rgba(0,0,0,.06), 0 2px 8px rgba(0,0,0,.04);
+  --card-shadow-hover: 0 4px 12px rgba(0,0,0,.1);
+  --radius: 14px;
+  --radius-sm: 8px;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Plus Jakarta Sans',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; font-size:14px; }
+.layout { display:flex; height:100vh; overflow:hidden; }
+
+/* ── SIDEBAR ── */
+.sidebar {
+  width:240px; flex-shrink:0; background:var(--white);
+  display:flex; flex-direction:column;
+  border-right:1px solid var(--border);
+  overflow-y:auto;
+}
+.logo { padding:24px 20px 20px; display:flex; align-items:center; gap:10px; border-bottom:1px solid var(--border); }
+.logo-mark {
+  width:34px; height:34px; background:var(--primary); border-radius:9px;
+  display:flex; align-items:center; justify-content:center; flex-shrink:0;
+}
+.logo-text { font-size:15px; font-weight:700; color:var(--text); line-height:1.2; }
+.logo-sub { font-size:11px; color:var(--text-2); font-weight:400; }
+.nav { padding:16px 12px; flex:1; }
+.nav-label { font-size:10px; font-weight:700; color:var(--text-3); letter-spacing:1px; text-transform:uppercase; padding:8px 8px 6px; }
+.nav-item {
+  display:flex; align-items:center; gap:10px; padding:9px 10px;
+  border-radius:9px; cursor:pointer; transition:all .15s;
+  color:var(--text-2); font-weight:500; font-size:13.5px;
+  position:relative;
+}
+.nav-item:hover { background:#F9FAFB; color:var(--text); }
+.nav-item.active { background:var(--primary); color:#fff; }
+.nav-item .nav-icon { width:18px; height:18px; flex-shrink:0; opacity:.7; }
+.nav-item.active .nav-icon { opacity:1; }
+.nav-badge {
+  margin-left:auto; font-size:11px; font-weight:600; padding:1px 7px;
+  border-radius:20px; background:var(--border); color:var(--text-2);
+}
+.nav-item.active .nav-badge { background:rgba(255,255,255,.25); color:#fff; }
+.nav-badge.urgent { background:#FEE2E2; color:var(--red); }
+.sidebar-footer {
+  padding:16px; border-top:1px solid var(--border);
+}
+.user-card {
+  display:flex; align-items:center; gap:10px; padding:10px; border-radius:10px;
+  background:var(--bg); cursor:pointer;
+}
+.user-avatar {
+  width:32px; height:32px; border-radius:50%; background:var(--primary);
+  display:flex; align-items:center; justify-content:center;
+  font-size:12px; font-weight:700; color:#fff; flex-shrink:0;
+}
+.user-name { font-size:12.5px; font-weight:600; color:var(--text); }
+.user-role { font-size:11px; color:var(--text-2); }
+
+/* ── MAIN ── */
+.main { flex:1; overflow-y:auto; display:flex; flex-direction:column; }
+.topbar {
+  background:var(--white); border-bottom:1px solid var(--border);
+  padding:14px 28px; display:flex; align-items:center; gap:16px; flex-shrink:0;
+}
+.search-wrap {
+  flex:1; max-width:320px; position:relative;
+}
+.search-input {
+  width:100%; padding:8px 12px 8px 36px; border-radius:9px;
+  border:1px solid var(--border); background:#F9FAFB;
+  font-family:'Plus Jakarta Sans',sans-serif; font-size:13px; color:var(--text);
+  outline:none; transition:border-color .15s;
+}
+.search-input:focus { border-color:var(--primary-mid); background:#fff; }
+.search-icon { position:absolute; left:11px; top:50%; transform:translateY(-50%); opacity:.4; }
+.topbar-right { margin-left:auto; display:flex; align-items:center; gap:10px; }
+.icon-btn {
+  width:36px; height:36px; border-radius:9px; border:1px solid var(--border);
+  background:#fff; display:flex; align-items:center; justify-content:center;
+  cursor:pointer; transition:all .15s; position:relative;
+}
+.icon-btn:hover { background:var(--bg); }
+.notif-dot {
+  position:absolute; top:6px; right:6px; width:7px; height:7px;
+  background:var(--red); border-radius:50%; border:1.5px solid #fff;
+}
+.topbar-date { font-size:12.5px; color:var(--text-2); font-weight:500; }
+
+/* ── CONTENT ── */
+.content { padding:28px; flex:1; }
+.page { display:none; }
+.page.active { display:block; }
+.page-header { margin-bottom:24px; }
+.page-title { font-size:22px; font-weight:700; color:var(--text); }
+.page-sub { font-size:13px; color:var(--text-2); margin-top:4px; }
+.page-actions { display:flex; gap:10px; margin-top:14px; }
+
+/* ── BUTTONS ── */
+.btn { display:inline-flex; align-items:center; gap:7px; padding:9px 16px; border-radius:9px; font-size:13px; font-family:'Plus Jakarta Sans',sans-serif; font-weight:600; cursor:pointer; transition:all .15s; border:none; }
+.btn-primary { background:var(--primary); color:#fff; }
+.btn-primary:hover { background:var(--primary-mid); }
+.btn-ghost { background:transparent; border:1.5px solid var(--border); color:var(--text); }
+.btn-ghost:hover { border-color:var(--primary); color:var(--primary); background:var(--primary-light); }
+.btn-sm { padding:7px 13px; font-size:12px; }
+
+/* ── CARDS ── */
+.card { background:var(--white); border-radius:var(--radius); box-shadow:var(--card-shadow); padding:20px; }
+.card:hover { box-shadow:var(--card-shadow-hover); }
+.card-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; }
+.card-title { font-size:14px; font-weight:700; color:var(--text); }
+.card-sub { font-size:12px; color:var(--text-2); margin-top:2px; }
+.card-link { font-size:12px; color:var(--primary-mid); font-weight:600; cursor:pointer; }
+
+/* ── KPI GRID ── */
+.kpi-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:20px; }
+.kpi { background:var(--white); border-radius:var(--radius); box-shadow:var(--card-shadow); padding:20px; position:relative; overflow:hidden; }
+.kpi.featured { background:var(--primary); }
+.kpi-label { font-size:12px; font-weight:600; color:var(--text-2); letter-spacing:.3px; }
+.kpi.featured .kpi-label { color:rgba(255,255,255,.65); }
+.kpi-value { font-size:30px; font-weight:700; color:var(--text); margin:8px 0 4px; line-height:1; }
+.kpi.featured .kpi-value { color:#fff; }
+.kpi-delta { font-size:12px; color:var(--text-2); display:flex; align-items:center; gap:4px; }
+.kpi.featured .kpi-delta { color:rgba(255,255,255,.6); }
+.kpi-delta.up { color:#16A34A; }
+.kpi-delta.warn { color:var(--amber); }
+.kpi-delta.danger { color:var(--red); }
+.kpi-arrow {
+  position:absolute; top:16px; right:16px; width:28px; height:28px;
+  border-radius:50%; border:1.5px solid var(--border);
+  display:flex; align-items:center; justify-content:center; cursor:pointer;
+}
+.kpi.featured .kpi-arrow { border-color:rgba(255,255,255,.25); }
+
+/* ── GRID LAYOUTS ── */
+.grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px; }
+.grid-3-2 { display:grid; grid-template-columns:1.5fr 1fr; gap:16px; margin-bottom:16px; }
+.grid-2-3 { display:grid; grid-template-columns:1fr 1.5fr; gap:16px; margin-bottom:16px; }
+.grid-3 { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:16px; }
+
+/* ── LIST ROWS ── */
+.row { display:flex; align-items:flex-start; gap:12px; padding:12px 0; border-bottom:1px solid var(--border); }
+.row:last-child { border-bottom:none; padding-bottom:0; }
+.row:first-child { padding-top:0; }
+.row-icon { width:34px; height:34px; border-radius:9px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.ri-green { background:var(--primary-light); }
+.ri-amber { background:var(--amber-light); }
+.ri-red { background:var(--red-light); }
+.ri-blue { background:var(--blue-light); }
+.ri-gray { background:var(--bg); }
+.row-body { flex:1; }
+.row-title { font-size:13.5px; font-weight:600; color:var(--text); }
+.row-desc { font-size:12px; color:var(--text-2); margin-top:2px; line-height:1.4; }
+.row-meta { font-size:12px; color:var(--text-2); flex-shrink:0; text-align:right; }
+
+/* ── TAGS ── */
+.tag { display:inline-flex; align-items:center; padding:3px 9px; border-radius:20px; font-size:11.5px; font-weight:600; }
+.tag-green { background:var(--primary-light); color:var(--primary); }
+.tag-amber { background:var(--amber-light); color:var(--amber); }
+.tag-red { background:var(--red-light); color:var(--red); }
+.tag-blue { background:var(--blue-light); color:var(--blue); }
+.tag-gray { background:var(--bg); color:var(--text-2); }
+.tag-white { background:rgba(255,255,255,.2); color:#fff; }
+
+/* ── ALERT BANNER ── */
+.alert { display:flex; align-items:flex-start; gap:10px; padding:12px 16px; border-radius:10px; margin-bottom:20px; font-size:13px; }
+.alert-red { background:var(--red-light); color:var(--red); border:1px solid #FECACA; }
+.alert-amber { background:var(--amber-light); color:var(--amber); border:1px solid #FDE68A; }
+.alert strong { font-weight:700; }
+
+/* ── MAP ── */
+.map-area {
+  height:190px; border-radius:10px; overflow:hidden; position:relative;
+  background:linear-gradient(160deg,#c8dfc8 0%,#a8c9b0 30%,#90b5a0 55%,#7aa090 70%,#6b8a7a 100%);
+}
+.map-area svg { position:absolute; inset:0; }
+.map-legend { display:flex; gap:14px; margin-top:12px; flex-wrap:wrap; }
+.map-legend-item { display:flex; align-items:center; gap:5px; font-size:12px; color:var(--text-2); }
+.legend-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+
+/* ── SUBSIDY CARDS ── */
+.subsidy { border:1px solid var(--border); border-radius:12px; padding:16px; margin-bottom:12px; cursor:pointer; transition:all .2s; background:var(--white); }
+.subsidy:hover { border-color:var(--primary-muted); box-shadow:var(--card-shadow-hover); transform:translateY(-1px); }
+.subsidy-top { display:flex; gap:14px; align-items:flex-start; }
+.match-badge {
+  width:50px; height:50px; border-radius:50%; display:flex; align-items:center;
+  justify-content:center; font-size:13px; font-weight:700; flex-shrink:0;
+}
+.mb-high { background:var(--primary-light); color:var(--primary); border:2px solid var(--primary); }
+.mb-mid { background:var(--amber-light); color:var(--amber); border:2px solid #FCD34D; }
+.mb-low { background:var(--bg); color:var(--text-2); border:2px solid var(--border); }
+.subsidy-name { font-size:14px; font-weight:700; color:var(--text); }
+.subsidy-org { font-size:12px; color:var(--text-2); margin-top:2px; }
+.progress { height:3px; background:var(--border); border-radius:2px; margin:8px 0; overflow:hidden; }
+.progress-fill { height:100%; border-radius:2px; }
+.pf-green { background:var(--primary); }
+.pf-amber { background:#FBBF24; }
+.subsidy-footer { display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-top:8px; }
+.subsidy-amount { font-size:13px; font-weight:700; color:var(--primary); }
+.subsidy-reasons { display:none; margin-top:12px; padding-top:12px; border-top:1px solid var(--border); }
+.reason { display:flex; gap:8px; align-items:flex-start; margin-bottom:5px; font-size:12.5px; color:var(--text-2); }
+.rdot { width:5px; height:5px; border-radius:50%; background:var(--primary-mid); flex-shrink:0; margin-top:5px; }
+
+/* ── EMAIL ── */
+.email-row { display:flex; gap:12px; padding:12px 0; border-bottom:1px solid var(--border); cursor:pointer; border-radius:8px; transition:background .1s; }
+.email-row:hover { background:var(--bg); padding:12px 8px; margin:0 -8px; }
+.email-row:last-child { border-bottom:none; }
+.av { width:35px; height:35px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; color:#fff; flex-shrink:0; }
+.av-p { background:var(--primary); }
+.av-a { background:#B45309; }
+.av-b { background:var(--blue); }
+.av-r { background:#7C3AED; }
+.av-g { background:#059669; }
+.email-body { flex:1; min-width:0; }
+.email-from { font-size:13px; font-weight:600; color:var(--text); }
+.email-subject { font-size:13px; color:var(--text-2); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.email-preview { font-size:12px; color:var(--text-3); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.email-meta { text-align:right; flex-shrink:0; font-size:12px; color:var(--text-2); }
+.email-time { display:block; margin-bottom:4px; }
+.unread .email-from { font-weight:700; }
+.unread .email-subject { color:var(--text); font-weight:600; }
+.udot { width:7px; height:7px; border-radius:50%; background:var(--primary-mid); margin-left:auto; }
+
+/* ── AGENDA ── */
+.agenda-row { display:flex; gap:14px; padding:12px 0; border-bottom:1px solid var(--border); }
+.agenda-row:last-child { border-bottom:none; }
+.ag-date { width:42px; flex-shrink:0; text-align:center; }
+.ag-day { font-size:22px; font-weight:700; color:var(--primary); line-height:1; }
+.ag-month { font-size:10px; text-transform:uppercase; color:var(--text-2); letter-spacing:.5px; font-weight:600; }
+.ag-bar { width:2px; flex-shrink:0; border-radius:1px; background:var(--border); }
+.ag-bar.green { background:var(--primary); }
+.ag-bar.red { background:var(--red); }
+.ag-bar.blue { background:var(--blue); }
+.ag-bar.amber { background:#FBBF24; }
+.ag-content { flex:1; }
+.ag-title { font-size:13.5px; font-weight:600; color:var(--text); }
+.ag-detail { font-size:12px; color:var(--text-2); margin-top:2px; }
+
+/* ── COMM NETWORK ── */
+#network-svg { width:100%; height:190px; border-radius:10px; background:#F8FAF9; }
+
+/* ── THEME CHIPS ── */
+.theme-chip { display:inline-flex; align-items:center; gap:5px; padding:6px 12px; border-radius:20px; font-size:12.5px; font-weight:600; cursor:pointer; border:1.5px solid var(--border); background:var(--white); color:var(--text-2); transition:all .15s; }
+.theme-chip:hover, .theme-chip.active { background:var(--primary); color:#fff; border-color:var(--primary); }
+.chips { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px; }
+
+/* ── DOC GRID ── */
+.doc-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+.doc-card { border:1px solid var(--border); border-radius:10px; padding:14px; cursor:pointer; transition:all .15s; }
+.doc-card:hover { border-color:var(--primary-muted); background:var(--primary-light); }
+.doc-icon { margin-bottom:10px; }
+.doc-name { font-size:12.5px; font-weight:600; color:var(--text); line-height:1.35; }
+.doc-date { font-size:11px; color:var(--text-2); margin-top:5px; }
+
+/* ── DIVIDER ── */
+.divider { height:1px; background:var(--border); margin:14px 0; }
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width:5px; }
+::-webkit-scrollbar-track { background:transparent; }
+::-webkit-scrollbar-thumb { background:var(--border); border-radius:3px; }
+
+/* ── BOTTOM NAV (mobile only) ── */
+.bottom-nav {
+  display:none;
+  position:fixed; bottom:0; left:0; right:0;
+  background:var(--white); border-top:1px solid var(--border);
+  padding:8px 4px calc(8px + env(safe-area-inset-bottom));
+  z-index:100;
+  justify-content:space-around;
+}
+.bn-item {
+  display:flex; flex-direction:column; align-items:center; gap:3px;
+  padding:6px 10px; border-radius:10px; cursor:pointer; min-width:52px;
+  transition:all .15s; color:var(--text-3); font-size:10px; font-weight:600;
+  border:none; background:transparent;
+}
+.bn-item.active { color:var(--primary); }
+.bn-item.active svg { stroke:var(--primary); }
+.bn-dot {
+  position:absolute; top:4px; right:4px; width:6px; height:6px;
+  background:var(--red); border-radius:50%; border:1.5px solid #fff;
+}
+.bn-icon-wrap { position:relative; }
+
+/* ── MOBILE HEADER ── */
+.mobile-header {
+  display:none;
+  background:var(--white); border-bottom:1px solid var(--border);
+  padding:14px 16px; align-items:center; gap:12px; flex-shrink:0;
+}
+.mobile-logo { display:flex; align-items:center; gap:8px; flex:1; }
+.mobile-title { font-size:15px; font-weight:700; color:var(--text); }
+.mobile-sub { font-size:11px; color:var(--text-2); }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  .layout { height:auto; min-height:100vh; overflow:visible; flex-direction:column; }
+  .sidebar { display:none !important; width:0; }
+  .topbar { display:none !important; }
+  .mobile-header { display:flex; }
+  .bottom-nav { display:flex; }
+  .main { overflow-y:visible; padding-bottom:80px; }
+  .content { padding:16px; }
+  .page-title { font-size:18px; }
+  .page-sub { font-size:12px; }
+  .page-actions { flex-wrap:wrap; }
+  .page-actions .btn { flex:1; justify-content:center; }
+
+  /* Grids → single column */
+  .kpi-grid { grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px; }
+  .grid-2 { grid-template-columns:1fr; }
+  .grid-3-2 { grid-template-columns:1fr; }
+  .grid-2-3 { grid-template-columns:1fr; }
+  .grid-3 { grid-template-columns:1fr; }
+
+  /* KPI cards smaller */
+  .kpi { padding:14px; }
+  .kpi-value { font-size:24px; }
+  .kpi-label { font-size:11px; }
+  .kpi-delta { font-size:11px; }
+  .kpi-arrow { display:none; }
+
+  /* Cards */
+  .card { padding:14px; border-radius:12px; margin-bottom:12px; }
+  .card-header { margin-bottom:12px; }
+
+  /* Map smaller on mobile */
+  .map-area { height:150px; }
+
+  /* Subsidy cards */
+  .subsidy { padding:12px; }
+  .match-badge { width:42px; height:42px; font-size:11px; }
+  .subsidy-name { font-size:13px; }
+
+  /* Chips scroll horizontally */
+  .chips { flex-wrap:nowrap; overflow-x:auto; padding-bottom:4px; }
+  .chips::-webkit-scrollbar { display:none; }
+  .theme-chip { white-space:nowrap; flex-shrink:0; }
+
+  /* Agenda */
+  .ag-day { font-size:18px; }
+  .ag-date { width:36px; }
+
+  /* Alert */
+  .alert { font-size:12px; padding:10px 12px; }
+
+  /* Doc grid → 2 cols */
+  .doc-grid { grid-template-columns:1fr 1fr; }
+
+  /* Network svg smaller */
+  #network-svg { height:160px; }
+
+  /* Tags on small screens */
+  .row-meta { display:none; }
+}
+
+@media (max-width: 420px) {
+  .kpi-grid { grid-template-columns:1fr 1fr; }
+  .doc-grid { grid-template-columns:1fr; }
+  .page-actions .btn-ghost { display:none; }
+}
+
+</style>
+</head>
+<body>
+<div class="layout">
+
+<!-- ═══ SIDEBAR ═══ -->
+<aside class="sidebar">
+  <div class="logo">
+    <div class="logo-mark">
+      <svg width="18" height="18" fill="none" viewBox="0 0 24 24">
+        <path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"/>
+        <path d="M9 21V12h6v9" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <div>
+      <div class="logo-text">Gunterstein</div>
+      <div class="logo-sub">Breukelen · Stichtse Vecht</div>
+    </div>
+  </div>
+
+  <nav class="nav">
+    <div class="nav-label">Menu</div>
+
+    <!-- Fundament -->
+    <div class="nav-item active" onclick="nav('overview',this)">
+      <svg class="nav-icon" fill="none" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.8"/><rect x="14" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.8"/><rect x="3" y="14" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.8"/><rect x="14" y="14" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.8"/></svg>
+      Overzicht
+    </div>
+    <div class="nav-item" onclick="nav('landgoed',this)">
+      <svg class="nav-icon" fill="none" viewBox="0 0 24 24"><path d="M3 21h18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M5 21V10l7-5 7 5v11" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><rect x="9" y="13" width="6" height="8" stroke="currentColor" stroke-width="1.8"/><path d="M3 21l9-15 9 15" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" opacity=".3"/></svg>
+      Landgoed
+    </div>
+    <div class="nav-item" onclick="nav('documenten',this)">
+      <svg class="nav-icon" fill="none" viewBox="0 0 24 24"><path d="M13 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9l-7-7z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M13 2v7h7" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+      Documenten
+    </div>
+    <div class="nav-item" onclick="nav('relaties',this)">
+      <svg class="nav-icon" fill="none" viewBox="0 0 24 24"><circle cx="9" cy="7" r="4" stroke="currentColor" stroke-width="1.8"/><path d="M3 21v-2a4 4 0 014-4h4a4 4 0 014 4v2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="18" cy="8" r="3" stroke="currentColor" stroke-width="1.8"/><path d="M22 21v-1.5a3 3 0 00-2-2.83" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      Relaties
+    </div>
+
+    <div class="nav-label" style="margin-top:6px">Radar</div>
+    <div class="nav-item" onclick="nav('subsidie',this)">
+      <svg class="nav-icon" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="5" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/></svg>
+      Subsidieradar
+      <span class="nav-badge">5</span>
+    </div>
+    <div class="nav-item" onclick="nav('regelgeving',this)">
+      <svg class="nav-icon" fill="none" viewBox="0 0 24 24"><path d="M12 2l1.5 4.5H18l-3.75 2.73 1.43 4.39L12 11.1l-3.68 2.52 1.43-4.39L6 6.5h4.5L12 2z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M5 20h14M8 17l4-5 4 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Regelgeving
+      <span class="nav-badge urgent">1</span>
+    </div>
+
+    <div class="nav-label" style="margin-top:6px">Communicatie</div>
+    <div class="nav-item" onclick="nav('berichten',this)">
+      <svg class="nav-icon" fill="none" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" stroke="currentColor" stroke-width="1.8"/><polyline points="22,6 12,13 2,6" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+      Berichten
+      <span class="nav-badge">3</span>
+    </div>
+    <div class="nav-item" onclick="nav('agenda',this)">
+      <svg class="nav-icon" fill="none" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" stroke-width="1.8"/><line x1="16" y1="2" x2="16" y2="6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><line x1="8" y1="2" x2="8" y2="6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><line x1="3" y1="10" x2="21" y2="10" stroke="currentColor" stroke-width="1.8"/></svg>
+      Agenda &amp; Events
+    </div>
+    <div class="nav-item" onclick="nav('taken',this)">
+      <svg class="nav-icon" fill="none" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M8 11l3 3 5-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Taken
+      <span class="nav-badge urgent">4</span>
+    </div>
+
+    <div class="nav-label" style="margin-top:6px">Beheer</div>
+    <div class="nav-item" onclick="nav('financieel',this)">
+      <svg class="nav-icon" fill="none" viewBox="0 0 24 24"><path d="M12 2v20M17 6H9.5a3.5 3.5 0 100 7h5a3.5 3.5 0 110 7H6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Financieel
+    </div>
+    <div class="nav-item" onclick="nav('contracten',this)">
+      <svg class="nav-icon" fill="none" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2" stroke="currentColor" stroke-width="1.8"/><rect x="9" y="3" width="6" height="4" rx="1" stroke="currentColor" stroke-width="1.8"/><line x1="9" y1="12" x2="15" y2="12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><line x1="9" y1="16" x2="13" y2="16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      Contracten
+    </div>
+    <div class="nav-item" onclick="nav('onderhoud',this)">
+      <svg class="nav-icon" fill="none" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3-3a5 5 0 01-8.45 8.45l-5.8 5.8a2 2 0 01-2.83-2.83l5.8-5.8A5 5 0 0114.7 6.3z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+      Onderhoud (MJOP)
+    </div>
+  </nav>
+
+  <div class="sidebar-footer">
+    <div class="user-card">
+      <div class="user-avatar">LQ</div>
+      <div>
+        <div class="user-name">Lara Quarles van Ufford</div>
+        <div class="user-role">Eigenaar · Gunterstein</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- ═══ MOBILE HEADER ═══ -->
+<div class="mobile-header">
+  <div class="mobile-logo">
+    <div class="logo-mark" style="width:30px;height:30px;border-radius:8px">
+      <svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"/><path d="M9 21V12h6v9" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"/></svg>
+    </div>
+    <div>
+      <div class="mobile-title">Gunterstein</div>
+      <div class="mobile-sub">Breukelen · Stichtse Vecht</div>
+    </div>
+  </div>
+  <div class="icon-btn" style="flex-shrink:0">
+    <svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9" stroke="#6B7280" stroke-width="1.8"/><path d="M13.73 21a2 2 0 01-3.46 0" stroke="#6B7280" stroke-width="1.8"/></svg>
+    <span class="notif-dot"></span>
+  </div>
+</div>
+
+<!-- ═══ BOTTOM NAV ═══ -->
+<nav class="bottom-nav">
+  <button class="bn-item active" onclick="nav('overview',null);setMobileNav(this)">
+    <div class="bn-icon-wrap"><svg width="20" height="20" fill="none" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.8"/><rect x="14" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.8"/><rect x="3" y="14" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.8"/><rect x="14" y="14" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.8"/></svg></div>
+    Overzicht
+  </button>
+  <button class="bn-item" onclick="nav('subsidie',null);setMobileNav(this)">
+    <div class="bn-icon-wrap">
+      <svg width="20" height="20" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="5" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/></svg>
+      <span class="bn-dot"></span>
+    </div>
+    Subsidies
+  </button>
+  <button class="bn-item" onclick="nav('berichten',null);setMobileNav(this)">
+    <div class="bn-icon-wrap">
+      <svg width="20" height="20" fill="none" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" stroke="currentColor" stroke-width="1.8"/><polyline points="22,6 12,13 2,6" stroke="currentColor" stroke-width="1.8"/></svg>
+      <span class="bn-dot"></span>
+    </div>
+    Berichten
+  </button>
+  <button class="bn-item" onclick="nav('agenda',null);setMobileNav(this)">
+    <div class="bn-icon-wrap"><svg width="20" height="20" fill="none" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" stroke-width="1.8"/><line x1="16" y1="2" x2="16" y2="6" stroke="currentColor" stroke-width="1.8"/><line x1="8" y1="2" x2="8" y2="6" stroke="currentColor" stroke-width="1.8"/><line x1="3" y1="10" x2="21" y2="10" stroke="currentColor" stroke-width="1.8"/></svg></div>
+    Agenda
+  </button>
+  <button class="bn-item" onclick="nav('contracten',null);setMobileNav(this)">
+    <div class="bn-icon-wrap"><svg width="20" height="20" fill="none" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2" stroke="currentColor" stroke-width="1.8"/><rect x="9" y="3" width="6" height="4" rx="1" stroke="currentColor" stroke-width="1.8"/><line x1="9" y1="12" x2="15" y2="12" stroke="currentColor" stroke-width="1.8"/><line x1="9" y1="16" x2="13" y2="16" stroke="currentColor" stroke-width="1.8"/></svg></div>
+    Meer
+  </button>
+</nav>
+
+<!-- ═══ MAIN ═══ -->
+<div class="main">
+  <!-- Top bar -->
+  <div class="topbar">
+    <div class="search-wrap">
+      <svg class="search-icon" width="15" height="15" fill="none" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8" stroke="#6B7280" stroke-width="2"/><path d="M21 21l-4.35-4.35" stroke="#6B7280" stroke-width="2" stroke-linecap="round"/></svg>
+      <input class="search-input" placeholder="Zoeken in Gunterstein...">
+    </div>
+    <div class="topbar-right">
+      <span class="topbar-date">Vrijdag, 29 mei 2026</span>
+      <div class="icon-btn">
+        <svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9" stroke="#6B7280" stroke-width="1.8"/><path d="M13.73 21a2 2 0 01-3.46 0" stroke="#6B7280" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <span class="notif-dot"></span>
+      </div>
+      <div class="icon-btn">
+        <svg width="16" height="16" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4" stroke="#6B7280" stroke-width="1.8"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke="#6B7280" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- Page Content -->
+  <div class="content">
+
+    <!-- ══ OVERZICHT ══ -->
+    <div class="page active" id="page-overview">
+      <div class="page-header">
+        <div class="page-title">Goedemorgen, Lara</div>
+        <div class="page-sub">Operationeel dagoverzicht · Vrijdag 29 mei 2026 · Gunterstein</div>
+        <div class="page-actions">
+          <button class="btn btn-primary btn-sm" onclick="nav('taken',null)">
+            <svg width="13" height="13" fill="none" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>
+            Taak toevoegen
+          </button>
+          <button class="btn btn-ghost btn-sm" onclick="nav('subsidie',null)">Subsidieradar openen</button>
+        </div>
+      </div>
+
+      <div class="alert alert-red">
+        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/><line x1="12" y1="8" x2="12" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="16" r="1" fill="currentColor"/></svg>
+        <div><strong>Actie vereist:</strong> Pachtcontract Hof van Gunterstein loopt af op 1 januari 2027 — herziening conform nieuwe Pachtwet vereist tijdig overleg.</div>
+      </div>
+
+      <div class="kpi-grid">
+        <div class="kpi" onclick="nav('taken',null)" style="cursor:pointer">
+          <div class="kpi-arrow"><svg width="12" height="12" fill="none" viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round"/></svg></div>
+          <div class="kpi-label">Mijn open taken</div>
+          <div class="kpi-value">7</div>
+          <div class="kpi-delta danger">1 urgent · 2 vervallen</div>
+        </div>
+        <div class="kpi" onclick="nav('agenda',null)" style="cursor:pointer">
+          <div class="kpi-arrow"><svg width="12" height="12" fill="none" viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round"/></svg></div>
+          <div class="kpi-label">Agenda · komende 7 dgn</div>
+          <div class="kpi-value">4</div>
+          <div class="kpi-delta">Bestuur, dakinspectie, FPG, NVR</div>
+        </div>
+        <div class="kpi" onclick="nav('berichten',null)" style="cursor:pointer">
+          <div class="kpi-arrow"><svg width="12" height="12" fill="none" viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round"/></svg></div>
+          <div class="kpi-label">Berichten ongelezen</div>
+          <div class="kpi-value">3</div>
+          <div class="kpi-delta warn">1 pachter · 1 RVO · 1 rentmeester</div>
+        </div>
+        <div class="kpi" onclick="nav('financieel',null)" style="cursor:pointer">
+          <div class="kpi-arrow"><svg width="12" height="12" fill="none" viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round"/></svg></div>
+          <div class="kpi-label">Te betalen deze week</div>
+          <div class="kpi-value">€ 2.140</div>
+          <div class="kpi-delta danger">1 factuur vervallen</div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div>
+          <div class="card" style="margin-bottom:16px">
+            <div class="card-header"><div class="card-title">Mijn taken — top 3</div><span class="card-link" onclick="nav('taken',null)">Alle taken</span></div>
+            <div class="row">
+              <div class="row-icon ri-red"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="#DC2626" stroke-width="1.8"/><line x1="12" y1="8" x2="12" y2="12" stroke="#DC2626" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="16" r="1" fill="#DC2626"/></svg></div>
+              <div class="row-body"><div class="row-title">Pachtcontract Hof van Gunterstein — herziening starten</div><div class="row-desc">Juridisch · contract verloopt 1 jan 2027</div></div>
+              <div class="row-meta"><span class="tag tag-red">Urgent</span></div>
+            </div>
+            <div class="row">
+              <div class="row-icon ri-amber"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="#B45309" stroke-width="1.8"/><path d="M12 8v4l3 3" stroke="#B45309" stroke-width="1.8" stroke-linecap="round"/></svg></div>
+              <div class="row-body"><div class="row-title">Factuur Van Dongen Inspectie betalen</div><div class="row-desc">€ 2.140 · vervallen 14 dgn</div></div>
+              <div class="row-meta"><span class="tag tag-amber">Vervallen</span></div>
+            </div>
+            <div class="row">
+              <div class="row-icon ri-amber"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" stroke="#B45309" stroke-width="1.8"/></svg></div>
+              <div class="row-body"><div class="row-title">Concept agenda bestuursvergadering versturen</div><div class="row-desc">11 juni · halfjaarrapportage bijvoegen</div></div>
+              <div class="row-meta"><span class="tag tag-amber">Deze wk</span></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header"><div class="card-title">Agenda — komende 7 dagen</div><span class="card-link" onclick="nav('agenda',null)">Volledige agenda</span></div>
+            <div class="agenda-row" style="padding:10px 0">
+              <div class="ag-date"><div class="ag-day">5</div><div class="ag-month">Jun</div></div>
+              <div class="ag-bar amber"></div>
+              <div class="ag-content"><div class="ag-title">Overleg Hof van Gunterstein</div><div class="ag-detail">14:00 · waterpeil slootkant</div></div>
+            </div>
+            <div class="agenda-row" style="padding:10px 0">
+              <div class="ag-date"><div class="ag-day">11</div><div class="ag-month">Jun</div></div>
+              <div class="ag-bar green"></div>
+              <div class="ag-content"><div class="ag-title">Bestuursvergadering Gunterstein</div><div class="ag-detail">10:00 · Kasteel</div></div>
+            </div>
+            <div class="agenda-row" style="padding:10px 0">
+              <div class="ag-date"><div class="ag-day">12</div><div class="ag-month">Jun</div></div>
+              <div class="ag-bar blue"></div>
+              <div class="ag-content"><div class="ag-title">FPG Themadag — Pachtwet 2028</div><div class="ag-detail">Wageningen</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ LANDGOED ══ -->
+    <div class="page" id="page-landgoed">
+      <div class="page-header">
+        <div class="page-title">Landgoed Gunterstein</div>
+        <div class="page-sub">Identiteit, oppervlakte, monumenten en kadaster · Breukelen, Stichtse Vecht</div>
+        <div class="page-actions">
+          <button class="btn btn-ghost btn-sm">Profiel bewerken</button>
+          <button class="btn btn-ghost btn-sm">Kadasterkaart openen</button>
+        </div>
+      </div>
+
+      <div class="kpi-grid">
+        <div class="kpi featured">
+          <div class="kpi-arrow"><svg width="12" height="12" fill="none" viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10" stroke="rgba(255,255,255,.6)" stroke-width="2" stroke-linecap="round"/></svg></div>
+          <div class="kpi-label">Oppervlakte landgoed</div>
+          <div class="kpi-value">115 ha</div>
+          <div class="kpi-delta">Bos · weiland · park · water</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-arrow"><svg width="12" height="12" fill="none" viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round"/></svg></div>
+          <div class="kpi-label">Rijksmonumenten</div>
+          <div class="kpi-value">2</div>
+          <div class="kpi-delta">Kasteel (508234) + Klein Boomrijk (508260)</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-arrow"><svg width="12" height="12" fill="none" viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round"/></svg></div>
+          <div class="kpi-label">NSW-status</div>
+          <div class="kpi-value">Actief</div>
+          <div class="kpi-delta">Gerangschikt sinds 2017 · 40 dgn openstelling</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-arrow"><svg width="12" height="12" fill="none" viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round"/></svg></div>
+          <div class="kpi-label">Kadasterpercelen</div>
+          <div class="kpi-value">23</div>
+          <div class="kpi-delta">Gemeente Breukelen sectie A &amp; B</div>
+        </div>
+      </div>
+
+      <div class="grid-3-2">
+        <div class="card">
+          <div class="card-header"><div class="card-title">Oppervlakteverdeling</div><span class="card-link">Verdeling exporteren</span></div>
+          <div style="display:flex;flex-direction:column;gap:14px;margin-top:4px">
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:5px"><span style="font-weight:600">Bos &amp; laanstructuur</span><span style="color:var(--text-2)">56 ha · 49%</span></div>
+              <div class="progress" style="height:8px"><div class="progress-fill pf-green" style="width:49%"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:5px"><span style="font-weight:600">Weiland (pacht)</span><span style="color:var(--text-2)">38 ha · 33%</span></div>
+              <div class="progress" style="height:8px"><div class="progress-fill" style="width:33%;background:#8AB58A"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:5px"><span style="font-weight:600">Park &amp; tuinen</span><span style="color:var(--text-2)">14 ha · 12%</span></div>
+              <div class="progress" style="height:8px"><div class="progress-fill" style="width:12%;background:#B45309"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:5px"><span style="font-weight:600">Water (Vecht, vijvers, sloten)</span><span style="color:var(--text-2)">7 ha · 6%</span></div>
+              <div class="progress" style="height:8px"><div class="progress-fill" style="width:6%;background:#6BA8B8"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header"><div class="card-title">Kadaster &amp; juridisch</div></div>
+          <div style="font-size:13px;line-height:1.9;color:var(--text)">
+            <div><strong>Gemeente</strong> · Stichtse Vecht (Breukelen)</div>
+            <div><strong>Kadastrale sectie</strong> · A nrs. 12, 14, 18-24, 31-40</div>
+            <div><strong>Kadastrale sectie</strong> · B nrs. 8, 9, 14</div>
+            <div><strong>Eigendomsvorm</strong> · Stichting Gunterstein</div>
+            <div><strong>NSW-rangschikking</strong> · Nr. 2017/UT-441</div>
+            <div><strong>Openstelling</strong> · 40 dagen/jaar (zo + feestdagen)</div>
+          </div>
+          <div class="divider"></div>
+          <div style="font-size:12px;color:var(--text-2);line-height:1.5">Volledige perceelkaart en eigendomsakten beschikbaar in Documenten.</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><div class="card-title">Objecten op het landgoed</div><span class="card-link">Object toevoegen</span></div>
+        <div class="row">
+          <div class="row-icon ri-green"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path d="M3 21h18M5 21V10l7-5 7 5v11" stroke="#1B3A28" stroke-width="1.8" stroke-linejoin="round"/></svg></div>
+          <div class="row-body"><div class="row-title">Kasteel Gunterstein (1681)</div><div class="row-desc">Hoofdgebouw · 1.840 m² BVO · NEN 2767 cond. 3</div></div>
+          <div class="row-meta"><span class="tag tag-red">Rijksmonument 508234</span></div>
+        </div>
+        <div class="row">
+          <div class="row-icon ri-blue"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path d="M3 21h18M5 21V10l7-5 7 5v11" stroke="#1E40AF" stroke-width="1.8" stroke-linejoin="round"/></svg></div>
+          <div class="row-body"><div class="row-title">Klein Boomrijk</div><div class="row-desc">Voormalig koetsiershuis · 320 m² · recreatieverhuur zomerhuisje</div></div>
+          <div class="row-meta"><span class="tag tag-blue">Rijksmonument 508260</span></div>
+        </div>
+        <div class="row">
+          <div class="row-icon ri-amber"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" stroke="#B45309" stroke-width="1.8"/></svg></div>
+          <div class="row-body"><div class="row-title">Hof van Gunterstein</div><div class="row-desc">Boerderij + bedrijfsgebouwen · 75 ha · in pacht (regulier)</div></div>
+          <div class="row-meta"><span class="tag tag-amber">Gemeentelijk monument</span></div>
+        </div>
+        <div class="row">
+          <div class="row-icon ri-gray"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" stroke="#6B7280" stroke-width="1.8"/></svg></div>
+          <div class="row-body"><div class="row-title">Koetshuis</div><div class="row-desc">Bijgebouw kasteel · 420 m² · dakrenovatie 2026</div></div>
+          <div class="row-meta"><span class="tag tag-gray">Beeldbepalend</span></div>
+        </div>
+        <div class="row">
+          <div class="row-icon ri-gray"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" stroke="#6B7280" stroke-width="1.8"/></svg></div>
+          <div class="row-body"><div class="row-title">Oranjerie</div><div class="row-desc">Park · 110 m² · schilderwerk gepland Q4 2026</div></div>
+          <div class="row-meta"><span class="tag tag-gray">Beeldbepalend</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ SUBSIDIERADAR ══ -->
+    <div class="page" id="page-subsidie">
+      <div class="page-header">
+        <div class="page-title">Subsidieradar</div>
+        <div class="page-sub">Automatische matching op basis van het profiel van Gunterstein — klik op een subsidie voor de redenering</div>
+        <div class="page-actions">
+          <button class="btn btn-ghost btn-sm">Profiel bijwerken</button>
+          <button class="btn btn-ghost btn-sm">Exporteer overzicht</button>
+        </div>
+      </div>
+      <div class="chips">
+        <button class="theme-chip active">Alle (8)</button>
+        <button class="theme-chip">Monumenten SIM</button>
+        <button class="theme-chip">Natuur SNL</button>
+        <button class="theme-chip">Agrarisch ANLb</button>
+        <button class="theme-chip">NSW Fiscaal</button>
+      </div>
+      <div class="grid-2">
+        <div>
+          <div class="subsidy" onclick="toggleSub(this)">
+            <div class="subsidy-top">
+              <div class="match-badge mb-high">89%</div>
+              <div style="flex:1">
+                <div class="subsidy-name">SIM — Subsidie Instandhouding Monumenten</div>
+                <div class="subsidy-org">Rijksdienst voor het Cultureel Erfgoed / RVO</div>
+                <div class="progress"><div class="progress-fill pf-green" style="width:89%"></div></div>
+              </div>
+            </div>
+            <div class="subsidy-footer">
+              <div class="subsidy-amount">Max. 70% instandhoudingskosten</div>
+              <span class="tag tag-amber">Deadline 30 sept</span>
+              <span class="tag tag-amber">Actie vereist</span>
+            </div>
+            <div class="subsidy-reasons">
+              <div class="reason"><div class="rdot"></div>Kasteel Gunterstein is Rijksmonument (nr. 508234, 1681)</div>
+              <div class="reason"><div class="rdot"></div>Klein Boomrijk eveneens Rijksmonument (nr. 508260)</div>
+              <div class="reason"><div class="rdot"></div>Dakinspectie Koetshuis vereist als onderbouwing bij aanvraag</div>
+              <div class="reason"><div class="rdot"></div>Onderhoudsbeschrijving met NEN 2767 meting aanbevolen</div>
+            </div>
+          </div>
+
+          <div class="subsidy" onclick="toggleSub(this)">
+            <div class="subsidy-top">
+              <div class="match-badge mb-high">84%</div>
+              <div style="flex:1">
+                <div class="subsidy-name">SNL Natuur — Droog bos met productie</div>
+                <div class="subsidy-org">RVO / Provincie Utrecht</div>
+                <div class="progress"><div class="progress-fill pf-green" style="width:84%"></div></div>
+              </div>
+            </div>
+            <div class="subsidy-footer">
+              <div class="subsidy-amount">€ 130/ha/jr · ~€ 7.280</div>
+              <span class="tag tag-gray">Aanmelding Q3</span>
+              <span class="tag tag-green">Aanvraagbaar</span>
+            </div>
+            <div class="subsidy-reasons">
+              <div class="reason"><div class="rdot"></div>56 ha parkbos en lanen kwalificeren als productief bos</div>
+              <div class="reason"><div class="rdot"></div>Landgoed ligt in NNN Vechtstreek (hoge prioriteit provincie)</div>
+              <div class="reason"><div class="rdot"></div>Lopend beheerplan aanwezig — vereiste bijlage beschikbaar</div>
+            </div>
+          </div>
+
+          <div class="subsidy" onclick="toggleSub(this)">
+            <div class="subsidy-top">
+              <div class="match-badge mb-mid">71%</div>
+              <div style="flex:1">
+                <div class="subsidy-name">ANLb Weidevogelbeheer — Uitgesteld maaien</div>
+                <div class="subsidy-org">BoerenNatuur Utrecht</div>
+                <div class="progress"><div class="progress-fill pf-amber" style="width:71%"></div></div>
+              </div>
+            </div>
+            <div class="subsidy-footer">
+              <div class="subsidy-amount">€ 145/ha/jr · ~€ 4.350</div>
+              <span class="tag tag-gray">Open aanmelding</span>
+              <span class="tag tag-green">Aanvraagbaar</span>
+            </div>
+            <div class="subsidy-reasons">
+              <div class="reason"><div class="rdot"></div>30 ha weiland langs Vecht geschikt voor weidevogelbeheer</div>
+              <div class="reason"><div class="rdot"></div>Polder is onderdeel van collectief BoerenNatuur Utrecht</div>
+              <div class="reason"><div class="rdot"></div>Afstemming met Hof van Gunterstein (pachter) vereist</div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="subsidy" onclick="toggleSub(this)">
+            <div class="subsidy-top">
+              <div class="match-badge mb-high">92%</div>
+              <div style="flex:1">
+                <div class="subsidy-name">SNL Natuur — Vochtige alluviale bossen</div>
+                <div class="subsidy-org">RVO / Provincie Utrecht</div>
+                <div class="progress"><div class="progress-fill pf-green" style="width:92%"></div></div>
+              </div>
+            </div>
+            <div class="subsidy-footer">
+              <div class="subsidy-amount">€ 450/ha/jr · ~€ 6.750</div>
+              <span class="tag tag-amber">Deadline 15 juni</span>
+              <span class="tag tag-green">Aanvraagbaar</span>
+            </div>
+            <div class="subsidy-reasons">
+              <div class="reason"><div class="rdot"></div>15 ha oeverzone Vecht kwalificeert als alluviaal bos</div>
+              <div class="reason"><div class="rdot"></div>Hoge provinciale prioriteit langs de Vecht</div>
+              <div class="reason"><div class="rdot"></div>Habitat type H91E0* — zeldzaam, extra subsidiegewicht</div>
+            </div>
+          </div>
+
+          <div class="subsidy" onclick="toggleSub(this)">
+            <div class="subsidy-top">
+              <div class="match-badge mb-mid">65%</div>
+              <div style="flex:1">
+                <div class="subsidy-name">NSW Fiscale Vrijstelling — Herijking 2026</div>
+                <div class="subsidy-org">Belastingdienst</div>
+                <div class="progress"><div class="progress-fill pf-amber" style="width:65%"></div></div>
+              </div>
+            </div>
+            <div class="subsidy-footer">
+              <div class="subsidy-amount">Vrijstelling erf- en schenkbelasting</div>
+              <span class="tag tag-gray">Aanmelding jan 2027</span>
+              <span class="tag tag-blue">Status controleren</span>
+            </div>
+            <div class="subsidy-reasons">
+              <div class="reason"><div class="rdot"></div>NSW-rangschikking geldig — openstellingsverplichting 40 dgn/jr</div>
+              <div class="reason"><div class="rdot"></div>Openstellingsregistratie 2025 controleren</div>
+            </div>
+          </div>
+
+          <div class="card" style="border:1.5px dashed var(--primary-muted);box-shadow:none;background:var(--primary-light)">
+            <div class="card-title" style="color:var(--primary)">AI-assistent</div>
+            <div style="font-size:13px;color:#2A5C3F;line-height:1.6;margin-bottom:14px">
+              De <strong>SIM-aanvraag</strong> voor het kasteel heeft de hoogste urgentie dit kwartaal. De dakinspectie van het Koetshuis staat al ingepland — ik kan alvast de onderhoudsbeschrijving voor de aanvraag opstellen op basis van het bestaande MJOP.
+            </div>
+            <button class="btn btn-primary btn-sm">SIM-aanvraag starten</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ BERICHTEN ══ -->
+    <div class="page" id="page-berichten">
+      <div class="page-header">
+        <div class="page-title">Berichten &amp; Correspondentie</div>
+        <div class="page-sub">Alle communicatie van Gunterstein geordend, getagd en doorzoekbaar</div>
+        <div class="page-actions">
+          <button class="btn btn-ghost btn-sm">Gmail koppelen</button>
+          <button class="btn btn-primary btn-sm">Nieuw bericht</button>
+        </div>
+      </div>
+      <div class="grid-3-2">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Inbox — Gunterstein</div>
+            <span class="card-link">Alles bekijken</span>
+          </div>
+          <div class="chips" style="margin-bottom:12px">
+            <button class="theme-chip active">Alles</button>
+            <button class="theme-chip">Pachters</button>
+            <button class="theme-chip">Overheid</button>
+            <button class="theme-chip">Bestuur</button>
+            <button class="theme-chip">Adviseurs</button>
+          </div>
+          <div class="email-row unread">
+            <div class="av av-a">HG</div>
+            <div class="email-body">
+              <div class="email-from">Hof van Gunterstein (pachter)</div>
+              <div class="email-subject">Waterpeil slootkant Achterplaats — melding</div>
+              <div class="email-preview">Geachte mevrouw Quarles van Ufford, in verband met de recente regenval...</div>
+            </div>
+            <div class="email-meta"><span class="email-time">08:42</span><div class="udot"></div></div>
+          </div>
+          <div class="email-row unread">
+            <div class="av av-b">RVO</div>
+            <div class="email-body">
+              <div class="email-from">RVO Nederland</div>
+              <div class="email-subject">Bevestiging ANLb-aanvraag 2026 ontvangen</div>
+              <div class="email-preview">Uw aanvraag kenmerk ANL-2026-GU-881 is in goede orde ontvangen...</div>
+            </div>
+            <div class="email-meta"><span class="email-time">Gisteren</span><div class="udot"></div></div>
+          </div>
+          <div class="email-row unread">
+            <div class="av av-r">JK</div>
+            <div class="email-body">
+              <div class="email-from">Jos Koopmans (rentmeester)</div>
+              <div class="email-subject">Concept herziening pachtcontract bijgevoegd</div>
+              <div class="email-preview">Lara, zie bijgevoegd het concept voor de herziening per 2027. Let op de...</div>
+            </div>
+            <div class="email-meta"><span class="email-time">26 mei</span><div class="udot"></div></div>
+          </div>
+          <div class="email-row">
+            <div class="av av-p">RCE</div>
+            <div class="email-body">
+              <div class="email-from">Rijksdienst Cultureel Erfgoed</div>
+              <div class="email-subject">SIM 2026 — indieningsvereisten kastelen</div>
+              <div class="email-preview">Geachte eigenaar, wij informeren u over de gewijzigde vereisten voor...</div>
+            </div>
+            <div class="email-meta"><span class="email-time">24 mei</span></div>
+          </div>
+          <div class="email-row">
+            <div class="av av-g">GV</div>
+            <div class="email-body">
+              <div class="email-from">Gemeente Stichtse Vecht</div>
+              <div class="email-subject">Omgevingsvisie Vechtstreek 2026 — inzage</div>
+              <div class="email-preview">Geachte belanghebbende, de ontwerp-omgevingsvisie ligt ter inzage van...</div>
+            </div>
+            <div class="email-meta"><span class="email-time">21 mei</span></div>
+          </div>
+        </div>
+
+        <div>
+          <div class="card" style="margin-bottom:16px">
+            <div class="card-header"><div class="card-title">Communicatienetwerk</div></div>
+            <svg id="network-svg" viewBox="0 0 280 180" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <filter id="shadow"><feDropShadow dx="0" dy="1" stdDeviation="2" flood-opacity=".15"/></filter>
+              </defs>
+              <!-- edges -->
+              <line x1="140" y1="90" x2="60" y2="40" stroke="#C8D9CC" stroke-width="3" stroke-dasharray="5,3"/>
+              <line x1="140" y1="90" x2="220" y2="40" stroke="#C8D9CC" stroke-width="3" stroke-dasharray="5,3"/>
+              <line x1="140" y1="90" x2="50" y2="140" stroke="#C8D9CC" stroke-width="4" stroke-dasharray="5,3"/>
+              <line x1="140" y1="90" x2="230" y2="140" stroke="#C8D9CC" stroke-width="2" stroke-dasharray="5,3"/>
+              <line x1="140" y1="90" x2="140" y2="165" stroke="#C8D9CC" stroke-width="2" stroke-dasharray="5,3"/>
+              <!-- center node -->
+              <circle cx="140" cy="90" r="26" fill="#1B3A28" filter="url(#shadow)"/>
+              <text x="140" y="86" text-anchor="middle" fill="white" font-size="9" font-weight="700" font-family="Plus Jakarta Sans,sans-serif">Lara</text>
+              <text x="140" y="97" text-anchor="middle" fill="rgba(255,255,255,.7)" font-size="8" font-family="Plus Jakarta Sans,sans-serif">eigenaar</text>
+              <!-- other nodes -->
+              <circle cx="60" cy="40" r="18" fill="#B45309" filter="url(#shadow)"/>
+              <text x="60" y="44" text-anchor="middle" fill="white" font-size="8" font-weight="700" font-family="Plus Jakarta Sans,sans-serif">HvG</text>
+              <text x="60" y="62" text-anchor="middle" fill="#6B7280" font-size="8" font-family="Plus Jakarta Sans,sans-serif">Pachter</text>
+
+              <circle cx="220" cy="40" r="18" fill="#7C3AED" filter="url(#shadow)"/>
+              <text x="220" y="44" text-anchor="middle" fill="white" font-size="8" font-weight="700" font-family="Plus Jakarta Sans,sans-serif">Jos K.</text>
+              <text x="220" y="62" text-anchor="middle" fill="#6B7280" font-size="8" font-family="Plus Jakarta Sans,sans-serif">Rentm.</text>
+
+              <circle cx="50" cy="140" r="18" fill="#1E40AF" filter="url(#shadow)"/>
+              <text x="50" y="144" text-anchor="middle" fill="white" font-size="8" font-weight="700" font-family="Plus Jakarta Sans,sans-serif">RVO</text>
+              <text x="50" y="162" text-anchor="middle" fill="#6B7280" font-size="8" font-family="Plus Jakarta Sans,sans-serif">Subsidies</text>
+
+              <circle cx="230" cy="140" r="16" fill="#059669" filter="url(#shadow)"/>
+              <text x="230" y="144" text-anchor="middle" fill="white" font-size="8" font-weight="700" font-family="Plus Jakarta Sans,sans-serif">RCE</text>
+              <text x="230" y="160" text-anchor="middle" fill="#6B7280" font-size="8" font-family="Plus Jakarta Sans,sans-serif">Monument</text>
+
+              <circle cx="140" cy="165" r="15" fill="#6B7280" filter="url(#shadow)"/>
+              <text x="140" y="169" text-anchor="middle" fill="white" font-size="8" font-weight="700" font-family="Plus Jakarta Sans,sans-serif">Gem.</text>
+            </svg>
+            <div style="font-size:11px;color:var(--text-2);text-align:center;margin-top:8px">Dikte lijn = communicatiefrequentie · 90 dagen</div>
+          </div>
+
+          <div class="card">
+            <div class="card-header"><div class="card-title">Meest besproken thema's</div></div>
+            <div style="display:flex;flex-wrap:wrap;gap:8px">
+              <span class="tag tag-green" style="font-size:12px;padding:5px 12px">Pacht (14)</span>
+              <span class="tag tag-amber" style="font-size:12px;padding:5px 12px">Restauratie (9)</span>
+              <span class="tag tag-blue" style="font-size:12px;padding:5px 12px">Subsidies (8)</span>
+              <span class="tag tag-red" style="font-size:12px;padding:5px 12px">Onderhoud (6)</span>
+              <span class="tag tag-gray" style="font-size:12px;padding:5px 12px">Bestuur (4)</span>
+              <span class="tag tag-gray" style="font-size:12px;padding:5px 12px">Natuur (4)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ AGENDA ══ -->
+    <div class="page" id="page-agenda">
+      <div class="page-header">
+        <div class="page-title">Agenda &amp; Bijeenkomsten</div>
+        <div class="page-sub">Eigen afspraken én relevante sector-events automatisch samengebracht</div>
+        <div class="page-actions">
+          <button class="btn btn-primary btn-sm">Afspraak toevoegen</button>
+        </div>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header"><div class="card-title">Aankomend — juni 2026</div></div>
+
+          <div class="agenda-row">
+            <div class="ag-date"><div class="ag-day">5</div><div class="ag-month">Jun</div></div>
+            <div class="ag-bar amber"></div>
+            <div class="ag-content">
+              <div class="ag-title">Overleg Hof van Gunterstein — waterpeil</div>
+              <div class="ag-detail">14:00 · Boerderij Gunterstein · <span class="tag tag-amber" style="font-size:11px">Pacht</span></div>
+            </div>
+          </div>
+
+          <div class="agenda-row">
+            <div class="ag-date"><div class="ag-day">11</div><div class="ag-month">Jun</div></div>
+            <div class="ag-bar green"></div>
+            <div class="ag-content">
+              <div class="ag-title">Bestuursvergadering Stichting Gunterstein</div>
+              <div class="ag-detail">10:00 · Kasteel · Alle bestuursleden · <span class="tag tag-green" style="font-size:11px">Bestuur</span></div>
+            </div>
+          </div>
+
+          <div class="agenda-row">
+            <div class="ag-date"><div class="ag-day">12</div><div class="ag-month">Jun</div></div>
+            <div class="ag-bar blue"></div>
+            <div class="ag-content">
+              <div class="ag-title">FPG Themadag — Pachtwet 2028</div>
+              <div class="ag-detail">Wageningen · Federatie Particulier Grondbezit · <span class="tag tag-blue" style="font-size:11px">Sector-event</span></div>
+            </div>
+          </div>
+
+          <div class="agenda-row">
+            <div class="ag-date"><div class="ag-day">18</div><div class="ag-month">Jun</div></div>
+            <div class="ag-bar amber"></div>
+            <div class="ag-content">
+              <div class="ag-title">Dakinspectie Koetshuis — NEN 2767</div>
+              <div class="ag-detail">09:00 · Koetshuis Gunterstein · Inspectiebedrijf Van Dongen · <span class="tag tag-amber" style="font-size:11px">MJOP</span></div>
+            </div>
+          </div>
+
+          <div class="agenda-row">
+            <div class="ag-date"><div class="ag-day">25</div><div class="ag-month">Jun</div></div>
+            <div class="ag-bar blue"></div>
+            <div class="ag-content">
+              <div class="ag-title">NVR Jaarvergadering 2026</div>
+              <div class="ag-detail">Utrecht · Ned. Vereniging van Rentmeesters · <span class="tag tag-blue" style="font-size:11px">Sector-event</span></div>
+            </div>
+          </div>
+
+          <div class="agenda-row">
+            <div class="ag-date"><div class="ag-day">30</div><div class="ag-month">Jun</div></div>
+            <div class="ag-bar" style="background:var(--red)"></div>
+            <div class="ag-content">
+              <div class="ag-title">Deadline SNL Natuur — vochtige bossen</div>
+              <div class="ag-detail">Indienen bij RVO vóór 23:59 · <span class="tag tag-red" style="font-size:11px">Subsidie</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="card" style="margin-bottom:16px">
+            <div class="card-header"><div class="card-title">Relevante sector-events</div><span class="card-link">Meer laden</span></div>
+            <div style="font-size:12px;color:var(--text-2);margin-bottom:12px">Automatisch geselecteerd op basis van uw landgoedprofiel</div>
+            <div class="row">
+              <div class="row-icon ri-blue">
+                <svg width="15" height="15" fill="none" viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-7 10 7" stroke="#1E40AF" stroke-width="1.8" stroke-linejoin="round"/><path d="M6 10v6a2 2 0 002 2h8a2 2 0 002-2v-6" stroke="#1E40AF" stroke-width="1.8"/></svg>
+              </div>
+              <div class="row-body"><div class="row-title">Cursus Pachtrecht — Nieuw regime 2028</div><div class="row-desc">Van Hall Larenstein · Velp · 3 september</div></div>
+              <div class="row-meta"><span class="tag tag-blue">Aanmelden</span></div>
+            </div>
+            <div class="row">
+              <div class="row-icon ri-green">
+                <svg width="15" height="15" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="#1B3A28" stroke-width="1.8"/><path d="M8 14s1.5 2 4 2 4-2 4-2" stroke="#1B3A28" stroke-width="1.8" stroke-linecap="round"/><line x1="9" y1="9" x2="9.01" y2="9" stroke="#1B3A28" stroke-width="2" stroke-linecap="round"/><line x1="15" y1="9" x2="15.01" y2="9" stroke="#1B3A28" stroke-width="2" stroke-linecap="round"/></svg>
+              </div>
+              <div class="row-body"><div class="row-title">ANLb collectief Utrecht — informatiedag</div><div class="row-desc">BoerenNatuur · De Meern · 19 juni</div></div>
+              <div class="row-meta"><span class="tag tag-green">Gratis</span></div>
+            </div>
+            <div class="row">
+              <div class="row-icon ri-amber">
+                <svg width="15" height="15" fill="none" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" stroke="#B45309" stroke-width="1.8"/></svg>
+              </div>
+              <div class="row-body"><div class="row-title">Monumentenzorg &amp; klimaatadaptatie</div><div class="row-desc">RCE · Online webinar · 7 augustus</div></div>
+              <div class="row-meta"><span class="tag tag-amber">Online</span></div>
+            </div>
+          </div>
+
+          <div class="card" style="background:var(--primary-light);border:1.5px solid var(--primary-muted);box-shadow:none">
+            <div class="card-title" style="color:var(--primary);margin-bottom:10px">Bestuursvergadering — 11 juni</div>
+            <div style="font-size:12.5px;color:var(--text-2);margin-bottom:12px;font-weight:500">Concept agenda</div>
+            <div style="font-size:13px;line-height:2;color:var(--text)">
+              <div>1. Opening &amp; notulen vorige vergadering</div>
+              <div>2. <strong>Financiën</strong> — halfjaarrapportage 2026</div>
+              <div>3. <strong>Pacht Hof van Gunterstein</strong> — strategie 2027</div>
+              <div>4. <strong>SIM-aanvraag</strong> Koetshuis — akkoord?</div>
+              <div>5. MJOP kasteel — resultaten inspectie</div>
+              <div>6. Rondvraag en sluiting</div>
+            </div>
+            <div style="display:flex;gap:8px;margin-top:14px">
+              <button class="btn btn-primary btn-sm">Agenda versturen</button>
+              <button class="btn btn-ghost btn-sm">Notulen starten</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ DOCUMENTEN ══ -->
+    <div class="page" id="page-documenten">
+      <div class="page-header">
+        <div class="page-title">Documenten &amp; Dossiers</div>
+        <div class="page-sub">Alle documenten gekoppeld aan objecten, percelen en relaties</div>
+        <div class="page-actions"><button class="btn btn-primary btn-sm">Document uploaden</button></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">Recent bijgewerkt</div></div>
+        <div class="doc-grid">
+          <div class="doc-card"><div class="doc-icon"><svg width="22" height="22" fill="none" viewBox="0 0 24 24"><path d="M13 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9l-7-7z" stroke="#1B3A28" stroke-width="1.8"/><path d="M13 2v7h7" stroke="#1B3A28" stroke-width="1.8"/></svg></div><div class="doc-name">Pachtcontract Hof van Gunterstein 2021</div><div class="doc-date">26 mei 2026</div></div>
+          <div class="doc-card"><div class="doc-icon"><svg width="22" height="22" fill="none" viewBox="0 0 24 24"><path d="M13 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9l-7-7z" stroke="#1E40AF" stroke-width="1.8"/><path d="M13 2v7h7" stroke="#1E40AF" stroke-width="1.8"/></svg></div><div class="doc-name">Beheerplan SNL 2023–2028</div><div class="doc-date">10 jan 2026</div></div>
+          <div class="doc-card"><div class="doc-icon"><svg width="22" height="22" fill="none" viewBox="0 0 24 24"><path d="M13 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9l-7-7z" stroke="#B45309" stroke-width="1.8"/><path d="M13 2v7h7" stroke="#B45309" stroke-width="1.8"/></svg></div><div class="doc-name">Rijksmonumentenstatus Kasteel (508234)</div><div class="doc-date">2018</div></div>
+          <div class="doc-card"><div class="doc-icon"><svg width="22" height="22" fill="none" viewBox="0 0 24 24"><path d="M13 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9l-7-7z" stroke="#1B3A28" stroke-width="1.8"/><path d="M13 2v7h7" stroke="#1B3A28" stroke-width="1.8"/></svg></div><div class="doc-name">MJOP Kasteel Gunterstein 2022</div><div class="doc-date">5 feb 2022</div></div>
+          <div class="doc-card"><div class="doc-icon"><svg width="22" height="22" fill="none" viewBox="0 0 24 24"><path d="M13 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9l-7-7z" stroke="#6B7280" stroke-width="1.8"/><path d="M13 2v7h7" stroke="#6B7280" stroke-width="1.8"/></svg></div><div class="doc-name">NSW Rangschikkingsbesluit Gunterstein</div><div class="doc-date">2017</div></div>
+          <div class="doc-card"><div class="doc-icon"><svg width="22" height="22" fill="none" viewBox="0 0 24 24"><path d="M13 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9l-7-7z" stroke="#1E40AF" stroke-width="1.8"/><path d="M13 2v7h7" stroke="#1E40AF" stroke-width="1.8"/></svg></div><div class="doc-name">ANLb Collectiefcontract Utrecht 2024</div><div class="doc-date">mrt 2024</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ RELATIES ══ -->
+    <div class="page" id="page-relaties">
+      <div class="page-header"><div class="page-title">Relaties</div><div class="page-sub">Pachters, adviseurs, overheden en leveranciers</div></div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">Relatienetwerk Gunterstein</div><button class="btn btn-ghost btn-sm">Relatie toevoegen</button></div>
+        <div class="row"><div class="row-icon ri-amber"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" stroke="#B45309" stroke-width="1.8"/></svg></div><div class="row-body"><div class="row-title">Hof van Gunterstein — Pachter</div><div class="row-desc">Biologisch melkveebedrijf · 75 ha · contract t/m 1 jan 2027</div></div><div class="row-meta"><span class="tag tag-red">Contract verloopt</span></div></div>
+        <div class="row"><div class="row-icon ri-green"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="7" r="4" stroke="#1B3A28" stroke-width="1.8"/><path d="M3 21v-2a4 4 0 014-4h10a4 4 0 014 4v2" stroke="#1B3A28" stroke-width="1.8"/></svg></div><div class="row-body"><div class="row-title">Jos Koopmans — Rentmeester</div><div class="row-desc">Pacht- en juridisch advies · uurbasis</div></div><div class="row-meta"><span class="tag tag-gray">Adviseur</span></div></div>
+        <div class="row"><div class="row-icon ri-blue"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" stroke="#1E40AF" stroke-width="1.8"/><path d="M8 21h8M12 17v4" stroke="#1E40AF" stroke-width="1.8"/></svg></div><div class="row-body"><div class="row-title">RVO Nederland</div><div class="row-desc">SNL, ANLb, SIM-aanvragen</div></div><div class="row-meta"><span class="tag tag-blue">Overheid</span></div></div>
+        <div class="row"><div class="row-icon ri-blue"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" stroke="#1E40AF" stroke-width="1.8"/><path d="M8 21h8M12 17v4" stroke="#1E40AF" stroke-width="1.8"/></svg></div><div class="row-body"><div class="row-title">Rijksdienst voor het Cultureel Erfgoed (RCE)</div><div class="row-desc">Monumentenzorg · restauratiebegeleiding</div></div><div class="row-meta"><span class="tag tag-blue">Overheid</span></div></div>
+        <div class="row"><div class="row-icon ri-green"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" stroke="#1B3A28" stroke-width="1.8"/><path d="M8 21h8M12 17v4" stroke="#1B3A28" stroke-width="1.8"/></svg></div><div class="row-body"><div class="row-title">Gemeente Stichtse Vecht</div><div class="row-desc">Omgevingsvergunningen · omgevingsplan</div></div><div class="row-meta"><span class="tag tag-gray">Overheid</span></div></div>
+      </div>
+    </div>
+
+    <!-- ══ REGELGEVING ══ -->
+    <div class="page" id="page-regelgeving">
+      <div class="page-header"><div class="page-title">Regelgeving &amp; Deadlines</div><div class="page-sub">Wijzigingen die direct relevant zijn voor Gunterstein</div></div>
+      <div class="alert alert-red"><svg width="16" height="16" fill="none" viewBox="0 0 24 24" style="flex-shrink:0"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/><line x1="12" y1="8" x2="12" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="16" r="1" fill="currentColor"/></svg><div><strong>Nieuw:</strong> Pachtwet herziening treedt naar verwachting in werking per 2028. Reguliere pachtcontracten wijzigen sterk — aanbevolen actie: strategie bepalen vóór einde 2026.</div></div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">Relevante wijzigingen</div></div>
+        <div class="row"><div class="row-icon ri-red"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2" stroke="#DC2626" stroke-width="1.8"/><rect x="9" y="3" width="6" height="4" rx="1" stroke="#DC2626" stroke-width="1.8"/></svg></div><div class="row-body"><div class="row-title">Nieuwe Pachtwet 2028 — reguliere pacht</div><div class="row-desc">Fundamentele herziening · pacht Hof van Gunterstein vereist tijdige herbeoordeling</div></div><div class="row-meta"><span class="tag tag-red">Urgent</span></div></div>
+        <div class="row"><div class="row-icon ri-amber"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="#B45309" stroke-width="1.8"/><path d="M12 8v4l3 3" stroke="#B45309" stroke-width="1.8" stroke-linecap="round"/></svg></div><div class="row-body"><div class="row-title">NSW herijking — openstellingsverplichting</div><div class="row-desc">Aanscherping voorwaarden 2026 · 40 dgn per jaar openstellingsregistratie controleren</div></div><div class="row-meta"><span class="tag tag-amber">Controleer</span></div></div>
+        <div class="row"><div class="row-icon ri-blue"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" stroke="#1E40AF" stroke-width="1.8"/><path d="M3 9h18" stroke="#1E40AF" stroke-width="1.8"/><path d="M9 21V9" stroke="#1E40AF" stroke-width="1.8"/></svg></div><div class="row-body"><div class="row-title">Omgevingsvisie Stichtse Vecht 2026</div><div class="row-desc">Ontwerp ligt ter inzage t/m 15 juli · zienswijze mogelijk</div></div><div class="row-meta"><span class="tag tag-blue">Inzage</span></div></div>
+      </div>
+    </div>
+
+    <!-- ══ CONTRACTEN ══ -->
+    <div class="page" id="page-contracten">
+      <div class="page-header"><div class="page-title">Contracten &amp; Rechten</div><div class="page-sub">Pacht, huur, erfpacht, jacht- en visrechten</div></div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">Actieve contracten</div><button class="btn btn-ghost btn-sm">Nieuw contract</button></div>
+        <div class="row"><div class="row-icon ri-red"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2" stroke="#DC2626" stroke-width="1.8"/><rect x="9" y="3" width="6" height="4" rx="1" stroke="#DC2626" stroke-width="1.8"/></svg></div><div class="row-body"><div class="row-title">Pacht Hof van Gunterstein</div><div class="row-desc">Reguliere pacht · 75 ha · € 28.500/jr · biologisch melkveebedrijf</div></div><div class="row-meta"><span class="tag tag-red">Verloopt jan 2027</span></div></div>
+        <div class="row"><div class="row-icon ri-green"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2" stroke="#1B3A28" stroke-width="1.8"/><rect x="9" y="3" width="6" height="4" rx="1" stroke="#1B3A28" stroke-width="1.8"/></svg></div><div class="row-body"><div class="row-title">Verhuur Zomerhuisje Klein Boomrijk</div><div class="row-desc">Recreatieverhuur · jaarlijks opzegbaar · € 4.800/jr</div></div><div class="row-meta"><span class="tag tag-green">Actief</span></div></div>
+        <div class="row"><div class="row-icon ri-green"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path d="M3 12h18M3 6h18M3 18h18" stroke="#1B3A28" stroke-width="1.8" stroke-linecap="round"/></svg></div><div class="row-body"><div class="row-title">Visrecht Vijver Gunterstein</div><div class="row-desc">Sportvisserij Utrecht · € 1.800/jr · jaarlijks opzegbaar</div></div><div class="row-meta"><span class="tag tag-green">Actief</span></div></div>
+        <div class="row"><div class="row-icon ri-amber"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2" stroke="#B45309" stroke-width="1.8"/><rect x="9" y="3" width="6" height="4" rx="1" stroke="#B45309" stroke-width="1.8"/></svg></div><div class="row-body"><div class="row-title">Jachtrecht Landgoed Gunterstein</div><div class="row-desc">Wildbeheereenheden Utrecht · 6-jarig contract · loopt t/m 2028</div></div><div class="row-meta"><span class="tag tag-gray">t/m 2028</span></div></div>
+      </div>
+    </div>
+
+    <!-- ══ TAKEN ══ -->
+    <div class="page" id="page-taken">
+      <div class="page-header">
+        <div class="page-title">Taken &amp; acties</div>
+        <div class="page-sub">Alle openstaande en afgeronde acties · per gebruiker en status</div>
+        <div class="page-actions">
+          <button class="btn btn-primary btn-sm">
+            <svg width="13" height="13" fill="none" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>
+            Taak toevoegen
+          </button>
+          <button class="btn btn-ghost btn-sm">Exporteer</button>
+        </div>
+      </div>
+
+      <div class="kpi-grid">
+        <div class="kpi">
+          <div class="kpi-label">Mijn open taken</div>
+          <div class="kpi-value">7</div>
+          <div class="kpi-delta danger">1 urgent · 2 vervallen</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">In behandeling</div>
+          <div class="kpi-value">3</div>
+          <div class="kpi-delta">Rentmeester &amp; aannemer</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">Deze week afgerond</div>
+          <div class="kpi-value">5</div>
+          <div class="kpi-delta up">
+            <svg width="11" height="11" fill="none" viewBox="0 0 24 24"><path d="M5 10l7-7 7 7M12 3v18" stroke="#16A34A" stroke-width="2" stroke-linecap="round"/></svg>
+            +2 t.o.v. vorige week
+          </div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">Totaal landgoed</div>
+          <div class="kpi-value">14</div>
+          <div class="kpi-delta">Alle gebruikers · open</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><div class="card-title">Filter</div><span class="card-link" onclick="resetTakenFilters()">Reset</span></div>
+        <div style="font-size:11px;font-weight:700;color:var(--text-3);letter-spacing:.6px;text-transform:uppercase;margin-bottom:6px">Gebruiker</div>
+        <div class="chips chips-user">
+          <button class="theme-chip active" data-filter="all">Iedereen</button>
+          <button class="theme-chip" data-filter="lara">Lara</button>
+          <button class="theme-chip" data-filter="jos">Jos K. (rentmeester)</button>
+          <button class="theme-chip" data-filter="hvg">Hof van Gunterstein</button>
+          <button class="theme-chip" data-filter="extern">Extern (aannemer)</button>
+        </div>
+        <div style="font-size:11px;font-weight:700;color:var(--text-3);letter-spacing:.6px;text-transform:uppercase;margin-bottom:6px;margin-top:8px">Status</div>
+        <div class="chips chips-status" style="margin-bottom:4px">
+          <button class="theme-chip active" data-filter="open">Open</button>
+          <button class="theme-chip" data-filter="in-behandeling">In behandeling</button>
+          <button class="theme-chip" data-filter="afgerond">Afgerond</button>
+          <button class="theme-chip" data-filter="all">Alle</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><div class="card-title">Taken · <span id="taken-count">13</span> zichtbaar</div><span class="card-link">Sorteren op deadline</span></div>
+
+        <div class="row taken-row" data-user="jos" data-status="open">
+          <div class="row-icon ri-red"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="#DC2626" stroke-width="1.8"/><line x1="12" y1="8" x2="12" y2="12" stroke="#DC2626" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="16" r="1" fill="#DC2626"/></svg></div>
+          <div class="row-body">
+            <div class="row-title">SIM-aanvraag Koetshuis indienen</div>
+            <div class="row-desc">Subsidie · deadline 30 sept · onderhoudsbeschrijving NEN 2767 toevoegen</div>
+          </div>
+          <div class="row-meta">
+            <div style="display:flex;align-items:center;gap:6px;justify-content:flex-end"><span class="av av-r" style="width:24px;height:24px;font-size:10px">JK</span><span style="font-size:11.5px;font-weight:600">Jos K.</span></div>
+            <div style="display:flex;gap:4px;justify-content:flex-end;margin-top:6px"><span class="tag tag-red">Urgent</span><span class="tag tag-gray">Open</span></div>
+          </div>
+        </div>
+
+        <div class="row taken-row" data-user="lara" data-status="open">
+          <div class="row-icon ri-red"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="#DC2626" stroke-width="1.8"/><line x1="12" y1="8" x2="12" y2="12" stroke="#DC2626" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="16" r="1" fill="#DC2626"/></svg></div>
+          <div class="row-body">
+            <div class="row-title">Pachtcontract Hof van Gunterstein — herziening starten</div>
+            <div class="row-desc">Juridisch · contract verloopt 1 jan 2027 · overleg met Jos K. agenderen</div>
+          </div>
+          <div class="row-meta">
+            <div style="display:flex;align-items:center;gap:6px;justify-content:flex-end"><span class="av av-p" style="width:24px;height:24px;font-size:10px">LQ</span><span style="font-size:11.5px;font-weight:600">Lara</span></div>
+            <div style="display:flex;gap:4px;justify-content:flex-end;margin-top:6px"><span class="tag tag-red">Urgent</span><span class="tag tag-gray">Open</span></div>
+          </div>
+        </div>
+
+        <div class="row taken-row" data-user="lara" data-status="open">
+          <div class="row-icon ri-amber"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="#B45309" stroke-width="1.8"/><path d="M12 8v4l3 3" stroke="#B45309" stroke-width="1.8" stroke-linecap="round"/></svg></div>
+          <div class="row-body">
+            <div class="row-title">Factuur Van Dongen Inspectie betalen</div>
+            <div class="row-desc">Financieel · F-2026-441 · vervallen 14 dgn · € 2.140</div>
+          </div>
+          <div class="row-meta">
+            <div style="display:flex;align-items:center;gap:6px;justify-content:flex-end"><span class="av av-p" style="width:24px;height:24px;font-size:10px">LQ</span><span style="font-size:11.5px;font-weight:600">Lara</span></div>
+            <div style="display:flex;gap:4px;justify-content:flex-end;margin-top:6px"><span class="tag tag-amber">Hoog</span><span class="tag tag-amber">Vervallen</span></div>
+          </div>
+        </div>
+
+        <div class="row taken-row" data-user="extern" data-status="in-behandeling">
+          <div class="row-icon ri-amber"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3-3a5 5 0 01-8.45 8.45l-5.8 5.8a2 2 0 01-2.83-2.83l5.8-5.8A5 5 0 0114.7 6.3z" stroke="#B45309" stroke-width="1.8"/></svg></div>
+          <div class="row-body">
+            <div class="row-title">Dakinspectie Koetshuis — uitvoering</div>
+            <div class="row-desc">Onderhoud · 18 juni · Van Dongen Inspectie · NEN 2767</div>
+          </div>
+          <div class="row-meta">
+            <div style="display:flex;align-items:center;gap:6px;justify-content:flex-end"><span class="av" style="width:24px;height:24px;font-size:10px;background:#6B7280">VD</span><span style="font-size:11.5px;font-weight:600">Extern</span></div>
+            <div style="display:flex;gap:4px;justify-content:flex-end;margin-top:6px"><span class="tag tag-amber">Hoog</span><span class="tag tag-blue">In behandeling</span></div>
+          </div>
+        </div>
+
+        <div class="row taken-row" data-user="hvg" data-status="open">
+          <div class="row-icon ri-amber"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" stroke="#B45309" stroke-width="1.8"/></svg></div>
+          <div class="row-body">
+            <div class="row-title">Waterpeil-voorstel slootkant Achterplaats indienen</div>
+            <div class="row-desc">Pacht · Hof van Gunterstein levert technisch voorstel · binnen 14 dgn</div>
+          </div>
+          <div class="row-meta">
+            <div style="display:flex;align-items:center;gap:6px;justify-content:flex-end"><span class="av av-a" style="width:24px;height:24px;font-size:10px">HG</span><span style="font-size:11.5px;font-weight:600">Hof v.G.</span></div>
+            <div style="display:flex;gap:4px;justify-content:flex-end;margin-top:6px"><span class="tag tag-amber">Normaal</span><span class="tag tag-gray">Open</span></div>
+          </div>
+        </div>
+
+        <div class="row taken-row" data-user="jos" data-status="open">
+          <div class="row-icon ri-blue"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" stroke="#1E40AF" stroke-width="1.8"/><line x1="3" y1="10" x2="21" y2="10" stroke="#1E40AF" stroke-width="1.8"/></svg></div>
+          <div class="row-body">
+            <div class="row-title">Reageren op waterpeil-melding</div>
+            <div class="row-desc">Pacht · Hof van Gunterstein · slootkant Achterplaats · binnen 5 dgn antwoorden</div>
+          </div>
+          <div class="row-meta">
+            <div style="display:flex;align-items:center;gap:6px;justify-content:flex-end"><span class="av av-r" style="width:24px;height:24px;font-size:10px">JK</span><span style="font-size:11.5px;font-weight:600">Jos K.</span></div>
+            <div style="display:flex;gap:4px;justify-content:flex-end;margin-top:6px"><span class="tag tag-amber">Normaal</span><span class="tag tag-gray">Open</span></div>
+          </div>
+        </div>
+
+        <div class="row taken-row" data-user="jos" data-status="open">
+          <div class="row-icon ri-blue"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" stroke="#1E40AF" stroke-width="1.8"/><circle cx="12" cy="12" r="5" stroke="#1E40AF" stroke-width="1.8"/></svg></div>
+          <div class="row-body">
+            <div class="row-title">SNL Vochtige Alluviale Bossen — aanvraag indienen</div>
+            <div class="row-desc">Subsidie · deadline 30 juni · 15 ha oeverzone Vecht · € 6.750</div>
+          </div>
+          <div class="row-meta">
+            <div style="display:flex;align-items:center;gap:6px;justify-content:flex-end"><span class="av av-r" style="width:24px;height:24px;font-size:10px">JK</span><span style="font-size:11.5px;font-weight:600">Jos K.</span></div>
+            <div style="display:flex;gap:4px;justify-content:flex-end;margin-top:6px"><span class="tag tag-amber">Hoog</span><span class="tag tag-gray">Open</span></div>
+          </div>
+        </div>
+
+        <div class="row taken-row" data-user="lara" data-status="in-behandeling">
+          <div class="row-icon ri-green"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" stroke="#1B3A28" stroke-width="1.8"/><line x1="16" y1="2" x2="16" y2="6" stroke="#1B3A28" stroke-width="1.8"/></svg></div>
+          <div class="row-body">
+            <div class="row-title">Concept agenda bestuursvergadering versturen</div>
+            <div class="row-desc">Bestuur · 11 juni vergadering · agenda + financiële halfjaarrapportage</div>
+          </div>
+          <div class="row-meta">
+            <div style="display:flex;align-items:center;gap:6px;justify-content:flex-end"><span class="av av-p" style="width:24px;height:24px;font-size:10px">LQ</span><span style="font-size:11.5px;font-weight:600">Lara</span></div>
+            <div style="display:flex;gap:4px;justify-content:flex-end;margin-top:6px"><span class="tag tag-gray">Normaal</span><span class="tag tag-blue">In behandeling</span></div>
+          </div>
+        </div>
+
+        <div class="row taken-row" data-user="jos" data-status="open">
+          <div class="row-icon ri-green"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7" stroke="#1B3A28" stroke-width="1.8"/><path d="M20 20l-3-3" stroke="#1B3A28" stroke-width="1.8"/></svg></div>
+          <div class="row-body">
+            <div class="row-title">VTA boomveiligheidskeuring Lindenlaan plannen</div>
+            <div class="row-desc">Onderhoud · 48 linde-exemplaren · jaarlijks · in te plannen aug–sept</div>
+          </div>
+          <div class="row-meta">
+            <div style="display:flex;align-items:center;gap:6px;justify-content:flex-end"><span class="av av-r" style="width:24px;height:24px;font-size:10px">JK</span><span style="font-size:11.5px;font-weight:600">Jos K.</span></div>
+            <div style="display:flex;gap:4px;justify-content:flex-end;margin-top:6px"><span class="tag tag-gray">Laag</span><span class="tag tag-gray">Open</span></div>
+          </div>
+        </div>
+
+        <div class="row taken-row" data-user="jos" data-status="open">
+          <div class="row-icon ri-gray"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" stroke="#6B7280" stroke-width="1.8"/></svg></div>
+          <div class="row-body">
+            <div class="row-title">NSW openstellingsregistratie 2025 controleren</div>
+            <div class="row-desc">Fiscaal · 40 dgn/jaar · vóór herijking 2026</div>
+          </div>
+          <div class="row-meta">
+            <div style="display:flex;align-items:center;gap:6px;justify-content:flex-end"><span class="av av-r" style="width:24px;height:24px;font-size:10px">JK</span><span style="font-size:11.5px;font-weight:600">Jos K.</span></div>
+            <div style="display:flex;gap:4px;justify-content:flex-end;margin-top:6px"><span class="tag tag-gray">Normaal</span><span class="tag tag-gray">Open</span></div>
+          </div>
+        </div>
+
+        <div class="row taken-row" data-user="lara" data-status="open">
+          <div class="row-icon ri-gray"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" stroke="#6B7280" stroke-width="1.8"/></svg></div>
+          <div class="row-body">
+            <div class="row-title">Herinnering visrechten Sportvisserij Utrecht</div>
+            <div class="row-desc">Financieel · factuur 8 wk oud · € 900 · aanmaning sturen</div>
+          </div>
+          <div class="row-meta">
+            <div style="display:flex;align-items:center;gap:6px;justify-content:flex-end"><span class="av av-p" style="width:24px;height:24px;font-size:10px">LQ</span><span style="font-size:11.5px;font-weight:600">Lara</span></div>
+            <div style="display:flex;gap:4px;justify-content:flex-end;margin-top:6px"><span class="tag tag-gray">Laag</span><span class="tag tag-gray">Open</span></div>
+          </div>
+        </div>
+
+        <div class="row taken-row" data-user="lara" data-status="afgerond" style="opacity:.65">
+          <div class="row-icon ri-green"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4" stroke="#1B3A28" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="12" r="10" stroke="#1B3A28" stroke-width="1.8"/></svg></div>
+          <div class="row-body">
+            <div class="row-title">ANLb-aanvraag 2026 indienen</div>
+            <div class="row-desc">Subsidie · Weidevogelbeheer · RVO bevestigd · afgerond 24 mei</div>
+          </div>
+          <div class="row-meta">
+            <div style="display:flex;align-items:center;gap:6px;justify-content:flex-end"><span class="av av-p" style="width:24px;height:24px;font-size:10px">LQ</span><span style="font-size:11.5px;font-weight:600">Lara</span></div>
+            <div style="display:flex;gap:4px;justify-content:flex-end;margin-top:6px"><span class="tag tag-green">Afgerond</span></div>
+          </div>
+        </div>
+
+        <div class="row taken-row" data-user="jos" data-status="afgerond" style="opacity:.65">
+          <div class="row-icon ri-green"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4" stroke="#1B3A28" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="12" r="10" stroke="#1B3A28" stroke-width="1.8"/></svg></div>
+          <div class="row-body">
+            <div class="row-title">Beheerplan SNL — actualisatie 2026</div>
+            <div class="row-desc">Subsidie · concept verstuurd naar provincie · afgerond 21 mei</div>
+          </div>
+          <div class="row-meta">
+            <div style="display:flex;align-items:center;gap:6px;justify-content:flex-end"><span class="av av-r" style="width:24px;height:24px;font-size:10px">JK</span><span style="font-size:11.5px;font-weight:600">Jos K.</span></div>
+            <div style="display:flex;gap:4px;justify-content:flex-end;margin-top:6px"><span class="tag tag-green">Afgerond</span></div>
+          </div>
+        </div>
+
+        <div id="taken-empty" style="display:none;padding:24px;text-align:center;color:var(--text-2);font-size:13px">Geen taken voor deze filter.</div>
+      </div>
+    </div>
+
+    <!-- ══ FINANCIEEL ══ -->
+    <div class="page" id="page-financieel">
+      <div class="page-header">
+        <div class="page-title">Financieel</div>
+        <div class="page-sub">Kasstroom, bank en debiteuren/crediteuren · Q2 2026</div>
+        <div class="page-actions">
+          <button class="btn btn-ghost btn-sm">Periode wisselen</button>
+          <button class="btn btn-ghost btn-sm">Exporteer naar boekhouding</button>
+        </div>
+      </div>
+
+      <div class="alert" style="background:var(--primary-light);color:var(--primary);border:1px solid var(--primary-muted)">
+        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" style="flex-shrink:0;margin-top:1px"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <div><strong>Banksaldo gesynchroniseerd via PSD2</strong> — ING (zakelijk) en Triodos (vermogen) · laatst bijgewerkt 2 uur geleden · automatische dagelijkse update om 06:00</div>
+      </div>
+
+      <div class="kpi-grid">
+        <div class="kpi">
+          <div class="kpi-arrow"><svg width="12" height="12" fill="none" viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round"/></svg></div>
+          <div class="kpi-label">Operationele kasstroom</div>
+          <div class="kpi-value">€ +12.450</div>
+          <div class="kpi-delta up">
+            <svg width="11" height="11" fill="none" viewBox="0 0 24 24"><path d="M5 10l7-7 7 7M12 3v18" stroke="#16A34A" stroke-width="2" stroke-linecap="round"/></svg>
+            YTD · 8% boven begroting
+          </div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-arrow"><svg width="12" height="12" fill="none" viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round"/></svg></div>
+          <div class="kpi-label">Onderhoud · besteed / budget</div>
+          <div class="kpi-value">€ 28k <span style="font-size:18px;color:var(--text-2);font-weight:500">/ € 45k</span></div>
+          <div class="progress" style="height:5px;margin:8px 0 6px"><div class="progress-fill pf-green" style="width:62%"></div></div>
+          <div class="kpi-delta">62% benut · H1 2026</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-arrow"><svg width="12" height="12" fill="none" viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round"/></svg></div>
+          <div class="kpi-label">Banksaldo totaal</div>
+          <div class="kpi-value">€ 87.320</div>
+          <div class="kpi-delta">ING € 24.110 · Triodos € 63.210</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-arrow"><svg width="12" height="12" fill="none" viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round"/></svg></div>
+          <div class="kpi-label">Nog te betalen</div>
+          <div class="kpi-value">€ 6.840</div>
+          <div class="kpi-delta warn">3 facturen · 1 vervallen</div>
+        </div>
+      </div>
+
+      <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr)">
+        <div class="kpi" style="grid-column:span 1">
+          <div class="kpi-arrow"><svg width="12" height="12" fill="none" viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round"/></svg></div>
+          <div class="kpi-label">Nog te ontvangen</div>
+          <div class="kpi-value">€ 14.200</div>
+          <div class="kpi-delta">Pacht Q3 + ANLb voorschot</div>
+        </div>
+        <div class="card" style="grid-column:span 3;padding:18px 20px">
+          <div class="card-header" style="margin-bottom:10px"><div class="card-title">Kasstroom 2026 — maandelijks (€ × 1.000)</div><span style="font-size:11px;color:var(--text-2)">Inkomsten vs uitgaven</span></div>
+          <svg viewBox="0 0 360 90" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:90px">
+            <line x1="0" y1="60" x2="360" y2="60" stroke="#E5E7EB" stroke-width="1"/>
+            <!-- inkomsten bars (groen) -->
+            <g fill="#1B3A28">
+              <rect x="6" y="22" width="14" height="38"/>
+              <rect x="36" y="30" width="14" height="30"/>
+              <rect x="66" y="15" width="14" height="45"/>
+              <rect x="96" y="35" width="14" height="25"/>
+              <rect x="126" y="20" width="14" height="40"/>
+              <rect x="156" y="28" width="14" height="32"/>
+            </g>
+            <!-- uitgaven bars (amber, omlaag) -->
+            <g fill="#B45309" opacity=".8">
+              <rect x="22" y="60" width="14" height="14"/>
+              <rect x="52" y="60" width="14" height="22"/>
+              <rect x="82" y="60" width="14" height="10"/>
+              <rect x="112" y="60" width="14" height="25"/>
+              <rect x="142" y="60" width="14" height="18"/>
+              <rect x="172" y="60" width="14" height="12"/>
+            </g>
+            <!-- maand labels -->
+            <g font-size="8" fill="#9CA3AF" font-family="Plus Jakarta Sans,sans-serif">
+              <text x="14" y="86" text-anchor="middle">jan</text>
+              <text x="44" y="86" text-anchor="middle">feb</text>
+              <text x="74" y="86" text-anchor="middle">mrt</text>
+              <text x="104" y="86" text-anchor="middle">apr</text>
+              <text x="134" y="86" text-anchor="middle">mei</text>
+              <text x="164" y="86" text-anchor="middle">jun</text>
+            </g>
+            <!-- legenda -->
+            <g font-size="9" font-family="Plus Jakarta Sans,sans-serif">
+              <rect x="210" y="14" width="9" height="9" fill="#1B3A28"/>
+              <text x="223" y="22" fill="#6B7280">Inkomsten (pacht, subsidie, verhuur)</text>
+              <rect x="210" y="32" width="9" height="9" fill="#B45309" opacity=".8"/>
+              <text x="223" y="40" fill="#6B7280">Uitgaven (onderhoud, beheer, verzekering)</text>
+            </g>
+          </svg>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header"><div class="card-title">Crediteuren — openstaand</div><span class="card-link">Alles · 7</span></div>
+          <div class="row">
+            <div class="row-icon ri-red"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="#DC2626" stroke-width="1.8"/><line x1="12" y1="8" x2="12" y2="12" stroke="#DC2626" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="16" r="1" fill="#DC2626"/></svg></div>
+            <div class="row-body"><div class="row-title">Van Dongen Inspectiebedrijf</div><div class="row-desc">F-2026-441 · vervaltermijn 14 dgn verstreken</div></div>
+            <div class="row-meta"><div style="font-weight:700;color:var(--text)">€ 2.140</div><span class="tag tag-red" style="margin-top:4px">Vervallen</span></div>
+          </div>
+          <div class="row">
+            <div class="row-icon ri-amber"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="#B45309" stroke-width="1.8"/><path d="M12 8v4l3 3" stroke="#B45309" stroke-width="1.8" stroke-linecap="round"/></svg></div>
+            <div class="row-body"><div class="row-title">Hoveniersbedrijf Vechtweide</div><div class="row-desc">F-2026-482 · vervalt over 6 dgn</div></div>
+            <div class="row-meta"><div style="font-weight:700;color:var(--text)">€ 1.880</div><span class="tag tag-amber" style="margin-top:4px">Bijna vervallen</span></div>
+          </div>
+          <div class="row">
+            <div class="row-icon ri-gray"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="14" rx="2" stroke="#6B7280" stroke-width="1.8"/><path d="M3 10h18" stroke="#6B7280" stroke-width="1.8"/></svg></div>
+            <div class="row-body"><div class="row-title">Verzekering Univé — opstal</div><div class="row-desc">F-2026-503 · vervalt 28 juni</div></div>
+            <div class="row-meta"><div style="font-weight:700;color:var(--text)">€ 1.420</div><span class="tag tag-gray" style="margin-top:4px">Open</span></div>
+          </div>
+          <div class="row">
+            <div class="row-icon ri-gray"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="14" rx="2" stroke="#6B7280" stroke-width="1.8"/><path d="M3 10h18" stroke="#6B7280" stroke-width="1.8"/></svg></div>
+            <div class="row-body"><div class="row-title">Energie · Vattenfall (kasteel)</div><div class="row-desc">F-2026-510 · vervalt 4 juli</div></div>
+            <div class="row-meta"><div style="font-weight:700;color:var(--text)">€ 1.400</div><span class="tag tag-gray" style="margin-top:4px">Open</span></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header"><div class="card-title">Debiteuren — openstaand</div><span class="card-link">Alles · 4</span></div>
+          <div class="row">
+            <div class="row-icon ri-green"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" stroke="#1B3A28" stroke-width="1.8"/></svg></div>
+            <div class="row-body"><div class="row-title">Hof van Gunterstein — pacht Q3</div><div class="row-desc">Factuur verzonden 1 juni · termijn 30 dgn</div></div>
+            <div class="row-meta"><div style="font-weight:700;color:var(--text)">€ 7.125</div><span class="tag tag-green" style="margin-top:4px">In termijn</span></div>
+          </div>
+          <div class="row">
+            <div class="row-icon ri-blue"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" stroke="#1E40AF" stroke-width="1.8"/></svg></div>
+            <div class="row-body"><div class="row-title">RVO — ANLb voorschot 2026</div><div class="row-desc">Beschikking ontvangen · uitbetaling juli</div></div>
+            <div class="row-meta"><div style="font-weight:700;color:var(--text)">€ 4.350</div><span class="tag tag-blue" style="margin-top:4px">Verwacht</span></div>
+          </div>
+          <div class="row">
+            <div class="row-icon ri-green"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" stroke="#1B3A28" stroke-width="1.8"/></svg></div>
+            <div class="row-body"><div class="row-title">Zomerhuisje Klein Boomrijk — augustus</div><div class="row-desc">Boeking · aanbetaling 50%</div></div>
+            <div class="row-meta"><div style="font-weight:700;color:var(--text)">€ 1.825</div><span class="tag tag-green" style="margin-top:4px">In termijn</span></div>
+          </div>
+          <div class="row">
+            <div class="row-icon ri-amber"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="#B45309" stroke-width="1.8"/><path d="M12 8v4l3 3" stroke="#B45309" stroke-width="1.8" stroke-linecap="round"/></svg></div>
+            <div class="row-body"><div class="row-title">Sportvisserij Utrecht — visrecht 2026</div><div class="row-desc">Factuur 8 wk oud · herinnering versturen</div></div>
+            <div class="row-meta"><div style="font-weight:700;color:var(--text)">€ 900</div><span class="tag tag-amber" style="margin-top:4px">Aanmanen</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><div class="card-title">Onderhoudsbudget 2026 — per object</div><span class="card-link">Begroting bewerken</span></div>
+        <div style="display:flex;flex-direction:column;gap:14px;margin-top:4px">
+          <div>
+            <div style="display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:5px"><span style="font-weight:600">Kasteel Gunterstein</span><span style="color:var(--text-2)">€ 14.200 / € 22.000 · 65%</span></div>
+            <div class="progress" style="height:8px"><div class="progress-fill pf-green" style="width:65%"></div></div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:5px"><span style="font-weight:600">Koetshuis (dakrenovatie)</span><span style="color:var(--text-2)">€ 8.400 / € 12.000 · 70%</span></div>
+            <div class="progress" style="height:8px"><div class="progress-fill pf-amber" style="width:70%"></div></div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:5px"><span style="font-weight:600">Klein Boomrijk</span><span style="color:var(--text-2)">€ 2.800 / € 5.500 · 51%</span></div>
+            <div class="progress" style="height:8px"><div class="progress-fill pf-green" style="width:51%"></div></div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:5px"><span style="font-weight:600">Park &amp; oranjerie</span><span style="color:var(--text-2)">€ 2.600 / € 5.500 · 47%</span></div>
+            <div class="progress" style="height:8px"><div class="progress-fill pf-green" style="width:47%"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ ONDERHOUD ══ -->
+    <div class="page" id="page-onderhoud">
+      <div class="page-header"><div class="page-title">Onderhoud &amp; MJOP</div><div class="page-sub">Meerjarenonderhoudsplan gebouwen en groene elementen</div></div>
+      <div class="alert alert-amber"><svg width="16" height="16" fill="none" viewBox="0 0 24 24" style="flex-shrink:0"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/><line x1="12" y1="8" x2="12" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="16" r="1" fill="currentColor"/></svg><div><strong>Herinnering:</strong> Dakinspectie Koetshuis staat ingepland voor 18 juni — resultaten zijn vereist voor de SIM-aanvraag (deadline 30 september).</div></div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">Prioriteiten 2026</div></div>
+        <div class="row"><div class="row-icon ri-red"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" stroke="#DC2626" stroke-width="1.8"/></svg></div><div class="row-body"><div class="row-title">Kasteel Gunterstein — gevelrestauratie noord</div><div class="row-desc">Conditiemeting NEN 2767: 4 · geraamd € 85.000 · SIM-subsidie aanvragen</div></div><div class="row-meta"><span class="tag tag-red">Urgent</span></div></div>
+        <div class="row"><div class="row-icon ri-red"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" stroke="#DC2626" stroke-width="1.8"/></svg></div><div class="row-body"><div class="row-title">Koetshuis — dakrenovatie</div><div class="row-desc">Inspectie 18 juni · geraamd € 42.000 · SIM-subsidie mogelijk</div></div><div class="row-meta"><span class="tag tag-red">Urgent</span></div></div>
+        <div class="row"><div class="row-icon ri-amber"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7" stroke="#B45309" stroke-width="1.8"/><path d="M20 20l-3-3" stroke="#B45309" stroke-width="1.8"/></svg></div><div class="row-body"><div class="row-title">Lindenlaan — VTA boomveiligheidskeuring</div><div class="row-desc">48 linde-exemplaren · jaarlijkse keuring vereist · in te plannen aug–sept</div></div><div class="row-meta"><span class="tag tag-amber">Plannen</span></div></div>
+        <div class="row"><div class="row-icon ri-green"><svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3-3a5 5 0 01-8.45 8.45l-5.8 5.8a2 2 0 01-2.83-2.83l5.8-5.8A5 5 0 0114.7 6.3z" stroke="#1B3A28" stroke-width="1.8"/></svg></div><div class="row-body"><div class="row-title">Oranjerie — schilderwerk kozijnen</div><div class="row-desc">Gepland Q4 2026 · geraamd € 8.500 · geen subsidie</div></div><div class="row-meta"><span class="tag tag-gray">Gepland</span></div></div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+</div><!-- /layout -->
+
+<script>
+function setMobileNav(el) {
+  document.querySelectorAll('.bn-item').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+}
+function nav(id, el) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  if (el) el.classList.add('active');
+  else {
+    // find the nav item that navigates to this page
+    document.querySelectorAll('.nav-item').forEach(n => {
+      if (n.getAttribute('onclick') && n.getAttribute('onclick').includes("'"+id+"'")) n.classList.add('active');
+    });
+  }
+}
+function toggleSub(card) {
+  const r = card.querySelector('.subsidy-reasons');
+  if (!r) return;
+  r.style.display = r.style.display === 'block' ? 'none' : 'block';
+}
+// chip interaction
+document.querySelectorAll('.theme-chip').forEach(chip => {
+  chip.addEventListener('click', function() {
+    const parent = this.closest('.chips');
+    parent.querySelectorAll('.theme-chip').forEach(c => c.classList.remove('active'));
+    this.classList.add('active');
+    if (parent.classList.contains('chips-user') || parent.classList.contains('chips-status')) {
+      filterTaken();
+    }
+  });
+});
+
+function filterTaken() {
+  const userChip = document.querySelector('.chips-user .theme-chip.active');
+  const statusChip = document.querySelector('.chips-status .theme-chip.active');
+  const userVal = userChip ? userChip.getAttribute('data-filter') : 'all';
+  const statusVal = statusChip ? statusChip.getAttribute('data-filter') : 'all';
+  let visible = 0;
+  document.querySelectorAll('.taken-row').forEach(row => {
+    const u = row.getAttribute('data-user');
+    const s = row.getAttribute('data-status');
+    const userMatch = (userVal === 'all') || (u === userVal);
+    const statusMatch = (statusVal === 'all') || (s === statusVal);
+    const show = userMatch && statusMatch;
+    row.style.display = show ? '' : 'none';
+    if (show) visible++;
+  });
+  const cnt = document.getElementById('taken-count');
+  if (cnt) cnt.textContent = visible;
+  const empty = document.getElementById('taken-empty');
+  if (empty) empty.style.display = visible === 0 ? 'block' : 'none';
+}
+
+function resetTakenFilters() {
+  document.querySelectorAll('.chips-user .theme-chip').forEach(c => c.classList.remove('active'));
+  document.querySelectorAll('.chips-status .theme-chip').forEach(c => c.classList.remove('active'));
+  const allUser = document.querySelector('.chips-user .theme-chip[data-filter="all"]');
+  const openStatus = document.querySelector('.chips-status .theme-chip[data-filter="open"]');
+  if (allUser) allUser.classList.add('active');
+  if (openStatus) openStatus.classList.add('active');
+  filterTaken();
+}
+
+// initial filter pass (default: Iedereen + Open)
+filterTaken();
+</script>
+</body>
+</html>
