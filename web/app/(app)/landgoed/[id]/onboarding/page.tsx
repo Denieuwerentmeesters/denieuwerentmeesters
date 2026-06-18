@@ -2,6 +2,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { aiBeschikbaar } from "@/lib/ai";
 import BestandVeld from "@/components/BestandVeld";
+import SubmitKnop from "@/components/SubmitKnop";
 import { uploadBron, verrijkDoc, verrijkTx } from "./acties";
 
 export default async function OnboardingPage({
@@ -102,9 +103,9 @@ export default async function OnboardingPage({
                 <label className="label-up mb-1 block">Bestand</label>
                 <BestandVeld maxMb={5} />
               </div>
-              <button type="submit" className="btn btn-primary">
+              <SubmitKnop className="btn btn-primary" pendingTekst="Uploaden…">
                 Uploaden
-              </button>
+              </SubmitKnop>
             </form>
           </Stap>
 
@@ -130,16 +131,24 @@ export default async function OnboardingPage({
                     <input type="hidden" name="landgoed_id" value={id} />
                     <input type="hidden" name="document_id" value={d.id} />
                     <div className="flex-1 text-[13.5px]">{d.titel}</div>
-                    <button className="btn btn-ghost btn-sm" disabled={aiUit}>
+                    <SubmitKnop
+                      className="btn btn-ghost btn-sm"
+                      disabled={aiUit}
+                      pendingTekst="AI leest…"
+                    >
                       Lees met AI
-                    </button>
+                    </SubmitKnop>
                   </form>
                 ))}
                 <form action={verrijkTx} className="mt-1">
                   <input type="hidden" name="landgoed_id" value={id} />
-                  <button className="btn btn-ghost btn-sm" disabled={aiUit}>
+                  <SubmitKnop
+                    className="btn btn-ghost btn-sm"
+                    disabled={aiUit}
+                    pendingTekst="AI leest…"
+                  >
                     Ook uit transacties afleiden
-                  </button>
+                  </SubmitKnop>
                 </form>
               </div>
             )}

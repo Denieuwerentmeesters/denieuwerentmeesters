@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { aiBeschikbaar } from "@/lib/ai";
+import SubmitKnop from "@/components/SubmitKnop";
 import {
   verrijkUitDocument,
   verrijkUitTransacties,
@@ -180,18 +181,31 @@ export default async function StamgegevensPage({
                   ))}
                 </select>
               </div>
-              <button type="submit" className="btn btn-primary" disabled={aiUit}>
+              <SubmitKnop
+                className="btn btn-primary"
+                disabled={aiUit}
+                pendingTekst="AI leest…"
+              >
                 Lees met AI
-              </button>
+              </SubmitKnop>
             </form>
 
             <form action={verrijkUitTransacties}>
               <input type="hidden" name="landgoed_id" value={id} />
-              <button type="submit" className="btn btn-ghost" disabled={aiUit}>
+              <SubmitKnop
+                className="btn btn-ghost"
+                disabled={aiUit}
+                pendingTekst="AI leest…"
+              >
                 Uit transacties afleiden
-              </button>
+              </SubmitKnop>
             </form>
           </div>
+          <p className="mt-2 text-[12px]" style={{ color: "var(--text-3)" }}>
+            &ldquo;Uit transacties afleiden&rdquo; leest je geïmporteerde
+            banktransacties (uit Financieel) en stelt objecten/koppelingen voor —
+            bv. een terugkerende huur die naar een woning + huurder wijst.
+          </p>
           {pdfDocumenten.length === 0 && (
             <p className="mt-2 text-[12px]" style={{ color: "var(--text-3)" }}>
               Geen PDF-documenten gevonden. Upload er eerst een bij{" "}

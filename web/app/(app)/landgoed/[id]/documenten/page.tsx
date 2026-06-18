@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import BestandVeld from "@/components/BestandVeld";
+import SubmitKnop from "@/components/SubmitKnop";
 import { uploadDocument, verwijderDocument } from "./acties";
 
 export default async function DocumentenPage({
@@ -62,9 +63,9 @@ export default async function DocumentenPage({
             <label className="label-up mb-1 block">Bestand</label>
             <BestandVeld maxMb={5} />
           </div>
-          <button type="submit" className="btn btn-primary">
+          <SubmitKnop className="btn btn-primary" pendingTekst="Uploaden…">
             Uploaden
-          </button>
+          </SubmitKnop>
         </form>
 
         <div className="card divide-y" style={{ borderColor: "var(--border)" }}>
