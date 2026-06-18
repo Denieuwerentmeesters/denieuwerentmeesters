@@ -1,0 +1,27 @@
+{
+  "id": "boerenlandvogels-nh",
+  "naam": "Boerenlandvogels Noord-Holland (ANLb-variant)",
+  "afkorting": "Boerenlandvogels NH",
+  "bestuurslaag": "provinciaal",
+  "uitvoerder": "Provincie Noord-Holland / ANLb-collectieven Noord-Holland",
+  "doelgroep": ["agrariërs", "melkveehouders", "collectieven"],
+  "sector": ["natuur", "landbouw"],
+  "aanvraagperiode": {"start": "01-01", "eind": "02-28"},
+  "looptijd": "6 jaar",
+  "indicatief_bedrag": "ANLb-basisvergoeding + aanvulling provincie: weidevogelbeheer ca. €400–900/ha/jaar totaal; akkervogels ca. €700–1.100/ha/jaar",
+  "budget_totaal": "Onderdeel van ANLb-budget NH + aanvullend provinciaal budget; ca. €8–15 miljoen per jaar",
+  "voorwaarden": [
+    "Percelen liggen in aangewezen Boerenlandvogelgebieden Noord-Holland",
+    "Aanvraag via Noord-Hollands ANLb-collectief (bijv. WFNH, ANWB-collectief)",
+    "Uitgesteld maaien, plasdras en nestbescherming zijn kernmaatregelen",
+    "Provinciale aanvulling vereist deelname aan monitoring (broedvogeltellingen)",
+    "Overeenkomst 6 jaar, jaarlijkse uitbetalingen"
+  ],
+  "regio": "Noord-Holland",
+  "provincie_specifiek": true,
+  "url": "https://www.noord-holland.nl/onderwerpen/natuur-en-landschap/boerenlandvogels",
+  "tags": ["boerenlandvogels", "Noord-Holland", "ANLb", "weidevogels", "akkervogels", "collectief", "plasdras"],
+  "laatste_update": "2026-03-17",
+  "status": "seizoensgebonden",
+  "notities": "Noord-Holland heeft rijke weidevogelgebieden in de droogmakerijen en veenweidepolder (bijv. Eilandspolder, Wormer- en Jisperveld). Provincie NH stelt aanvullend budget beschikbaar bovenop het reguliere ANLb. Akkervogels in de Wieringermeer en Haarlemmermeer. Aanvraag verloopt via het collectief."
+}

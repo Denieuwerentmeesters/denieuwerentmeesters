@@ -1,0 +1,28 @@
+{
+  "id": "invest-duurzame-stal",
+  "naam": "Subsidie Duurzame Stallen en Emissiereductie Veestapel",
+  "afkorting": "Duurzame Stallen",
+  "bestuurslaag": "landelijk",
+  "uitvoerder": "RVO / provincies (wisselend per regeling)",
+  "doelgroep": ["veehouders", "melkveehouders", "pluimveehouders", "varkenshouders"],
+  "sector": ["landbouw", "energie"],
+  "aanvraagperiode": {"start": "03-01", "eind": "05-31"},
+  "looptijd": "Eenmalige investering; geen looptijd",
+  "indicatief_bedrag": "30–50% van de subsidiabele investeringskosten; maximaal €500.000 per bedrijf per openstellingsronde",
+  "budget_totaal": "Wisselend; onderdeel van NPLG/LNV-budget; ca. €50–150 miljoen per openstellingsronde",
+  "voorwaarden": [
+    "Investering leidt tot aantoonbare emissiereductie (ammoniak, fijnstof, methaan)",
+    "Techniek staat op de Maatlat Duurzame Veehouderij of erkende emissielijst",
+    "Bedrijf heeft geldige milieuvergunning",
+    "Geen bedrijfsstopper of saneerder (uitsluitingscriterium in sommige regelingen)",
+    "Investeringsplan met kostenraming indienen",
+    "Geen dubbele subsidiëring (MIA/VAMIL wel combineerbaar, maar geen andere investeringssubsidie)"
+  ],
+  "regio": "alle provincies",
+  "provincie_specifiek": false,
+  "url": "https://www.rvo.nl/onderwerpen/duurzame-landbouw",
+  "tags": ["duurzame-stallen", "emissiereductie", "ammoniak", "methaan", "luchtwasser", "stikstof", "veehouderij"],
+  "laatste_update": "2026-03-17",
+  "status": "seizoensgebonden",
+  "notities": "Meerdere regelingen vallen onder deze categorie: Subsidie Duurzame Stallen (SDS), Wsw (Wet subsidies stikstof-emissiereductie). Openstellingen wisselen sterk per jaar. Combinatie met MIA/VAMIL is doorgaans mogelijk. Raadpleeg RVO voor actuele openstellingen."
+}

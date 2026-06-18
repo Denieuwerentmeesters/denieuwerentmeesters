@@ -1,0 +1,29 @@
+{
+  "id": "sde-plus-plus",
+  "naam": "SDE++ Stimulering Duurzame Energieproductie en Klimaattransitie",
+  "afkorting": "SDE++",
+  "bestuurslaag": "landelijk",
+  "uitvoerder": "RVO",
+  "doelgroep": ["agrariërs", "bedrijven", "energiecoöperaties", "landgoedeigenaren", "projectontwikkelaars"],
+  "sector": ["energie", "landbouw"],
+  "aanvraagperiode": {"start": "03-01", "eind": "04-30"},
+  "looptijd": "15 jaar (zon PV) / 12–15 jaar (wind) / 12 jaar (biomassa)",
+  "indicatief_bedrag": "Subsidie op onrendabele top: verschil tussen basisbedrag (kostprijs duurzame energie) en correctiebedrag (marktprijs). Voor zon-PV: ca. €0,04–0,09 per kWh (afhankelijk van categorie en ronde)",
+  "budget_totaal": "ca. €5–8 miljard per jaar (totaal begrotingsruimte SDE++)",
+  "voorwaarden": [
+    "Installatie levert duurzame energie (zon, wind, biomassa, geothermie, waterstof, warmte)",
+    "Nettaansluiting aanwezig of aangevraagd",
+    "Vergunningen aanwezig of aantoonbaar aangevraagd",
+    "Realisatietermijn: 3–4 jaar na beschikking",
+    "Minimale projectomvang: doorgaans >15 kWp (zon PV categorie 3+)",
+    "Geen andere exploitatiesubsidie voor dezelfde kWh",
+    "Aanvraag via mijn.rvo.nl — categorie en technologie kiezen"
+  ],
+  "regio": "alle provincies",
+  "provincie_specifiek": false,
+  "url": "https://www.rvo.nl/onderwerpen/sde",
+  "tags": ["SDE++", "zonnepanelen", "wind", "biomassa", "duurzame-energie", "onrendabele-top", "energie-opwek"],
+  "laatste_update": "2026-03-17",
+  "status": "seizoensgebonden",
+  "notities": "Meerdere openstellingsronden per jaar (voorjaar en najaar). Aanvragen worden in fasen behandeld: goedkoopste categorieën eerst. Zon PV op agrarisch dak is veelgevraagde categorie. Let op: SDE++ is een productiestimulans, geen investeringssubsidie. Combinatie met postcoderoos / saldering niet mogelijk voor zelfde kWh."
+}

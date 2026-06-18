@@ -1,0 +1,26 @@
+{
+  "id": "daw-agrarisch-waterbeheer",
+  "naam": "DAW — Deltaplan Agrarisch Waterbeheer",
+  "bestuurslaag": "waterschap",
+  "uitvoerder": "Waterschappen (21 regionale waterschappen)",
+  "doelgroep": ["melkveehouders", "akkerbouwers", "agrarisch adviseurs"],
+  "sector": ["water", "landbouw"],
+  "aanvraagperiode": {
+    "start": "continu",
+    "eind": "per waterschap verschillend"
+  },
+  "looptijd": "projectgebonden (1-3 jaar)",
+  "indicatief_bedrag": "40-60% van investeringskosten, max €60.000 per project",
+  "voorwaarden": [
+    "Landbouwbedrijf actief",
+    "Perceel in beheersgebied waterschap",
+    "Aantoonbare wateropgave"
+  ],
+  "regio": "heel Nederland",
+  "provincie_specifiek": null,
+  "url": "https://www.deltaprogramma.nl/deltaplan-agrarisch-waterbeheer",
+  "tags": ["DAW", "waterschap", "waterbeheer", "landbouw", "klimaat", "drainage"],
+  "laatste_update": "2026-03-17",
+  "status": "actief",
+  "notities": "Aanvraag loopt via het eigen regionale waterschap. Elk waterschap heeft eigen openstellingen en budgetten."
+}

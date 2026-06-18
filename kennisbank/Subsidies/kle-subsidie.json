@@ -1,0 +1,26 @@
+{
+  "id": "kle-kleine-landschapselementen",
+  "naam": "Subsidie Kleine Landschapselementen (KLE)",
+  "bestuurslaag": "provinciaal",
+  "uitvoerder": "Provincie (per provincie verschilt uitvoerder)",
+  "doelgroep": ["agrariërs", "landgoedeigenaren", "rentmeesters"],
+  "sector": ["landschap", "natuur", "agrarisch"],
+  "aanvraagperiode": {
+    "start": "variabel",
+    "eind": "per provincie"
+  },
+  "looptijd": "6 jaar (beheer) of éénmalig (aanleg)",
+  "indicatief_bedrag": "€100–600/element/jaar (beheer) of 70-100% van aanlegkosten (aanleg)",
+  "voorwaarden": [
+    "Element gelegen op landbouwgrond of particulier terrein",
+    "Minimale afmeting afhankelijk van type (heg, poel, houtkant, knotboom, etc.)",
+    "Provincie moet KLE-regeling open hebben"
+  ],
+  "regio": "heel Nederland",
+  "provincie_specifiek": null,
+  "url": "https://www.bij12.nl/onderwerp/natuur-en-landschapsbeheer/kleine-landschapselementen/",
+  "tags": ["KLE", "landschapselementen", "heg", "poel", "houtkant", "landschap", "beheer"],
+  "laatste_update": "2026-03-17",
+  "status": "actief",
+  "notities": "Niet alle provincies hebben een aparte KLE-regeling; sommige vallen onder SNL landschap. Check provinciaal loket."
+}

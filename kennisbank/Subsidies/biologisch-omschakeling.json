@@ -1,0 +1,26 @@
+{
+  "id": "subsidie-biologische-omschakeling",
+  "naam": "Subsidie Biologische Omschakeling",
+  "bestuurslaag": "nationaal",
+  "uitvoerder": "RVO.nl",
+  "doelgroep": ["akkerbouwers", "melkveehouders", "tuinders"],
+  "sector": ["landbouw", "biologisch"],
+  "aanvraagperiode": {
+    "start": "variabel",
+    "eind": "openstellingen per jaar"
+  },
+  "looptijd": "5 jaar omschakelperiode",
+  "indicatief_bedrag": "€250–600/ha/jaar gedurende omschakelperiode",
+  "voorwaarden": [
+    "Gangbaar bedrijf dat omschakelt naar biologisch",
+    "Aansluiting bij biologische certificering (Skal)",
+    "Minimaal 5 ha"
+  ],
+  "regio": "heel Nederland",
+  "provincie_specifiek": null,
+  "url": "https://www.rvo.nl/subsidies-financiering/biologische-landbouw",
+  "tags": ["biologisch", "omschakeling", "Skal", "duurzaam", "landbouw"],
+  "laatste_update": "2026-03-17",
+  "status": "actief",
+  "notities": "Budget is beperkt; openstellingen snel vol. Combineerbaar met eco-regeling en ANLb."
+}

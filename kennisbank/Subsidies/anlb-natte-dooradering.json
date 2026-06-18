@@ -1,0 +1,28 @@
+{
+  "id": "anlb-natte-dooradering",
+  "naam": "ANLb Natte Dooradering — Slootkanten, Oevers en Waterplanten",
+  "afkorting": "ANLb Natte Dooradering",
+  "bestuurslaag": "europees",
+  "uitvoerder": "RVO / provincies via ANLb-collectieven",
+  "doelgroep": ["agrariërs", "veehouders", "collectieven", "waterschappen (partner)"],
+  "sector": ["natuur", "water", "landbouw"],
+  "aanvraagperiode": {"start": "01-01", "eind": "02-28"},
+  "looptijd": "6 jaar",
+  "indicatief_bedrag": "Kruidenrijke slootkant: ca. €200–400/ha/jaar. Oevervegeta­tie: ca. €300–500/ha/jaar. Waterplantenbeheer: ca. €150–300/ha/jaar",
+  "budget_totaal": "Onderdeel van totaal ANLb-budget ca. €100 miljoen/jaar NL-breed",
+  "voorwaarden": [
+    "Percelen grenzen aan watergangen of hebben brede (>3m) kruidenrijke slootkanten",
+    "Aanvraag via erkend ANLb-collectief",
+    "Beheer: aangepast maairegime slootkant (niet voor bepaalde datum, alternerend maaien)",
+    "Geen meststoffen of bestrijdingsmiddelen binnen 1m van watergang",
+    "Geen beschoeiing of verharding van oever",
+    "Samenwerking met waterschap voor afstemming peilbeheer"
+  ],
+  "regio": ["Noord-Holland", "Zuid-Holland", "Utrecht", "Friesland", "Groningen", "Zeeland", "Overijssel"],
+  "provincie_specifiek": false,
+  "url": "https://www.rvo.nl/onderwerpen/agrarisch-natuur-en-landschapsbeheer",
+  "tags": ["ANLb", "slootkanten", "oevers", "waterplanten", "natte-dooradering", "waterkwaliteit", "KRW", "collectief"],
+  "laatste_update": "2026-03-17",
+  "status": "seizoensgebonden",
+  "notities": "Natte dooradering is primair in klei- en veenweidepolder-gebieden. Draagt bij aan KRW-waterkwaliteitsdoelen. Samenwerking met waterschap is essentieel voor peilbeheer en slootonderhoud-afstemming. Combinatie met weidevogelpakket is gebruikelijk in veenweidegebieden."
+}

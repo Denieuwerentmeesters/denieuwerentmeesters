@@ -1,0 +1,26 @@
+{
+  "id": "nplg-gebiedstransitie",
+  "naam": "NPLG — Nationaal Programma Landelijk Gebied (gebiedsgericht)",
+  "bestuurslaag": "nationaal",
+  "uitvoerder": "Provincie (namens Rijk)",
+  "doelgroep": ["agrariërs in stikstofgevoelige gebieden", "rentmeesters", "terreinbeheerders"],
+  "sector": ["stikstof", "natuur", "water", "klimaat"],
+  "aanvraagperiode": {
+    "start": "variabel",
+    "eind": "per provincie en maatregel"
+  },
+  "looptijd": "afhankelijk van maatregel (1-10 jaar)",
+  "indicatief_bedrag": "Sterk variabel: €500–5000/ha voor extensivering; opkoopregelingen marktwaarde+",
+  "voorwaarden": [
+    "Perceel in of nabij stikstofgevoelig Natura 2000-gebied",
+    "Deelname aan gebiedsproces",
+    "Bereidheid tot bedrijfsaanpassing"
+  ],
+  "regio": "Noord-Brabant, Gelderland, Overijssel, Utrecht, Friesland, Groningen (prioritair)",
+  "provincie_specifiek": null,
+  "url": "https://www.rijksoverheid.nl/onderwerpen/natuur-en-biodiversiteit/nationaal-programma-landelijk-gebied",
+  "tags": ["NPLG", "stikstof", "natuur", "gebiedsgericht", "transitie", "extensivering"],
+  "laatste_update": "2026-03-17",
+  "status": "actief",
+  "notities": "Complexe regeling in ontwikkeling. Raadpleeg provinciaal gebiedscoördinator. Hoge bedragen mogelijk bij grondaankoop of beëindiging."
+}

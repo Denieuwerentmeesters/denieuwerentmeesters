@@ -1,0 +1,28 @@
+{
+  "id": "glb-basispremie",
+  "naam": "GLB Basispremie (Gecombineerde Opgave)",
+  "afkorting": "GLB",
+  "bestuurslaag": "europees",
+  "uitvoerder": "RVO",
+  "doelgroep": ["agrariërs", "akkerbouwers", "veehouders", "gemengde bedrijven"],
+  "sector": ["landbouw", "natuur"],
+  "aanvraagperiode": {"start": "03-01", "eind": "05-15"},
+  "looptijd": "1 jaar",
+  "indicatief_bedrag": "€180–250 per ha, afhankelijk van regio en grondsoort; betalingsrechten worden jaarlijks vastgesteld",
+  "budget_totaal": "ca. €700 miljoen per jaar (NL-aandeel GLB eerste pijler)",
+  "voorwaarden": [
+    "Minimaal 1 ha landbouwareaal in gebruik",
+    "Percelen zijn landbouwgrond (akker, grasland, blijvend grasland, tuinbouw)",
+    "Conditionaliteitseisen: GLMC-normen (goed landbouw- en milieucondities) naleven",
+    "Jaarlijkse Gecombineerde Opgave (GO) indienen via mijn.rvo.nl",
+    "Actieve landbouwer zijn (geen papieren bedrijven)",
+    "Basisbetalingsregeling of Basispremie gekoppeld aan percelen"
+  ],
+  "regio": "alle provincies",
+  "provincie_specifiek": false,
+  "url": "https://www.rvo.nl/onderwerpen/gecombineerde-opgave",
+  "tags": ["GLB", "basispremie", "betalingsrechten", "gecombineerde-opgave", "eerste-pijler", "jaarlijks"],
+  "laatste_update": "2026-03-17",
+  "status": "seizoensgebonden",
+  "notities": "Jaarlijkse aanvraag via Gecombineerde Opgave (GO), uiterlijk 15 mei. Te laat indienen leidt tot korting (1% per werkdag). Betalingsrechten zijn overdraagbaar en verpachtbaar. Afbouw betalingsrechten loopt door in huidige GLB-periode 2023–2027."
+}

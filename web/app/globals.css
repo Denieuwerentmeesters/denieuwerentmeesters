@@ -1,0 +1,150 @@
+@import "tailwindcss";
+
+/* ── Brand tokens (zie docs/brand-guide.md) ── */
+:root {
+  --bg: #f1f3f6;
+  --white: #ffffff;
+  --primary: #1b3a28;
+  --primary-mid: #2a5c3f;
+  --primary-light: #eaf0ec;
+  --primary-muted: #c8d9cc;
+  --text: #111827;
+  --text-2: #6b7280;
+  --text-3: #9ca3af;
+  --border: #e5e7eb;
+  --red: #dc2626;
+  --red-light: #fef2f2;
+  --amber: #b45309;
+  --amber-light: #fffbeb;
+  --blue: #1e40af;
+  --blue-light: #eff6ff;
+  --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 2px 8px rgba(0, 0, 0, 0.04);
+  --card-shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --radius: 14px;
+  --radius-sm: 8px;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-white: var(--white);
+  --color-primary: var(--primary);
+  --color-primary-mid: var(--primary-mid);
+  --color-primary-light: var(--primary-light);
+  --color-text: var(--text);
+  --color-text-2: var(--text-2);
+  --color-text-3: var(--text-3);
+  --color-border: var(--border);
+  --font-sans: var(--font-jakarta);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-jakarta), sans-serif;
+  font-size: 14px;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Componentklassen (brand-guide §5) ── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 9px 16px;
+  border-radius: 9px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  border: none;
+}
+.btn-primary {
+  background: var(--primary);
+  color: #fff;
+}
+.btn-primary:hover {
+  background: var(--primary-mid);
+}
+.btn-ghost {
+  background: transparent;
+  border: 1.5px solid var(--border);
+  color: var(--text);
+}
+.btn-ghost:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+  background: var(--primary-light);
+}
+.btn-sm {
+  padding: 7px 13px;
+  font-size: 12px;
+}
+.btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--card-shadow);
+}
+
+.input {
+  width: 100%;
+  padding: 9px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: #f9fafb;
+  font-size: 13.5px;
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.15s, background 0.15s;
+}
+.input:focus {
+  border-color: var(--primary-mid);
+  background: #fff;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 9px;
+  border-radius: 20px;
+  font-size: 11.5px;
+  font-weight: 600;
+}
+.tag-green {
+  background: var(--primary-light);
+  color: var(--primary);
+}
+.tag-amber {
+  background: var(--amber-light);
+  color: var(--amber);
+}
+.tag-red {
+  background: var(--red-light);
+  color: var(--red);
+}
+.tag-blue {
+  background: var(--blue-light);
+  color: var(--blue);
+}
+.tag-gray {
+  background: var(--bg);
+  color: var(--text-2);
+}
+
+.label-up {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-3);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}

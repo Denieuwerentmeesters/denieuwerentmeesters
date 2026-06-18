@@ -1,0 +1,28 @@
+{
+  "id": "subsidie-jacht-wildbeheer",
+  "naam": "Subsidie Faunabeheer — Tegemoetkoming Wildschade en Faunabeheer",
+  "afkorting": "Faunabeheer",
+  "bestuurslaag": "provinciaal",
+  "uitvoerder": "Provincies / Faunabeheereenheid (FBE)",
+  "doelgroep": ["agrariërs", "rentmeesters", "grondeigenaren", "jachthouders", "terreinbeheerders"],
+  "sector": ["landbouw", "natuur"],
+  "aanvraagperiode": {"start": "01-01", "eind": "12-31"},
+  "looptijd": "Jaarlijks of per schadeincident",
+  "indicatief_bedrag": "Tegemoetkoming wildschade: 65–100% van de taxatiewaarde van de schade. Faunabeheerkosten: vergoeding per uur of per actie afhankelijk van provincie",
+  "budget_totaal": "ca. €10–20 miljoen per jaar NL-breed",
+  "voorwaarden": [
+    "Schade veroorzaakt door beschermde diersoorten (ganzen, reeën, everzwijnen, bevers, etc.)",
+    "Schade gemeld bij BIJ12/provincie binnen gestelde termijn (doorgaans 48 uur)",
+    "Preventieve maatregelen aantoonbaar getroffen of onmogelijk gebleken",
+    "Taxatie door erkend taxateur of BIJ12",
+    "Aanvraag via BIJ12 of provinciaal loket",
+    "Faunabeheerplan aanwezig (voor structurele schadebestrijding)"
+  ],
+  "regio": "alle provincies",
+  "provincie_specifiek": true,
+  "url": "https://www.bij12.nl/onderwerp/faunaschade/",
+  "tags": ["faunabeheer", "wildschade", "ganzen", "reeën", "everzwijn", "BIJ12", "tegemoetkoming"],
+  "laatste_update": "2026-03-17",
+  "status": "continu",
+  "notities": "Tegemoetkoming wildschade wordt geregeld via BIJ12 (uitvoeringsorganisatie van de provincies). Schade door beschermde soorten (kolganzen, grauwe ganzen, reeën) komt voor vergoeding in aanmerking. Schade door niet-beschermde soorten valt buiten de regeling. Provincies stellen jaarlijks de ganzenpolders vast waar ganzenbeheer is toegestaan."
+}

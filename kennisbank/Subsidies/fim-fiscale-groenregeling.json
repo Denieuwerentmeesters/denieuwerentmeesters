@@ -1,0 +1,27 @@
+{
+  "id": "fim-fiscale-groenregeling",
+  "naam": "Fiscale Groenregeling — Groene Lening via Erkende Bank",
+  "afkorting": "Groenregeling",
+  "bestuurslaag": "landelijk",
+  "uitvoerder": "Belastingdienst / erkende groenfondsen (ASN Bank, Triodos, Rabobank, ING Groenbank)",
+  "doelgroep": ["particulieren", "agrariërs", "landgoedeigenaren", "terreinbeheerders", "projectontwikkelaars natuur"],
+  "sector": ["natuur", "energie", "landbouw", "gebouwen"],
+  "aanvraagperiode": {"start": "01-01", "eind": "12-31"},
+  "looptijd": "Looptijd van de groene lening (doorgaans 5–25 jaar)",
+  "indicatief_bedrag": "Rentevoordeel: ca. 0,7 procentpunt lager dan reguliere lening. Heffingskorting voor de spaarder/investeerder: €0,70 per €1.000 belegd (vrijstelling vermogensrendementsheffing). Effectief voordeel lener: ca. 0,5–1% per jaar",
+  "budget_totaal": "Belastingderving ca. €50–80 miljoen per jaar",
+  "voorwaarden": [
+    "Project is aangemerkt als groen project door RVO (Groenverklaring vereist)",
+    "Project valt in een van de categorieën: natuur, biologische landbouw, duurzame energie, duurzaam bouwen",
+    "Groenverklaring aanvragen bij RVO (vóór aanvang project)",
+    "Lening afsluiten bij erkende groenbank",
+    "Project in Nederland"
+  ],
+  "regio": "alle provincies",
+  "provincie_specifiek": false,
+  "url": "https://www.rvo.nl/onderwerpen/groenprojecten",
+  "tags": ["groenregeling", "groene-lening", "fiscaal", "groenverklaring", "rentekorting", "duurzame-financiering"],
+  "laatste_update": "2026-03-17",
+  "status": "continu",
+  "notities": "De fiscale groenregeling werkt via een lagere rente op groene leningen, gefinancierd door belastingvoordeel voor de spaarder. Stap 1: Groenverklaring aanvragen bij RVO. Stap 2: Lening afsluiten bij erkende groenbank (ASN, Triodos, Rabobank Groenfonds, etc.). Geschikt voor: NSW-landgoed investeringen, duurzame agrarische stallen, biologische omschakeling. Combineerbaar met SKNL en MIA/VAMIL."
+}

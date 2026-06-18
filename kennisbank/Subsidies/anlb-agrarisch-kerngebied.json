@@ -1,0 +1,29 @@
+{
+  "id": "anlb-agrarisch-kerngebied",
+  "naam": "ANLb Kerngebied Open Grasland — Weidevogelbeheer",
+  "afkorting": "ANLb Weidevogels",
+  "bestuurslaag": "europees",
+  "uitvoerder": "RVO / provincies via ANLb-collectieven",
+  "doelgroep": ["agrariërs", "veehouders", "melkveehouders", "collectieven"],
+  "sector": ["natuur", "landbouw", "water"],
+  "aanvraagperiode": {"start": "01-01", "eind": "02-28"},
+  "looptijd": "6 jaar",
+  "indicatief_bedrag": "Basispakket weidevogelbeheer: ca. €300–600/ha/jaar. Intensief pakket (nestbescherming, plasdras): ca. €800–1.500/ha/jaar",
+  "budget_totaal": "Onderdeel van totaal ANLb-budget ca. €100 miljoen/jaar NL-breed",
+  "voorwaarden": [
+    "Perceel ligt in een begrensd weidevogelleefgebied (provinciaal vastgesteld)",
+    "Aanvraag via erkend ANLb-collectief",
+    "Uitgesteld maaien (gruttopakket: niet voor 1 juni of later afhankelijk van nest-dichtheid)",
+    "Peilbeheer afgestemd op weidevogelseizoen (hoge grondwaterstand in broedseizoen)",
+    "Rustperiode op perceel tijdens broedseizoen (geen bewerkingen voor vastgestelde datum)",
+    "Jaarlijkse monitoring door collectief",
+    "Overeenkomst voor 6 jaar"
+  ],
+  "regio": ["Noord-Holland", "Zuid-Holland", "Utrecht", "Friesland", "Groningen", "Overijssel"],
+  "provincie_specifiek": false,
+  "url": "https://www.rvo.nl/onderwerpen/agrarisch-natuur-en-landschapsbeheer",
+  "tags": ["ANLb", "weidevogels", "grutto", "kievit", "tureluur", "uitgesteld-maaien", "collectief", "veenweide"],
+  "laatste_update": "2026-03-17",
+  "status": "seizoensgebonden",
+  "notities": "Weidevogelbeheer is het grootste ANLb-pakket in Nederland. Primair in veenweide- en kleigebieden. Het collectief coördineert de aanpak en bewaakt de minimale beheerdrempel per leefgebied (ca. 50% van percelen dient beheerd te worden voor effectiviteit). Gruttogids-methode wordt steeds meer toegepast voor nidificatie-monitoring."
+}

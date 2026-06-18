@@ -1,0 +1,28 @@
+{
+  "id": "pop3-agrarische-structuur",
+  "naam": "POP3 Agrarische Structuurverbetering (Plattelands Ontwikkelings Programma 3)",
+  "afkorting": "POP3",
+  "bestuurslaag": "europees",
+  "uitvoerder": "RVO / provincies",
+  "doelgroep": ["agrariërs", "veehouders", "akkerbouwers", "collectieven"],
+  "sector": ["landbouw", "natuur", "water", "energie"],
+  "aanvraagperiode": {"start": "03-01", "eind": "05-31"},
+  "looptijd": "Programmaperiode 2014–2022 (verlengd t/m 2025); POP4/NPLG verwacht vanaf 2027",
+  "indicatief_bedrag": "40–50% van goedgekeurde investeringskosten; voor jonge boeren soms 60%. Minimale projectkosten doorgaans €25.000",
+  "budget_totaal": "ca. €550 miljoen totaal POP3 NL-breed (2014–2022 periode)",
+  "voorwaarden": [
+    "Investering draagt bij aan verduurzaming of structuurverbetering van het agrarisch bedrijf",
+    "Investeringen in duurzame stallen, emissiereductie, waterbeheer of precisielandbouw",
+    "Bedrijf heeft een toekomstperspectief (bedrijfsplan vereist)",
+    "Geen dubbele financiering met andere EU-subsidies",
+    "Provinciale openstelling afwachten (wisselend per provincie en maatregel)",
+    "Aanbestedingsregels volgen voor opdrachten boven €50.000"
+  ],
+  "regio": "alle provincies",
+  "provincie_specifiek": false,
+  "url": "https://www.rvo.nl/onderwerpen/pop3",
+  "tags": ["POP3", "plattelandsontwikkeling", "investeringssubsidie", "duurzame-stallen", "structuurverbetering", "tweede-pijler"],
+  "laatste_update": "2026-03-17",
+  "status": "gesloten",
+  "notities": "POP3 loopt grotendeels af. Nieuwe programmaperiode (POP4 of NSP Tweede Pijler / NPLG) wordt verwacht vanaf 2027. Controleer RVO voor lopende openstellingen binnen POP3-resttermijnen. Sommige provincies hebben eigen openstellingen nog lopend via transitiegeld."
+}

@@ -1,0 +1,29 @@
+{
+  "id": "sknl-kwaliteitsimpuls",
+  "naam": "SKNL Subsidie Kwaliteitsimpuls Natuur en Landschap",
+  "afkorting": "SKNL",
+  "bestuurslaag": "provinciaal",
+  "uitvoerder": "BIJ12 / provincies",
+  "doelgroep": ["terreinbeheerders", "landgoedeigenaren", "rentmeesters", "agrariërs", "natuurorganisaties"],
+  "sector": ["natuur", "landschap", "water"],
+  "aanvraagperiode": {"start": "09-01", "eind": "10-31"},
+  "looptijd": "6 jaar",
+  "indicatief_bedrag": "70% van de goedgekeurde investeringskosten; voor functieverandering landbouw→natuur tevens inrichtingssubsidie",
+  "budget_totaal": "Wisselend per provincie; totaal ca. €40–80 miljoen per jaar NL-breed",
+  "voorwaarden": [
+    "Perceel moet (deels) begrensd zijn in het Natuur Netwerk Nederland (NNN) of Natura 2000",
+    "Functieverandering landbouw naar natuur OF kwaliteitsverbetering bestaand beheerde natuur",
+    "SNL-beheerovereenkomst vereist als vervolg op inrichtingssubsidie",
+    "Investeringsplan indienen met kostenraming (erkend adviesbureau aanbevolen)",
+    "Minimale investeringsdrempel: doorgaans €10.000",
+    "Geen dubbele subsidiëring met andere investeringsregelingen",
+    "Grondeigenaar of langdurig pachter (>6 jaar resterende looptijd)"
+  ],
+  "regio": "alle provincies",
+  "provincie_specifiek": true,
+  "url": "https://www.bij12.nl/onderwerp/natuursubsidies/sknl/",
+  "tags": ["SKNL", "functieverandering", "natuur", "NNN", "Natura2000", "inrichting", "kwaliteitsverbetering"],
+  "laatste_update": "2026-03-17",
+  "status": "seizoensgebonden",
+  "notities": "Openstellingsperiode varieert per provincie. Sommige provincies stellen jaarlijks open, andere tweejaarlijks. Raadpleeg provinciale subsidieportalen voor exacte openstellingen. SKNL bestaat uit twee onderdelen: Functieverandering (landbouw→natuur) en Kwaliteitsverbetering (bestaande natuur opwaarderen). Beide zijn aan SNL gekoppeld."
+}

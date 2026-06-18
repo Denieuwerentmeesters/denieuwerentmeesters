@@ -1,0 +1,27 @@
+{
+  "id": "erfbeplanting-landelijk-gebied",
+  "naam": "Subsidie Erfbeplanting Landelijk Gebied",
+  "bestuurslaag": "provinciaal",
+  "uitvoerder": "Provincie of Landschapsbeheer Nederland",
+  "doelgroep": ["agrariërs", "landgoedeigenaren"],
+  "sector": ["landschap", "groen", "bebouwing"],
+  "aanvraagperiode": {
+    "start": "variabel",
+    "eind": "variabel"
+  },
+  "looptijd": "éénmalig (aanlegsubsidie)",
+  "indicatief_bedrag": "50-100% van aanlegkosten, max €5.000",
+  "voorwaarden": [
+    "Agrarisch erf of landgoederf",
+    "Beplanting met streekeigen soorten",
+    "Minimale omvang",
+    "Onderhoudsverplichting 10 jaar"
+  ],
+  "regio": "Groningen, Drenthe, Overijssel, Gelderland, Utrecht (meeste regelingen hier)",
+  "provincie_specifiek": null,
+  "url": "https://www.landschapsbeheer.nl/subsidies",
+  "tags": ["erfbeplanting", "streekeigen", "landschap", "groen", "erf", "aanleg"],
+  "laatste_update": "2026-03-17",
+  "status": "actief",
+  "notities": "Sterk regionaal georganiseerd via provinciale Landschapsbeheer-organisaties. Check lokaal loket."
+}

@@ -1,0 +1,28 @@
+{
+  "id": "nplg-transitiefonds",
+  "naam": "NPLG Transitiefonds Landelijk Gebied",
+  "afkorting": "NPLG Transitiefonds",
+  "bestuurslaag": "landelijk",
+  "uitvoerder": "Ministerie LNV / provincies",
+  "doelgroep": ["agrariërs", "terreinbeheerders", "landgoedeigenaren", "gemeenten", "waterschappen", "provincies"],
+  "sector": ["natuur", "landbouw", "water"],
+  "aanvraagperiode": {"start": "01-01", "eind": "12-31"},
+  "looptijd": "2023–2035 (programmaperiode NPLG)",
+  "indicatief_bedrag": "Wisselend per maatregel en provincie; grondaankoop tot marktwaarde; inrichting 70–100% van kosten",
+  "budget_totaal": "€24,3 miljard totaal (2023–2035)",
+  "voorwaarden": [
+    "Bijdrage aan doelen NPLG: stikstofreductie, waterkwaliteit, klimaatadaptatie, biodiversiteit",
+    "Aanvraag via provinciaal gebiedsplan (niet rechtstreeks bij LNV)",
+    "Project past binnen provinciaal uitvoeringsprogramma",
+    "Grondaankoop: vrijwillig, tegen marktwaarde",
+    "Inrichtingsmaatregelen: conform provinciaal plan",
+    "Monitoring en rapportage vereist"
+  ],
+  "regio": "alle provincies",
+  "provincie_specifiek": false,
+  "url": "https://www.rijksoverheid.nl/onderwerpen/natuur-en-biodiversiteit/nationaal-programma-landelijk-gebied",
+  "tags": ["NPLG", "transitiefonds", "stikstof", "grondaankoop", "waterkwaliteit", "klimaat", "gebiedsplan"],
+  "laatste_update": "2026-03-17",
+  "status": "continu",
+  "notities": "Het Transitiefonds is het grootste landelijke financieringsprogramma voor het landelijk gebied ooit. Budget loopt via provinciale gebiedsplannen. Grondaankopen voor natuur, extensivering of functieverandering zijn de grootste kostenpost. Individuele agrariërs kunnen via provinciaal loket meedoen aan vrijwillige bedrijfsbeëindiging of omschakeling."
+}

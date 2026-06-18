@@ -1,0 +1,28 @@
+{
+  "id": "prins-bernhard-cultuurfonds",
+  "naam": "Prins Bernhard Cultuurfonds Natuur",
+  "afkorting": "PBCF Natuur",
+  "bestuurslaag": "privaat",
+  "uitvoerder": "Prins Bernhard Cultuurfonds",
+  "doelgroep": ["terreinbeheerders", "landgoedeigenaren", "natuurorganisaties", "vrijwilligersorganisaties", "gemeenten"],
+  "sector": ["natuur", "landschap"],
+  "aanvraagperiode": {"start": "01-01", "eind": "10-01"},
+  "looptijd": "Project-gebaseerd, doorgaans 1–3 jaar",
+  "indicatief_bedrag": "Subsidies doorgaans €5.000–25.000 per project. Grotere projecten tot €100.000 mogelijk bij uitzonderlijk belang",
+  "budget_totaal": "ca. €5–10 miljoen per jaar (totaal cultuurfonds NL-breed, waarvan deel natuur)",
+  "voorwaarden": [
+    "Project heeft maatschappelijke of educatieve waarde voor natuur of landschap",
+    "Geen commercieel doel",
+    "Stichting of vereniging als aanvrager (geen privépersonen of overheden)",
+    "Co-financiering aantoonbaar aanwezig",
+    "Project is uitvoerbaar binnen de looptijd",
+    "Aanvraag via online portaal cultuurfonds"
+  ],
+  "regio": "alle provincies",
+  "provincie_specifiek": false,
+  "url": "https://www.cultuurfonds.nl/natuur",
+  "tags": ["cultuurfonds", "natuur", "landschap", "educatie", "vrijwilligers", "maatschappelijk", "klein-project"],
+  "laatste_update": "2026-03-17",
+  "status": "seizoensgebonden",
+  "notities": "Gericht op kleinere natuur- en landschapsprojecten met een maatschappelijke component. Geschikt voor: natuureducatie, herstel historische tuinen/parken op landgoederen, aanleg kleine natuur door vrijwilligersgroepen. Aanvraag sluit doorgaans 1 oktober voor het volgende jaar. Raadpleeg website voor actuele prioriteiten."
+}

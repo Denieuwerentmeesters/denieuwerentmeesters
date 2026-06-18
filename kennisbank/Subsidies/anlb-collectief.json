@@ -1,0 +1,29 @@
+{
+  "id": "anlb-collectief",
+  "naam": "ANLb Agrarisch Natuur- en Landschapsbeheer",
+  "afkorting": "ANLb",
+  "bestuurslaag": "europees",
+  "uitvoerder": "RVO / provincies via ANLb-collectieven",
+  "doelgroep": ["agrariërs", "rentmeesters", "collectieven", "akkerbouwers", "veehouders"],
+  "sector": ["natuur", "landbouw", "landschap", "water"],
+  "aanvraagperiode": {"start": "01-01", "eind": "02-28"},
+  "looptijd": "6 jaar",
+  "indicatief_bedrag": "Vergoeding per beheertype, variërend van ca. €200/ha (droge dooradering) tot ca. €1.500/ha (weidevogelbeheer intensief); vastgelegd in beheertypen-catalogus BIJ12",
+  "budget_totaal": "ca. €100 miljoen per jaar (NL-aandeel GLB tweede pijler)",
+  "voorwaarden": [
+    "Aanvraag verloopt uitsluitend via een erkend ANLb-collectief",
+    "Percelen moeten liggen in een begrensd ANLb-leefgebied (kaart per provincie)",
+    "Overeenkomst aangaan met collectief voor minimaal 6 jaar",
+    "Beheeractiviteiten aantoonbaar uitvoeren conform beheerpakket",
+    "Jaarlijkse rapportage en controle door collectief",
+    "Gecombineerde Opgave indienen als basispremie ook gewenst is",
+    "Geen dubbele vergoeding voor zelfde perceel via andere regelingen (o.a. eco-regeling)"
+  ],
+  "regio": "alle provincies",
+  "provincie_specifiek": false,
+  "url": "https://www.rvo.nl/onderwerpen/agrarisch-natuur-en-landschapsbeheer",
+  "tags": ["ANLb", "collectief", "weidevogels", "biodiversiteit", "agrarisch-natuurbeheer", "tweede-pijler", "leefgebied"],
+  "laatste_update": "2026-03-17",
+  "status": "seizoensgebonden",
+  "notities": "Aanvraag loopt via het collectief, niet rechtstreeks bij RVO. Openstellingen worden per collectief bepaald — check lokaal collectief voor exacte deadline. Beheertypen zijn vastgelegd in de Index Natuur en Landschap (BIJ12). Lopende contracten worden vernieuwd of verlengd per 6-jaarsperiode."
+}

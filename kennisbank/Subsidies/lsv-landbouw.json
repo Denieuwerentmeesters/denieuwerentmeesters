@@ -1,0 +1,27 @@
+{
+  "id": "lsv-landbouw",
+  "naam": "Landbouwstructuurversterkingsfonds (LVF)",
+  "afkorting": "LVF",
+  "bestuurslaag": "landelijk",
+  "uitvoerder": "RVO",
+  "doelgroep": ["agrariërs", "veehouders", "akkerbouwers", "collectieven", "samenwerkingsverbanden"],
+  "sector": ["landbouw", "natuur", "water", "energie"],
+  "aanvraagperiode": {"start": "04-01", "eind": "06-30"},
+  "looptijd": "1–5 jaar afhankelijk van maatregel",
+  "indicatief_bedrag": "35–50% van subsidiabele kosten; voor samenwerking of innovatie soms hoger. Minimale projectomvang €50.000",
+  "budget_totaal": "Wisselend; onderdeel van NPLG-transitiemiddelen",
+  "voorwaarden": [
+    "Investeringen gericht op duurzame landbouw (emissiereductie, kringlooplandbouw, biodiversiteit)",
+    "Bedrijfsplan of samenwerkingsovereenkomst vereist",
+    "Minimaal 2 jaar agrarisch actief",
+    "Geen dubbele financiering met SDE++, MIA/VAMIL of POP3 voor zelfde investering",
+    "Aanvraag via mijn.rvo.nl tijdens openstellingsperiode"
+  ],
+  "regio": "alle provincies",
+  "provincie_specifiek": false,
+  "url": "https://www.rvo.nl/onderwerpen/landbouw",
+  "tags": ["LVF", "landbouwstructuur", "duurzame-landbouw", "kringlooplandbouw", "investering"],
+  "laatste_update": "2026-03-17",
+  "status": "seizoensgebonden",
+  "notities": "Het LVF is een paraplufonds voor diverse investeringsmaatregelen in de landbouwtransitie. Specifieke openstellingen wisselen per jaar en zijn onderdeel van het bredere NPLG-beleid. Raadpleeg RVO voor actuele openstellingen en subsidiabele categorieën."
+}

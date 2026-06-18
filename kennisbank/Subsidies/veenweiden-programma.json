@@ -1,0 +1,27 @@
+{
+  "id": "veenweiden-programma",
+  "naam": "Veenweidenprogramma — Peilverhoging en Extensivering Veengebieden",
+  "afkorting": "Veenweidenprogramma",
+  "bestuurslaag": "landelijk",
+  "uitvoerder": "Provincies (Noord-Holland, Zuid-Holland, Utrecht, Friesland, Groningen) / waterschappen",
+  "doelgroep": ["agrariërs", "melkveehouders", "veehouders", "rentmeesters", "terreinbeheerders"],
+  "sector": ["landbouw", "water", "natuur"],
+  "aanvraagperiode": {"start": "01-01", "eind": "12-31"},
+  "looptijd": "10–30 jaar (peilverhoging is permanente ingreep)",
+  "indicatief_bedrag": "Peilverhoging: vergoeding gebruikswaardevermindering €500–2.000/ha/jaar. Extensivering: aanvullend €200–500/ha. Functieverandering: SKNL + grondverwerving via NPLG",
+  "budget_totaal": "ca. €50–100 miljoen per jaar (provincies + NPLG-transitiefonds + waterschappen)",
+  "voorwaarden": [
+    "Perceel ligt in een veenweidegebied (aangewezen in Veenweidenprogramma per provincie)",
+    "Bereidheid tot peilverhoging (minimaal 20–40 cm)",
+    "Extensivering veehouderij als gevolg van hogere peilen",
+    "Langdurige of permanente overeenkomst (>20 jaar)",
+    "Geen conflicterende drainage of bemaling op het perceel"
+  ],
+  "regio": ["Noord-Holland", "Zuid-Holland", "Utrecht", "Friesland", "Groningen"],
+  "provincie_specifiek": true,
+  "url": "https://www.veenweide.nl",
+  "tags": ["veenweide", "peilverhoging", "CO2-reductie", "weidevogels", "bodemdaling", "extensivering"],
+  "laatste_update": "2026-03-17",
+  "status": "continu",
+  "notities": "Het Veenweidenprogramma richt zich op vermindering van bodemdaling en CO2-uitstoot in veengebieden door peilverhoging. Dit is tevens gunstig voor weidevogels en waterkwaliteit. Vergoeding voor eigenaren/gebruikers die productieverlies lijden. Grote urgentie in West-Nederland vanwege bodemdaling en klimaatdoelen."
+}

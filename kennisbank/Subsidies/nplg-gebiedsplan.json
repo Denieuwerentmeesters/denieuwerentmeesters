@@ -1,0 +1,27 @@
+{
+  "id": "nplg-gebiedsplan",
+  "naam": "NPLG Gebiedsplanuitvoering (per provincie)",
+  "afkorting": "NPLG Gebiedsplan",
+  "bestuurslaag": "landelijk",
+  "uitvoerder": "Provincies (uitvoering) / Ministerie LNV (kader)",
+  "doelgroep": ["agrariërs", "terreinbeheerders", "landgoedeigenaren", "gemeenten", "waterschappen"],
+  "sector": ["natuur", "landbouw", "water"],
+  "aanvraagperiode": {"start": "01-01", "eind": "12-31"},
+  "looptijd": "2023–2035 (NPLG-programmaperiode)",
+  "indicatief_bedrag": "Grondaankoop: tot marktwaarde. Inrichting: 70–100% van subsidiabele kosten. Vrijwillige bedrijfsbeëindiging: marktconforme vergoeding + opheffings-vergoeding. Omschakelingssubsidie: €500–5.000/ha",
+  "budget_totaal": "€24,3 miljard totaal 2023–2035 (zie ook nplg-transitiefonds)",
+  "voorwaarden": [
+    "Perceel of bedrijf ligt in een NPLG-prioriteitsgebied (stikstof, water, klimaat)",
+    "Deelname is vrijwillig voor individuele eigenaren",
+    "Aanvraag via provinciaal loket (niet landelijk)",
+    "Plan past binnen provinciaal gebiedsplan",
+    "Monitoring- en rapportageverplichtingen"
+  ],
+  "regio": "alle provincies",
+  "provincie_specifiek": true,
+  "url": "https://www.rijksoverheid.nl/nplg",
+  "tags": ["NPLG", "gebiedsplan", "stikstof", "grondaankoop", "omschakeling", "bedrijfsbeëindiging", "provinciaal"],
+  "laatste_update": "2026-03-17",
+  "status": "continu",
+  "notities": "NPLG is het overkoepelende nationale programma maar uitvoering is provinciaal. Elk van de 12 provincies heeft een gebiedsplan met eigen prioriteiten, maatregelen en budgetten. Voor agrariërs zijn de vrijwillige bedrijfsbeëindiging (uitkoop), omschakeling naar extensieve landbouw en functieverandering de meest relevante routes. Raadpleeg provinciaal loket voor actuele openstellingen."
+}

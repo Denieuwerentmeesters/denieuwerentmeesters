@@ -1,0 +1,27 @@
+{
+  "id": "mia-vamil-natuur",
+  "naam": "MIA/VAMIL — Milieu-investeringsaftrek Natuur en Landschap",
+  "bestuurslaag": "nationaal",
+  "uitvoerder": "RVO.nl + Belastingdienst",
+  "doelgroep": ["agrarisch ondernemers", "landgoedeigenaren"],
+  "sector": ["fiscaal", "natuur", "investering"],
+  "aanvraagperiode": {
+    "start": "continu",
+    "eind": "melding binnen 3 maanden na investering"
+  },
+  "looptijd": "éénmalig per investering",
+  "indicatief_bedrag": "45% MIA-aftrek + 75% VAMIL-afschrijving op kwalificerende investeringen",
+  "voorwaarden": [
+    "Investering op Milieulijst RVO",
+    "Ondernemer IB- of VPB-plichtig",
+    "Tijdige melding bij RVO",
+    "Minimale investering €2.500"
+  ],
+  "regio": "heel Nederland",
+  "provincie_specifiek": null,
+  "url": "https://www.rvo.nl/subsidies-financiering/mia-vamil",
+  "tags": ["MIA", "VAMIL", "fiscaal", "investering", "duurzaam", "natuur", "belastingvoordeel"],
+  "laatste_update": "2026-03-17",
+  "status": "actief",
+  "notities": "Geen directe subsidie maar fiscaal voordeel. Stapelbaar met andere subsidies. Relevant voor drainagesystemen, precisielandbouw, agroforestry."
+}

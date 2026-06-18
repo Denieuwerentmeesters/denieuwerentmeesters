@@ -1,0 +1,29 @@
+{
+  "id": "glb-eco-regeling",
+  "naam": "Eco-regeling (GLB)",
+  "afkorting": "Eco-regeling",
+  "bestuurslaag": "europees",
+  "uitvoerder": "RVO",
+  "doelgroep": ["agrariërs", "akkerbouwers", "veehouders", "gemengde bedrijven"],
+  "sector": ["landbouw", "natuur", "water"],
+  "aanvraagperiode": {"start": "03-01", "eind": "05-15"},
+  "looptijd": "1 jaar",
+  "indicatief_bedrag": "Brons: ~€60/ha | Zilver: ~€120/ha | Goud: ~€200/ha (indicatief, afhankelijk van beschikbaar budget en deelname)",
+  "budget_totaal": "ca. €175 miljoen per jaar (NL-aandeel eco-regelingen GLB)",
+  "voorwaarden": [
+    "Deelname via Gecombineerde Opgave (GO)",
+    "Minimaal 1 ha landbouwareaal in gebruik",
+    "Eco-activiteiten kiezen uit de officiële catalogus (eco-activiteiten lijst RVO)",
+    "Voldoende punten behalen voor gewenst niveau (brons/zilver/goud)",
+    "Eco-activiteiten aantoonbaar uitvoeren gedurende het aanvraagjaar",
+    "Conditionaliteitseisen GLB naleven",
+    "Combineerbaar met ANLb maar geen dubbele vergoeding voor zelfde maatregel"
+  ],
+  "regio": "alle provincies",
+  "provincie_specifiek": false,
+  "url": "https://www.rvo.nl/onderwerpen/eco-regeling",
+  "tags": ["GLB", "eco-regeling", "biodiversiteit", "brons", "zilver", "goud", "eco-activiteiten", "eerste-pijler"],
+  "laatste_update": "2026-03-17",
+  "status": "seizoensgebonden",
+  "notities": "Drie niveaus: brons, zilver en goud. Hogere niveaus vereisen meer eco-activiteiten of zwaardere maatregelen (bijv. bufferstroken, vanggewassen, behoud landschapselementen). Puntensysteem bepaalt niveau. Budget wordt gedeeld door deelnemers — definitieve vergoeding wordt na afloop aanvraagjaar vastgesteld. Nieuw in GLB 2023–2027."
+}

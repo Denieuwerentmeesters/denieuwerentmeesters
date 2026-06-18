@@ -1,0 +1,27 @@
+{
+  "id": "invest-waterberging",
+  "naam": "Klimaatadaptatie Waterberging (waterschappen en gemeenten)",
+  "afkorting": "Waterberging",
+  "bestuurslaag": "gemeentelijk",
+  "uitvoerder": "Waterschappen / gemeenten / provincies",
+  "doelgroep": ["agrariërs", "gemeenten", "waterschappen", "terreinbeheerders", "landgoedeigenaren"],
+  "sector": ["water", "natuur", "landbouw"],
+  "aanvraagperiode": {"start": "01-01", "eind": "12-31"},
+  "looptijd": "Project-gebaseerd, 1–5 jaar",
+  "indicatief_bedrag": "40–80% van de investeringskosten; waterschap-vergoedingen: ca. €500–2.000/ha voor peilverhoging of berging. Gemeentelijk: wisselend per regeling",
+  "budget_totaal": "Onderdeel van Deltafonds en waterschapsbudgetten; ca. €100–300 miljoen per jaar NL-breed",
+  "voorwaarden": [
+    "Project leidt tot aantoonbare vergroting waterbergingscapaciteit",
+    "Ligging in waterbergings- of klimaatadaptatiegebied conform waterbeheerprogramma",
+    "Samenwerking met waterschap vereist",
+    "Inrichtingsplan goedgekeurd door waterschap",
+    "Beheer en onderhoud waterberging geborgd voor minimaal 10 jaar"
+  ],
+  "regio": "alle provincies",
+  "provincie_specifiek": false,
+  "url": "https://www.deltacommissaris.nl/klimaatadaptatie",
+  "tags": ["waterberging", "klimaatadaptatie", "peilverhoging", "wateroverlast", "droogte", "waterschap", "deltafonds"],
+  "laatste_update": "2026-03-17",
+  "status": "continu",
+  "notities": "Waterschapssubsidies voor waterberging zijn sterk afhankelijk van het lokale waterbeheerprogramma. Na de overstromingen van 2021 is het budget voor klimaatadaptatie sterk vergroot. Maatregelen: retentiebekkens, peilverhoging, waterbergingspolders, infiltratie-voorzieningen. Altijd contact opnemen met het lokale waterschap."
+}

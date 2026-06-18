@@ -1,0 +1,26 @@
+{
+  "id": "vab-vrijkomende-agrarische-bebouwing",
+  "naam": "VAB — Vrijkomende Agrarische Bebouwing herbestemming",
+  "bestuurslaag": "gemeentelijk",
+  "uitvoerder": "Gemeente + provincie (Rood voor Rood regelingen)",
+  "doelgroep": ["agrarisch ondernemers", "rentmeesters", "landgoedeigenaren"],
+  "sector": ["gebouwen", "herbestemming", "ruimtelijke ordening"],
+  "aanvraagperiode": {
+    "start": "continu",
+    "eind": "continu"
+  },
+  "looptijd": "éénmalig",
+  "indicatief_bedrag": "Afhankelijk van regeling: €10.000–100.000 of bouwrecht in ruil voor sloopmeters",
+  "voorwaarden": [
+    "Vrijkomende of leegstaande agrarische bebouwing",
+    "Gemeente met VAB/Rood-voor-Rood beleid",
+    "Sloopverplichting van overtollige bebouwing"
+  ],
+  "regio": "heel Nederland",
+  "provincie_specifiek": null,
+  "url": "https://www.rvo.nl/onderwerpen/agrarische-bebouwing/vrijkomende-agrarische-bebouwing",
+  "tags": ["VAB", "herbestemming", "sloop", "wonen", "platteland", "gemeente"],
+  "laatste_update": "2026-03-17",
+  "status": "actief",
+  "notities": "Sterk afhankelijk van gemeentelijk beleid. Sommige provincies hebben overkoepelend beleid (bijv. Rood voor Rood in Overijssel/Gelderland)."
+}

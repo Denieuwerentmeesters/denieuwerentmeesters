@@ -1,0 +1,28 @@
+{
+  "id": "productieve-investeringen-groen-blauw",
+  "naam": "Productieve investeringen groen-blauw en dierenwelzijn",
+  "bestuurslaag": "provinciaal",
+  "uitvoerder": "RVO.nl namens provincies Noord-Holland, Zuid-Holland, Utrecht en Zeeland",
+  "doelgroep": ["melkveehouders", "agrariërs", "veehouders", "akkerbouwers"],
+  "sector": ["landbouw", "dierenwelzijn", "groen-blauw", "melkvee", "verduurzaming"],
+  "aanvraagperiode": {
+    "start": "2025-12-03",
+    "eind": "2026-02-26"
+  },
+  "looptijd": "éénmalig (investeringssubsidie)",
+  "indicatief_bedrag": "40-80% van investeringskosten; €10.000–€100.000 per aanvraag (jonge boeren: 55-80%)",
+  "voorwaarden": [
+    "Actief landbouwbedrijf in Noord-Holland, Zuid-Holland, Utrecht of Zeeland",
+    "Investering gericht op verduurzaming, dierenwelzijn of groene/blauwe infrastructuur",
+    "Minimale investering €10.000 (Zeeland: €15.000)",
+    "Jonge boeren (<40 jaar) ontvangen hogere vergoeding en mogen vaker aanvragen",
+    "In Zeeland: alleen individuele agrariërs (geen coöperaties)"
+  ],
+  "regio": "Noord-Holland, Zuid-Holland, Utrecht, Zeeland",
+  "provincie_specifiek": ["Noord-Holland", "Zuid-Holland", "Utrecht", "Zeeland"],
+  "url": "https://www.rvo.nl/subsidies-financiering/productieve-investeringen-groen-blauw-en-dierenwelzijn",
+  "tags": ["dierenwelzijn", "groen-blauw", "investeringen", "melkvee", "veehouderij", "verduurzaming", "jonge boeren", "Noord-Holland", "Zuid-Holland", "Utrecht", "Zeeland"],
+  "laatste_update": "2026-03-17",
+  "status": "gesloten",
+  "notities": "Openstellingsperiode 2025-2026 gesloten (deadline februari 2026). Volgende ronde verwacht najaar 2026. Relevant voor melkveehouders die willen investeren in dierenwelzijn (stal, uitloop, weidegang) of groene infrastructuur. Beschikbaar in slechts 4 provincies."
+}

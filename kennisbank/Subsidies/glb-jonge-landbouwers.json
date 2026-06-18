@@ -1,0 +1,27 @@
+{
+  "id": "glb-jonge-landbouwers",
+  "naam": "GLB — Aanvullende Inkomenstoeslag Jonge Landbouwers",
+  "bestuurslaag": "europees",
+  "uitvoerder": "RVO.nl",
+  "doelgroep": ["agrariërs jonger dan 40 jaar", "starters"],
+  "sector": ["agrarisch", "GLB"],
+  "aanvraagperiode": {
+    "start": "2026-03-01",
+    "eind": "2026-05-15"
+  },
+  "looptijd": "jaarlijks (max 5 jaar)",
+  "indicatief_bedrag": "€130–200/ha/jaar extra bovenop basispremie (max 90 ha)",
+  "voorwaarden": [
+    "Leeftijd <40 jaar op 1 januari aanvraagjaar",
+    "Actief landbouwer",
+    "Gecombineerde Opgave indienen",
+    "Eerste vestiging als bedrijfshoofd <5 jaar geleden"
+  ],
+  "regio": "heel Nederland",
+  "provincie_specifiek": null,
+  "url": "https://www.rvo.nl/subsidies-financiering/glb/jonge-landbouwers",
+  "tags": ["GLB", "jonge landbouwers", "toeslag", "basispremie", "starter"],
+  "laatste_update": "2026-03-17",
+  "status": "actief",
+  "notities": "Aanvraag via Gecombineerde Opgave tegelijk met basispremie. Combineerbaar met eco-regeling."
+}

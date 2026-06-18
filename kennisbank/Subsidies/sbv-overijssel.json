@@ -1,0 +1,27 @@
+{
+  "id": "sbv-overijssel",
+  "naam": "Subsidie Verbetering Waterkwaliteit Overijssel",
+  "afkorting": "SBV Overijssel",
+  "bestuurslaag": "provinciaal",
+  "uitvoerder": "Provincie Overijssel / Waterschap Drents Overijsselse Delta / Waterschap Vechtstromen",
+  "doelgroep": ["agrariërs", "terreinbeheerders", "gemeenten", "waterschappen"],
+  "sector": ["water", "natuur", "landbouw"],
+  "aanvraagperiode": {"start": "03-01", "eind": "05-31"},
+  "looptijd": "Project-gebaseerd, 5–10 jaar beheerperiode",
+  "indicatief_bedrag": "50–80% van de subsidiabele kosten. Typische projectomvang: €10.000–200.000",
+  "budget_totaal": "ca. €5–15 miljoen per jaar (KRW-middelen provincie Overijssel)",
+  "voorwaarden": [
+    "Project draagt bij aan KRW-waterkwaliteitsdoelen in Overijssel",
+    "Locatie in of nabij een KRW-waterlichaam in Overijssel",
+    "Projectplan met milieuparagraaf indienen",
+    "Samenwerking met waterschap vereist",
+    "Beheer en monitoring voor minimaal 6 jaar"
+  ],
+  "regio": "Overijssel",
+  "provincie_specifiek": true,
+  "url": "https://www.overijssel.nl/subsidies/natuur-water",
+  "tags": ["waterkwaliteit", "KRW", "Overijssel", "beekdalen", "oeverbeheer", "nutriënten", "fosfaat"],
+  "laatste_update": "2026-03-17",
+  "status": "seizoensgebonden",
+  "notities": "Gericht op KRW-doelen voor Overijsselse beken en het IJsselmeer-systeem. Maatregelen: oeverbuffers, fosfaatverwijdering, hermeandering beken, aanleg natte bufferzones. Combinatie met ANLb natte dooradering veelvoorkomend. Raadpleeg provincie Overijssel en lokale waterschappen voor actuele openstellingen."
+}

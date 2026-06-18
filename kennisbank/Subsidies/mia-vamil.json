@@ -1,0 +1,28 @@
+{
+  "id": "mia-vamil",
+  "naam": "MIA/VAMIL Milieu-investeringsaftrek en Willekeurige Afschrijving Milieu-investeringen",
+  "afkorting": "MIA/VAMIL",
+  "bestuurslaag": "landelijk",
+  "uitvoerder": "RVO / Belastingdienst",
+  "doelgroep": ["agrariërs", "bedrijven", "veehouders", "akkerbouwers", "landgoedeigenaren"],
+  "sector": ["energie", "landbouw", "natuur", "water"],
+  "aanvraagperiode": {"start": "01-01", "eind": "12-31"},
+  "looptijd": "continu (melding binnen 3 maanden na investering)",
+  "indicatief_bedrag": "MIA: 45% aftrek van investeringsbedrag op winst (effectief belastingvoordeel ~10–14% van investering). VAMIL: 75% willekeurige afschrijving (liquiditeitsvoordeel). Gecombineerd effectief voordeel ca. 14–19% van investeringsbedrag",
+  "budget_totaal": "ca. €200 miljoen per jaar",
+  "voorwaarden": [
+    "Investering staat op de Milieulijst (jaarlijks gepubliceerd door RVO)",
+    "Melding binnen 3 maanden na aangaan van de investeringsverplichting via eAmbtI/mijn.rvo.nl",
+    "Ondernemer betaalt vennootschapsbelasting of inkomstenbelasting (IB-ondernemer of BV)",
+    "Investering in Nederland",
+    "Geen andere investeringsaftrek voor hetzelfde bedrijfsmiddel (bijv. geen KIA combineren met MIA voor zelfde object)",
+    "Drempel: investering ≥ €2.500 per bedrijfsmiddel"
+  ],
+  "regio": "alle provincies",
+  "provincie_specifiek": false,
+  "url": "https://www.rvo.nl/onderwerpen/mia-en-vamil",
+  "tags": ["MIA", "VAMIL", "fiscaal", "milieu-investering", "aftrek", "duurzame-stallen", "emissiereductie"],
+  "laatste_update": "2026-03-17",
+  "status": "continu",
+  "notities": "MIA en VAMIL zijn fiscale voordelen, geen directe subsidie. Melding bij RVO is verplicht — zonder melding vervalt het recht. De Milieulijst wordt jaarlijks per 1 januari gepubliceerd; investeringen in duurzame stallen, luchtwassers, precisiebemesting en energieopslag zijn veelvoorkomende agrarische categorieën."
+}

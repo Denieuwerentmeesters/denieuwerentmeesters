@@ -1,0 +1,27 @@
+{
+  "id": "deltaplan-biodiversiteit",
+  "naam": "Deltaplan Biodiversiteitsherstel",
+  "afkorting": "Deltaplan Biodiversiteit",
+  "bestuurslaag": "privaat",
+  "uitvoerder": "Deltaplan Biodiversiteitsherstel (coalitie van partijen) / private cofinanciering",
+  "doelgroep": ["agrariërs", "terreinbeheerders", "landgoedeigenaren", "bedrijven", "gemeenten"],
+  "sector": ["natuur", "landbouw", "landschap"],
+  "aanvraagperiode": {"start": "01-01", "eind": "12-31"},
+  "looptijd": "Project-gebaseerd, doorgaans 3–10 jaar",
+  "indicatief_bedrag": "Afhankelijk van project en cofinancieringspartners. Bijdragen van €10.000–500.000 per project. Deltaplan heeft geen eigen subsidiepot maar fungeert als coördinatiemechanisme",
+  "budget_totaal": "ca. €40 miljoen per jaar (verzameld uit private en publieke bronnen)",
+  "voorwaarden": [
+    "Project draagt aantoonbaar bij aan biodiversiteitsherstel",
+    "Samenwerking van meerdere partijen (boer + natuur + bedrijfsleven)",
+    "Meetbare biodiversiteitsdoelen in projectplan",
+    "Cofinanciering van private partijen aanwezig",
+    "Voortkomend uit of aansluitend bij één van de Delta-thema's (landbouw, water, stedelijk, etc.)"
+  ],
+  "regio": "alle provincies",
+  "provincie_specifiek": false,
+  "url": "https://www.deltaplanbiodiversiteitsherstel.nl",
+  "tags": ["biodiversiteit", "deltaplan", "samenwerking", "private-financiering", "bloemrijke-percelen", "insecten"],
+  "laatste_update": "2026-03-17",
+  "status": "continu",
+  "notities": "Het Deltaplan Biodiversiteitsherstel is een brede coalitie van boeren, natuur-organisaties, bedrijven en overheden. Het heeft geen eigen subsidieloket maar helpt partijen cofinanciering te vinden en projecten te verbinden. Relevant als netwerk- en matchmakingplatform voor biodiversiteitsprojecten. Meest effectief in combinatie met ANLb, SNL of provinciale fondsen."
+}

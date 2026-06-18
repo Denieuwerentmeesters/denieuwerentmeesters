@@ -1,0 +1,27 @@
+{
+  "id": "nsw-landgoed-fiscaal",
+  "naam": "NSW — Natuurschoonwet Landgoed",
+  "bestuurslaag": "nationaal",
+  "uitvoerder": "RVO.nl + Belastingdienst",
+  "doelgroep": ["landgoedeigenaren", "rentmeesters"],
+  "sector": ["natuur", "landschap", "fiscaal"],
+  "aanvraagperiode": {
+    "start": "continu",
+    "eind": "continu"
+  },
+  "looptijd": "permanent (zolang landgoed voldoet aan voorwaarden)",
+  "indicatief_bedrag": "Vrijstelling erfbelasting + overdrachtsbelasting; lagere WOZ-waarde",
+  "voorwaarden": [
+    "Minimaal 5 ha aaneengesloten",
+    "Minimaal 30% bos of natuur",
+    "Opengesteld voor publiek (minstens 50% van het jaar)",
+    "Inschrijving als NSW-landgoed bij RVO"
+  ],
+  "regio": "heel Nederland",
+  "provincie_specifiek": null,
+  "url": "https://www.rvo.nl/subsidies-financiering/nsw",
+  "tags": ["NSW", "landgoed", "fiscaal", "erfbelasting", "natuur", "particulier"],
+  "laatste_update": "2026-03-17",
+  "status": "actief",
+  "notities": "Geen subsidie maar fiscale vrijstelling. Zeer waardevol voor landgoedeigenaren. Combineerbaar met SNL."
+}

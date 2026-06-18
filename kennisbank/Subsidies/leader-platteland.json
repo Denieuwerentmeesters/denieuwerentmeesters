@@ -1,0 +1,26 @@
+{
+  "id": "leader-clld-platteland",
+  "naam": "LEADER / CLLD — Plattelandsontwikkeling",
+  "bestuurslaag": "europees",
+  "uitvoerder": "Lokale Actie Groepen (LAG's) — 30 regio's in Nederland",
+  "doelgroep": ["agrariërs", "landgoedeigenaren", "lokale ondernemers", "gebiedscoöperaties"],
+  "sector": ["platteland", "recreatie", "natuur", "agrarisch"],
+  "aanvraagperiode": {
+    "start": "variabel",
+    "eind": "per regio"
+  },
+  "looptijd": "projectgebonden (1-4 jaar)",
+  "indicatief_bedrag": "40-80% van projectkosten, max €200.000 per project",
+  "voorwaarden": [
+    "Project draagt bij aan lokale ontwikkelstrategie van de LAG",
+    "Minimaal 2 partijen betrokken",
+    "Niet-commercieel of publiek belang"
+  ],
+  "regio": "plattelijkegebieden Nederland",
+  "provincie_specifiek": null,
+  "url": "https://www.rvo.nl/subsidies-financiering/leader",
+  "tags": ["LEADER", "CLLD", "platteland", "gebiedsontwikkeling", "EU", "innovatie"],
+  "laatste_update": "2026-03-17",
+  "status": "actief",
+  "notities": "Aanvraag via de lokale LAG van het gebied. Sterk locatiegebonden — check welke LAG actief is in het perceel."
+}

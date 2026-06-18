@@ -1,0 +1,28 @@
+{
+  "id": "postcode-loterij-groenfonds",
+  "naam": "Postcode Loterij Groen Fonds",
+  "afkorting": "PLGF",
+  "bestuurslaag": "privaat",
+  "uitvoerder": "Postcodeloterij / Natuur & Milieu (uitvoering)",
+  "doelgroep": ["terreinbeheerders", "landgoedeigenaren", "natuurorganisaties", "stichtingen"],
+  "sector": ["natuur", "landschap", "water", "energie"],
+  "aanvraagperiode": {"start": "01-01", "eind": "03-31"},
+  "looptijd": "Project-gebaseerd, doorgaans 3–5 jaar",
+  "indicatief_bedrag": "Grote projecten: €50.000–2.000.000. Gemiddelde subsidie ca. €200.000–500.000 per project",
+  "budget_totaal": "ca. €20–40 miljoen per jaar (afhankelijk van loterij-opbrengsten)",
+  "voorwaarden": [
+    "Groot natuur- of biodiversiteitsproject van nationaal belang",
+    "Rechtspersoon als aanvrager (stichting, vereniging — geen overheid)",
+    "Aantoonbare impact op biodiversiteit of klimaat",
+    "Co-financiering aanwezig (minimaal 25%)",
+    "Uitvoeringsplan met meetbare doelen",
+    "Project is overdraagbaar en duurzaam geborgd"
+  ],
+  "regio": "alle provincies",
+  "provincie_specifiek": false,
+  "url": "https://www.postcodeloterij.nl/groenfonds",
+  "tags": ["postcodeloterij", "groenfonds", "groot-project", "biodiversiteit", "natuur", "nationaal"],
+  "laatste_update": "2026-03-17",
+  "status": "seizoensgebonden",
+  "notities": "Het Groen Fonds financiert grote, impactvolle natuur- en biodiversiteitsprojecten. Minimumbedrag €50.000. Geschikt voor: landschapherstel op grote schaal, verbindingszones tussen Natura 2000-gebieden, grootschalige bosaanleg. Aanvraagprocedure duurt doorgaans 6–12 maanden. Ontvang eerst een letter of intent voor grote aanvragen."
+}

@@ -1,0 +1,7 @@
+# macOS
+.DS_Store
+
+# Env files (kunnen secrets bevatten)
+.env
+.env.*
+!.env.*.example

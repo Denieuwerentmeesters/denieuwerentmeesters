@@ -1,0 +1,28 @@
+{
+  "id": "rabobank-rabo-carbon-bank",
+  "naam": "Rabo Carbon Bank — Koolstofcredits voor Agrariërs",
+  "afkorting": "Rabo Carbon Bank",
+  "bestuurslaag": "privaat",
+  "uitvoerder": "Rabobank / Rabo Carbon Bank",
+  "doelgroep": ["agrariërs", "veehouders", "akkerbouwers", "terreinbeheerders", "landgoedeigenaren"],
+  "sector": ["landbouw", "natuur", "energie"],
+  "aanvraagperiode": {"start": "01-01", "eind": "12-31"},
+  "looptijd": "10–20 jaar (koolstofcontract looptijd)",
+  "indicatief_bedrag": "€20–60 per ton CO2-equivalent opgeslagen. Typisch agrarisch bedrijf: 50–200 ton CO2/jaar; vergoeding €1.000–10.000/jaar",
+  "budget_totaal": "Marktgestuurd; geen vaste budgetplafond",
+  "voorwaarden": [
+    "Agrarisch bedrijf of terreinbeheerder in Nederland",
+    "Maatregelen die CO2 opslaan of uitstoot reduceren: regeneratieve landbouw, bosaanleg, veenoxidatiereductie",
+    "Additioneel: maatregel zou zonder carbonvergoeding niet worden genomen",
+    "Meting en verificatie via erkende methodologie (bijv. ISO 14064, Gold Standard)",
+    "Contract voor minimale looptijd",
+    "Geen dubbele creditering voor zelfde maatregel"
+  ],
+  "regio": "alle provincies",
+  "provincie_specifiek": false,
+  "url": "https://www.rabobank.nl/carbon-bank",
+  "tags": ["carbon-credits", "CO2-opslag", "koolstof", "regeneratieve-landbouw", "veenweide", "bosaanleg", "Rabobank"],
+  "laatste_update": "2026-03-17",
+  "status": "continu",
+  "notities": "De Rabo Carbon Bank is een marktgebaseerd instrument, geen overheidssubsidie. Vergoeding is afhankelijk van koolstofmarktprijs en geverifieerde opslag. Veelbelovende maatregelen: peilverhoging veenweide (CO2-uitstoot vermindering), bosaanleg, vanggewassen, composttoediening. Combineerbaar met ANLb en SNL mits geen dubbele vergoeding voor zelfde oppervlak."
+}

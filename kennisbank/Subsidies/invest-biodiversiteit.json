@@ -1,0 +1,27 @@
+{
+  "id": "invest-biodiversiteit",
+  "naam": "Subsidie Biodiversiteitsmaatregelen (provinciaal, wisselend)",
+  "afkorting": "BiodiversiteitSubsidie",
+  "bestuurslaag": "provinciaal",
+  "uitvoerder": "Provincies (wisselend per provincie)",
+  "doelgroep": ["agrariërs", "terreinbeheerders", "landgoedeigenaren", "rentmeesters", "gemeenten"],
+  "sector": ["natuur", "landbouw", "landschap"],
+  "aanvraagperiode": {"start": "04-01", "eind": "06-30"},
+  "looptijd": "Project-gebaseerd, doorgaans 3–5 jaar beheerperiode na aanleg",
+  "indicatief_bedrag": "40–75% van de aanleg- en inrichtingskosten; wisselend per provincie en maatregel. Typisch €500–5.000 per maatregel",
+  "budget_totaal": "Wisselend per provincie; totaal NL ca. €20–50 miljoen per jaar",
+  "voorwaarden": [
+    "Maatregel draagt aantoonbaar bij aan biodiversiteitsherstel",
+    "Perceel of project ligt in of nabij een prioriteitsgebied (NNN, Natura 2000-bufferzone)",
+    "Beheerplan of projectplan indienen",
+    "Minimale beheerperiode na aanleg (doorgaans 5 jaar)",
+    "Openstellingsperiode en eisen per provincie raadplegen"
+  ],
+  "regio": "alle provincies",
+  "provincie_specifiek": true,
+  "url": "https://www.bij12.nl/onderwerp/natuursubsidies/",
+  "tags": ["biodiversiteit", "inrichting", "NNN", "provinciaal", "bloemrijke-randen", "poel", "faunapassage"],
+  "laatste_update": "2026-03-17",
+  "status": "seizoensgebonden",
+  "notities": "Sterk wisselend per provincie en jaar. Sommige provincies combineren dit met hun groenfonds of landschapsfonds. Maatregelen kunnen omvatten: aanleg poelen, bloemrijke akkerranden, faunapassages, bosranden, kleine landschapselementen. Check altijd provinciaal subsidieloket."
+}

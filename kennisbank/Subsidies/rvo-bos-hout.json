@@ -1,0 +1,28 @@
+{
+  "id": "rvo-bos-hout",
+  "naam": "Subsidie Bosaanleg en Bosbeheer (RVO)",
+  "afkorting": "Bosaanleg",
+  "bestuurslaag": "landelijk",
+  "uitvoerder": "RVO / provincies",
+  "doelgroep": ["landgoedeigenaren", "rentmeesters", "terreinbeheerders", "gemeenten", "agrariërs"],
+  "sector": ["natuur", "landschap"],
+  "aanvraagperiode": {"start": "09-01", "eind": "11-30"},
+  "looptijd": "Beheerovereenkomst doorgaans 12 jaar",
+  "indicatief_bedrag": "Bosaanleg: €1.000–3.000 per ha (afhankelijk van regio en boomsoortenmix). Bosbeheer (extra maatregelen): ca. €200–800/ha/jaar aanvullend op SNL",
+  "budget_totaal": "ca. €30–60 miljoen per jaar (NL-bosaanleg ambities 2030)",
+  "voorwaarden": [
+    "Aanleg van nieuw bos op voormalige landbouwgrond of andere niet-boslocaties",
+    "Minimale oppervlakte 0,5 ha aaneengesloten",
+    "Gebruik van inheemse boomsoorten (minimaal 80% van aanplant)",
+    "Beheerplan opstellen voor de gehele looptijd",
+    "Bos blijft minimaal 12 jaar in stand",
+    "Geen aanleg op percelen met hoge landbouwwaarde (kleigrond type 1) — tenzij strategisch"
+  ],
+  "regio": "alle provincies",
+  "provincie_specifiek": false,
+  "url": "https://www.rvo.nl/onderwerpen/bos-en-houtopstanden",
+  "tags": ["bosaanleg", "bosbeheer", "hout", "CO2-opslag", "biodiversiteit", "inheemse-soorten", "klimaatbos"],
+  "laatste_update": "2026-03-17",
+  "status": "seizoensgebonden",
+  "notities": "Nederland heeft de ambitie om 37.000 ha nieuw bos aan te leggen tot 2030. Subsidie voor bosaanleg is onderdeel van het Bossenstrategie-beleid. Aanvraag loopt via provinciale openstellingen (wisselend). Na aanleg komen percelen ook in aanmerking voor SNL-bosbeheer. Let op: bij bosaanleg op landbouwgrond vervalt betalingsrecht GLB."
+}

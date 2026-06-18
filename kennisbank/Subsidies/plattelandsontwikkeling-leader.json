@@ -1,0 +1,28 @@
+{
+  "id": "plattelandsontwikkeling-leader",
+  "naam": "LEADER — Lokale Plattelandsontwikkeling via LAG-groepen",
+  "afkorting": "LEADER",
+  "bestuurslaag": "europees",
+  "uitvoerder": "Lokale Actie Groepen (LAG) / provincies / RVO",
+  "doelgroep": ["agrariërs", "ondernemers landelijk gebied", "gemeenten", "dorpsorganisaties", "toerisme", "zorg"],
+  "sector": ["landbouw", "natuur", "landschap"],
+  "aanvraagperiode": {"start": "01-01", "eind": "12-31"},
+  "looptijd": "Programmaperiode GLB 2023–2027; projecten 1–4 jaar",
+  "indicatief_bedrag": "50–80% van subsidiabele projectkosten. Projecten doorgaans €20.000–200.000. Maximaal per project verschilt per LAG-gebied",
+  "budget_totaal": "ca. €100 miljoen totaal NL-breed voor LEADER 2023–2027",
+  "voorwaarden": [
+    "Project draagt bij aan lokale plattelandsontwikkelingsstrategie (LOS) van het LAG-gebied",
+    "Uitvoerder is gevestigd in het LEADER-gebied",
+    "Samenwerking tussen meerdere partijen aanbevolen (maar niet altijd verplicht)",
+    "Project is innovatief voor de regio of versterkt de lokale economie",
+    "Aanvraag bij het lokale LAG-kantoor (niet bij RVO of provincie)",
+    "Co-financiering aantonen"
+  ],
+  "regio": "alle provincies",
+  "provincie_specifiek": true,
+  "url": "https://www.rvo.nl/onderwerpen/pop3/leader",
+  "tags": ["LEADER", "LAG", "plattelandsontwikkeling", "lokaal", "innovatie", "gemeenschap", "toerisme", "zorg"],
+  "laatste_update": "2026-03-17",
+  "status": "continu",
+  "notities": "LEADER werkt via ca. 20 LAG-groepen verspreid over Nederland, elk met een eigen werkgebied en prioriteiten. Aanvraag altijd via het lokale LAG-kantoor. Thema's per LAG wisselen sterk: toerisme, agrarische verbreding, zorglandbouw, krimp/leefbaarheid, circulaire economie. Raadpleeg www.leadernetwerk.nl voor een overzicht van alle LAG-gebieden."
+}

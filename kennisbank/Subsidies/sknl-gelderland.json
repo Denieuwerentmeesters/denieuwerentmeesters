@@ -1,0 +1,24 @@
+{
+  "id": "sknl-gelderland",
+  "naam": "SKNL Subsidie Kwaliteitsimpuls Natuur en Landschap Gelderland",
+  "bestuurslaag": "provinciaal",
+  "uitvoerder": "BIJ12 namens Provincie Gelderland",
+  "doelgroep": ["rentmeesters", "landgoedeigenaren", "terreinbeheerders"],
+  "sector": ["natuur", "landschap"],
+  "aanvraagperiode": { "start": "variabel", "eind": "variabel" },
+  "looptijd": "éénmalig (investeringssubsidie)",
+  "indicatief_bedrag": "70% van de investeringskosten voor omvorming naar natuur",
+  "voorwaarden": [
+    "Perceel gelegen in NNN of provinciale ecologische structuur",
+    "Eigendom of erfpacht vereist (geen reguliere pacht)",
+    "Aantoonbare investeringen in omvorming naar natuur",
+    "Perceel begrensd voor functieverandering in Natuurbeheerplan"
+  ],
+  "regio": "Gelderland",
+  "provincie_specifiek": "Gelderland",
+  "url": "https://www.bij12.nl/onderwerp/natuur-en-landschapsbeheer/subsidie-kwaliteitsimpuls-natuur-en-landschap/",
+  "tags": ["SKNL", "kwaliteitsimpuls", "natuur", "investeringssubsidie", "functieverandering", "gelderland"],
+  "laatste_update": "2026-03-17",
+  "status": "actief",
+  "notities": "Openstellingsmoment per provincie verschilt sterk. Check provinciaal subsidieloket. Combineerbaar met SNL na omvorming."
+}

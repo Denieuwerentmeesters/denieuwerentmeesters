@@ -1,0 +1,28 @@
+{
+  "id": "anlb-akkervogels",
+  "naam": "ANLb Akkervogels — Akkerranden, Onkruidrijke Akkers en Voedselvelden",
+  "afkorting": "ANLb Akkervogels",
+  "bestuurslaag": "europees",
+  "uitvoerder": "RVO / provincies via ANLb-collectieven",
+  "doelgroep": ["akkerbouwers", "agrariërs", "collectieven"],
+  "sector": ["natuur", "landbouw"],
+  "aanvraagperiode": {"start": "01-01", "eind": "02-28"},
+  "looptijd": "6 jaar",
+  "indicatief_bedrag": "Kruidenrijke akkerrand: ca. €900–1.200/ha/jaar. Onkruidrijke strook: ca. €600–900/ha/jaar. Voedselveld/braak: ca. €800–1.100/ha/jaar",
+  "budget_totaal": "Onderdeel van totaal ANLb-budget ca. €100 miljoen/jaar NL-breed",
+  "voorwaarden": [
+    "Perceel ligt in een begrensd akkervogelleefgebied (provinciaal vastgesteld)",
+    "Aanvraag via erkend ANLb-collectief",
+    "Akkerrand aanleggen en in stand houden (minimale breedte 3–6m, afhankelijk van pakket)",
+    "Geen gebruik van pesticiden en kunstmest op de rand/strook",
+    "Niet bewerken van de rand buiten de toegestane periode",
+    "Zaadmengsel conform pakketvereisten (inheemse kruiden of graanstoppel)"
+  ],
+  "regio": ["Flevoland", "Groningen", "Zeeland", "Noord-Brabant", "Drenthe"],
+  "provincie_specifiek": false,
+  "url": "https://www.rvo.nl/onderwerpen/agrarisch-natuur-en-landschapsbeheer",
+  "tags": ["ANLb", "akkervogels", "akkerranden", "veldleeuwerik", "patrijs", "geelgors", "onkruidrijke-akker", "collectief"],
+  "laatste_update": "2026-03-17",
+  "status": "seizoensgebonden",
+  "notities": "Akkervogels (veldleeuwerik, patrijs, geelgors, kneu) zijn sterk achteruitgegaan. Aanleg van akkerranden en voedselvelden is bewezen effectief. Primaire leefgebieden zijn de akkerbouwgebieden: Flevoland, Zeeland, kleigebieden Groningen. Combinatie met eco-regeling akkerrand is mogelijk mits geen dubbele vergoeding voor hetzelfde perceel."
+}

@@ -1,0 +1,28 @@
+{
+  "id": "klimaatbuffers",
+  "naam": "Klimaatbufferprogramma — Grote Waterbuffering en Ecologisch Herstel",
+  "afkorting": "Klimaatbuffers",
+  "bestuurslaag": "landelijk",
+  "uitvoerder": "Rijkswaterstaat / Deltaprogramma / provincies / terreinbeheerders",
+  "doelgroep": ["terreinbeheerders", "provincies", "waterschappen", "gemeenten", "samenwerkingsverbanden"],
+  "sector": ["water", "natuur", "landschap"],
+  "aanvraagperiode": {"start": "01-01", "eind": "12-31"},
+  "looptijd": "5–15 jaar (grote herstelprojecten)",
+  "indicatief_bedrag": "Grote projecten: €1 miljoen–50 miljoen. Bijdrage Rijkswaterstaat/LNV: 50–80% van kosten",
+  "budget_totaal": "ca. €200–500 miljoen per jaar (Deltafonds + LNV-budget natuur en water)",
+  "voorwaarden": [
+    "Project leidt tot substantiële vergroting waterbuffercapaciteit",
+    "Gecombineerde doelen: waterberging + biodiversiteitsherstel + klimaatadaptatie",
+    "Groot samenwerkingsverband (waterschap + provincie + terreinbeheerder)",
+    "Projectplan met langetermijn-monitoring",
+    "Vrijwillig grondverwerving of grondruil",
+    "Aansluiting bij Deltaprogramma of NNN-realisatie"
+  ],
+  "regio": "alle provincies",
+  "provincie_specifiek": false,
+  "url": "https://www.rijksoverheid.nl/onderwerpen/klimaatverandering/klimaatadaptatie",
+  "tags": ["klimaatbuffer", "waterberging", "deltaprogramma", "grootschalig", "ecologisch-herstel", "uiterwaarden", "natte-natuur"],
+  "laatste_update": "2026-03-17",
+  "status": "continu",
+  "notities": "Klimaatbuffers zijn grootschalige gebiedsinrichtingen die tegelijk bijdragen aan waterberging en natuur. Voorbeelden: uiterwaardenherstel Rijntakken, veenweide-peilverhoging West-NL, kustmoeras-herstel. Te groot voor individuele aanvraag — initiatief via gebiedsproces of provincie. Nationaal Klimaatadaptatieprogramma 2026–2030 is relevant kader."
+}

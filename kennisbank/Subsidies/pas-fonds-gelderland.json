@@ -1,0 +1,28 @@
+{
+  "id": "pas-fonds-gelderland",
+  "naam": "Gelderlands Landschapsfonds / PAS-maatregelen Gelderland",
+  "afkorting": "GLF",
+  "bestuurslaag": "provinciaal",
+  "uitvoerder": "Provincie Gelderland",
+  "doelgroep": ["terreinbeheerders", "landgoedeigenaren", "rentmeesters", "agrariërs", "gemeenten"],
+  "sector": ["natuur", "landschap", "water"],
+  "aanvraagperiode": {"start": "02-01", "eind": "04-30"},
+  "looptijd": "Project-gebaseerd, 3–10 jaar",
+  "indicatief_bedrag": "50–100% van de subsidiabele projectkosten; afhankelijk van doelstelling en locatie. Projecten doorgaans €10.000–500.000",
+  "budget_totaal": "ca. €10–25 miljoen per jaar (wisselend per begrotingsjaar)",
+  "voorwaarden": [
+    "Project draagt bij aan behoud of verbetering van het Gelders landschap",
+    "Locatie in Gelderland, bij voorkeur in of nabij NNN of Natura 2000",
+    "Projectplan met begroting en uitvoeringsschema indienen",
+    "Cofinanciering van minimaal 20% vereist",
+    "Samenwerking met gemeente of waterschap aanbevolen",
+    "PAS-maatregelen: specifiek gericht op stikstofreductie nabij Natura 2000"
+  ],
+  "regio": "Gelderland",
+  "provincie_specifiek": true,
+  "url": "https://www.gelderland.nl/subsidies/natuur-en-landschap",
+  "tags": ["Gelderland", "landschapsfonds", "PAS", "stikstof", "Natura2000", "Veluwe", "Achterhoek", "landschap"],
+  "laatste_update": "2026-03-17",
+  "status": "seizoensgebonden",
+  "notities": "Het Gelderlands Landschapsfonds ondersteunt diverse landschapsinitiatieven in Gelderland. PAS-maatregelen zijn specifiek gericht op stikstofproblematiek rondom Natura 2000-gebieden (Veluwe, Rijntakken). Gelderland heeft het grootste NNN-areaal van Nederland. Raadpleeg provincie Gelderland voor actuele openstellingen."
+}

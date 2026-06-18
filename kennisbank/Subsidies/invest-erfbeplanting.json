@@ -1,0 +1,27 @@
+{
+  "id": "invest-erfbeplanting",
+  "naam": "Erfbeplantingssubsidie (gemeente/waterschap, wisselend)",
+  "afkorting": "Erfbeplanting",
+  "bestuurslaag": "gemeentelijk",
+  "uitvoerder": "Gemeenten / waterschappen / provinciale landschappen",
+  "doelgroep": ["agrariërs", "landgoedeigenaren", "rentmeesters", "particulieren in landelijk gebied"],
+  "sector": ["landschap", "natuur"],
+  "aanvraagperiode": {"start": "09-01", "eind": "11-30"},
+  "looptijd": "Eenmalige aanleg; geen vaste looptijd",
+  "indicatief_bedrag": "50–75% van de aanlegkosten plantmateriaal; of vergoeding in natura (gratis plantmateriaal). Typisch €500–5.000 per erftransformatie",
+  "budget_totaal": "Wisselend; doorgaans kleine lokale budgetten €50.000–500.000 per gemeente/regio",
+  "voorwaarden": [
+    "Agrarisch erf in het landelijk gebied",
+    "Beplanting met streekeigen soorten (soortenlijst per regio)",
+    "Aanvraag voor aanplant in het najaar/winter (plantseizoen)",
+    "Beplanting in stand houden voor minimaal 10 jaar",
+    "Geen beplanting op percelen met conflicterend gebruik (bijv. teeltvrije zone)"
+  ],
+  "regio": "alle provincies",
+  "provincie_specifiek": true,
+  "url": "https://www.landschapsbeheer.nl",
+  "tags": ["erfbeplanting", "streekeigen-beplanting", "landschapselementen", "bomen", "hagen", "erftransformatie"],
+  "laatste_update": "2026-03-17",
+  "status": "seizoensgebonden",
+  "notities": "Sterk lokaal georganiseerd. Veel gemeenten werken samen met Landschapsbeheer (provinciaal) voor uitgifte en begeleiding. Soms wordt plantmateriaal gratis of tegen sterk gereduceerde prijs beschikbaar gesteld. Controleer bij gemeente, waterschap of provinciaal landschapsbeheer."
+}

@@ -1,0 +1,27 @@
+{
+  "id": "kader-richtlijn-water",
+  "naam": "KRW-maatregelen Subsidiëring via Waterbeheerplannen",
+  "afkorting": "KRW",
+  "bestuurslaag": "europees",
+  "uitvoerder": "Provincies / waterschappen / Rijkswaterstaat",
+  "doelgroep": ["agrariërs", "terreinbeheerders", "gemeenten", "waterschappen"],
+  "sector": ["water", "natuur", "landbouw"],
+  "aanvraagperiode": {"start": "01-01", "eind": "12-31"},
+  "looptijd": "6-jarige KRW-planperiode (huidig: 2022–2027)",
+  "indicatief_bedrag": "Sterk wisselend per maatregel en waterschap: oeverbuffers €500–2.000/ha; fosfaatfilters €10.000–100.000 per installatie; herstelprojecten €50.000–5 miljoen",
+  "budget_totaal": "ca. €300–500 miljoen per jaar NL-breed (KRW-maatregelenprogramma's)",
+  "voorwaarden": [
+    "Maatregel staat in het KRW-maatregelenprogramma van het betreffende waterlichaam",
+    "Bijdrage aan verbetering ecologische of chemische waterkwaliteit",
+    "Aanvraag via het bevoegde waterschap of provincie",
+    "Monitoring van waterkwaliteitseffecten vereist",
+    "KRW-doelen 2027 als referentie"
+  ],
+  "regio": "alle provincies",
+  "provincie_specifiek": false,
+  "url": "https://www.helpdesk-water.nl/krw",
+  "tags": ["KRW", "waterkwaliteit", "fosfaat", "stikstof", "ecologie", "waterlichaam", "oevers"],
+  "laatste_update": "2026-03-17",
+  "status": "continu",
+  "notities": "De Kaderrichtlijn Water (KRW) verplicht Nederland tot goede waterkwaliteit in 2027 (deadline verlengbaar tot 2033). Maatregelen worden gefinancierd via waterbeheerplannen van waterschappen en provincies. Voor agrariërs relevant: bufferstroken, droge randvoorwaarden, fosfaatuitspoeling reduceren. Zie ook ANLb natte dooradering en sbv-overijssel."
+}

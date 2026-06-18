@@ -1,0 +1,27 @@
+{
+  "id": "waterschap-subsidies",
+  "naam": "Waterschapssubsidies Oeverbeheer, Waterberging en Biodiversiteit",
+  "afkorting": "Waterschapssubsidies",
+  "bestuurslaag": "gemeentelijk",
+  "uitvoerder": "Waterschappen (21 waterschappen in Nederland)",
+  "doelgroep": ["agrariërs", "terreinbeheerders", "landgoedeigenaren", "gemeenten", "particulieren"],
+  "sector": ["water", "natuur", "landbouw"],
+  "aanvraagperiode": {"start": "01-01", "eind": "12-31"},
+  "looptijd": "Project-gebaseerd of beheerovereenkomst, 1–10 jaar",
+  "indicatief_bedrag": "Sterk wisselend per waterschap: beheervergoeding oevers ca. €0,50–2/m per jaar; investeringssubsidie oeverbeschoeiing verwijderen: €10–30/m. Totaalsubsidies project: €1.000–100.000",
+  "budget_totaal": "Gezamenlijk ca. €50–150 miljoen per jaar NL-breed",
+  "voorwaarden": [
+    "Eigendom of beheer van percelen grenzend aan watergang beheerd door waterschap",
+    "Maatregel past in het waterbeheerprogramma van het betreffende waterschap",
+    "Geen harde beschoeiing meer na subsidie (vergroening oever)",
+    "Beheerovereenkomst voor minimale periode",
+    "Aanvraag bij het lokaal bevoegd waterschap"
+  ],
+  "regio": "alle provincies",
+  "provincie_specifiek": true,
+  "url": "https://www.uvw.nl",
+  "tags": ["waterschap", "oever", "waterberging", "biodiversiteit", "sloot", "KRW", "waterkwaliteit"],
+  "laatste_update": "2026-03-17",
+  "status": "continu",
+  "notities": "Elk van de 21 waterschappen heeft eigen subsidie- en vergoedingsprogramma's. Belangrijke waterschappen voor landelijk gebied: Waterschap Drents Overijsselse Delta, Waterschap Rijn en IJssel (Achterhoek/Gelderse Vallei), Waterschap AGV (Noord-Holland), Waterschap Hollandse Delta. Altijd direct contact opnemen met het lokale waterschap voor actuele regelingen."
+}

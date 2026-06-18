@@ -1,0 +1,27 @@
+{
+  "id": "nationaal-groenfonds-lening",
+  "naam": "Nationaal Groenfonds — Groene lening",
+  "bestuurslaag": "nationaal",
+  "uitvoerder": "Nationaal Groenfonds",
+  "doelgroep": ["landgoedeigenaren", "terreinbeheerders", "natuurorganisaties"],
+  "sector": ["natuur", "landschap", "financiering"],
+  "aanvraagperiode": {
+    "start": "continu",
+    "eind": "continu"
+  },
+  "looptijd": "10-30 jaar (lening)",
+  "indicatief_bedrag": "Rentekorting van 1-3% onder markttarief; leningen van €500.000–50 miljoen",
+  "voorwaarden": [
+    "Project met duidelijk maatschappelijk groenbelang",
+    "Eigendom of langlopende pacht",
+    "Businessplan",
+    "Minimale leenbedrag €500.000"
+  ],
+  "regio": "heel Nederland",
+  "provincie_specifiek": null,
+  "url": "https://www.nationaalgroenfonds.nl",
+  "tags": ["groenfonds", "lening", "financiering", "natuur", "landgoed", "rente"],
+  "laatste_update": "2026-03-17",
+  "status": "actief",
+  "notities": "Geen subsidie maar gunstige lening. Relevant voor grote investeringen in natuur en landgoed. Vaak gecombineerd met NSW en SNL."
+}

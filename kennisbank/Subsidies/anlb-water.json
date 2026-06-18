@@ -1,0 +1,26 @@
+{
+  "id": "anlb-water-klimaat",
+  "naam": "ANLb — Water en Klimaat pakket",
+  "bestuurslaag": "nationaal",
+  "uitvoerder": "Agrarische collectieven (via RVO.nl)",
+  "doelgroep": ["melkveehouders", "akkerbouwers in veenweidegebied"],
+  "sector": ["water", "klimaat", "agrarisch natuur"],
+  "aanvraagperiode": {
+    "start": "2026-01-01",
+    "eind": "2026-03-01"
+  },
+  "looptijd": "6 jaar (contractperiode ANLb 2023-2028)",
+  "indicatief_bedrag": "€200–600/ha/jaar afhankelijk van pakket en peilverhoging",
+  "voorwaarden": [
+    "Perceel in veenweidegebied of waterbergingsgebied",
+    "Lid van ANLb-collectief",
+    "Deelname via collectief aanvraag"
+  ],
+  "regio": "Noord-Holland, Zuid-Holland, Utrecht, Friesland, Groningen (veenweiden)",
+  "provincie_specifiek": null,
+  "url": "https://www.bij12.nl/onderwerp/agrarisch-natuur-en-landschapsbeheer/",
+  "tags": ["ANLb", "water", "klimaat", "veenweide", "peilverhoging", "collectief"],
+  "laatste_update": "2026-03-17",
+  "status": "actief",
+  "notities": "Onderdeel van bredere ANLb-systematiek. Aanvraag ALTIJD via erkend collectief, nooit individueel."
+}

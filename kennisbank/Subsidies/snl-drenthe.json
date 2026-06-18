@@ -1,0 +1,24 @@
+{
+  "id": "snl-drenthe",
+  "naam": "SNL Natuur- en Landschapsbeheer Drenthe",
+  "bestuurslaag": "provinciaal",
+  "uitvoerder": "BIJ12 namens Provincie Drenthe",
+  "doelgroep": ["rentmeesters", "terreinbeheerders", "landgoedeigenaren", "particuliere natuurbeheerders"],
+  "sector": ["natuur", "landschap"],
+  "aanvraagperiode": { "start": "2026-11-15", "eind": "2026-12-31" },
+  "looptijd": "6 jaar",
+  "indicatief_bedrag": "84% van de standaardkostprijs per beheertype (€200–1800/ha/jaar)",
+  "voorwaarden": [
+    "Perceel moet begrensd zijn in het Provinciale Natuurbeheerplan",
+    "Certificaat natuurbeheer vereist (ANb)",
+    "Minimale oppervlakte: 0,1 ha per beheertype",
+    "Eigendom of langdurige pacht (≥6 jaar)"
+  ],
+  "regio": "Drenthe",
+  "provincie_specifiek": "Drenthe",
+  "url": "https://www.bij12.nl/onderwerp/natuur-en-landschapsbeheer/subsidie-natuur-en-landschapsbeheer/subsidie-natuur-en-landschapsbeheer-drenthe/",
+  "tags": ["SNL", "natuur", "beheer", "provincaal", "drenthe"],
+  "laatste_update": "2026-03-17",
+  "status": "actief",
+  "notities": "Openstellingsperiode varieert per provincie. Raadpleeg BIJ12 voor actuele tarieven en openstellingen. Drenthe kent kenmerkende heidevelden, esdorpen met essen, hoogveenrestanten en beekdalen die prioriteit hebben in het Natuurbeheerplan."
+}

@@ -1,0 +1,28 @@
+{
+  "id": "invest-houtwallen",
+  "naam": "Subsidie Aanleg Houtwallen en Heggen (provincies en gemeenten)",
+  "afkorting": "Houtwallen",
+  "bestuurslaag": "provinciaal",
+  "uitvoerder": "Provincies / gemeenten / Landschapsbeheer",
+  "doelgroep": ["agrariërs", "landgoedeigenaren", "rentmeesters", "terreinbeheerders"],
+  "sector": ["landschap", "natuur", "landbouw"],
+  "aanvraagperiode": {"start": "09-01", "eind": "11-30"},
+  "looptijd": "Eenmalige aanleg; beheerovereenkomst 6–10 jaar",
+  "indicatief_bedrag": "Aanleg houtwal: €5–15 per strekkende meter. Aanleg heg: €3–8 per strekkende meter. Totaalsubsidie: 50–80% van aanlegkosten",
+  "budget_totaal": "Wisselend per provincie; ca. €2–10 miljoen per provincie per jaar",
+  "voorwaarden": [
+    "Locatie ligt in een landschapsstructuurzone of nabij een weidevogelgebied",
+    "Aanleg met streekeigen soorten conform soortenlijst",
+    "Minimale lengte: doorgaans 25 meter",
+    "Beheerovereenkomst aangaan voor minimaal 6 jaar",
+    "Geen aanleg op percelen met conflicterend gebruik",
+    "Goedkeuring van gemeente of provincie vereist (afhankelijk van lokale regeling)"
+  ],
+  "regio": "alle provincies",
+  "provincie_specifiek": true,
+  "url": "https://www.landschapsbeheer.nl",
+  "tags": ["houtwallen", "heggen", "landschapselementen", "aanleg", "droge-dooradering", "kleine-landschapselementen"],
+  "laatste_update": "2026-03-17",
+  "status": "seizoensgebonden",
+  "notities": "Subsidies voor aanleg van houtwallen en heggen zijn sterk afhankelijk van lokaal landschapsbeleid. Sommige provincies (bijv. Gelderland, Overijssel, Drenthe) hebben actieve programma's. ANLb-beheervergoeding voor het onderhoud is aparte aanvraag via collectief. Combinatie aanlegsubsidie + ANLb-beheervergoeding is de gebruikelijke aanpak."
+}

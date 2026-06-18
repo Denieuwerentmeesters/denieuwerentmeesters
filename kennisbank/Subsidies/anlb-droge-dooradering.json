@@ -1,0 +1,28 @@
+{
+  "id": "anlb-droge-dooradering",
+  "naam": "ANLb Droge Dooradering — Houtwallen, Heggen en Bomenrijen",
+  "afkorting": "ANLb Droge Dooradering",
+  "bestuurslaag": "europees",
+  "uitvoerder": "RVO / provincies via ANLb-collectieven",
+  "doelgroep": ["agrariërs", "landgoedeigenaren", "rentmeesters", "collectieven"],
+  "sector": ["natuur", "landschap", "landbouw"],
+  "aanvraagperiode": {"start": "01-01", "eind": "02-28"},
+  "looptijd": "6 jaar",
+  "indicatief_bedrag": "Onderhoud houtwal: ca. €0,50–1,50 per strekkende meter per jaar. Onderhoud bomenrij: ca. €5–15 per boom per jaar. Aanleg: via SKNL of investerings-subsidieregelingen",
+  "budget_totaal": "Onderdeel van totaal ANLb-budget ca. €100 miljoen/jaar NL-breed",
+  "voorwaarden": [
+    "Landschapselementen (houtwallen, heggen, bomenrijen, singels) aanwezig op of nabij het perceel",
+    "Aanvraag via erkend ANLb-collectief",
+    "Beheer conform beheerpakket (snoeicyclus, geen kappen buiten aangewezen periode)",
+    "Minimale breedte/lengte per element afhankelijk van beheertype",
+    "Element blijft minimaal 6 jaar in beheer",
+    "Geen gebruik van chemische bestrijdingsmiddelen op of direct naast het element"
+  ],
+  "regio": ["Gelderland", "Overijssel", "Drenthe", "Groningen", "Utrecht", "Noord-Brabant"],
+  "provincie_specifiek": false,
+  "url": "https://www.rvo.nl/onderwerpen/agrarisch-natuur-en-landschapsbeheer",
+  "tags": ["ANLb", "houtwallen", "heggen", "bomenrijen", "droge-dooradering", "landschapselementen", "collectief"],
+  "laatste_update": "2026-03-17",
+  "status": "seizoensgebonden",
+  "notities": "Droge dooradering is primair in de zandgebieden (Achterhoek, Salland, Drenthe, Kempen). Houtwallen en heggen zijn karakteristiek voor het oud-cultuurlandschap. Beheervergoeding is relatief laag — aanleg wordt vaak via SKNL of provinciale fondsen gefinancierd. Combinatie met landgoedbeheer veelvoorkomend."
+}

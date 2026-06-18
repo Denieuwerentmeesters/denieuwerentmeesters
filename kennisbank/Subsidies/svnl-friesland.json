@@ -1,0 +1,27 @@
+{
+  "id": "svnl-friesland",
+  "naam": "SVNL Subsidieverlening Natuur en Landschap Friesland",
+  "afkorting": "SVNL Fryslân",
+  "bestuurslaag": "provinciaal",
+  "uitvoerder": "Provincie Fryslân / BIJ12",
+  "doelgroep": ["terreinbeheerders", "landgoedeigenaren", "agrariërs", "rentmeesters", "collectieven"],
+  "sector": ["natuur", "landschap", "water"],
+  "aanvraagperiode": {"start": "11-01", "eind": "12-31"},
+  "looptijd": "6 jaar",
+  "indicatief_bedrag": "Aanvullend op SNL: doorgaans 10–15% extra vergoeding voor Friese specifieke beheertypen en weidevogelbeheer intensief. Totaalvergoeding 84–100% van standaardkostprijs",
+  "budget_totaal": "Onderdeel van provinciaal SNL-budget Fryslân; aanvullend ca. €2–5 miljoen",
+  "voorwaarden": [
+    "Beheerpercelen vallen reeds onder SNL Friesland",
+    "Aanvullend beheer voor specifieke Friese prioriteitssoorten (grutto, kemphaan)",
+    "Aanvraag via BIJ12-portaal, gecombineerd met SNL-aanvraag",
+    "Beheerplan met soortgerichte maatregelen",
+    "Resultaatmonitoring vereist (nestsucces weidevogels)"
+  ],
+  "regio": "Friesland",
+  "provincie_specifiek": true,
+  "url": "https://www.fryslan.frl/subsidies/natuur-en-landschap",
+  "tags": ["SVNL", "Friesland", "Fryslân", "weidevogels", "grutto", "kemphaan", "aanvullend-beheer"],
+  "laatste_update": "2026-03-17",
+  "status": "seizoensgebonden",
+  "notities": "SVNL Friesland is een aanvulling op de reguliere SNL voor specifiek Fries weidevogelbeheer. Friesland zet in op resultaatbeloning: hogere vergoeding bij bewezen nestsucces. Het Friese weidevogelgebied is van nationaal belang (grutto is nationaalvogel). Aanvraag via BIJ12 gelijktijdig met SNL-aanvraag."
+}
