@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { aiBeschikbaar } from "@/lib/ai";
+import BestandVeld from "@/components/BestandVeld";
 import { uploadBron, verrijkDoc, verrijkTx } from "./acties";
 
 export default async function OnboardingPage({
@@ -99,7 +100,7 @@ export default async function OnboardingPage({
               </div>
               <div>
                 <label className="label-up mb-1 block">Bestand</label>
-                <input className="input" type="file" name="bestand" required />
+                <BestandVeld maxMb={5} />
               </div>
               <button type="submit" className="btn btn-primary">
                 Uploaden

@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import BestandVeld from "@/components/BestandVeld";
 import { uploadDocument, verwijderDocument } from "./acties";
 
 export default async function DocumentenPage({
@@ -59,7 +60,7 @@ export default async function DocumentenPage({
           </div>
           <div>
             <label className="label-up mb-1 block">Bestand</label>
-            <input className="input" type="file" name="bestand" required />
+            <BestandVeld maxMb={5} />
           </div>
           <button type="submit" className="btn btn-primary">
             Uploaden
