@@ -39,6 +39,7 @@ export default async function LandgoedLayout({
 
   const items = [
     { href: `/landgoed/${id}/overzicht`, label: "Overzicht" },
+    { href: `/landgoed/${id}/stamgegevens`, label: "Stamgegevens" },
     {
       href: `/landgoed/${id}/taken`,
       label: "Taken",
