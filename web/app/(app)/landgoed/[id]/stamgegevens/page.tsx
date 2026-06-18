@@ -3,8 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { aiBeschikbaar } from "@/lib/ai";
 import SubmitKnop from "@/components/SubmitKnop";
 import {
-  verrijkUitDocument,
-  verrijkUitTransacties,
+  verrijkUitBron,
   accordeerObject,
   wijsAfObject,
   accordeerVerband,
@@ -167,44 +166,38 @@ export default async function StamgegevensPage({
         {/* Verrijk uit bron */}
         <div className="card mb-5 p-4">
           <div className="mb-3 text-[14px] font-semibold">Verrijk uit een bron</div>
-          <div className="flex flex-wrap items-end gap-3">
-            <form action={verrijkUitDocument} className="flex items-end gap-2">
-              <input type="hidden" name="landgoed_id" value={id} />
-              <div className="min-w-[220px]">
-                <label className="label-up mb-1 block">Uit document (PDF)</label>
-                <select className="input" name="document_id" required>
-                  <option value="">Kies een document…</option>
-                  {pdfDocumenten.map((d) => (
-                    <option key={d.id} value={d.id}>
-                      {d.titel}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <SubmitKnop
-                className="btn btn-primary"
-                disabled={aiUit}
-                pendingTekst="AI leest…"
-              >
-                Lees met AI
-              </SubmitKnop>
-            </form>
-
-            <form action={verrijkUitTransacties}>
-              <input type="hidden" name="landgoed_id" value={id} />
-              <SubmitKnop
-                className="btn btn-ghost"
-                disabled={aiUit}
-                pendingTekst="AI leest…"
-              >
-                Uit transacties afleiden
-              </SubmitKnop>
-            </form>
-          </div>
+          <form action={verrijkUitBron} className="flex flex-wrap items-end gap-3">
+            <input type="hidden" name="landgoed_id" value={id} />
+            <div className="min-w-[260px] flex-1">
+              <label className="label-up mb-1 block">Bron</label>
+              <select className="input" name="bron" required>
+                <option value="">Kies een bron…</option>
+                {pdfDocumenten.length > 0 && (
+                  <optgroup label="Documenten">
+                    {pdfDocumenten.map((d) => (
+                      <option key={d.id} value={`doc:${d.id}`}>
+                        {d.titel}
+                      </option>
+                    ))}
+                  </optgroup>
+                )}
+                <optgroup label="Administratie">
+                  <option value="transacties">Banktransacties (Financieel)</option>
+                </optgroup>
+              </select>
+            </div>
+            <SubmitKnop
+              className="btn btn-primary"
+              disabled={aiUit}
+              pendingTekst="AI leest…"
+            >
+              Lees met AI
+            </SubmitKnop>
+          </form>
           <p className="mt-2 text-[12px]" style={{ color: "var(--text-3)" }}>
-            &ldquo;Uit transacties afleiden&rdquo; leest je geïmporteerde
-            banktransacties (uit Financieel) en stelt objecten/koppelingen voor —
-            bv. een terugkerende huur die naar een woning + huurder wijst.
+            Kies een document of je banktransacties; de AI stelt objecten en
+            koppelingen voor die je daarna controleert. (E-mail en boekhouding
+            komen later als extra bron.)
           </p>
           {pdfDocumenten.length === 0 && (
             <p className="mt-2 text-[12px]" style={{ color: "var(--text-3)" }}>

@@ -68,6 +68,30 @@ export async function verrijkUitTransacties(fd: FormData) {
   await verrijk(landgoed_id, (s) => transactieBron(s, landgoed_id), "transacties");
 }
 
+// Eén "Lees met AI" voor elke bron: 'transacties' of 'doc:<uuid>'.
+// (Later komen hier e-mail/boekhouding-bronnen bij — zelfde flow.)
+export async function verrijkUitBron(fd: FormData) {
+  const landgoed_id = String(fd.get("landgoed_id"));
+  const bron = String(fd.get("bron") ?? "").trim();
+  if (!bron) return;
+
+  if (bron === "transacties") {
+    await verrijk(
+      landgoed_id,
+      (s) => transactieBron(s, landgoed_id),
+      "transacties",
+    );
+  } else if (bron.startsWith("doc:")) {
+    const document_id = bron.slice(4);
+    await verrijk(
+      landgoed_id,
+      (s) => documentBron(s, landgoed_id, document_id),
+      "document",
+      document_id,
+    );
+  }
+}
+
 export async function accordeerObject(fd: FormData) {
   const landgoed_id = String(fd.get("landgoed_id"));
   const id = String(fd.get("id"));
