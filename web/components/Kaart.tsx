@@ -32,6 +32,16 @@ const LEEG: Basis = {
   provincie: "",
 };
 
+// PDOK levert oppervlakte in m²; tonen in hectare (nl-notatie).
+function haTekst(m2: unknown): string {
+  const n = Number(m2);
+  if (!Number.isFinite(n)) return "";
+  return `${(n / 10000).toLocaleString("nl-NL", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  })} ha`;
+}
+
 // PDOK Locatieserver reverse: coordinaat -> adres/postcode/plaats/gemeente/provincie.
 async function reverseGeocode(lat: number, lon: number): Promise<Basis> {
   const fl =
@@ -108,27 +118,6 @@ export default function Kaart({
       perceelLaagRef.current.remove();
       perceelLaagRef.current = null;
     }
-    // Kadastrale overlay aan in perceel-modus.
-    const L = LRef.current;
-    const map = mapRef.current;
-    if (L && map) {
-      if (mode === "perceel" && !kadRef.current) {
-        kadRef.current = L.tileLayer.wms(KADASTER_WMS, {
-          // Alleen de perceelranden (schoon beeld; geen vlakken/bebouwing/namen).
-          layers: "KadastraleGrens",
-          styles: "", // WMS 1.3.0 vereist STYLES; leeg = standaardstijl voor alle lagen
-          format: "image/png",
-          transparent: true,
-          version: "1.3.0",
-          maxZoom: 19,
-          attribution: "© Kadaster",
-        });
-        kadRef.current!.addTo(map);
-      } else if (mode === "basis" && kadRef.current) {
-        kadRef.current.remove();
-        kadRef.current = null;
-      }
-    }
   }, [mode]);
 
   useEffect(() => {
@@ -141,6 +130,17 @@ export default function Kaart({
         maxZoom: 19,
         attribution: "© PDOK BRT-Achtergrondkaart",
       }).addTo(map);
+      // Perceelranden altijd zichtbaar (PDOK Kadastrale Kaart, alleen grenzen).
+      kadRef.current = L.tileLayer.wms(KADASTER_WMS, {
+        layers: "KadastraleGrens",
+        styles: "",
+        format: "image/png",
+        transparent: true,
+        version: "1.3.0",
+        maxZoom: 19,
+        attribution: "© Kadaster",
+      });
+      kadRef.current!.addTo(map);
       const laag = L.layerGroup().addTo(map);
       LRef.current = L;
       mapRef.current = map;
@@ -328,7 +328,7 @@ export default function Kaart({
                   {perceel.label}
                 </span>
                 {perceel.kenmerken.oppervlakte_m2
-                  ? ` · ${String(perceel.kenmerken.oppervlakte_m2)} m²`
+                  ? ` · ${haTekst(perceel.kenmerken.oppervlakte_m2)}`
                   : ""}
               </span>
             ) : (
