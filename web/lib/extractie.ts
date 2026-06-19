@@ -18,8 +18,16 @@ const TOEGESTANE_CATEGORIEEN = new Set([
   "woning",
   "opstal",
   "pachtperceel",
+  "tuin",
+  "natuur",
+  "infrastructuur",
+  "water",
   "overig",
 ]);
+
+function normNaam(s: string): string {
+  return (s ?? "").toLowerCase().trim();
+}
 
 // Context: de reeds bekende records waar de AI naar mag verwijzen.
 async function laadContext(
@@ -145,8 +153,23 @@ export async function persisteerVoorstellen(
   const { landgoedId, gebruikerId, bronSoort, bronId, resultaat } = opts;
   const idMap = new Map<string, string>(); // tijdelijk_id -> echte uuid
 
-  // 1. Objecten inserten (één voor één om de nieuwe id te koppelen aan tijdelijk_id).
+  // Bestaande objecten ophalen om duplicaten te voorkomen (match op naam).
+  const { data: bestaand } = await supabase
+    .from("stamobject")
+    .select("id, naam")
+    .eq("landgoed_id", landgoedId);
+  const naamNaarId = new Map<string, string>();
+  (bestaand ?? []).forEach((b) => naamNaarId.set(normNaam(b.naam), b.id));
+
+  let nieuwAantal = 0;
+  // 1. Objecten inserten — duplicaten (zelfde naam) overslaan en koppelen aan bestaand.
   for (const o of resultaat.objecten ?? []) {
+    const nrm = normNaam(o.naam);
+    const bestaandeId = naamNaarId.get(nrm);
+    if (bestaandeId) {
+      if (o.tijdelijk_id) idMap.set(o.tijdelijk_id, bestaandeId);
+      continue;
+    }
     const categorie = TOEGESTANE_CATEGORIEEN.has(o.categorie)
       ? o.categorie
       : "overig";
@@ -166,7 +189,11 @@ export async function persisteerVoorstellen(
       })
       .select("id")
       .single();
-    if (!error && data && o.tijdelijk_id) idMap.set(o.tijdelijk_id, data.id);
+    if (!error && data) {
+      naamNaarId.set(nrm, data.id);
+      if (o.tijdelijk_id) idMap.set(o.tijdelijk_id, data.id);
+      nieuwAantal++;
+    }
   }
 
   // 2. Koppelingen inserten; refs vertalen (tijdelijk_id -> uuid, anders bestaande uuid).
@@ -198,7 +225,7 @@ export async function persisteerVoorstellen(
   }
 
   const telling = {
-    objecten: idMap.size,
+    objecten: nieuwAantal,
     koppelingen: verbandRijen.length,
   };
 

@@ -141,6 +141,10 @@ export type StamobjectVoorstel = {
     | "woning"
     | "opstal"
     | "pachtperceel"
+    | "tuin"
+    | "natuur"
+    | "infrastructuur"
+    | "water"
     | "overig";
   naam: string;
   code?: string;
@@ -171,11 +175,18 @@ export type ExtractieContext = {
 
 const STAMGEGEVENS_SYSTEEM =
   "Je helpt een Nederlands landgoed z'n stamgegevens opbouwen uit bronnen (documenten/administratie). " +
-  "Haal de fysieke/juridische OBJECTEN eruit (alleen categorieën: gebouw, woning, opstal, pachtperceel, overig) " +
-  "en leg KOPPELINGEN naar reeds bekende records (contracten, relaties/contacten, objecten) wanneer die duidelijk uit de bron volgen. " +
-  "Belangrijk: verzin niets. Noemt de bron een gegeven niet, laat het veld dan leeg — liever een gat dan een aanname. " +
-  "Categorie-specifieke details (bouwjaar, monumentstatus, adres, oppervlakte, functie) zet je in 'kenmerken' als losse sleutels. " +
-  "Geef elk voorgesteld object een uniek 'tijdelijk_id' (bv. 'obj1'); verwijs daar in koppelingen naar, of naar een bestaande uuid. " +
+  "Haal de fysieke/juridische OBJECTEN eruit en leg KOPPELINGEN naar reeds bekende records " +
+  "(contracten, relaties/contacten, objecten) wanneer die duidelijk uit de bron volgen. " +
+  "Categorieën (kies altijd de best passende, vermijd 'overig' tenzij echt niets past): " +
+  "gebouw, woning, opstal, pachtperceel (landbouwgrond/percelen), " +
+  "tuin (tuinen, moestuin, nutstuin, borders, stinzenplanten), " +
+  "natuur (parkbos, bos, natuurgebied, water-als-natuur, lanen), " +
+  "infrastructuur (bruggen, paden, wegen, hekken, parkeerplaatsen, kabels/leidingen), " +
+  "water (vijvers, sloten, waterlopen), overig. " +
+  "BELANGRIJK: noem elk uniek object exact ÉÉN keer — geen duplicaten. " +
+  "Verzin niets: noemt de bron een gegeven niet, laat het veld leeg (liever een gat dan een aanname). " +
+  "Details (bouwjaar, monumentstatus, adres, oppervlakte, functie) in 'kenmerken' als losse sleutels. " +
+  "Geef elk object een uniek 'tijdelijk_id' (bv. 'obj1'); verwijs daar in koppelingen naar, of naar een bestaande uuid. " +
   "Antwoord UITSLUITEND met JSON: {objecten: [{tijdelijk_id, categorie, naam, code?, beschrijving?, kenmerken?, reden}], " +
   "koppelingen: [{bron_type, bron_ref, doel_type, doel_ref, rol, reden}]}.";
 

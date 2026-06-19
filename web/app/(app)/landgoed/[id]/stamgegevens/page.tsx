@@ -2,6 +2,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { aiBeschikbaar } from "@/lib/ai";
 import SubmitKnop from "@/components/SubmitKnop";
+import ObjectBewerken from "@/components/ObjectBewerken";
 import {
   verrijkUitBron,
   accordeerObject,
@@ -9,6 +10,8 @@ import {
   accordeerVerband,
   wijsAfVerband,
   objectHandmatig,
+  bewerkObject,
+  verwijderObject,
 } from "./acties";
 
 const CATEGORIE_LABEL: Record<string, string> = {
@@ -27,6 +30,10 @@ const CATEGORIE_LABEL: Record<string, string> = {
   brug: "Bruggen",
   hek: "Hekken",
   vijver_sloot: "Vijvers & sloten",
+  tuin: "Tuinen",
+  natuur: "Natuur",
+  infrastructuur: "Infrastructuur",
+  water: "Water",
   overig: "Overig",
 };
 
@@ -35,7 +42,20 @@ const HANDMATIG_CATEGORIEEN = [
   "woning",
   "opstal",
   "pachtperceel",
+  "tuin",
+  "natuur",
+  "infrastructuur",
+  "water",
   "overig",
+];
+
+const GEBRUIK_OPTIES = [
+  "Wonen",
+  "Bedrijf",
+  "Natuur",
+  "Agrarisch",
+  "Recreatie",
+  "Maatschappelijk",
 ];
 
 type Obj = {
@@ -44,6 +64,7 @@ type Obj = {
   categorie: string;
   beschrijving: string | null;
   voorstel_reden: string | null;
+  kenmerken: Record<string, unknown> | null;
 };
 type Verband = {
   id: string;
@@ -66,7 +87,9 @@ export default async function StamgegevensPage({
   const [objectenRes, verbandenRes, documentenRes, runsRes] = await Promise.all([
     supabase
       .from("stamobject")
-      .select("id, naam, categorie, beschrijving, geaccordeerd, voorstel_reden")
+      .select(
+        "id, naam, categorie, beschrijving, geaccordeerd, voorstel_reden, kenmerken",
+      )
       .eq("landgoed_id", id)
       .order("categorie"),
     supabase
@@ -127,6 +150,10 @@ export default async function StamgegevensPage({
   }
 
   const aiUit = !aiBeschikbaar();
+  const categorieOpties: [string, string][] = HANDMATIG_CATEGORIEEN.map((c) => [
+    c,
+    CATEGORIE_LABEL[c] ?? c,
+  ]);
 
   return (
     <div className="flex flex-col">
@@ -358,34 +385,57 @@ export default async function StamgegevensPage({
                 </div>
                 <div className="divide-y" style={{ borderColor: "var(--border)" }}>
                   {objecten.map((o) => {
-                    const koppelingen = alleVerbanden.filter(
-                      (v) =>
-                        v.status === "geaccordeerd" &&
-                        (v.bron_id === o.id || v.doel_id === o.id),
+                    const kn = o.kenmerken ?? {};
+                    const isGebouw = ["gebouw", "woning", "opstal"].includes(
+                      o.categorie,
                     );
+                    const m2 = Number(kn.oppervlakte_m2);
+                    const opp = Number.isFinite(m2)
+                      ? isGebouw
+                        ? `${m2} m²`
+                        : `${(m2 / 10000).toLocaleString("nl-NL", {
+                            maximumFractionDigits: 2,
+                          })} ha`
+                      : null;
+                    const detail = [
+                      o.beschrijving,
+                      kn.adres ? String(kn.adres) : null,
+                      opp,
+                      kn.bouwjaar ? `bouwjaar ${String(kn.bouwjaar)}` : null,
+                      kn.pandstatus ? String(kn.pandstatus) : null,
+                      kn.gebruik ? String(kn.gebruik) : null,
+                    ]
+                      .filter(Boolean)
+                      .join(" · ");
+                    const koppelingen = alleVerbanden
+                      .filter(
+                        (v) =>
+                          v.status === "geaccordeerd" &&
+                          (v.bron_id === o.id || v.doel_id === o.id),
+                      )
+                      .map((v) => {
+                        const ander = v.bron_id === o.id ? v.doel_id : v.bron_id;
+                        return `${v.rol ?? "gekoppeld"}: ${label(ander)}`;
+                      })
+                      .join(" · ");
                     return (
-                      <div key={o.id} className="py-2.5">
-                        <div className="text-[14px] font-semibold">{o.naam}</div>
-                        {o.beschrijving && (
-                          <div className="text-[12px]" style={{ color: "var(--text-2)" }}>
-                            {o.beschrijving}
-                          </div>
-                        )}
-                        {koppelingen.length > 0 && (
-                          <div
-                            className="mt-1 text-[12px]"
-                            style={{ color: "var(--text-3)" }}
-                          >
-                            {koppelingen
-                              .map((v) => {
-                                const ander =
-                                  v.bron_id === o.id ? v.doel_id : v.bron_id;
-                                return `${v.rol ?? "gekoppeld"}: ${label(ander)}`;
-                              })
-                              .join(" · ")}
-                          </div>
-                        )}
-                      </div>
+                      <ObjectBewerken
+                        key={o.id}
+                        object={{
+                          id: o.id,
+                          naam: o.naam,
+                          categorie: o.categorie,
+                          beschrijving: o.beschrijving,
+                          gebruik: kn.gebruik != null ? String(kn.gebruik) : null,
+                        }}
+                        detail={detail}
+                        koppelingen={koppelingen}
+                        categorieOpties={categorieOpties}
+                        gebruikOpties={GEBRUIK_OPTIES}
+                        landgoedId={id}
+                        bewerkObject={bewerkObject}
+                        verwijderObject={verwijderObject}
+                      />
                     );
                   })}
                 </div>

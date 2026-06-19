@@ -152,3 +152,49 @@ export async function objectHandmatig(fd: FormData) {
   });
   revalidatePath(pad(landgoed_id));
 }
+
+// Een stamgegeven bewerken (naam, categorie, gebruik, beschrijving).
+export async function bewerkObject(fd: FormData) {
+  const landgoed_id = String(fd.get("landgoed_id"));
+  const id = String(fd.get("id"));
+  const naam = String(fd.get("naam") ?? "").trim();
+  const categorie = String(fd.get("categorie") ?? "").trim();
+  const beschrijving = String(fd.get("beschrijving") ?? "").trim();
+  const gebruik = String(fd.get("gebruik") ?? "").trim();
+  if (!id || !naam) return;
+
+  const supabase = await createClient();
+  const { data: best } = await supabase
+    .from("stamobject")
+    .select("kenmerken")
+    .eq("id", id)
+    .maybeSingle();
+  const kenmerken = {
+    ...((best?.kenmerken as object) ?? {}),
+    gebruik: gebruik || null,
+  };
+  await supabase
+    .from("stamobject")
+    .update({
+      naam,
+      categorie: categorie || "overig",
+      beschrijving: beschrijving || null,
+      kenmerken,
+    })
+    .eq("id", id);
+  revalidatePath(pad(landgoed_id));
+}
+
+// Een stamgegeven verwijderen (incl. koppelingen ernaartoe).
+export async function verwijderObject(fd: FormData) {
+  const landgoed_id = String(fd.get("landgoed_id"));
+  const id = String(fd.get("id"));
+  if (!id) return;
+  const supabase = await createClient();
+  await supabase
+    .from("verband")
+    .delete()
+    .or(`bron_id.eq.${id},doel_id.eq.${id}`);
+  await supabase.from("stamobject").delete().eq("id", id);
+  revalidatePath(pad(landgoed_id));
+}
