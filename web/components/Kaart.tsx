@@ -24,14 +24,6 @@ const PDOK_TILES =
   "https://service.pdok.nl/brt/achtergrondkaart/wmts/v2_0/standaard/EPSG:3857/{z}/{x}/{y}.png";
 const KADASTER_WMS = "https://service.pdok.nl/kadaster/kadastralekaart/wms/v5_0";
 
-const PERCEEL_VELDEN: [string, string][] = [
-  ["kadastrale_gemeente", "Kadastrale gemeente"],
-  ["sectie", "Sectie"],
-  ["perceelnummer", "Perceelnummer"],
-  ["oppervlakte_m2", "Oppervlakte (m²)"],
-  ["identificatie", "Identificatie"],
-];
-
 const LEEG: Basis = {
   adres: "",
   postcode: "",
@@ -122,8 +114,8 @@ export default function Kaart({
     if (L && map) {
       if (mode === "perceel" && !kadRef.current) {
         kadRef.current = L.tileLayer.wms(KADASTER_WMS, {
-          // Zelfde lagen als de PDOK-viewer: grenzen, percelen, bebouwing, namen.
-          layers: "Perceel,KadastraleGrens,Bebouwing,OpenbareRuimteNaam",
+          // Alleen de perceelranden (schoon beeld; geen vlakken/bebouwing/namen).
+          layers: "KadastraleGrens",
           styles: "", // WMS 1.3.0 vereist STYLES; leeg = standaardstijl voor alle lagen
           format: "image/png",
           transparent: true,
@@ -331,33 +323,14 @@ export default function Kaart({
                 opzoeken…
               </span>
             ) : perceel ? (
-              <div>
-                <div
-                  className="mb-2 text-[14px] font-semibold"
-                  style={{ color: "var(--text)" }}
-                >
+              <span>
+                <span className="font-semibold" style={{ color: "var(--text)" }}>
                   {perceel.label}
-                </div>
-                <table className="text-[12.5px]">
-                  <tbody>
-                    {PERCEEL_VELDEN.map(([key, lbl]) =>
-                      perceel.kenmerken[key] != null ? (
-                        <tr key={key}>
-                          <td
-                            className="pr-3 align-top"
-                            style={{ color: "var(--text-3)" }}
-                          >
-                            {lbl}
-                          </td>
-                          <td className="font-medium">
-                            {String(perceel.kenmerken[key])}
-                          </td>
-                        </tr>
-                      ) : null,
-                    )}
-                  </tbody>
-                </table>
-              </div>
+                </span>
+                {perceel.kenmerken.oppervlakte_m2
+                  ? ` · ${String(perceel.kenmerken.oppervlakte_m2)} m²`
+                  : ""}
+              </span>
             ) : (
               "Geen perceel gevonden op dit punt."
             )}
