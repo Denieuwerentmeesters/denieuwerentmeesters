@@ -44,6 +44,9 @@ export default async function KaartPage({
       lon?: number;
       gebruik?: string;
       oppervlakte_m2?: unknown;
+      pandstatus?: unknown;
+      bouwjaar?: unknown;
+      adres?: unknown;
     };
     return {
       id: o.id,
@@ -52,7 +55,11 @@ export default async function KaartPage({
       lat: Number(k.lat),
       lon: Number(k.lon),
       gebruik: k.gebruik ?? null,
-      oppervlakte: haTekst(k.oppervlakte_m2),
+      oppervlakteHa: haTekst(k.oppervlakte_m2),
+      oppervlakteM2: k.oppervlakte_m2 != null ? String(k.oppervlakte_m2) : null,
+      pandstatus: k.pandstatus != null ? String(k.pandstatus) : null,
+      bouwjaar: k.bouwjaar != null ? String(k.bouwjaar) : null,
+      adres: k.adres != null ? String(k.adres) : null,
     };
   });
 

@@ -15,10 +15,27 @@ type PlaatsObject = {
   naam: string;
   categorie: string;
   gebruik: string | null;
-  oppervlakte: string | null;
+  oppervlakteHa: string | null;
+  oppervlakteM2: string | null;
+  pandstatus: string | null;
+  bouwjaar: string | null;
+  adres: string | null;
   lat: number;
   lon: number;
 };
+
+function objectDetails(o: PlaatsObject): string {
+  const isGebouw = GEBOUW_CATS.has(o.categorie);
+  const delen = isGebouw
+    ? [
+        o.adres,
+        o.oppervlakteM2 ? `${o.oppervlakteM2} m²` : null,
+        o.pandstatus,
+        o.bouwjaar ? `bouwjaar ${o.bouwjaar}` : null,
+      ]
+    : [o.gebruik, o.oppervlakteHa];
+  return [o.categorie, ...delen].filter(Boolean).join(" · ");
+}
 type Basis = {
   adres: string;
   postcode: string;
@@ -480,9 +497,7 @@ export default function Kaart({
                 >
                   <div className="text-[14px] font-semibold">{o.naam}</div>
                   <div className="text-[12px]" style={{ color: "var(--text-2)" }}>
-                    {o.categorie}
-                    {o.gebruik ? ` · ${o.gebruik}` : ""}
-                    {o.oppervlakte ? ` · ${o.oppervlakte}` : ""}
+                    {objectDetails(o)}
                   </div>
                 </button>
                 <form action={verwijderObject}>
