@@ -1,6 +1,7 @@
 "use client";
 
 import "leaflet/dist/leaflet.css";
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import type {
   Map as LMap,
@@ -577,6 +578,12 @@ export default function Kaart({
                     {objectDetails(o)}
                   </div>
                 </button>
+                <Link
+                  href={`/landgoed/${landgoedId}/object/${o.id}`}
+                  className="btn btn-ghost btn-sm"
+                >
+                  Details
+                </Link>
                 <form action={verwijderObject}>
                   <input type="hidden" name="landgoed_id" value={landgoedId} />
                   <input type="hidden" name="id" value={o.id} />

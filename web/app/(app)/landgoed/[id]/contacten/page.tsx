@@ -11,7 +11,7 @@ export default async function ContactenPage({
 
   const { data: relaties } = await supabase
     .from("relatie")
-    .select("id, naam, type, contact")
+    .select("id, naam, type, email, telefoon, contact")
     .eq("landgoed_id", id)
     .order("naam");
 
@@ -55,13 +55,17 @@ export default async function ContactenPage({
               <option value="dienstverlener">Dienstverlener</option>
             </select>
           </div>
-          <div className="min-w-[200px] flex-1">
-            <label className="label-up mb-1 block">Contactgegevens</label>
-            <input
-              className="input"
-              name="contact"
-              placeholder="E-mail of telefoon"
-            />
+          <div className="min-w-[160px] flex-1">
+            <label className="label-up mb-1 block">E-mail</label>
+            <input className="input" name="email" type="email" placeholder="naam@…" />
+          </div>
+          <div className="min-w-[140px] flex-1">
+            <label className="label-up mb-1 block">Telefoon</label>
+            <input className="input" name="telefoon" placeholder="06…" />
+          </div>
+          <div className="min-w-[160px] flex-1">
+            <label className="label-up mb-1 block">Overig</label>
+            <input className="input" name="contact" placeholder="adres / notitie" />
           </div>
           <button type="submit" className="btn btn-primary">
             Toevoegen
@@ -82,9 +86,9 @@ export default async function ContactenPage({
             >
               <div className="flex-1">
                 <div className="text-[14px] font-semibold">{r.naam}</div>
-                {r.contact && (
+                {[r.email, r.telefoon, r.contact].filter(Boolean).length > 0 && (
                   <div className="text-[12px]" style={{ color: "var(--text-2)" }}>
-                    {r.contact}
+                    {[r.email, r.telefoon, r.contact].filter(Boolean).join(" · ")}
                   </div>
                 )}
               </div>

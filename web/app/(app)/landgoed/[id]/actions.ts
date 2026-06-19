@@ -47,6 +47,8 @@ export async function nieuwContact(fd: FormData) {
     landgoed_id,
     naam,
     type: tekst(fd, "type"),
+    email: tekst(fd, "email"),
+    telefoon: tekst(fd, "telefoon"),
     contact: tekst(fd, "contact"),
   });
   revalidatePath(`/landgoed/${landgoed_id}/contacten`);
@@ -69,6 +71,8 @@ export async function nieuwContract(fd: FormData) {
     indexatie_type: tekst(fd, "indexatie_type"),
     volgende_indexatie: tekst(fd, "volgende_indexatie"),
     servicekosten: getal(fd, "servicekosten"),
+    achterstand: getal(fd, "achterstand"),
+    achterstand_notitie: tekst(fd, "achterstand_notitie"),
     status: "actief",
   });
   revalidatePath(`/landgoed/${landgoed_id}/contracten`);

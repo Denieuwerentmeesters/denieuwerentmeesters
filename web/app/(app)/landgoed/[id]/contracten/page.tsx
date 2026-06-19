@@ -27,7 +27,7 @@ export default async function ContractenPage({
   const { data: contracten } = await supabase
     .from("contract")
     .select(
-      "id, titel, type, partij, bedrag, ingangsdatum, einddatum, indexatie_type, volgende_indexatie, servicekosten, status",
+      "id, titel, type, partij, bedrag, ingangsdatum, einddatum, indexatie_type, volgende_indexatie, servicekosten, achterstand, status",
     )
     .eq("landgoed_id", id)
     .order("einddatum", { nullsFirst: false });
@@ -99,6 +99,18 @@ export default async function ContractenPage({
             <label className="label-up mb-1 block">Volgende indexatie</label>
             <input className="input" type="date" name="volgende_indexatie" />
           </div>
+          <div>
+            <label className="label-up mb-1 block">Achterstand (€)</label>
+            <input className="input" name="achterstand" inputMode="decimal" placeholder="0" />
+          </div>
+          <div className="col-span-2 md:col-span-2">
+            <label className="label-up mb-1 block">Notitie achterstand</label>
+            <input
+              className="input"
+              name="achterstand_notitie"
+              placeholder="bijv. herinnering gestuurd 1-6"
+            />
+          </div>
           <div className="col-span-2 flex items-end md:col-span-3">
             <button type="submit" className="btn btn-primary">
               Contract toevoegen
@@ -147,6 +159,11 @@ export default async function ContractenPage({
                   {indexAlert && (
                     <span className="tag tag-blue">
                       Indexatie over {indexDagen} d
+                    </span>
+                  )}
+                  {Number(c.achterstand) > 0 && (
+                    <span className="tag tag-red">
+                      Achterstand {euro(c.achterstand)}
                     </span>
                   )}
                 </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import SubmitKnop from "@/components/SubmitKnop";
 
 type Obj = {
@@ -48,6 +49,12 @@ export default function ObjectBewerken({
             </div>
           )}
         </div>
+        <Link
+          href={`/landgoed/${landgoedId}/object/${object.id}`}
+          className="btn btn-ghost btn-sm"
+        >
+          Details
+        </Link>
         <button
           type="button"
           onClick={() => setOpen(true)}
