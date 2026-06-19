@@ -6,66 +6,153 @@ import type {
   Map as LMap,
   LayerGroup,
   CircleMarker,
+  TileLayer,
   LeafletMouseEvent,
 } from "leaflet";
 import SubmitKnop from "@/components/SubmitKnop";
 
 type Marker = { id: string; naam: string; lat: number; lon: number };
+type Basis = {
+  adres: string;
+  postcode: string;
+  plaats: string;
+  gemeente: string;
+  provincie: string;
+};
 
-// PDOK BRT-Achtergrondkaart (gratis, geen key). EPSG:3857 = standaard voor Leaflet.
 const PDOK_TILES =
   "https://service.pdok.nl/brt/achtergrondkaart/wmts/v2_0/standaard/EPSG:3857/{z}/{x}/{y}.png";
+const KADASTER_WMS = "https://service.pdok.nl/kadaster/kadastralekaart/wms/v5_0";
 
-// PDOK Locatieserver reverse-geocoder (gratis, geen GIS): coördinaat -> adres.
-async function reverseGeocode(lat: number, lon: number) {
+const LEEG: Basis = {
+  adres: "",
+  postcode: "",
+  plaats: "",
+  gemeente: "",
+  provincie: "",
+};
+
+// PDOK Locatieserver reverse: coordinaat -> adres/postcode/plaats/gemeente/provincie.
+async function reverseGeocode(lat: number, lon: number): Promise<Basis> {
   const fl =
     "weergavenaam,straatnaam,huisnummer,postcode,woonplaatsnaam,gemeentenaam,provincienaam";
   const url = `https://api.pdok.nl/bzk/locatieserver/search/v3_1/reverse?lat=${lat}&lon=${lon}&rows=1&type=adres&fl=${fl}`;
   try {
     const res = await fetch(url);
     const json = await res.json();
-    const doc = json?.response?.docs?.[0];
+    const d = json?.response?.docs?.[0] ?? {};
     return {
-      adres: doc?.weergavenaam ?? "",
-      gemeente: doc?.gemeentenaam ?? "",
-      provincie: doc?.provincienaam ?? "",
+      adres: d.weergavenaam ?? "",
+      postcode: d.postcode ?? "",
+      plaats: d.woonplaatsnaam ?? "",
+      gemeente: d.gemeentenaam ?? "",
+      provincie: d.provincienaam ?? "",
     };
   } catch {
-    return { adres: "", gemeente: "", provincie: "" };
+    return LEEG;
   }
 }
 
-const CATEGORIEEN = [
-  ["gebouw", "Gebouw"],
-  ["woning", "Woning"],
-  ["opstal", "Opstal"],
-  ["brug", "Brug"],
-  ["hek", "Hek"],
-  ["vijver_sloot", "Vijver/sloot"],
-  ["overig", "Overig"],
-];
+// PDOK Kadastrale Kaart WMS GetFeatureInfo: klik -> perceel-attributen.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function bevraagPerceel(L: any, map: LMap, latlng: { lat: number; lng: number }) {
+  const size = map.getSize();
+  const p = map.latLngToContainerPoint(latlng);
+  const b = map.getBounds();
+  const sw = L.CRS.EPSG3857.project(b.getSouthWest());
+  const ne = L.CRS.EPSG3857.project(b.getNorthEast());
+  const bbox = `${sw.x},${sw.y},${ne.x},${ne.y}`;
+  const url =
+    `${KADASTER_WMS}?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetFeatureInfo` +
+    `&LAYERS=Perceel&QUERY_LAYERS=Perceel&CRS=EPSG:3857&BBOX=${bbox}` +
+    `&WIDTH=${Math.round(size.x)}&HEIGHT=${Math.round(size.y)}` +
+    `&I=${Math.round(p.x)}&J=${Math.round(p.y)}&INFO_FORMAT=application/json&FEATURE_COUNT=1`;
+  try {
+    const res = await fetch(url);
+    const gj = await res.json();
+    const f = gj?.features?.[0];
+    if (!f) return null;
+    const pr = f.properties ?? {};
+    const gem =
+      pr.kadastraleGemeenteWaarde ?? pr.kadastraleGemeenteCode ?? "";
+    const label =
+      [gem, pr.sectie, pr.perceelnummer].filter(Boolean).join(" ") ||
+      pr.identificatieLokaalID ||
+      "Perceel";
+    return {
+      label,
+      kenmerken: {
+        kadastrale_aanduiding: label,
+        kadastrale_gemeente: gem,
+        sectie: pr.sectie ?? null,
+        perceelnummer: pr.perceelnummer ?? null,
+        oppervlakte_m2: pr.kadastraleGrootteWaarde ?? null,
+        identificatie: pr.identificatieLokaalID ?? null,
+      } as Record<string, unknown>,
+    };
+  } catch {
+    return null;
+  }
+}
 
 export default function Kaart({
   landgoedId,
   markers,
-  plaatsObject,
+  basisIngesteld,
+  setBasisLocatie,
+  plaatsPerceel,
 }: {
   landgoedId: string;
   markers: Marker[];
-  plaatsObject: (fd: FormData) => Promise<void>;
+  basisIngesteld: boolean;
+  setBasisLocatie: (fd: FormData) => Promise<void>;
+  plaatsPerceel: (fd: FormData) => Promise<void>;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<LMap | null>(null);
   const laagRef = useRef<LayerGroup | null>(null);
   const tempRef = useRef<CircleMarker | null>(null);
+  const kadRef = useRef<TileLayer | null>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const LRef = useRef<any>(null);
+  const modeRef = useRef<"basis" | "perceel">("basis");
 
+  const [mode, setMode] = useState<"basis" | "perceel">("basis");
   const [punt, setPunt] = useState<{ lat: number; lon: number } | null>(null);
-  const [adres, setAdres] = useState({ adres: "", gemeente: "", provincie: "" });
+  const [basis, setBasis] = useState<Basis>(LEEG);
+  const [perceel, setPerceel] = useState<{
+    label: string;
+    kenmerken: Record<string, unknown>;
+  } | null>(null);
   const [bezig, setBezig] = useState(false);
 
-  // Init kaart (eenmalig, leaflet dynamisch geladen i.v.m. SSR).
+  useEffect(() => {
+    modeRef.current = mode;
+    setPunt(null);
+    if (tempRef.current) {
+      tempRef.current.remove();
+      tempRef.current = null;
+    }
+    // Kadastrale overlay aan in perceel-modus.
+    const L = LRef.current;
+    const map = mapRef.current;
+    if (L && map) {
+      if (mode === "perceel" && !kadRef.current) {
+        kadRef.current = L.tileLayer.wms(KADASTER_WMS, {
+          layers: "KadastraleGrens,Perceel,Bebouwing",
+          format: "image/png",
+          transparent: true,
+          version: "1.3.0",
+          attribution: "© Kadaster",
+        });
+        kadRef.current!.addTo(map);
+      } else if (mode === "basis" && kadRef.current) {
+        kadRef.current.remove();
+        kadRef.current = null;
+      }
+    }
+  }, [mode]);
+
   useEffect(() => {
     let cancelled = false;
     (async () => {
@@ -81,7 +168,6 @@ export default function Kaart({
       mapRef.current = map;
       laagRef.current = laag;
 
-      // Bestaande objecten tekenen + inzoomen.
       markers.forEach((m) =>
         L.circleMarker([m.lat, m.lon], {
           radius: 7,
@@ -94,10 +180,10 @@ export default function Kaart({
           .addTo(laag),
       );
       if (markers.length) {
-        map.fitBounds(markers.map((m) => [m.lat, m.lon]), {
-          padding: [40, 40],
-          maxZoom: 16,
-        });
+        map.fitBounds(
+          markers.map((m) => [m.lat, m.lon] as [number, number]),
+          { padding: [40, 40], maxZoom: 16 },
+        );
       }
 
       map.on("click", async (e: LeafletMouseEvent) => {
@@ -113,7 +199,14 @@ export default function Kaart({
           fillOpacity: 0.6,
           weight: 2,
         }).addTo(map);
-        setAdres(await reverseGeocode(lat, lon));
+
+        if (modeRef.current === "basis") {
+          setBasis(await reverseGeocode(lat, lon));
+          setPerceel(null);
+        } else {
+          const r = await bevraagPerceel(L, map, e.latlng);
+          setPerceel(r);
+        }
         setBezig(false);
       });
     })();
@@ -127,7 +220,6 @@ export default function Kaart({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Markers bijwerken als de lijst verandert (na plaatsen).
   useEffect(() => {
     const L = LRef.current;
     const laag = laagRef.current;
@@ -148,76 +240,116 @@ export default function Kaart({
 
   return (
     <div className="flex flex-col gap-3">
+      <div className="flex gap-2">
+        <button
+          className={`btn btn-sm ${mode === "basis" ? "btn-primary" : "btn-ghost"}`}
+          onClick={() => setMode("basis")}
+        >
+          Basis: landgoed-locatie
+        </button>
+        <button
+          className={`btn btn-sm ${mode === "perceel" ? "btn-primary" : "btn-ghost"}`}
+          onClick={() => setMode("perceel")}
+        >
+          Percelen aanklikken
+        </button>
+      </div>
+
+      <p className="text-[12px]" style={{ color: "var(--text-3)" }}>
+        {mode === "basis"
+          ? basisIngesteld
+            ? "Klik op de kaart om de landgoed-locatie te wijzigen."
+            : "Klik op de hoofdlocatie van het landgoed; adres/gemeente/provincie wordt opgezocht."
+          : "Klik op een perceel; de kadastrale gegevens worden opgehaald (PDOK Kadaster)."}
+      </p>
+
       <div
         ref={containerRef}
         className="card overflow-hidden"
         style={{ height: 480, padding: 0 }}
       />
 
-      {punt && (
-        <form action={plaatsObject} className="card p-4">
+      {/* Basis-paneel */}
+      {mode === "basis" && punt && (
+        <form action={setBasisLocatie} className="card p-4">
           <input type="hidden" name="landgoed_id" value={landgoedId} />
           <input type="hidden" name="lat" value={punt.lat} />
           <input type="hidden" name="lon" value={punt.lon} />
-          <input type="hidden" name="adres" value={adres.adres} />
-          <input type="hidden" name="gemeente" value={adres.gemeente} />
-          <input type="hidden" name="provincie" value={adres.provincie} />
-
+          <input type="hidden" name="adres" value={basis.adres} />
+          <input type="hidden" name="postcode" value={basis.postcode} />
+          <input type="hidden" name="plaats" value={basis.plaats} />
+          <input type="hidden" name="gemeente" value={basis.gemeente} />
+          <input type="hidden" name="provincie" value={basis.provincie} />
           <div className="mb-3 text-[13px]" style={{ color: "var(--text-2)" }}>
             {bezig ? (
               <span className="inline-flex items-center gap-1.5">
                 <span className="inline-block animate-spin">🏰</span> Adres
                 opzoeken…
               </span>
-            ) : adres.adres ? (
+            ) : basis.adres ? (
               <>
                 <span className="font-semibold" style={{ color: "var(--text)" }}>
-                  {adres.adres}
-                </span>{" "}
-                · {adres.gemeente} · {adres.provincie}
+                  {basis.adres}
+                </span>
+                {basis.postcode ? `, ${basis.postcode}` : ""}{" "}
+                {basis.plaats} · Gemeente {basis.gemeente} · {basis.provincie}
               </>
             ) : (
-              "Geen adres gevonden op dit punt — je kunt het object toch plaatsen."
+              "Geen adres gevonden op dit punt."
             )}
           </div>
+          <SubmitKnop className="btn btn-primary" pendingTekst="Opslaan…">
+            Zet als landgoed-locatie
+          </SubmitKnop>
+        </form>
+      )}
 
-          <div className="flex flex-wrap items-end gap-3">
-            <div className="min-w-[200px] flex-1">
-              <label className="label-up mb-1 block">Naam</label>
-              <input
-                className="input"
-                name="naam"
-                placeholder="bv. Koetshuis"
-                required
-              />
-            </div>
-            <div>
-              <label className="label-up mb-1 block">Categorie</label>
-              <select className="input" name="categorie" defaultValue="gebouw">
-                {CATEGORIEEN.map(([w, l]) => (
-                  <option key={w} value={w}>
-                    {l}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <SubmitKnop className="btn btn-primary" pendingTekst="Plaatsen…">
-              Plaats hier
-            </SubmitKnop>
-            <button
-              type="button"
-              className="btn btn-ghost"
-              onClick={() => {
-                setPunt(null);
-                if (tempRef.current) {
-                  tempRef.current.remove();
-                  tempRef.current = null;
-                }
-              }}
-            >
-              Annuleer
-            </button>
+      {/* Perceel-paneel */}
+      {mode === "perceel" && punt && (
+        <form action={plaatsPerceel} className="card p-4">
+          <input type="hidden" name="landgoed_id" value={landgoedId} />
+          <input type="hidden" name="lat" value={punt.lat} />
+          <input type="hidden" name="lon" value={punt.lon} />
+          <input
+            type="hidden"
+            name="kenmerken"
+            value={JSON.stringify(perceel?.kenmerken ?? {})}
+          />
+          <div className="mb-3 text-[13px]" style={{ color: "var(--text-2)" }}>
+            {bezig ? (
+              <span className="inline-flex items-center gap-1.5">
+                <span className="inline-block animate-spin">🏰</span> Perceel
+                opzoeken…
+              </span>
+            ) : perceel ? (
+              <>
+                <span className="font-semibold" style={{ color: "var(--text)" }}>
+                  {perceel.label}
+                </span>
+                {perceel.kenmerken.oppervlakte_m2
+                  ? ` · ${String(perceel.kenmerken.oppervlakte_m2)} m²`
+                  : ""}
+              </>
+            ) : (
+              "Geen perceel gevonden op dit punt."
+            )}
           </div>
+          {perceel && (
+            <div className="flex flex-wrap items-end gap-3">
+              <div className="min-w-[220px] flex-1">
+                <label className="label-up mb-1 block">Naam</label>
+                <input
+                  className="input"
+                  name="naam"
+                  defaultValue={perceel.label}
+                  required
+                />
+              </div>
+              <SubmitKnop className="btn btn-primary" pendingTekst="Plaatsen…">
+                Plaats perceel
+              </SubmitKnop>
+            </div>
+          )}
         </form>
       )}
     </div>
