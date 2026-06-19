@@ -22,6 +22,7 @@ type PlaatsObject = {
   adres: string | null;
   lat: number;
   lon: number;
+  geom: unknown;
 };
 
 function objectDetails(o: PlaatsObject): string {
@@ -105,6 +106,19 @@ async function reverseGeocode(lat: number, lon: number): Promise<Basis> {
   }
 }
 
+// Zet een geom (EPSG:3857) om naar Leaflet-latlngs, of null als ongeldig.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function geomNaarLatlngs(L: any, geom: unknown): unknown {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const g = geom as any;
+  if (!g?.coordinates) return null;
+  const ring = (rng: number[][]) =>
+    rng.map(([x, y]) => L.CRS.EPSG3857.unproject(L.point(x, y)));
+  return g.type === "MultiPolygon"
+    ? g.coordinates.map((poly: number[][][]) => poly.map(ring))
+    : g.coordinates.map(ring);
+}
+
 // Tekent de rand van een vlak (geom in EPSG:3857) op de kaart.
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function tekenRand(L: any, map: LMap, ref: { current: any }, geom: unknown) {
@@ -112,15 +126,8 @@ function tekenRand(L: any, map: LMap, ref: { current: any }, geom: unknown) {
     ref.current.remove();
     ref.current = null;
   }
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const g = geom as any;
-  if (!g?.coordinates) return;
-  const ring = (rng: number[][]) =>
-    rng.map(([x, y]) => L.CRS.EPSG3857.unproject(L.point(x, y)));
-  const latlngs =
-    g.type === "MultiPolygon"
-      ? g.coordinates.map((poly: number[][][]) => poly.map(ring))
-      : g.coordinates.map(ring);
+  const latlngs = geomNaarLatlngs(L, geom);
+  if (!latlngs) return;
   ref.current = L.polygon(latlngs, {
     color: "#dc2626",
     weight: 2,
@@ -157,6 +164,11 @@ export default function Kaart({
   const bagRef = useRef<TileLayer | null>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const randRef = useRef<any>(null);
+  // Overzichtslaag: alle aangevinkte percelen/gebouwen, altijd zichtbaar.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const overzichtRef = useRef<any>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const boundsRef = useRef<any>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const LRef = useRef<any>(null);
   const modeRef = useRef<Mode>("basis");
@@ -180,6 +192,58 @@ export default function Kaart({
     }
   }
 
+  // Tekent alle aangevinkte percelen (groen vlak) + gebouwen (groene stip).
+  // Zo zie je in één oogopslag welke percelen al wél en nog niet zijn aangeklikt.
+  // Onthoudt de gezamenlijke bounds zodat de kaart op het landgoed kan inzoomen.
+  function tekenOverzicht() {
+    const L = LRef.current;
+    const map = mapRef.current;
+    if (!L || !map) return;
+    if (overzichtRef.current) {
+      overzichtRef.current.remove();
+      overzichtRef.current = null;
+    }
+    boundsRef.current = null;
+    const groep = L.layerGroup();
+    const bounds = L.latLngBounds([]);
+    for (const o of objecten) {
+      if (PERCEEL_CATS.has(o.categorie)) {
+        const latlngs = geomNaarLatlngs(L, o.geom);
+        if (latlngs) {
+          const poly = L.polygon(latlngs, {
+            color: "#1B3A28",
+            weight: 2.5,
+            fillColor: "#2A5C3F",
+            fillOpacity: 0.4,
+          });
+          poly.addTo(groep);
+          bounds.extend(poly.getBounds());
+          continue;
+        }
+      }
+      if (Number.isFinite(o.lat) && Number.isFinite(o.lon)) {
+        L.circleMarker([o.lat, o.lon], {
+          radius: 6,
+          color: "#2A5C3F",
+          fillColor: "#2A5C3F",
+          fillOpacity: 0.7,
+          weight: 1.5,
+        }).addTo(groep);
+        bounds.extend([o.lat, o.lon]);
+      }
+    }
+    groep.addTo(map);
+    overzichtRef.current = groep;
+    if (bounds.isValid()) boundsRef.current = bounds;
+  }
+
+  function zoomNaarLandgoed() {
+    const map = mapRef.current;
+    if (map && boundsRef.current?.isValid()) {
+      map.fitBounds(boundsRef.current, { padding: [40, 40], maxZoom: 16 });
+    }
+  }
+
   useEffect(() => {
     modeRef.current = mode;
     setPunt(null);
@@ -187,7 +251,16 @@ export default function Kaart({
     setGeselecteerd(null);
     setKoppelId("");
     wisHighlights();
+    // In basis-modus: toon het hele landgoed i.p.v. handmatig inzoomen.
+    if (mode === "basis") zoomNaarLandgoed();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mode]);
+
+  // (Her)teken de overzichtslaag wanneer de objecten wijzigen (na toevoegen/verwijderen).
+  useEffect(() => {
+    tekenOverzicht();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [objecten]);
 
   useEffect(() => {
     let cancelled = false;
@@ -222,6 +295,10 @@ export default function Kaart({
       bagRef.current!.addTo(map);
       LRef.current = L;
       mapRef.current = map;
+
+      // Toon bij laden alle aangevinkte percelen en zoom in op het landgoed.
+      tekenOverzicht();
+      zoomNaarLandgoed();
 
       map.on("click", async (e: LeafletMouseEvent) => {
         const lat = e.latlng.lat;

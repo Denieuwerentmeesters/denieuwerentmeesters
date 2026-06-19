@@ -47,6 +47,7 @@ export default async function KaartPage({
       pandstatus?: unknown;
       bouwjaar?: unknown;
       adres?: unknown;
+      geom_3857?: unknown;
     };
     return {
       id: o.id,
@@ -60,6 +61,7 @@ export default async function KaartPage({
       pandstatus: k.pandstatus != null ? String(k.pandstatus) : null,
       bouwjaar: k.bouwjaar != null ? String(k.bouwjaar) : null,
       adres: k.adres != null ? String(k.adres) : null,
+      geom: k.geom_3857 ?? null,
     };
   });
 
