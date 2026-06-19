@@ -102,10 +102,12 @@ export default function Kaart({
     if (L && map) {
       if (mode === "perceel" && !kadRef.current) {
         kadRef.current = L.tileLayer.wms(KADASTER_WMS, {
-          layers: "KadastraleGrens,Perceel,Bebouwing",
+          layers: "Perceel",
+          styles: "", // WMS 1.3.0 vereist STYLES; leeg = standaardstijl
           format: "image/png",
           transparent: true,
           version: "1.3.0",
+          maxZoom: 19,
           attribution: "© Kadaster",
         });
         kadRef.current!.addTo(map);
