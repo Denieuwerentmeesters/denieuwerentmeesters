@@ -34,23 +34,28 @@ export default function ObjectBewerken({
 
   return (
     <>
-      <button
-        type="button"
-        onClick={() => setOpen(true)}
-        className="w-full py-2.5 text-left"
-      >
-        <div className="text-[14px] font-semibold">{object.naam}</div>
-        {detail && (
-          <div className="text-[12px]" style={{ color: "var(--text-2)" }}>
-            {detail}
-          </div>
-        )}
-        {koppelingen && (
-          <div className="mt-1 text-[12px]" style={{ color: "var(--text-3)" }}>
-            {koppelingen}
-          </div>
-        )}
-      </button>
+      <div className="flex items-center gap-3 py-2.5">
+        <div className="flex-1">
+          <div className="text-[14px] font-semibold">{object.naam}</div>
+          {detail && (
+            <div className="text-[12px]" style={{ color: "var(--text-2)" }}>
+              {detail}
+            </div>
+          )}
+          {koppelingen && (
+            <div className="mt-1 text-[12px]" style={{ color: "var(--text-3)" }}>
+              {koppelingen}
+            </div>
+          )}
+        </div>
+        <button
+          type="button"
+          onClick={() => setOpen(true)}
+          className="btn btn-ghost btn-sm"
+        >
+          Pas aan
+        </button>
+      </div>
 
       {open && (
         <div
