@@ -95,6 +95,8 @@ export async function plaatsPerceel(fd: FormData) {
     extra = {};
   }
 
+  const gebruik = String(fd.get("gebruik") ?? "").trim();
+
   const supabase = await createClient();
   await supabase.from("stamobject").insert({
     landgoed_id,
@@ -103,7 +105,7 @@ export async function plaatsPerceel(fd: FormData) {
     geometrie_type: "vlak",
     herkomst: "handmatig",
     geaccordeerd: true,
-    kenmerken: { ...extra, lat, lon },
+    kenmerken: { ...extra, lat, lon, gebruik: gebruik || null },
   });
   revalidatePath(`/landgoed/${landgoed_id}/kaart`);
 }

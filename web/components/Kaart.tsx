@@ -32,6 +32,15 @@ const LEEG: Basis = {
   provincie: "",
 };
 
+const GEBRUIK = [
+  "Wonen",
+  "Bedrijf",
+  "Natuur",
+  "Agrarisch",
+  "Recreatie",
+  "Maatschappelijk",
+];
+
 // PDOK levert oppervlakte in m²; tonen in hectare (nl-notatie).
 function haTekst(m2: unknown): string {
   const n = Number(m2);
@@ -337,7 +346,7 @@ export default function Kaart({
           </div>
           {perceel && (
             <div className="flex flex-wrap items-end gap-3">
-              <div className="min-w-[220px] flex-1">
+              <div className="min-w-[200px] flex-1">
                 <label className="label-up mb-1 block">Naam</label>
                 <input
                   className="input"
@@ -345,6 +354,17 @@ export default function Kaart({
                   defaultValue={perceel.label}
                   required
                 />
+              </div>
+              <div>
+                <label className="label-up mb-1 block">Gebruik</label>
+                <select className="input" name="gebruik" defaultValue="">
+                  <option value="">— kies —</option>
+                  {GEBRUIK.map((g) => (
+                    <option key={g} value={g}>
+                      {g}
+                    </option>
+                  ))}
+                </select>
               </div>
               <SubmitKnop className="btn btn-primary" pendingTekst="Plaatsen…">
                 Plaats perceel
