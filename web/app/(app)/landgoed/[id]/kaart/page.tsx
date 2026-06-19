@@ -2,8 +2,9 @@ import { createClient } from "@/lib/supabase/server";
 import Kaart from "@/components/Kaart";
 import {
   setBasisLocatie,
-  plaatsPerceel,
+  plaatsOpKaart,
   lookupPerceel,
+  lookupGebouw,
   verwijderObject,
   wisBasis,
 } from "./acties";
@@ -124,8 +125,9 @@ export default async function KaartPage({
           objecten={geplaatst}
           basisIngesteld={basisIngesteld}
           setBasisLocatie={setBasisLocatie}
-          plaatsPerceel={plaatsPerceel}
+          plaatsOpKaart={plaatsOpKaart}
           lookupPerceel={lookupPerceel}
+          lookupGebouw={lookupGebouw}
           verwijderObject={verwijderObject}
         />
       </div>
