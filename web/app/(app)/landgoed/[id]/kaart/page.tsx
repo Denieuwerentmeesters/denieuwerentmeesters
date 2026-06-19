@@ -60,6 +60,13 @@ export default async function KaartPage({
     (m) => Number.isFinite(m.lat) && Number.isFinite(m.lon),
   );
 
+  // Alle stamgegevens (ook zonder geo, bv. AI-objecten) voor de koppel-dropdown.
+  const koppelbaar = (data ?? []).map((o) => ({
+    id: o.id,
+    naam: o.naam,
+    categorie: o.categorie as string,
+  }));
+
   const basisIngesteld = Boolean(
     landgoed?.adres || (landgoed?.lat && landgoed?.lon),
   );
@@ -123,6 +130,7 @@ export default async function KaartPage({
         <Kaart
           landgoedId={id}
           objecten={geplaatst}
+          koppelbaar={koppelbaar}
           basisIngesteld={basisIngesteld}
           setBasisLocatie={setBasisLocatie}
           plaatsOpKaart={plaatsOpKaart}

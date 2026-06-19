@@ -56,6 +56,9 @@ const GEBRUIK = [
   "Maatschappelijk",
 ];
 
+const GEBOUW_CATS = new Set(["gebouw", "woning", "opstal"]);
+const PERCEEL_CATS = new Set(["pachtperceel", "perceel"]);
+
 function haTekst(m2: unknown): string {
   const n = Number(m2);
   if (!Number.isFinite(n)) return "";
@@ -112,6 +115,7 @@ function tekenRand(L: any, map: LMap, ref: { current: any }, geom: unknown) {
 export default function Kaart({
   landgoedId,
   objecten,
+  koppelbaar,
   basisIngesteld,
   setBasisLocatie,
   plaatsOpKaart,
@@ -121,6 +125,7 @@ export default function Kaart({
 }: {
   landgoedId: string;
   objecten: PlaatsObject[];
+  koppelbaar: { id: string; naam: string; categorie: string }[];
   basisIngesteld: boolean;
   setBasisLocatie: (fd: FormData) => Promise<void>;
   plaatsOpKaart: (fd: FormData) => Promise<void>;
@@ -271,6 +276,12 @@ export default function Kaart({
   }
 
   const k = resultaat?.kenmerken ?? {};
+  // Koppel-opties: alleen stamgegevens van dezelfde soort als de modus.
+  const koppelOpties = koppelbaar.filter((o) =>
+    mode === "gebouw"
+      ? GEBOUW_CATS.has(o.categorie)
+      : PERCEEL_CATS.has(o.categorie),
+  );
 
   return (
     <div className="flex flex-col gap-3">
@@ -405,7 +416,7 @@ export default function Kaart({
                   onChange={(e) => setKoppelId(e.target.value)}
                 >
                   <option value="">— Nieuw object —</option>
-                  {objecten.map((o) => (
+                  {koppelOpties.map((o) => (
                     <option key={o.id} value={o.id}>
                       {o.naam}
                     </option>
