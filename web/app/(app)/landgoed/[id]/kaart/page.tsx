@@ -74,6 +74,27 @@ export default async function KaartPage({
     categorie: o.categorie as string,
   }));
 
+  // Totalen: som van de gronden (percelen) + aantallen.
+  const PERCEEL_CATS = new Set(["pachtperceel", "perceel"]);
+  const GEBOUW_CATS = new Set(["gebouw", "woning", "opstal"]);
+  let perceelM2 = 0;
+  let aantalPercelen = 0;
+  let aantalGebouwen = 0;
+  for (const o of data ?? []) {
+    const k = (o.kenmerken ?? {}) as { oppervlakte_m2?: unknown };
+    if (PERCEEL_CATS.has(o.categorie)) {
+      aantalPercelen++;
+      const m2 = Number(k.oppervlakte_m2);
+      if (Number.isFinite(m2)) perceelM2 += m2;
+    } else if (GEBOUW_CATS.has(o.categorie)) {
+      aantalGebouwen++;
+    }
+  }
+  const totaalHa = (perceelM2 / 10000).toLocaleString("nl-NL", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+
   const basisIngesteld = Boolean(
     landgoed?.adres || (landgoed?.lat && landgoed?.lon),
   );
@@ -124,6 +145,28 @@ export default async function KaartPage({
               hoofdlocatie van het landgoed.
             </div>
           )}
+        </div>
+
+        {/* Landgoed-totaal */}
+        <div className="card mb-5 flex flex-wrap gap-8 p-4">
+          <div>
+            <div className="text-[22px] font-bold">{totaalHa} ha</div>
+            <div className="text-[12px]" style={{ color: "var(--text-2)" }}>
+              grond (som percelen)
+            </div>
+          </div>
+          <div>
+            <div className="text-[22px] font-bold">{aantalPercelen}</div>
+            <div className="text-[12px]" style={{ color: "var(--text-2)" }}>
+              percelen
+            </div>
+          </div>
+          <div>
+            <div className="text-[22px] font-bold">{aantalGebouwen}</div>
+            <div className="text-[12px]" style={{ color: "var(--text-2)" }}>
+              gebouwen
+            </div>
+          </div>
         </div>
 
         <header className="mb-4">
