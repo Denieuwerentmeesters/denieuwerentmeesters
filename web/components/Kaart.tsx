@@ -4,14 +4,21 @@ import "leaflet/dist/leaflet.css";
 import { useEffect, useRef, useState } from "react";
 import type {
   Map as LMap,
-  LayerGroup,
   CircleMarker,
   TileLayer,
   LeafletMouseEvent,
 } from "leaflet";
 import SubmitKnop from "@/components/SubmitKnop";
 
-type Marker = { id: string; naam: string; lat: number; lon: number };
+type PlaatsObject = {
+  id: string;
+  naam: string;
+  categorie: string;
+  gebruik: string | null;
+  oppervlakte: string | null;
+  lat: number;
+  lon: number;
+};
 type Basis = {
   adres: string;
   postcode: string;
@@ -41,7 +48,6 @@ const GEBRUIK = [
   "Maatschappelijk",
 ];
 
-// PDOK levert oppervlakte in m²; tonen in hectare (nl-notatie).
 function haTekst(m2: unknown): string {
   const n = Number(m2);
   if (!Number.isFinite(n)) return "";
@@ -51,7 +57,6 @@ function haTekst(m2: unknown): string {
   })} ha`;
 }
 
-// PDOK Locatieserver reverse: coordinaat -> adres/postcode/plaats/gemeente/provincie.
 async function reverseGeocode(lat: number, lon: number): Promise<Basis> {
   const fl =
     "weergavenaam,straatnaam,huisnummer,postcode,woonplaatsnaam,gemeentenaam,provincienaam";
@@ -72,16 +77,41 @@ async function reverseGeocode(lat: number, lon: number): Promise<Basis> {
   }
 }
 
+// Tekent de rand van een perceel (geom in EPSG:3857) op de kaart.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function tekenPerceelRand(L: any, map: LMap, ref: { current: any }, geom: unknown) {
+  if (ref.current) {
+    ref.current.remove();
+    ref.current = null;
+  }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const g = geom as any;
+  if (!g?.coordinates) return;
+  const ring = (rng: number[][]) =>
+    rng.map(([x, y]) => L.CRS.EPSG3857.unproject(L.point(x, y)));
+  const latlngs =
+    g.type === "MultiPolygon"
+      ? g.coordinates.map((poly: number[][][]) => poly.map(ring))
+      : g.coordinates.map(ring);
+  ref.current = L.polygon(latlngs, {
+    color: "#dc2626",
+    weight: 2,
+    fillColor: "#dc2626",
+    fillOpacity: 0.12,
+  }).addTo(map);
+}
+
 export default function Kaart({
   landgoedId,
-  markers,
+  objecten,
   basisIngesteld,
   setBasisLocatie,
   plaatsPerceel,
   lookupPerceel,
+  verwijderObject,
 }: {
   landgoedId: string;
-  markers: Marker[];
+  objecten: PlaatsObject[];
   basisIngesteld: boolean;
   setBasisLocatie: (fd: FormData) => Promise<void>;
   plaatsPerceel: (fd: FormData) => Promise<void>;
@@ -93,10 +123,10 @@ export default function Kaart({
     kenmerken: Record<string, unknown>;
     geom: unknown;
   } | null>;
+  verwijderObject: (fd: FormData) => Promise<void>;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<LMap | null>(null);
-  const laagRef = useRef<LayerGroup | null>(null);
   const tempRef = useRef<CircleMarker | null>(null);
   const kadRef = useRef<TileLayer | null>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -114,11 +144,9 @@ export default function Kaart({
     geom: unknown;
   } | null>(null);
   const [bezig, setBezig] = useState(false);
+  const [geselecteerd, setGeselecteerd] = useState<string | null>(null);
 
-  useEffect(() => {
-    modeRef.current = mode;
-    setPunt(null);
-    setPerceel(null);
+  function wisHighlights() {
     if (tempRef.current) {
       tempRef.current.remove();
       tempRef.current = null;
@@ -127,6 +155,14 @@ export default function Kaart({
       perceelLaagRef.current.remove();
       perceelLaagRef.current = null;
     }
+  }
+
+  useEffect(() => {
+    modeRef.current = mode;
+    setPunt(null);
+    setPerceel(null);
+    setGeselecteerd(null);
+    wisHighlights();
   }, [mode]);
 
   useEffect(() => {
@@ -150,35 +186,16 @@ export default function Kaart({
         attribution: "© Kadaster",
       });
       kadRef.current!.addTo(map);
-      const laag = L.layerGroup().addTo(map);
       LRef.current = L;
       mapRef.current = map;
-      laagRef.current = laag;
-
-      markers.forEach((m) =>
-        L.circleMarker([m.lat, m.lon], {
-          radius: 7,
-          color: "#1B3A28",
-          fillColor: "#2A5C3F",
-          fillOpacity: 0.9,
-          weight: 2,
-        })
-          .bindPopup(m.naam)
-          .addTo(laag),
-      );
-      if (markers.length) {
-        map.fitBounds(
-          markers.map((m) => [m.lat, m.lon] as [number, number]),
-          { padding: [40, 40], maxZoom: 16 },
-        );
-      }
 
       map.on("click", async (e: LeafletMouseEvent) => {
         const lat = e.latlng.lat;
         const lon = e.latlng.lng;
+        setGeselecteerd(null);
         setPunt({ lat, lon });
         setBezig(true);
-        if (tempRef.current) tempRef.current.remove();
+        wisHighlights();
         tempRef.current = L.circleMarker([lat, lon], {
           radius: 8,
           color: "#dc2626",
@@ -193,26 +210,7 @@ export default function Kaart({
         } else {
           const r = await lookupPerceel(lat, lon);
           setPerceel(r);
-          if (perceelLaagRef.current) {
-            perceelLaagRef.current.remove();
-            perceelLaagRef.current = null;
-          }
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          const g = r?.geom as any;
-          if (g?.coordinates) {
-            const ring = (rng: number[][]) =>
-              rng.map(([x, y]) => L.CRS.EPSG3857.unproject(L.point(x, y)));
-            const latlngs =
-              g.type === "MultiPolygon"
-                ? g.coordinates.map((poly: number[][][]) => poly.map(ring))
-                : g.coordinates.map(ring);
-            perceelLaagRef.current = L.polygon(latlngs, {
-              color: "#dc2626",
-              weight: 2,
-              fillColor: "#dc2626",
-              fillOpacity: 0.12,
-            }).addTo(map);
-          }
+          tekenPerceelRand(L, map, perceelLaagRef, r?.geom);
         }
         setBezig(false);
       });
@@ -227,23 +225,29 @@ export default function Kaart({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
+  // Een geplaatst object selecteren: inzoomen + tonen (perceel = randen).
+  async function selecteer(o: PlaatsObject) {
     const L = LRef.current;
-    const laag = laagRef.current;
-    if (!L || !laag) return;
-    laag.clearLayers();
-    markers.forEach((m: Marker) =>
-      L.circleMarker([m.lat, m.lon], {
-        radius: 7,
+    const map = mapRef.current;
+    if (!L || !map || !Number.isFinite(o.lat) || !Number.isFinite(o.lon)) return;
+    setGeselecteerd(o.id);
+    setPunt(null);
+    setPerceel(null);
+    wisHighlights();
+    map.setView([o.lat, o.lon], 16);
+    if (o.categorie === "pachtperceel") {
+      const r = await lookupPerceel(o.lat, o.lon);
+      tekenPerceelRand(L, map, perceelLaagRef, r?.geom);
+    } else {
+      tempRef.current = L.circleMarker([o.lat, o.lon], {
+        radius: 8,
         color: "#1B3A28",
         fillColor: "#2A5C3F",
         fillOpacity: 0.9,
         weight: 2,
-      })
-        .bindPopup(m.naam)
-        .addTo(laag),
-    );
-  }, [markers]);
+      }).addTo(map);
+    }
+  }
 
   return (
     <div className="flex flex-col gap-3">
@@ -267,7 +271,7 @@ export default function Kaart({
           ? basisIngesteld
             ? "Klik op de kaart om de landgoed-locatie te wijzigen."
             : "Klik op de hoofdlocatie van het landgoed; adres/gemeente/provincie wordt opgezocht."
-          : "Klik op een perceel; de kadastrale gegevens worden opgehaald (PDOK Kadaster)."}
+          : "Klik op een perceel; de randen en oppervlakte worden opgehaald (PDOK Kadaster)."}
       </p>
 
       <div
@@ -298,8 +302,8 @@ export default function Kaart({
                 <span className="font-semibold" style={{ color: "var(--text)" }}>
                   {basis.adres}
                 </span>
-                {basis.postcode ? `, ${basis.postcode}` : ""}{" "}
-                {basis.plaats} · Gemeente {basis.gemeente} · {basis.provincie}
+                {basis.postcode ? `, ${basis.postcode}` : ""} {basis.plaats} ·
+                Gemeente {basis.gemeente} · {basis.provincie}
               </>
             ) : (
               "Geen adres gevonden op dit punt."
@@ -372,6 +376,50 @@ export default function Kaart({
             </div>
           )}
         </form>
+      )}
+
+      {/* Geplaatste objecten */}
+      {objecten.length > 0 && (
+        <div className="card p-4">
+          <div className="mb-2 text-[13px] font-semibold">
+            Geplaatste objecten ({objecten.length})
+          </div>
+          <div className="divide-y" style={{ borderColor: "var(--border)" }}>
+            {objecten.map((o) => (
+              <div
+                key={o.id}
+                className="flex items-center gap-3 py-2.5"
+                style={{
+                  background:
+                    geselecteerd === o.id ? "var(--primary-light)" : undefined,
+                }}
+              >
+                <button
+                  type="button"
+                  onClick={() => selecteer(o)}
+                  className="flex-1 text-left"
+                >
+                  <div className="text-[14px] font-semibold">{o.naam}</div>
+                  <div className="text-[12px]" style={{ color: "var(--text-2)" }}>
+                    {o.categorie}
+                    {o.gebruik ? ` · ${o.gebruik}` : ""}
+                    {o.oppervlakte ? ` · ${o.oppervlakte}` : ""}
+                  </div>
+                </button>
+                <form action={verwijderObject}>
+                  <input type="hidden" name="landgoed_id" value={landgoedId} />
+                  <input type="hidden" name="id" value={o.id} />
+                  <button
+                    className="btn btn-ghost btn-sm"
+                    style={{ color: "var(--red)" }}
+                  >
+                    Verwijder
+                  </button>
+                </form>
+              </div>
+            ))}
+          </div>
+        </div>
       )}
     </div>
   );

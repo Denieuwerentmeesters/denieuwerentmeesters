@@ -55,7 +55,7 @@ export default async function KaartPage({
     };
   });
 
-  const markers = objecten.filter(
+  const geplaatst = objecten.filter(
     (m) => Number.isFinite(m.lat) && Number.isFinite(m.lon),
   );
 
@@ -121,45 +121,13 @@ export default async function KaartPage({
 
         <Kaart
           landgoedId={id}
-          markers={markers}
+          objecten={geplaatst}
           basisIngesteld={basisIngesteld}
           setBasisLocatie={setBasisLocatie}
           plaatsPerceel={plaatsPerceel}
           lookupPerceel={lookupPerceel}
+          verwijderObject={verwijderObject}
         />
-
-        {/* Geplaatste objecten + verwijderen */}
-        {objecten.length > 0 && (
-          <div className="card mt-5 p-4">
-            <div className="mb-2 text-[13px] font-semibold">
-              Geplaatste objecten ({objecten.length})
-            </div>
-            <div className="divide-y" style={{ borderColor: "var(--border)" }}>
-              {objecten.map((o) => (
-                <div key={o.id} className="flex items-center gap-3 py-2.5">
-                  <div className="flex-1">
-                    <div className="text-[14px] font-semibold">{o.naam}</div>
-                    <div className="text-[12px]" style={{ color: "var(--text-2)" }}>
-                      {o.categorie}
-                      {o.gebruik ? ` · ${o.gebruik}` : ""}
-                      {o.oppervlakte ? ` · ${o.oppervlakte}` : ""}
-                    </div>
-                  </div>
-                  <form action={verwijderObject}>
-                    <input type="hidden" name="landgoed_id" value={id} />
-                    <input type="hidden" name="id" value={o.id} />
-                    <button
-                      className="btn btn-ghost btn-sm"
-                      style={{ color: "var(--red)" }}
-                    >
-                      Verwijder
-                    </button>
-                  </form>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );
