@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
+import Kalender, { type KalenderEvent } from "@/components/Kalender";
+import { nieuwAgendaItem, verwijderAgendaItem } from "./acties";
 
 function over(dagen: number) {
   const d = new Date();
@@ -18,34 +20,106 @@ export default async function OverzichtPage({
   const binnen90 = over(90);
   const vandaag = new Date().toISOString().slice(0, 10);
 
-  const [openTaken, contacten, contracten, aflopend, indexatie] =
-    await Promise.all([
-      supabase
-        .from("taak")
-        .select("id", { count: "exact", head: true })
-        .eq("landgoed_id", id)
-        .eq("status", "open"),
-      supabase
-        .from("relatie")
-        .select("id", { count: "exact", head: true })
-        .eq("landgoed_id", id),
-      supabase
-        .from("contract")
-        .select("id", { count: "exact", head: true })
-        .eq("landgoed_id", id),
-      supabase
-        .from("contract")
-        .select("id", { count: "exact", head: true })
-        .eq("landgoed_id", id)
-        .gte("einddatum", vandaag)
-        .lte("einddatum", binnen90),
-      supabase
-        .from("contract")
-        .select("id", { count: "exact", head: true })
-        .eq("landgoed_id", id)
-        .gte("volgende_indexatie", vandaag)
-        .lte("volgende_indexatie", binnen90),
-    ]);
+  const [
+    openTaken,
+    contacten,
+    contracten,
+    aflopend,
+    indexatie,
+    agendaItems,
+    taken,
+    contractData,
+    vergaderingen,
+  ] = await Promise.all([
+    supabase
+      .from("taak")
+      .select("id", { count: "exact", head: true })
+      .eq("landgoed_id", id)
+      .eq("status", "open"),
+    supabase
+      .from("relatie")
+      .select("id", { count: "exact", head: true })
+      .eq("landgoed_id", id),
+    supabase
+      .from("contract")
+      .select("id", { count: "exact", head: true })
+      .eq("landgoed_id", id),
+    supabase
+      .from("contract")
+      .select("id", { count: "exact", head: true })
+      .eq("landgoed_id", id)
+      .gte("einddatum", vandaag)
+      .lte("einddatum", binnen90),
+    supabase
+      .from("contract")
+      .select("id", { count: "exact", head: true })
+      .eq("landgoed_id", id)
+      .gte("volgende_indexatie", vandaag)
+      .lte("volgende_indexatie", binnen90),
+    // Bronnen voor de kalender:
+    supabase
+      .from("agenda_item")
+      .select("id, titel, datum, tijd, locatie")
+      .eq("landgoed_id", id),
+    supabase
+      .from("taak")
+      .select("titel, deadline")
+      .eq("landgoed_id", id)
+      .eq("status", "open")
+      .not("deadline", "is", null),
+    supabase
+      .from("contract")
+      .select("titel, einddatum, volgende_indexatie")
+      .eq("landgoed_id", id),
+    supabase.from("vergadering").select("titel, datum").eq("landgoed_id", id),
+  ]);
+
+  // Alle gedateerde items samenvoegen tot kalender-events.
+  const events: KalenderEvent[] = [];
+  for (const a of agendaItems.data ?? []) {
+    if (a.datum)
+      events.push({
+        datum: a.datum,
+        titel: a.titel,
+        soort: "agenda",
+        tijd: a.tijd,
+        agendaId: a.id,
+      });
+  }
+  for (const t of taken.data ?? []) {
+    if (t.deadline)
+      events.push({
+        datum: t.deadline,
+        titel: t.titel,
+        soort: "taak",
+        href: `/landgoed/${id}/taken`,
+      });
+  }
+  for (const c of contractData.data ?? []) {
+    if (c.einddatum)
+      events.push({
+        datum: c.einddatum,
+        titel: c.titel,
+        soort: "contract",
+        href: `/landgoed/${id}/contracten`,
+      });
+    if (c.volgende_indexatie)
+      events.push({
+        datum: c.volgende_indexatie,
+        titel: c.titel,
+        soort: "indexatie",
+        href: `/landgoed/${id}/contracten`,
+      });
+  }
+  for (const v of vergaderingen.data ?? []) {
+    if (v.datum)
+      events.push({
+        datum: v.datum,
+        titel: v.titel,
+        soort: "vergadering",
+        href: `/landgoed/${id}/vergaderingen`,
+      });
+  }
 
   const kpis = [
     {
@@ -90,7 +164,7 @@ export default async function OverzichtPage({
           </p>
         </header>
 
-        <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+        <div className="mb-6 grid grid-cols-2 gap-4 lg:grid-cols-4">
           {kpis.map((k) => (
             <Link key={k.label} href={k.href} className="card block p-5">
               <div className="label-up mb-2">{k.label}</div>
@@ -103,6 +177,15 @@ export default async function OverzichtPage({
             </Link>
           ))}
         </div>
+
+        <h2 className="mb-2 text-[16px] font-bold">Kalender</h2>
+        <Kalender
+          events={events}
+          landgoedId={id}
+          vandaag={vandaag}
+          nieuwAgendaItem={nieuwAgendaItem}
+          verwijderAgendaItem={verwijderAgendaItem}
+        />
       </div>
     </div>
   );
