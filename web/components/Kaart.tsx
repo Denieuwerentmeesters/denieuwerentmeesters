@@ -24,6 +24,14 @@ const PDOK_TILES =
   "https://service.pdok.nl/brt/achtergrondkaart/wmts/v2_0/standaard/EPSG:3857/{z}/{x}/{y}.png";
 const KADASTER_WMS = "https://service.pdok.nl/kadaster/kadastralekaart/wms/v5_0";
 
+const PERCEEL_VELDEN: [string, string][] = [
+  ["kadastrale_gemeente", "Kadastrale gemeente"],
+  ["sectie", "Sectie"],
+  ["perceelnummer", "Perceelnummer"],
+  ["oppervlakte_m2", "Oppervlakte (m²)"],
+  ["identificatie", "Identificatie"],
+];
+
 const LEEG: Basis = {
   adres: "",
   postcode: "",
@@ -69,13 +77,19 @@ export default function Kaart({
   lookupPerceel: (
     lat: number,
     lon: number,
-  ) => Promise<{ label: string; kenmerken: Record<string, unknown> } | null>;
+  ) => Promise<{
+    label: string;
+    kenmerken: Record<string, unknown>;
+    geom: unknown;
+  } | null>;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<LMap | null>(null);
   const laagRef = useRef<LayerGroup | null>(null);
   const tempRef = useRef<CircleMarker | null>(null);
   const kadRef = useRef<TileLayer | null>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const perceelLaagRef = useRef<any>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const LRef = useRef<any>(null);
   const modeRef = useRef<"basis" | "perceel">("basis");
@@ -86,15 +100,21 @@ export default function Kaart({
   const [perceel, setPerceel] = useState<{
     label: string;
     kenmerken: Record<string, unknown>;
+    geom: unknown;
   } | null>(null);
   const [bezig, setBezig] = useState(false);
 
   useEffect(() => {
     modeRef.current = mode;
     setPunt(null);
+    setPerceel(null);
     if (tempRef.current) {
       tempRef.current.remove();
       tempRef.current = null;
+    }
+    if (perceelLaagRef.current) {
+      perceelLaagRef.current.remove();
+      perceelLaagRef.current = null;
     }
     // Kadastrale overlay aan in perceel-modus.
     const L = LRef.current;
@@ -102,8 +122,9 @@ export default function Kaart({
     if (L && map) {
       if (mode === "perceel" && !kadRef.current) {
         kadRef.current = L.tileLayer.wms(KADASTER_WMS, {
-          layers: "Perceel",
-          styles: "", // WMS 1.3.0 vereist STYLES; leeg = standaardstijl
+          // Zelfde lagen als de PDOK-viewer: grenzen, percelen, bebouwing, namen.
+          layers: "Perceel,KadastraleGrens,Bebouwing,OpenbareRuimteNaam",
+          styles: "", // WMS 1.3.0 vereist STYLES; leeg = standaardstijl voor alle lagen
           format: "image/png",
           transparent: true,
           version: "1.3.0",
@@ -169,7 +190,28 @@ export default function Kaart({
           setBasis(await reverseGeocode(lat, lon));
           setPerceel(null);
         } else {
-          setPerceel(await lookupPerceel(lat, lon));
+          const r = await lookupPerceel(lat, lon);
+          setPerceel(r);
+          if (perceelLaagRef.current) {
+            perceelLaagRef.current.remove();
+            perceelLaagRef.current = null;
+          }
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const g = r?.geom as any;
+          if (g?.coordinates) {
+            const ring = (rng: number[][]) =>
+              rng.map(([x, y]) => L.CRS.EPSG3857.unproject(L.point(x, y)));
+            const latlngs =
+              g.type === "MultiPolygon"
+                ? g.coordinates.map((poly: number[][][]) => poly.map(ring))
+                : g.coordinates.map(ring);
+            perceelLaagRef.current = L.polygon(latlngs, {
+              color: "#dc2626",
+              weight: 2,
+              fillColor: "#dc2626",
+              fillOpacity: 0.12,
+            }).addTo(map);
+          }
         }
         setBezig(false);
       });
@@ -277,7 +319,10 @@ export default function Kaart({
           <input
             type="hidden"
             name="kenmerken"
-            value={JSON.stringify(perceel?.kenmerken ?? {})}
+            value={JSON.stringify({
+              ...(perceel?.kenmerken ?? {}),
+              geom_3857: perceel?.geom ?? null,
+            })}
           />
           <div className="mb-3 text-[13px]" style={{ color: "var(--text-2)" }}>
             {bezig ? (
@@ -286,14 +331,33 @@ export default function Kaart({
                 opzoeken…
               </span>
             ) : perceel ? (
-              <>
-                <span className="font-semibold" style={{ color: "var(--text)" }}>
+              <div>
+                <div
+                  className="mb-2 text-[14px] font-semibold"
+                  style={{ color: "var(--text)" }}
+                >
                   {perceel.label}
-                </span>
-                {perceel.kenmerken.oppervlakte_m2
-                  ? ` · ${String(perceel.kenmerken.oppervlakte_m2)} m²`
-                  : ""}
-              </>
+                </div>
+                <table className="text-[12.5px]">
+                  <tbody>
+                    {PERCEEL_VELDEN.map(([key, lbl]) =>
+                      perceel.kenmerken[key] != null ? (
+                        <tr key={key}>
+                          <td
+                            className="pr-3 align-top"
+                            style={{ color: "var(--text-3)" }}
+                          >
+                            {lbl}
+                          </td>
+                          <td className="font-medium">
+                            {String(perceel.kenmerken[key])}
+                          </td>
+                        </tr>
+                      ) : null,
+                    )}
+                  </tbody>
+                </table>
+              </div>
             ) : (
               "Geen perceel gevonden op dit punt."
             )}

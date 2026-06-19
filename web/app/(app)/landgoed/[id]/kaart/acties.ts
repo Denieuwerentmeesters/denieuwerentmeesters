@@ -36,7 +36,11 @@ export async function setBasisLocatie(fd: FormData) {
 export async function lookupPerceel(
   lat: number,
   lon: number,
-): Promise<{ label: string; kenmerken: Record<string, unknown> } | null> {
+): Promise<{
+  label: string;
+  kenmerken: Record<string, unknown>;
+  geom: unknown;
+} | null> {
   if (!Number.isFinite(lat) || !Number.isFinite(lon)) return null;
   const x = (lon * 20037508.342789244) / 180;
   const y =
@@ -61,6 +65,7 @@ export async function lookupPerceel(
       "Perceel";
     return {
       label,
+      geom: f.geometry ?? null, // Polygon in EPSG:3857
       kenmerken: {
         kadastrale_aanduiding: label,
         kadastrale_gemeente: gem,
