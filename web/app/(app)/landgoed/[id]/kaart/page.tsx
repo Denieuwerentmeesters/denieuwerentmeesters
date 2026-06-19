@@ -1,6 +1,20 @@
 import { createClient } from "@/lib/supabase/server";
 import Kaart from "@/components/Kaart";
-import { setBasisLocatie, plaatsPerceel, lookupPerceel } from "./acties";
+import {
+  setBasisLocatie,
+  plaatsPerceel,
+  lookupPerceel,
+  verwijderObject,
+  wisBasis,
+} from "./acties";
+
+function haTekst(m2: unknown): string | null {
+  const n = Number(m2);
+  if (!Number.isFinite(n)) return null;
+  return `${(n / 10000).toLocaleString("nl-NL", {
+    maximumFractionDigits: 2,
+  })} ha`;
+}
 
 export default async function KaartPage({
   params,
@@ -18,18 +32,36 @@ export default async function KaartPage({
 
   const { data } = await supabase
     .from("stamobject")
-    .select("id, naam, kenmerken")
+    .select("id, naam, categorie, kenmerken")
     .eq("landgoed_id", id)
-    .eq("geaccordeerd", true);
+    .eq("geaccordeerd", true)
+    .order("aangemaakt_op", { ascending: false });
 
-  const markers = (data ?? [])
-    .map((o) => {
-      const k = (o.kenmerken ?? {}) as { lat?: number; lon?: number };
-      return { id: o.id, naam: o.naam, lat: Number(k.lat), lon: Number(k.lon) };
-    })
-    .filter((m) => Number.isFinite(m.lat) && Number.isFinite(m.lon));
+  const objecten = (data ?? []).map((o) => {
+    const k = (o.kenmerken ?? {}) as {
+      lat?: number;
+      lon?: number;
+      gebruik?: string;
+      oppervlakte_m2?: unknown;
+    };
+    return {
+      id: o.id,
+      naam: o.naam,
+      categorie: o.categorie as string,
+      lat: Number(k.lat),
+      lon: Number(k.lon),
+      gebruik: k.gebruik ?? null,
+      oppervlakte: haTekst(k.oppervlakte_m2),
+    };
+  });
 
-  const basisIngesteld = Boolean(landgoed?.adres || (landgoed?.lat && landgoed?.lon));
+  const markers = objecten.filter(
+    (m) => Number.isFinite(m.lat) && Number.isFinite(m.lon),
+  );
+
+  const basisIngesteld = Boolean(
+    landgoed?.adres || (landgoed?.lat && landgoed?.lon),
+  );
 
   return (
     <div className="flex flex-col">
@@ -45,20 +77,31 @@ export default async function KaartPage({
       <div className="p-7">
         {/* Basislocatie-banner */}
         <div
-          className="card mb-5 p-4"
+          className="card mb-5 flex items-center gap-3 p-4"
           style={{
             background: basisIngesteld ? "var(--primary-light)" : "var(--bg)",
           }}
         >
           {basisIngesteld ? (
-            <div className="text-[14px]">
-              <span className="font-bold">{landgoed?.naam}</span>
-              {landgoed?.adres ? `, ${landgoed.adres}` : ""}
-              <span style={{ color: "var(--text-2)" }}>
-                {landgoed?.gemeente ? ` · Gemeente ${landgoed.gemeente}` : ""}
-                {landgoed?.provincie ? ` · ${landgoed.provincie}` : ""}
-              </span>
-            </div>
+            <>
+              <div className="flex-1 text-[14px]">
+                <span className="font-bold">{landgoed?.naam}</span>
+                {landgoed?.adres ? `, ${landgoed.adres}` : ""}
+                <span style={{ color: "var(--text-2)" }}>
+                  {landgoed?.gemeente ? ` · Gemeente ${landgoed.gemeente}` : ""}
+                  {landgoed?.provincie ? ` · ${landgoed.provincie}` : ""}
+                </span>
+              </div>
+              <form action={wisBasis}>
+                <input type="hidden" name="landgoed_id" value={id} />
+                <button
+                  className="btn btn-ghost btn-sm"
+                  style={{ color: "var(--red)" }}
+                >
+                  Wis locatie
+                </button>
+              </form>
+            </>
           ) : (
             <div className="text-[13px]" style={{ color: "var(--text-2)" }}>
               Nog geen basislocatie bepaald. Kies hieronder{" "}
@@ -84,6 +127,39 @@ export default async function KaartPage({
           plaatsPerceel={plaatsPerceel}
           lookupPerceel={lookupPerceel}
         />
+
+        {/* Geplaatste objecten + verwijderen */}
+        {objecten.length > 0 && (
+          <div className="card mt-5 p-4">
+            <div className="mb-2 text-[13px] font-semibold">
+              Geplaatste objecten ({objecten.length})
+            </div>
+            <div className="divide-y" style={{ borderColor: "var(--border)" }}>
+              {objecten.map((o) => (
+                <div key={o.id} className="flex items-center gap-3 py-2.5">
+                  <div className="flex-1">
+                    <div className="text-[14px] font-semibold">{o.naam}</div>
+                    <div className="text-[12px]" style={{ color: "var(--text-2)" }}>
+                      {o.categorie}
+                      {o.gebruik ? ` · ${o.gebruik}` : ""}
+                      {o.oppervlakte ? ` · ${o.oppervlakte}` : ""}
+                    </div>
+                  </div>
+                  <form action={verwijderObject}>
+                    <input type="hidden" name="landgoed_id" value={id} />
+                    <input type="hidden" name="id" value={o.id} />
+                    <button
+                      className="btn btn-ghost btn-sm"
+                      style={{ color: "var(--red)" }}
+                    >
+                      Verwijder
+                    </button>
+                  </form>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

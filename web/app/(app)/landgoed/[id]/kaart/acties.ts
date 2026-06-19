@@ -31,6 +31,39 @@ export async function setBasisLocatie(fd: FormData) {
   revalidatePath(`/landgoed/${landgoed_id}/kaart`);
 }
 
+// Een geplaatst object/perceel verwijderen (incl. koppelingen ernaartoe).
+export async function verwijderObject(fd: FormData) {
+  const landgoed_id = String(fd.get("landgoed_id"));
+  const id = String(fd.get("id"));
+  if (!id) return;
+  const supabase = await createClient();
+  await supabase
+    .from("verband")
+    .delete()
+    .or(`bron_id.eq.${id},doel_id.eq.${id}`);
+  await supabase.from("stamobject").delete().eq("id", id);
+  revalidatePath(`/landgoed/${landgoed_id}/kaart`);
+}
+
+// Basislocatie wissen.
+export async function wisBasis(fd: FormData) {
+  const landgoed_id = String(fd.get("landgoed_id"));
+  const supabase = await createClient();
+  await supabase
+    .from("landgoed")
+    .update({
+      adres: null,
+      postcode: null,
+      plaats: null,
+      gemeente: null,
+      provincie: null,
+      lat: null,
+      lon: null,
+    })
+    .eq("id", landgoed_id);
+  revalidatePath(`/landgoed/${landgoed_id}/kaart`);
+}
+
 // Perceel opzoeken via PDOK Kadastrale Kaart WMS GetFeatureInfo. Server-side
 // (geen CORS). Bouwt een kleine bbox in EPSG:3857 rond het klikpunt.
 export async function lookupPerceel(
