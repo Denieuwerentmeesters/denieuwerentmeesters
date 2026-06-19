@@ -31,6 +31,50 @@ export async function setBasisLocatie(fd: FormData) {
   revalidatePath(`/landgoed/${landgoed_id}/kaart`);
 }
 
+// Perceel opzoeken via PDOK Kadastrale Kaart WMS GetFeatureInfo. Server-side
+// (geen CORS). Bouwt een kleine bbox in EPSG:3857 rond het klikpunt.
+export async function lookupPerceel(
+  lat: number,
+  lon: number,
+): Promise<{ label: string; kenmerken: Record<string, unknown> } | null> {
+  if (!Number.isFinite(lat) || !Number.isFinite(lon)) return null;
+  const x = (lon * 20037508.342789244) / 180;
+  const y =
+    (Math.log(Math.tan(((90 + lat) * Math.PI) / 360)) / (Math.PI / 180)) *
+    (20037508.342789244 / 180);
+  const d = 150;
+  const bbox = `${x - d},${y - d},${x + d},${y + d}`;
+  const url =
+    "https://service.pdok.nl/kadaster/kadastralekaart/wms/v5_0?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetFeatureInfo" +
+    `&LAYERS=Perceel&QUERY_LAYERS=Perceel&CRS=EPSG:3857&BBOX=${bbox}` +
+    "&WIDTH=256&HEIGHT=256&I=128&J=128&INFO_FORMAT=application/json&FEATURE_COUNT=1";
+  try {
+    const res = await fetch(url);
+    const gj = await res.json();
+    const f = gj?.features?.[0];
+    if (!f) return null;
+    const pr = f.properties ?? {};
+    const gem = pr.kadastraleGemeenteWaarde ?? "";
+    const label =
+      [gem, pr.sectie, pr.perceelnummer].filter(Boolean).join(" ") ||
+      pr.identificatieLokaalID ||
+      "Perceel";
+    return {
+      label,
+      kenmerken: {
+        kadastrale_aanduiding: label,
+        kadastrale_gemeente: gem,
+        sectie: pr.sectie ?? null,
+        perceelnummer: pr.perceelnummer ?? null,
+        oppervlakte_m2: pr.kadastraleGrootteWaarde ?? null,
+        identificatie: pr.identificatieLokaalID ?? null,
+      },
+    };
+  } catch {
+    return null;
+  }
+}
+
 // Specifiek: een perceel (uit PDOK Kadastrale Kaart) als stamobject vastleggen.
 export async function plaatsPerceel(fd: FormData) {
   const landgoed_id = String(fd.get("landgoed_id"));

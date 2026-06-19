@@ -53,60 +53,23 @@ async function reverseGeocode(lat: number, lon: number): Promise<Basis> {
   }
 }
 
-// PDOK Kadastrale Kaart WMS GetFeatureInfo: klik -> perceel-attributen.
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-async function bevraagPerceel(L: any, map: LMap, latlng: { lat: number; lng: number }) {
-  const size = map.getSize();
-  const p = map.latLngToContainerPoint(latlng);
-  const b = map.getBounds();
-  const sw = L.CRS.EPSG3857.project(b.getSouthWest());
-  const ne = L.CRS.EPSG3857.project(b.getNorthEast());
-  const bbox = `${sw.x},${sw.y},${ne.x},${ne.y}`;
-  const url =
-    `${KADASTER_WMS}?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetFeatureInfo` +
-    `&LAYERS=Perceel&QUERY_LAYERS=Perceel&CRS=EPSG:3857&BBOX=${bbox}` +
-    `&WIDTH=${Math.round(size.x)}&HEIGHT=${Math.round(size.y)}` +
-    `&I=${Math.round(p.x)}&J=${Math.round(p.y)}&INFO_FORMAT=application/json&FEATURE_COUNT=1`;
-  try {
-    const res = await fetch(url);
-    const gj = await res.json();
-    const f = gj?.features?.[0];
-    if (!f) return null;
-    const pr = f.properties ?? {};
-    const gem =
-      pr.kadastraleGemeenteWaarde ?? pr.kadastraleGemeenteCode ?? "";
-    const label =
-      [gem, pr.sectie, pr.perceelnummer].filter(Boolean).join(" ") ||
-      pr.identificatieLokaalID ||
-      "Perceel";
-    return {
-      label,
-      kenmerken: {
-        kadastrale_aanduiding: label,
-        kadastrale_gemeente: gem,
-        sectie: pr.sectie ?? null,
-        perceelnummer: pr.perceelnummer ?? null,
-        oppervlakte_m2: pr.kadastraleGrootteWaarde ?? null,
-        identificatie: pr.identificatieLokaalID ?? null,
-      } as Record<string, unknown>,
-    };
-  } catch {
-    return null;
-  }
-}
-
 export default function Kaart({
   landgoedId,
   markers,
   basisIngesteld,
   setBasisLocatie,
   plaatsPerceel,
+  lookupPerceel,
 }: {
   landgoedId: string;
   markers: Marker[];
   basisIngesteld: boolean;
   setBasisLocatie: (fd: FormData) => Promise<void>;
   plaatsPerceel: (fd: FormData) => Promise<void>;
+  lookupPerceel: (
+    lat: number,
+    lon: number,
+  ) => Promise<{ label: string; kenmerken: Record<string, unknown> } | null>;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<LMap | null>(null);
@@ -204,8 +167,7 @@ export default function Kaart({
           setBasis(await reverseGeocode(lat, lon));
           setPerceel(null);
         } else {
-          const r = await bevraagPerceel(L, map, e.latlng);
-          setPerceel(r);
+          setPerceel(await lookupPerceel(lat, lon));
         }
         setBezig(false);
       });

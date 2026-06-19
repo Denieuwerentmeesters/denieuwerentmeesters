@@ -1,6 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import Kaart from "@/components/Kaart";
-import { setBasisLocatie, plaatsPerceel } from "./acties";
+import { setBasisLocatie, plaatsPerceel, lookupPerceel } from "./acties";
 
 export default async function KaartPage({
   params,
@@ -82,6 +82,7 @@ export default async function KaartPage({
           basisIngesteld={basisIngesteld}
           setBasisLocatie={setBasisLocatie}
           plaatsPerceel={plaatsPerceel}
+          lookupPerceel={lookupPerceel}
         />
       </div>
     </div>
