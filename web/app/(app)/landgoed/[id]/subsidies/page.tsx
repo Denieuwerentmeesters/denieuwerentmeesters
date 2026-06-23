@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import {
   nieuweSubsidie,
@@ -206,7 +207,11 @@ export default async function SubsidiesPage({
               </div>
             )}
             {lopend.map((s) => (
-              <div key={s.id} className="flex items-center gap-3 px-5 py-3.5">
+              <Link
+                key={s.id}
+                href={`/landgoed/${id}/subsidies/${s.id}`}
+                className="flex items-center gap-3 px-5 py-3.5 transition-colors hover:bg-black/[0.02]"
+              >
                 <div className="flex-1">
                   <div className="flex items-center gap-2">
                     <span className="text-[14px] font-semibold">{s.naam}</span>
@@ -220,7 +225,8 @@ export default async function SubsidiesPage({
                   </div>
                 </div>
                 {s.deadline && <span className="tag tag-gray">{s.deadline}</span>}
-              </div>
+                <span style={{ color: "var(--text-3)" }}>→</span>
+              </Link>
             ))}
           </div>
         </section>
@@ -242,20 +248,27 @@ export default async function SubsidiesPage({
             {kansen.map((s) => {
               const d = dagenTot(s.deadline);
               const urgent = d !== null && d >= 0 && d <= 30;
+              const kansrijk = (s.match_score ?? 0) >= 70;
               return (
-                <div key={s.id} className="flex items-center gap-3 px-5 py-3.5">
+                <Link
+                  key={s.id}
+                  href={`/landgoed/${id}/subsidies/${s.id}`}
+                  className="flex items-center gap-3 px-5 py-3.5 transition-colors hover:bg-black/[0.02]"
+                >
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
                       <span className="text-[14px] font-semibold">{s.naam}</span>
+                      {typeof s.match_score === "number" && (
+                        <span className={`tag ${kansrijk ? "tag-green" : "tag-gray"}`}>
+                          {kansrijk ? "Kansrijk" : "Mogelijk"}
+                        </span>
+                      )}
                       {s.regeling?.is_nieuw && <span className="tag tag-blue">Nieuw</span>}
                       {s.regeling?.is_tijdelijk && (
                         <span className="tag tag-red">Tijdelijk / beperkt budget</span>
                       )}
                       {s.regeling?.scope === "provinciaal" && (
                         <span className="tag tag-gray">provinciaal</span>
-                      )}
-                      {typeof s.match_score === "number" && (
-                        <span className="tag tag-gray">match {s.match_score}</span>
                       )}
                     </div>
                     {s.redenering && (
@@ -269,7 +282,8 @@ export default async function SubsidiesPage({
                       {urgent ? `nog ${d} d` : s.deadline}
                     </span>
                   )}
-                </div>
+                  <span style={{ color: "var(--text-3)" }}>→</span>
+                </Link>
               );
             })}
           </div>
