@@ -44,6 +44,13 @@ export default async function SubsidieDetailPage({
   if (!s) notFound();
   const r = s.regeling as Regeling;
 
+  const { data: lg } = await supabase
+    .from("landgoed")
+    .select("naam")
+    .eq("id", id)
+    .maybeSingle();
+  const naam = lg?.naam ?? "dit landgoed";
+
   // §7-lagen (alleen als er een catalogus-regeling achter zit).
   const [{ data: criteria }, { data: maatregelen }, { data: bewijs }, { data: verbanden }] =
     await Promise.all([
@@ -118,7 +125,7 @@ export default async function SubsidieDetailPage({
         </header>
 
         {/* Waarom interessant */}
-        <Sectie titel={isKans ? "Waarom dit (mogelijk) interessant is" : "Status"}>
+        <Sectie titel={isKans ? `Waarom dit interessant is voor ${naam}` : "Status"}>
           <p className="text-[14px]">
             {s.redenering ?? (isKans ? "Relevant op basis van het landgoedprofiel." : "Lopende subsidie.")}
           </p>

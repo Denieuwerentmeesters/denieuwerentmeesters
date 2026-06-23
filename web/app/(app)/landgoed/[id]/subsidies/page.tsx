@@ -48,8 +48,9 @@ export default async function SubsidiesPage({
   const { id } = await params;
   const supabase = await createClient();
 
-  const [{ data: subsidies }, { data: catTel }, { data: laatsteRun }, { data: docs }] =
+  const [{ data: landgoed }, { data: subsidies }, { data: catTel }, { data: laatsteRun }, { data: docs }] =
     await Promise.all([
+      supabase.from("landgoed").select("naam").eq("id", id).maybeSingle(),
       supabase
         .from("subsidie")
         .select(
@@ -84,6 +85,7 @@ export default async function SubsidiesPage({
 
   const catTotaal = (catTel ?? []).length;
   const catGeaccordeerd = (catTel ?? []).filter((r) => r.geaccordeerd).length;
+  const naam = landgoed?.naam ?? "dit landgoed";
 
   return (
     <div className="flex flex-col">
@@ -100,7 +102,8 @@ export default async function SubsidiesPage({
         <header className="mb-6">
           <h1 className="text-[22px] font-bold">Subsidies</h1>
           <p className="mt-1 text-[13px]" style={{ color: "var(--text-2)" }}>
-            Twee sporen: lopende subsidies beheren en kansen ontdekken.
+            Twee gescheiden sporen voor {naam}: bestaande subsidies beheren en
+            mogelijke kansen ontdekken — met per kans waarom die relevant is.
           </p>
         </header>
 
@@ -130,9 +133,11 @@ export default async function SubsidiesPage({
 
         {/* ── Spoor 1: Lopend ── */}
         <section className="mb-8">
-          <h2 className="mb-2 text-[15px] font-semibold">Lopende subsidies</h2>
+          <h2 className="mb-2 text-[15px] font-semibold">
+            Bestaande subsidies <span style={{ color: "var(--text-3)" }}>· {lopend.length}</span>
+          </h2>
           <p className="mb-3 text-[12.5px]" style={{ color: "var(--text-2)" }}>
-            Wat er nu loopt — beheren, voldoen aan eisen, verantwoorden.
+            Wat {naam} nu al ontvangt — beheren, voldoen aan eisen, verantwoorden.
           </p>
 
           <form
@@ -233,9 +238,12 @@ export default async function SubsidiesPage({
 
         {/* ── Spoor 2: Kansen ── */}
         <section>
-          <h2 className="mb-2 text-[15px] font-semibold">Subsidiekansen</h2>
+          <h2 className="mb-2 text-[15px] font-semibold">
+            Mogelijke kansen <span style={{ color: "var(--text-3)" }}>· {kansen.length}</span>
+          </h2>
           <p className="mb-3 text-[12.5px]" style={{ color: "var(--text-2)" }}>
-            Heat map: waar valt mogelijk iets te halen. Nieuw &amp; tijdelijk bovenaan.
+            Waar {naam} mogelijk aanspraak op kan maken — open een kans voor het
+            waarom. Nieuw &amp; tijdelijk bovenaan.
           </p>
 
           <div className="card divide-y" style={{ borderColor: "var(--border)" }}>
