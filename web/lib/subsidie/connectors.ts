@@ -36,3 +36,24 @@ export type Connector = {
   bronSleutel: string;
   haalOp(): Promise<RegelingNormaal[]>;
 };
+
+// ── Registry ──
+// Concrete connectors leven in ./connectors/*; hier verzameld op bron-sleutel.
+// (Bewust in dit bestand i.p.v. ./connectors/index.ts: een map én een
+// gelijknamig bestand naast elkaar geeft een import-botsing.)
+import { rvoConnector } from "./connectors/rvo";
+import { koopCvdrConnector, koopPublicatiesConnector } from "./connectors/koop";
+
+export const CONNECTORS: Record<string, Connector> = {
+  [rvoConnector.bronSleutel]: rvoConnector,
+  [koopCvdrConnector.bronSleutel]: koopCvdrConnector,
+  [koopPublicatiesConnector.bronSleutel]: koopPublicatiesConnector,
+};
+
+export function connectorsVoor(sleutel?: string | null): Connector[] {
+  if (sleutel) {
+    const c = CONNECTORS[sleutel];
+    return c ? [c] : [];
+  }
+  return Object.values(CONNECTORS);
+}
