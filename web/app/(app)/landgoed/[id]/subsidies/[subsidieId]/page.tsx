@@ -42,7 +42,7 @@ export default async function SubsidieDetailPage({
     .maybeSingle();
 
   if (!s) notFound();
-  const r = s.regeling as Regeling;
+  const r = s.regeling as unknown as Regeling;
 
   const { data: lg } = await supabase
     .from("landgoed")

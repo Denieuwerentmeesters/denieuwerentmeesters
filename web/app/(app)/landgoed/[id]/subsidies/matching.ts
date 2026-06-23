@@ -173,7 +173,7 @@ export async function zoekKansen(
       .select("regeling_id, veld, operator, waarde, verplicht")
       .in("regeling_id", ids)
       .eq("geaccordeerd", true);
-    ((criteria ?? []) as Criterium[]).forEach((c) => {
+    ((criteria ?? []) as unknown as Criterium[]).forEach((c) => {
       const arr = criteriaPer.get(c.regeling_id) ?? [];
       arr.push(c);
       criteriaPer.set(c.regeling_id, arr);
