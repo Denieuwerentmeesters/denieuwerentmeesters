@@ -221,3 +221,113 @@ export async function extraheerUitTekst(
     `${contextBlok(context)}\n\nBron-tekst:\n${tekst}\n\nStel objecten + koppelingen voor.`,
   );
 }
+
+// ── Regeling-verrijking (subsidiecatalogus) ──
+// Leest een regelingtekst (provinciepagina/PDF) en haalt de drie §7-lagen +
+// de openstellingsperiode eruit. Zelfde "verzin niets"-discipline: onbekend = leeg.
+// Output wordt als VOORSTEL weggeschreven (geaccordeerd=false) en pas na menselijke
+// accordering meegenomen in de matching.
+
+export type RegelingVerrijking = {
+  // Genormaliseerde catalogusvelden (alleen vullen wat de bron noemt).
+  organisatie?: string | null;
+  samenvatting?: string | null;
+  themas?: string[];
+  trefwoorden?: string[];
+  doelgroepen?: string[];
+  is_tijdelijk?: boolean;
+  openstelling_van?: string | null; // ISO-datum yyyy-mm-dd of null
+  openstelling_tot?: string | null;
+  budget_indicatie?: string | null;
+  criteria: {
+    omschrijving: string;
+    veld?: string | null; // 'nsw_status','provincie','hectare_min','natuurbeheertype',...
+    operator?: string | null; // 'is','bevat','>=','in'
+    waarde?: string | null;
+    verplicht?: boolean;
+  }[];
+  maatregelen: {
+    omschrijving: string;
+    natuurbeheertype?: string | null;
+    eenheid?: string | null;
+  }[];
+  bewijs: { omschrijving: string; document_type?: string | null }[];
+};
+
+const VERRIJKING_SYSTEEM =
+  "Je helpt een Nederlands landgoed subsidieregelingen begrijpen. Uit de aangeleverde " +
+  "regelingtekst haal je gestructureerd: (1) CRITERIA waaraan een aanvrager moet voldoen, " +
+  "(2) BEHEERSMAATREGELEN/activiteiten die concreet uitgevoerd moeten worden, " +
+  "(3) vereiste DOCUMENTATIE/bewijsstukken, en de OPENSTELLINGSPERIODE (aanvraagdata) + of " +
+  "het een tijdelijke/eenmalige regeling met beperkt budget is. " +
+  "Maak criteria waar mogelijk machine-leesbaar via veld/operator/waarde " +
+  "(velden: nsw_status, provincie, gemeente, hectare_min, natuurbeheertype, rijksmonument, " +
+  "agrarisch; operators: is, bevat, >=, in). Lukt dat niet, laat veld/operator/waarde leeg en " +
+  "geef alleen 'omschrijving'. " +
+  "Datums als yyyy-mm-dd; onbekend = null. " +
+  "VERZIN NIETS: noemt de tekst iets niet, laat het leeg/weg (liever een gat dan een aanname). " +
+  "Antwoord UITSLUITEND met JSON: {organisatie?, samenvatting?, themas?, trefwoorden?, doelgroepen?, " +
+  "is_tijdelijk?, openstelling_van?, openstelling_tot?, budget_indicatie?, " +
+  "criteria:[{omschrijving, veld?, operator?, waarde?, verplicht?}], " +
+  "maatregelen:[{omschrijving, natuurbeheertype?, eenheid?}], " +
+  "bewijs:[{omschrijving, document_type?}]}.";
+
+export async function verrijkRegeling(bron: {
+  naam: string;
+  tekst?: string;
+  pdf?: { base64: string; mediaType: string };
+}): Promise<RegelingVerrijking | null> {
+  const kop = `Regeling: ${bron.naam}\n\n`;
+  if (bron.pdf) {
+    return vraagJsonMetDocument<RegelingVerrijking>(
+      VERRIJKING_SYSTEEM,
+      `${kop}Lees het bijgevoegde document en lever de gestructureerde verrijking.`,
+      bron.pdf,
+    );
+  }
+  return vraagJson<RegelingVerrijking>(
+    VERRIJKING_SYSTEEM,
+    `${kop}Regelingtekst:\n${bron.tekst ?? ""}\n\nLever de gestructureerde verrijking.`,
+  );
+}
+
+// ── Lopende subsidies uit eigen documenten (datastroom B, §4a) ──
+// Leest onboarding-stukken (beschikkingen, jaarrekening, SNL-certificaat, GLB) en
+// stelt de AL LOPENDE subsidies voor — bron voor spoor 1 én de "al in gebruik"-onderdrukking.
+
+export type LopendeSubsidieVoorstel = {
+  naam: string; // regelingnaam zoals in het document
+  organisatie?: string | null;
+  beschikkingsnummer?: string | null;
+  bedrag?: string | null;
+  looptijd_van?: string | null; // yyyy-mm-dd of null
+  looptijd_tot?: string | null;
+  reden: string; // waar in de bron dit uit blijkt
+};
+
+const LOPENDE_SUBSIDIES_SYSTEEM =
+  "Je leest documenten van een Nederlands landgoed en haalt er de AL LOPENDE/TOEGEKENDE " +
+  "subsidies uit (subsidiebeschikkingen, toekenningsbrieven, jaarrekeningposten, SNL/SKNL-" +
+  "certificaten, GLB-/Gecombineerde-Opgave-stukken). Per gevonden subsidie: de regelingnaam, " +
+  "uitvoerder/organisatie, beschikkingsnummer, bedrag, en looptijd (van/tot) indien genoemd. " +
+  "Datums als yyyy-mm-dd; onbekend = null. " +
+  "VERZIN NIETS: alleen subsidies die echt in de bron staan (liever een gat dan een aanname). " +
+  "Antwoord UITSLUITEND met JSON: {subsidies:[{naam, organisatie?, beschikkingsnummer?, bedrag?, " +
+  "looptijd_van?, looptijd_tot?, reden}]}.";
+
+export async function extraheerLopendeSubsidies(bron: {
+  tekst?: string;
+  pdf?: { base64: string; mediaType: string };
+}): Promise<{ subsidies: LopendeSubsidieVoorstel[] } | null> {
+  if (bron.pdf) {
+    return vraagJsonMetDocument<{ subsidies: LopendeSubsidieVoorstel[] }>(
+      LOPENDE_SUBSIDIES_SYSTEEM,
+      "Lees het bijgevoegde document en geef de lopende subsidies.",
+      bron.pdf,
+    );
+  }
+  return vraagJson<{ subsidies: LopendeSubsidieVoorstel[] }>(
+    LOPENDE_SUBSIDIES_SYSTEEM,
+    `Brontekst:\n${bron.tekst ?? ""}\n\nGeef de lopende subsidies.`,
+  );
+}
