@@ -72,20 +72,38 @@ export async function bevestigExtractie(fd: FormData) {
   const c = run.concept as Record<string, string> ?? {};
 
   // Schrijf contact weg vanuit het concept
-  const naam = tekst(fd, "naam") ?? c.naam ?? null;
-  if (naam && naam !== "niet gevonden") {
+  const nf = (v: string | undefined) => (!v || v === "niet gevonden" ? null : v);
+  const naam = nf(c.naam);
+  if (naam) {
     const { data: relatie } = await supabase
       .from("relatie")
       .insert({
         landgoed_id,
         naam,
-        type: c.rol_voorstel && c.rol_voorstel !== "niet gevonden" ? c.rol_voorstel : null,
-        email: c.email && c.email !== "niet gevonden" ? c.email : null,
-        telefoon: c.telefoon && c.telefoon !== "niet gevonden" ? c.telefoon : null,
-        contact: c.omschrijving && c.omschrijving !== "niet gevonden" ? c.omschrijving : null,
+        organisatie: nf(c.organisatie),
+        email: nf(c.email),
+        telefoon: nf(c.telefoon),
+        omschrijving: nf(c.omschrijving),
+        status: nf(c.status_voorstel) ?? "actief",
+        bron: nf(c.bron_notitie),
       })
       .select("id")
       .single();
+
+    // Koppel rol als het voorstel matcht met een bestaand rol_type
+    if (relatie && nf(c.rol_voorstel)) {
+      const { data: rolType } = await supabase
+        .from("rol_type")
+        .select("id")
+        .ilike("naam", nf(c.rol_voorstel)!)
+        .maybeSingle();
+      if (rolType) {
+        await supabase.from("contact_rol").insert({
+          contact_id: relatie.id,
+          rol_type_id: rolType.id,
+        });
+      }
+    }
 
     // Markeer run als bevestigd
     const { data: { user } } = await supabase.auth.getUser();
