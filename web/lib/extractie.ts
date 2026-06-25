@@ -164,6 +164,9 @@ export async function persisteerVoorstellen(
   (bestaand ?? []).forEach((b) => naamNaarId.set(normNaam(b.naam), b.id));
 
   let nieuwAantal = 0;
+  const nieuweIds = new Set<string>(); // alleen net-ingevoegde voorstellen
+  // Hiërarchie-updates (kind -> hoofdobject), pas toepassen als alle objecten bestaan.
+  const bovenliggendRefs: { childId: string; parentRef: string }[] = [];
   // 1. Objecten inserten — duplicaten (zelfde naam) overslaan en koppelen aan bestaand.
   for (const o of resultaat.objecten ?? []) {
     const nrm = normNaam(o.naam);
@@ -187,23 +190,35 @@ export async function persisteerVoorstellen(
         herkomst: "ai",
         voorstel_reden: o.reden ?? null,
         geaccordeerd: false,
+        // "lijkt op bestaand object"-hint: alleen een geldige uuid overnemen.
+        lijkt_op_id: o.lijkt_op && isUuid(o.lijkt_op) ? o.lijkt_op : null,
         bron_document_id: bronSoort === "document" ? (bronId ?? null) : null,
       })
       .select("id")
       .single();
     if (!error && data) {
       naamNaarId.set(nrm, data.id);
+      nieuweIds.add(data.id);
       if (o.tijdelijk_id) idMap.set(o.tijdelijk_id, data.id);
+      if (o.bovenliggend_ref)
+        bovenliggendRefs.push({ childId: data.id, parentRef: o.bovenliggend_ref });
       nieuwAantal++;
     }
   }
 
   // 2. Koppelingen inserten; refs vertalen (tijdelijk_id -> uuid, anders bestaande uuid).
+  // 'onderdeel_van' is GÉÉN koppeling maar hiërarchie -> verwerk via bovenliggend_id.
   const verbandRijen = [];
   for (const k of resultaat.koppelingen ?? []) {
     const bron_id = idMap.get(k.bron_ref) ?? k.bron_ref;
     const doel_id = idMap.get(k.doel_ref) ?? k.doel_ref;
     if (!isUuid(bron_id) || !isUuid(doel_id)) continue; // onbruikbare verwijzing overslaan
+    if (k.rol === "onderdeel_van") {
+      // A onderdeel_van B => A (bron) krijgt B (doel) als hoofdobject. Alleen voor nieuwe voorstellen.
+      if (nieuweIds.has(bron_id))
+        bovenliggendRefs.push({ childId: bron_id, parentRef: k.doel_ref });
+      continue;
+    }
     verbandRijen.push({
       landgoed_id: landgoedId,
       bron_type: k.bron_type,
@@ -224,6 +239,16 @@ export async function persisteerVoorstellen(
         onConflict: "bron_type,bron_id,doel_type,doel_id,rol",
         ignoreDuplicates: true,
       });
+  }
+
+  // 2b. Hiërarchie toepassen: kind -> hoofdobject (parentRef vertalen naar uuid).
+  for (const { childId, parentRef } of bovenliggendRefs) {
+    const parentId = idMap.get(parentRef) ?? parentRef;
+    if (!isUuid(parentId) || parentId === childId) continue;
+    await supabase
+      .from("stamobject")
+      .update({ bovenliggend_id: parentId })
+      .eq("id", childId);
   }
 
   const telling = {

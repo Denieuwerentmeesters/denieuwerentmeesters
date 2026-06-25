@@ -2,7 +2,7 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
-import { aiBeschikbaar, aiModel } from "@/lib/ai";
+import { aiBeschikbaar, aiModel, laatsteAiFout } from "@/lib/ai";
 import {
   documentBron,
   transactieBron,
@@ -43,6 +43,7 @@ async function verrijk(
       aangemaakt_door: g.user?.id,
       fout:
         fout ??
+        laatsteAiFout() ??
         (aiBeschikbaar()
           ? "Geen voorstellen gevonden."
           : "AI niet beschikbaar (geen ANTHROPIC_API_KEY)."),
@@ -97,6 +98,46 @@ export async function accordeerObject(fd: FormData) {
   const id = String(fd.get("id"));
   const supabase = await createClient();
   await supabase.from("stamobject").update({ geaccordeerd: true }).eq("id", id);
+  // Koppelingen worden als label onder het object getoond: bij accorderen van het
+  // object lopen ook de voorgestelde koppelingen ernaartoe mee.
+  await supabase
+    .from("verband")
+    .update({ status: "geaccordeerd" })
+    .eq("status", "voorgesteld")
+    .or(`bron_id.eq.${id},doel_id.eq.${id}`);
+  revalidatePath(pad(landgoed_id));
+}
+
+// Twee voorstellen/objecten samenvoegen: het AI-voorstel (id) wordt opgeslokt door
+// een bestaand object (doel_id). Onderdelen en voorgestelde koppelingen verhuizen mee.
+export async function voegSamen(fd: FormData) {
+  const landgoed_id = String(fd.get("landgoed_id"));
+  const id = String(fd.get("id")); // het voorstel dat verdwijnt
+  const doel_id = String(fd.get("doel_id")); // het bestaande object dat blijft
+  if (!id || !doel_id || id === doel_id) return;
+  const supabase = await createClient();
+  // Eventuele onderdelen herhangen naar het bestaande object.
+  await supabase
+    .from("stamobject")
+    .update({ bovenliggend_id: doel_id })
+    .eq("bovenliggend_id", id);
+  // Voorgestelde koppelingen herhangen (bron- en doelzijde).
+  await supabase
+    .from("verband")
+    .update({ bron_id: doel_id })
+    .eq("status", "voorgesteld")
+    .eq("bron_id", id);
+  await supabase
+    .from("verband")
+    .update({ doel_id: doel_id })
+    .eq("status", "voorgesteld")
+    .eq("doel_id", id);
+  // Het voorstel zelf verwijderen (alleen als het nog een voorstel is).
+  await supabase
+    .from("stamobject")
+    .delete()
+    .eq("id", id)
+    .eq("geaccordeerd", false);
   revalidatePath(pad(landgoed_id));
 }
 
@@ -161,6 +202,10 @@ export async function bewerkObject(fd: FormData) {
   const categorie = String(fd.get("categorie") ?? "").trim();
   const beschrijving = String(fd.get("beschrijving") ?? "").trim();
   const gebruik = String(fd.get("gebruik") ?? "").trim();
+  // Leeg of gelijk-aan-zichzelf => hoofdobject (geen bovenliggend).
+  const bovenliggendRaw = String(fd.get("bovenliggend_id") ?? "").trim();
+  const bovenliggend_id =
+    bovenliggendRaw && bovenliggendRaw !== id ? bovenliggendRaw : null;
   if (!id || !naam) return;
 
   const supabase = await createClient();
@@ -180,6 +225,7 @@ export async function bewerkObject(fd: FormData) {
       categorie: categorie || "overig",
       beschrijving: beschrijving || null,
       kenmerken,
+      bovenliggend_id,
     })
     .eq("id", id);
   revalidatePath(pad(landgoed_id));

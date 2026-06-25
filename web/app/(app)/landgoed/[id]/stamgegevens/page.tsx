@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { aiBeschikbaar } from "@/lib/ai";
@@ -7,8 +8,7 @@ import {
   verrijkUitBron,
   accordeerObject,
   wijsAfObject,
-  accordeerVerband,
-  wijsAfVerband,
+  voegSamen,
   objectHandmatig,
   bewerkObject,
   verwijderObject,
@@ -65,6 +65,8 @@ type Obj = {
   beschrijving: string | null;
   voorstel_reden: string | null;
   kenmerken: Record<string, unknown> | null;
+  bovenliggend_id: string | null;
+  lijkt_op_id: string | null;
 };
 type Verband = {
   id: string;
@@ -88,7 +90,7 @@ export default async function StamgegevensPage({
     supabase
       .from("stamobject")
       .select(
-        "id, naam, categorie, beschrijving, geaccordeerd, voorstel_reden, kenmerken",
+        "id, naam, categorie, beschrijving, geaccordeerd, voorstel_reden, kenmerken, bovenliggend_id, lijkt_op_id",
       )
       .eq("landgoed_id", id)
       .order("categorie"),
@@ -118,9 +120,6 @@ export default async function StamgegevensPage({
   const alleVerbanden = (verbandenRes.data ?? []) as (Verband & {
     status: string;
   })[];
-  const voorgesteldeVerbanden = alleVerbanden.filter(
-    (v) => v.status === "voorgesteld",
-  );
 
   // Labelkaarten voor het weergeven van koppelingen.
   const contractenRes = await supabase
@@ -142,18 +141,187 @@ export default async function StamgegevensPage({
     d.bestand_pad?.toLowerCase().endsWith(".pdf"),
   );
 
+  // Koppeling-labels (géén onderdeel_van — dat is hiërarchie) voor één object.
+  const koppelingLabels = (
+    objId: string,
+    status: "voorgesteld" | "geaccordeerd",
+  ) =>
+    alleVerbanden
+      .filter(
+        (v) =>
+          v.status === status &&
+          v.rol !== "onderdeel_van" &&
+          (v.bron_id === objId || v.doel_id === objId),
+      )
+      .map((v) => {
+        const ander = v.bron_id === objId ? v.doel_id : v.bron_id;
+        return `${v.rol ?? "gekoppeld"}: ${label(ander)}`;
+      })
+      .join(" · ");
+
+  // ── Geaccordeerde catalogus: hoofdobjecten per categorie, onderdelen genest ──
+  const acceptedIds = new Set(geaccordeerdeObjecten.map((o) => o.id));
+  const isHoofd = (o: Obj) =>
+    !o.bovenliggend_id || !acceptedIds.has(o.bovenliggend_id);
+  const kinderenVan = new Map<string, Obj[]>();
+  for (const o of geaccordeerdeObjecten) {
+    if (!isHoofd(o) && o.bovenliggend_id) {
+      const l = kinderenVan.get(o.bovenliggend_id) ?? [];
+      l.push(o);
+      kinderenVan.set(o.bovenliggend_id, l);
+    }
+  }
   const gegroepeerd = new Map<string, Obj[]>();
   for (const o of geaccordeerdeObjecten) {
+    if (!isHoofd(o)) continue; // onderdelen verschijnen genest onder hun hoofdobject
     const lijst = gegroepeerd.get(o.categorie) ?? [];
     lijst.push(o);
     gegroepeerd.set(o.categorie, lijst);
   }
+  const bovenliggendOptiesAlle: [string, string][] = geaccordeerdeObjecten.map(
+    (o) => [o.id, o.naam],
+  );
+
+  // ── Review: voorstellen, onderdelen genest onder hun (voorgestelde) hoofdobject ──
+  const proposalIds = new Set(voorgesteldeObjecten.map((o) => o.id));
+  const voorstelKinderen = new Map<string, Obj[]>();
+  for (const o of voorgesteldeObjecten) {
+    if (o.bovenliggend_id && proposalIds.has(o.bovenliggend_id)) {
+      const l = voorstelKinderen.get(o.bovenliggend_id) ?? [];
+      l.push(o);
+      voorstelKinderen.set(o.bovenliggend_id, l);
+    }
+  }
+  const topVoorstellen = voorgesteldeObjecten.filter(
+    (o) => !o.bovenliggend_id || !proposalIds.has(o.bovenliggend_id),
+  );
 
   const aiUit = !aiBeschikbaar();
   const categorieOpties: [string, string][] = HANDMATIG_CATEGORIEEN.map((c) => [
     c,
     CATEGORIE_LABEL[c] ?? c,
   ]);
+
+  // Eén voorstel-rij (recursief: onderdelen ingesprongen onder hun hoofdobject).
+  function renderVoorstel(o: Obj, diepte: number) {
+    const kopp = koppelingLabels(o.id, "voorgesteld");
+    const parentNaam =
+      o.bovenliggend_id && diepte === 0 ? label(o.bovenliggend_id) : null;
+    const lijktNaam = o.lijkt_op_id ? label(o.lijkt_op_id) : null;
+    return (
+      <Fragment key={o.id}>
+        <div
+          className="flex items-center gap-3 rounded-[10px] p-3"
+          style={{ background: "var(--bg)", marginLeft: diepte * 18 }}
+        >
+          <div className="flex-1">
+            <div className="text-[13.5px] font-semibold">
+              {o.naam}{" "}
+              <span
+                className="text-[11px] font-normal"
+                style={{ color: "var(--text-3)" }}
+              >
+                {CATEGORIE_LABEL[o.categorie] ?? o.categorie}
+                {parentNaam ? ` · onderdeel van ${parentNaam}` : ""}
+              </span>
+            </div>
+            {o.voorstel_reden && (
+              <div className="text-[12px]" style={{ color: "var(--text-2)" }}>
+                {o.voorstel_reden}
+              </div>
+            )}
+            {kopp && (
+              <div className="mt-1 text-[12px]" style={{ color: "var(--text-3)" }}>
+                {kopp}
+              </div>
+            )}
+            {lijktNaam && (
+              <div className="mt-1 text-[12px]" style={{ color: "var(--red)" }}>
+                Lijkt op bestaand: {lijktNaam} — voeg samen i.p.v. dubbel aanmaken.
+              </div>
+            )}
+          </div>
+          {lijktNaam && (
+            <form action={voegSamen}>
+              <input type="hidden" name="landgoed_id" value={id} />
+              <input type="hidden" name="id" value={o.id} />
+              <input type="hidden" name="doel_id" value={o.lijkt_op_id ?? ""} />
+              <button className="btn btn-ghost btn-sm">Samenvoegen</button>
+            </form>
+          )}
+          <form action={accordeerObject}>
+            <input type="hidden" name="landgoed_id" value={id} />
+            <input type="hidden" name="id" value={o.id} />
+            <button className="btn btn-primary btn-sm">Accordeer</button>
+          </form>
+          <form action={wijsAfObject}>
+            <input type="hidden" name="landgoed_id" value={id} />
+            <input type="hidden" name="id" value={o.id} />
+            <button
+              className="btn btn-ghost btn-sm"
+              style={{ color: "var(--red)" }}
+            >
+              Wijs af
+            </button>
+          </form>
+        </div>
+        {(voorstelKinderen.get(o.id) ?? []).map((k) =>
+          renderVoorstel(k, diepte + 1),
+        )}
+      </Fragment>
+    );
+  }
+
+  // Eén catalogus-rij (recursief: onderdelen ingesprongen onder hun hoofdobject).
+  function renderTak(o: Obj, diepte: number) {
+    const kn = o.kenmerken ?? {};
+    const isGebouw = ["gebouw", "woning", "opstal"].includes(o.categorie);
+    const m2 = Number(kn.oppervlakte_m2);
+    const opp = Number.isFinite(m2)
+      ? isGebouw
+        ? `${m2} m²`
+        : `${(m2 / 10000).toLocaleString("nl-NL", {
+            maximumFractionDigits: 2,
+          })} ha`
+      : null;
+    const detail = [
+      o.beschrijving,
+      kn.adres ? String(kn.adres) : null,
+      opp,
+      kn.bouwjaar ? `bouwjaar ${String(kn.bouwjaar)}` : null,
+      kn.pandstatus ? String(kn.pandstatus) : null,
+      kn.gebruik ? String(kn.gebruik) : null,
+    ]
+      .filter(Boolean)
+      .join(" · ");
+    return (
+      <Fragment key={o.id}>
+        <div style={{ marginLeft: diepte * 18 }}>
+          <ObjectBewerken
+            object={{
+              id: o.id,
+              naam: o.naam,
+              categorie: o.categorie,
+              beschrijving: o.beschrijving,
+              gebruik: kn.gebruik != null ? String(kn.gebruik) : null,
+            }}
+            detail={detail}
+            koppelingen={koppelingLabels(o.id, "geaccordeerd")}
+            categorieOpties={categorieOpties}
+            gebruikOpties={GEBRUIK_OPTIES}
+            bovenliggendId={o.bovenliggend_id}
+            bovenliggendOpties={bovenliggendOptiesAlle.filter(
+              ([v]) => v !== o.id,
+            )}
+            landgoedId={id}
+            bewerkObject={bewerkObject}
+            verwijderObject={verwijderObject}
+          />
+        </div>
+        {(kinderenVan.get(o.id) ?? []).map((k) => renderTak(k, diepte + 1))}
+      </Fragment>
+    );
+  }
 
   return (
     <div className="flex flex-col">
@@ -250,97 +418,22 @@ export default async function StamgegevensPage({
         </div>
 
         {/* Review-wachtrij */}
-        {(voorgesteldeObjecten.length > 0 ||
-          voorgesteldeVerbanden.length > 0) && (
+        {voorgesteldeObjecten.length > 0 && (
           <div
             className="card mb-5 p-4"
             style={{ borderColor: "var(--primary-mid)" }}
           >
-            <div className="mb-3 text-[14px] font-semibold">
-              Te controleren ({voorgesteldeObjecten.length +
-                voorgesteldeVerbanden.length})
+            <div className="mb-1 text-[14px] font-semibold">
+              Te controleren ({voorgesteldeObjecten.length})
             </div>
+            <p className="mb-3 text-[12px]" style={{ color: "var(--text-3)" }}>
+              Onderdelen staan ingesprongen onder hun hoofdobject. Koppelingen
+              (beheerd door, grenst aan…) staan als grijs regeltje onder het object
+              en lopen mee bij accorderen.
+            </p>
 
             <div className="flex flex-col gap-2">
-              {voorgesteldeObjecten.map((o) => (
-                <div
-                  key={o.id}
-                  className="flex items-center gap-3 rounded-[10px] p-3"
-                  style={{ background: "var(--bg)" }}
-                >
-                  <div className="flex-1">
-                    <div className="text-[13.5px] font-semibold">
-                      {o.naam}{" "}
-                      <span
-                        className="text-[11px] font-normal"
-                        style={{ color: "var(--text-3)" }}
-                      >
-                        {CATEGORIE_LABEL[o.categorie] ?? o.categorie}
-                      </span>
-                    </div>
-                    {o.voorstel_reden && (
-                      <div className="text-[12px]" style={{ color: "var(--text-2)" }}>
-                        {o.voorstel_reden}
-                      </div>
-                    )}
-                  </div>
-                  <form action={accordeerObject}>
-                    <input type="hidden" name="landgoed_id" value={id} />
-                    <input type="hidden" name="id" value={o.id} />
-                    <button className="btn btn-primary btn-sm">Accordeer</button>
-                  </form>
-                  <form action={wijsAfObject}>
-                    <input type="hidden" name="landgoed_id" value={id} />
-                    <input type="hidden" name="id" value={o.id} />
-                    <button
-                      className="btn btn-ghost btn-sm"
-                      style={{ color: "var(--red)" }}
-                    >
-                      Wijs af
-                    </button>
-                  </form>
-                </div>
-              ))}
-
-              {voorgesteldeVerbanden.map((v) => (
-                <div
-                  key={v.id}
-                  className="flex items-center gap-3 rounded-[10px] p-3"
-                  style={{ background: "var(--bg)" }}
-                >
-                  <div className="flex-1">
-                    <div className="text-[13.5px] font-semibold">
-                      {label(v.bron_id)} → {label(v.doel_id)}{" "}
-                      <span
-                        className="text-[11px] font-normal"
-                        style={{ color: "var(--text-3)" }}
-                      >
-                        {v.rol ?? "koppeling"}
-                      </span>
-                    </div>
-                    {v.voorstel_reden && (
-                      <div className="text-[12px]" style={{ color: "var(--text-2)" }}>
-                        {v.voorstel_reden}
-                      </div>
-                    )}
-                  </div>
-                  <form action={accordeerVerband}>
-                    <input type="hidden" name="landgoed_id" value={id} />
-                    <input type="hidden" name="id" value={v.id} />
-                    <button className="btn btn-primary btn-sm">Accordeer</button>
-                  </form>
-                  <form action={wijsAfVerband}>
-                    <input type="hidden" name="landgoed_id" value={id} />
-                    <input type="hidden" name="id" value={v.id} />
-                    <button
-                      className="btn btn-ghost btn-sm"
-                      style={{ color: "var(--red)" }}
-                    >
-                      Wijs af
-                    </button>
-                  </form>
-                </div>
-              ))}
+              {topVoorstellen.map((o) => renderVoorstel(o, 0))}
             </div>
           </div>
         )}
@@ -384,60 +477,7 @@ export default async function StamgegevensPage({
                   {CATEGORIE_LABEL[categorie] ?? categorie} ({objecten.length})
                 </div>
                 <div className="divide-y" style={{ borderColor: "var(--border)" }}>
-                  {objecten.map((o) => {
-                    const kn = o.kenmerken ?? {};
-                    const isGebouw = ["gebouw", "woning", "opstal"].includes(
-                      o.categorie,
-                    );
-                    const m2 = Number(kn.oppervlakte_m2);
-                    const opp = Number.isFinite(m2)
-                      ? isGebouw
-                        ? `${m2} m²`
-                        : `${(m2 / 10000).toLocaleString("nl-NL", {
-                            maximumFractionDigits: 2,
-                          })} ha`
-                      : null;
-                    const detail = [
-                      o.beschrijving,
-                      kn.adres ? String(kn.adres) : null,
-                      opp,
-                      kn.bouwjaar ? `bouwjaar ${String(kn.bouwjaar)}` : null,
-                      kn.pandstatus ? String(kn.pandstatus) : null,
-                      kn.gebruik ? String(kn.gebruik) : null,
-                    ]
-                      .filter(Boolean)
-                      .join(" · ");
-                    const koppelingen = alleVerbanden
-                      .filter(
-                        (v) =>
-                          v.status === "geaccordeerd" &&
-                          (v.bron_id === o.id || v.doel_id === o.id),
-                      )
-                      .map((v) => {
-                        const ander = v.bron_id === o.id ? v.doel_id : v.bron_id;
-                        return `${v.rol ?? "gekoppeld"}: ${label(ander)}`;
-                      })
-                      .join(" · ");
-                    return (
-                      <ObjectBewerken
-                        key={o.id}
-                        object={{
-                          id: o.id,
-                          naam: o.naam,
-                          categorie: o.categorie,
-                          beschrijving: o.beschrijving,
-                          gebruik: kn.gebruik != null ? String(kn.gebruik) : null,
-                        }}
-                        detail={detail}
-                        koppelingen={koppelingen}
-                        categorieOpties={categorieOpties}
-                        gebruikOpties={GEBRUIK_OPTIES}
-                        landgoedId={id}
-                        bewerkObject={bewerkObject}
-                        verwijderObject={verwijderObject}
-                      />
-                    );
-                  })}
+                  {objecten.map((o) => renderTak(o, 0))}
                 </div>
               </div>
             ))}

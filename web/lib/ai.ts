@@ -28,19 +28,33 @@ function parseJson<T>(res: Anthropic.Message): T {
   return JSON.parse(schoon) as T;
 }
 
+// Laatste extractie-fout (leesbaar), zodat de aanroeper 'm in extractie_run.fout
+// kan tonen i.p.v. het misleidende "Geen voorstellen gevonden".
+let laatsteFout: string | null = null;
+export function laatsteAiFout(): string | null {
+  return laatsteFout;
+}
+function onthoudFout(e: unknown): null {
+  const msg = e instanceof Error ? e.message : String(e);
+  laatsteFout = msg;
+  console.error("[ai] aanroep mislukt:", msg);
+  return null;
+}
+
 // Roept het model aan en verwacht puur JSON terug. Geeft null bij geen key/fout.
 async function vraagJson<T>(systeem: string, prompt: string): Promise<T | null> {
   if (!aiBeschikbaar()) return null;
+  laatsteFout = null;
   try {
     const res = await client().messages.create({
       model: MODEL,
-      max_tokens: 4096,
+      max_tokens: 8192,
       system: systeem,
       messages: [{ role: "user", content: prompt }],
     });
     return parseJson<T>(res);
-  } catch {
-    return null;
+  } catch (e) {
+    return onthoudFout(e);
   }
 }
 
@@ -51,10 +65,11 @@ async function vraagJsonMetDocument<T>(
   pdf: { base64: string; mediaType: string },
 ): Promise<T | null> {
   if (!aiBeschikbaar()) return null;
+  laatsteFout = null;
   try {
     const res = await client().messages.create({
       model: MODEL,
-      max_tokens: 4096,
+      max_tokens: 8192,
       system: systeem,
       messages: [
         {
@@ -74,8 +89,8 @@ async function vraagJsonMetDocument<T>(
       ],
     });
     return parseJson<T>(res);
-  } catch {
-    return null;
+  } catch (e) {
+    return onthoudFout(e);
   }
 }
 
@@ -150,6 +165,8 @@ export type StamobjectVoorstel = {
   code?: string;
   beschrijving?: string;
   kenmerken?: Record<string, unknown>;
+  bovenliggend_ref?: string; // tijdelijk_id of bestaande uuid van het hoofdobject (dit is een onderdeel daarvan)
+  lijkt_op?: string; // bestaande uuid waar dit voorstel mee overlapt (dan NIET opnieuw aanmaken)
   reden: string; // onderbouwing waarom dit object uit de bron volgt
 };
 
@@ -176,18 +193,36 @@ export type ExtractieContext = {
 const STAMGEGEVENS_SYSTEEM =
   "Je helpt een Nederlands landgoed z'n stamgegevens opbouwen uit bronnen (documenten/administratie). " +
   "Haal de fysieke/juridische OBJECTEN eruit en leg KOPPELINGEN naar reeds bekende records " +
-  "(contracten, relaties/contacten, objecten) wanneer die duidelijk uit de bron volgen. " +
-  "Categorieën (kies altijd de best passende, vermijd 'overig' tenzij echt niets past): " +
+  "(contracten, relaties/contacten, objecten). " +
+  // ── GEEN GOKWERK (harde regels) ──
+  "GEEN GOKWERK. Maak een object of koppeling ALLEEN aan als de bron beide kanten én de relatie " +
+  "EXPLICIET noemt. Leid GEEN personen af uit vage termen als 'de familie', 'de bewoners' of 'de eigenaar' " +
+  "zonder eigennaam. Koppel NOOIT de ingelogde gebruiker of de aanvrager aan een object. " +
+  "Verzin niets: noemt de bron een gegeven niet, laat het veld leeg of weg (liever een gat dan een aanname). " +
+  "Bij twijfel: stel het object/de koppeling NIET voor. " +
+  // ── HOOFDOBJECTEN, NIET OPKNIPPEN ──
+  "HOUD HET OP HOOFDOBJECTEN. Maak per geheel standaard ÉÉN object (bv. één 'Parkbos' met vijvers, bosvakken en " +
+  "stinzenplanten beschreven in 'beschrijving'/'kenmerken'). Knip een geheel dat de bron als één eenheid beschrijft " +
+  "NIET op in losse deel-objecten. Maak alleen een apart onderdeel aan als de bron het duidelijk als eigen, " +
+  "zelfstandig benoemde eenheid behandelt; zet dan 'bovenliggend_ref' naar het tijdelijk_id of de uuid van het hoofdobject " +
+  "(gebruik hiervoor GEEN koppeling met rol 'onderdeel_van' — dat doet 'bovenliggend_ref' al). " +
+  // ── BESTAANDE OBJECTEN RESPECTEREN ──
+  "RESPECTEER BESTAANDE OBJECTEN. Bekijk de lijst 'Bestaande objecten' hieronder. Overlapt jouw voorstel met een " +
+  "bestaand object (zelfde of overkoepelend ding), maak het dan NIET opnieuw aan: vul 'lijkt_op' met de uuid van dat " +
+  "bestaande object, zodat de gebruiker kan samenvoegen. " +
+  // ── CATEGORIEËN ──
+  "Categorieën (kies de best passende, vermijd 'overig' tenzij echt niets past): " +
   "gebouw, woning, opstal, pachtperceel (landbouwgrond/percelen), " +
   "tuin (tuinen, moestuin, nutstuin, borders, stinzenplanten), " +
   "natuur (parkbos, bos, natuurgebied, water-als-natuur, lanen), " +
   "infrastructuur (bruggen, paden, wegen, hekken, parkeerplaatsen, kabels/leidingen), " +
   "water (vijvers, sloten, waterlopen), overig. " +
-  "BELANGRIJK: noem elk uniek object exact ÉÉN keer — geen duplicaten. " +
-  "Verzin niets: noemt de bron een gegeven niet, laat het veld leeg (liever een gat dan een aanname). " +
+  "Noem elk uniek object exact ÉÉN keer — geen duplicaten. " +
   "Details (bouwjaar, monumentstatus, adres, oppervlakte, functie) in 'kenmerken' als losse sleutels. " +
-  "Geef elk object een uniek 'tijdelijk_id' (bv. 'obj1'); verwijs daar in koppelingen naar, of naar een bestaande uuid. " +
-  "Antwoord UITSLUITEND met JSON: {objecten: [{tijdelijk_id, categorie, naam, code?, beschrijving?, kenmerken?, reden}], " +
+  "Geef elk object een uniek 'tijdelijk_id' (bv. 'obj1'); verwijs daar in koppelingen/bovenliggend_ref naar, of naar een bestaande uuid. " +
+  "Koppelingen zijn alléén voor andere relaties dan onderdeel-van (bv. beheerd_door, grenst_aan, toegang_tot, huurder_van) " +
+  "en uitsluitend als de bron ze expliciet noemt. " +
+  "Antwoord UITSLUITEND met JSON: {objecten: [{tijdelijk_id, categorie, naam, code?, beschrijving?, kenmerken?, bovenliggend_ref?, lijkt_op?, reden}], " +
   "koppelingen: [{bron_type, bron_ref, doel_type, doel_ref, rol, reden}]}.";
 
 function contextBlok(context: ExtractieContext): string {

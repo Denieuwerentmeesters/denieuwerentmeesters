@@ -18,6 +18,8 @@ export default function ObjectBewerken({
   koppelingen,
   categorieOpties,
   gebruikOpties,
+  bovenliggendId,
+  bovenliggendOpties,
   landgoedId,
   bewerkObject,
   verwijderObject,
@@ -27,6 +29,8 @@ export default function ObjectBewerken({
   koppelingen: string;
   categorieOpties: [string, string][];
   gebruikOpties: string[];
+  bovenliggendId: string | null;
+  bovenliggendOpties: [string, string][];
   landgoedId: string;
   bewerkObject: (fd: FormData) => Promise<void>;
   verwijderObject: (fd: FormData) => Promise<void>;
@@ -127,6 +131,22 @@ export default function ObjectBewerken({
                     ))}
                   </select>
                 </div>
+              </div>
+
+              <div>
+                <label className="label-up mb-1 block">Onderdeel van</label>
+                <select
+                  className="input"
+                  name="bovenliggend_id"
+                  defaultValue={bovenliggendId ?? ""}
+                >
+                  <option value="">— hoofdobject (geen onderdeel) —</option>
+                  {bovenliggendOpties.map(([v, l]) => (
+                    <option key={v} value={v}>
+                      {l}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               <div>
