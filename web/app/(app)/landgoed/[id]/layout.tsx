@@ -38,6 +38,7 @@ export default async function LandgoedLayout({
   const initialen = naam.slice(0, 2).toUpperCase();
 
   const items = [
+    { href: `/landgoed/${id}/profiel`, label: "Profiel" },
     { href: `/landgoed/${id}/overzicht`, label: "Overzicht" },
     { href: `/landgoed/${id}/stamgegevens`, label: "Stamgegevens" },
     { href: `/landgoed/${id}/kaart`, label: "Kaart" },

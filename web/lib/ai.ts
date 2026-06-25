@@ -257,6 +257,47 @@ export async function extraheerUitTekst(
   );
 }
 
+// ── Contact uit mail ──
+// Leest een mailbody en stelt een concept-contact voor. Velden die niet expliciet
+// in de mail staan worden als "niet gevonden" teruggegeven — nooit verzinnen.
+
+export type ContactUitMailVoorstel = {
+  naam:             string | "niet gevonden";
+  organisatie?:     string | "niet gevonden";
+  email?:           string | "niet gevonden";
+  telefoon?:        string | "niet gevonden";
+  rol_voorstel?:    string | "niet gevonden";
+  status_voorstel?: string | "niet gevonden";
+  omschrijving?:    string | "niet gevonden";
+  bron_notitie?:    string | "niet gevonden";
+};
+
+const CONTACT_UIT_MAIL_SYSTEEM =
+  "Je extraheert contactgegevens uit een doorgestuurde mail voor een Nederlands landgoedbeheerplatform. " +
+  "Haal op: naam, organisatie, e-mail, telefoon, een voorgestelde rol (pachter/huurder/overheid/adviseur/" +
+  "dienstverlener/sollicitant/aanbieder/overig — kies alleen als duidelijk, anders niet gevonden), " +
+  "een statusvoorstel (actief/latent/archief — sollicitanten en aanbieders = latent), een korte " +
+  "omschrijving (1 zin waarom dit contact relevant is), en een herkomst-notitie. " +
+  "HARDE REGELS: " +
+  "– Vul NOOIT een veld in als de mail dat niet expliciet noemt. Gebruik dan exact de string \"niet gevonden\". " +
+  "– Verzin geen gegevens, geen aannamen, geen gokken. " +
+  "– rol_voorstel en status_voorstel zijn VOORSTELLEN, geen besluiten. " +
+  "Antwoord UITSLUITEND met JSON: {naam, organisatie?, email?, telefoon?, rol_voorstel?, " +
+  "status_voorstel?, omschrijving?, bron_notitie?} — ontbrekende velden als \"niet gevonden\".";
+
+export async function extraheerContactUitMail(
+  mailTekst: string,
+  vrijeInstructie?: string | null,
+): Promise<ContactUitMailVoorstel | null> {
+  const extra = vrijeInstructie
+    ? `\n\nAanvullende instructie van de doorsturende gebruiker:\n${vrijeInstructie}`
+    : "";
+  return vraagJson<ContactUitMailVoorstel>(
+    CONTACT_UIT_MAIL_SYSTEEM,
+    `Mail-inhoud:\n${mailTekst}${extra}\n\nStel een concept-contact voor.`,
+  );
+}
+
 // ── Regeling-verrijking (subsidiecatalogus) ──
 // Leest een regelingtekst (provinciepagina/PDF) en haalt de drie §7-lagen +
 // de openstellingsperiode eruit. Zelfde "verzin niets"-discipline: onbekend = leeg.
