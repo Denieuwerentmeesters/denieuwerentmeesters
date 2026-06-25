@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { aiBeschikbaar } from "@/lib/ai";
 import SubmitKnop from "@/components/SubmitKnop";
 import ObjectBewerken from "@/components/ObjectBewerken";
+import VoorstelReview from "./VoorstelReview";
 import {
   verrijkUitBron,
   accordeerObject,
@@ -136,6 +137,10 @@ export default async function StamgegevensPage({
   (contractenRes.data ?? []).forEach((c) => naamVan.set(c.id, c.titel));
   (relatiesRes.data ?? []).forEach((r) => naamVan.set(r.id, r.naam));
   const label = (id: string) => naamVan.get(id) ?? "onbekend";
+  const naamLijst: [string, string][] = Array.from(naamVan.entries());
+  const voorgesteldeVerbandItems = alleVerbanden
+    .filter((v) => v.status === "voorgesteld")
+    .map((v) => ({ id: v.id, bron_id: v.bron_id, doel_id: v.doel_id, rol: v.rol }));
 
   const pdfDocumenten = (documentenRes.data ?? []).filter((d) =>
     d.bestand_pad?.toLowerCase().endsWith(".pdf"),
@@ -182,95 +187,11 @@ export default async function StamgegevensPage({
     (o) => [o.id, o.naam],
   );
 
-  // ── Review: voorstellen, onderdelen genest onder hun (voorgestelde) hoofdobject ──
-  const proposalIds = new Set(voorgesteldeObjecten.map((o) => o.id));
-  const voorstelKinderen = new Map<string, Obj[]>();
-  for (const o of voorgesteldeObjecten) {
-    if (o.bovenliggend_id && proposalIds.has(o.bovenliggend_id)) {
-      const l = voorstelKinderen.get(o.bovenliggend_id) ?? [];
-      l.push(o);
-      voorstelKinderen.set(o.bovenliggend_id, l);
-    }
-  }
-  const topVoorstellen = voorgesteldeObjecten.filter(
-    (o) => !o.bovenliggend_id || !proposalIds.has(o.bovenliggend_id),
-  );
-
   const aiUit = !aiBeschikbaar();
   const categorieOpties: [string, string][] = HANDMATIG_CATEGORIEEN.map((c) => [
     c,
     CATEGORIE_LABEL[c] ?? c,
   ]);
-
-  // Eén voorstel-rij (recursief: onderdelen ingesprongen onder hun hoofdobject).
-  function renderVoorstel(o: Obj, diepte: number) {
-    const kopp = koppelingLabels(o.id, "voorgesteld");
-    const parentNaam =
-      o.bovenliggend_id && diepte === 0 ? label(o.bovenliggend_id) : null;
-    const lijktNaam = o.lijkt_op_id ? label(o.lijkt_op_id) : null;
-    return (
-      <Fragment key={o.id}>
-        <div
-          className="flex items-center gap-3 rounded-[10px] p-3"
-          style={{ background: "var(--bg)", marginLeft: diepte * 18 }}
-        >
-          <div className="flex-1">
-            <div className="text-[13.5px] font-semibold">
-              {o.naam}{" "}
-              <span
-                className="text-[11px] font-normal"
-                style={{ color: "var(--text-3)" }}
-              >
-                {CATEGORIE_LABEL[o.categorie] ?? o.categorie}
-                {parentNaam ? ` · onderdeel van ${parentNaam}` : ""}
-              </span>
-            </div>
-            {o.voorstel_reden && (
-              <div className="text-[12px]" style={{ color: "var(--text-2)" }}>
-                {o.voorstel_reden}
-              </div>
-            )}
-            {kopp && (
-              <div className="mt-1 text-[12px]" style={{ color: "var(--text-3)" }}>
-                {kopp}
-              </div>
-            )}
-            {lijktNaam && (
-              <div className="mt-1 text-[12px]" style={{ color: "var(--red)" }}>
-                Lijkt op bestaand: {lijktNaam} — voeg samen i.p.v. dubbel aanmaken.
-              </div>
-            )}
-          </div>
-          {lijktNaam && (
-            <form action={voegSamen}>
-              <input type="hidden" name="landgoed_id" value={id} />
-              <input type="hidden" name="id" value={o.id} />
-              <input type="hidden" name="doel_id" value={o.lijkt_op_id ?? ""} />
-              <button className="btn btn-ghost btn-sm">Samenvoegen</button>
-            </form>
-          )}
-          <form action={accordeerObject}>
-            <input type="hidden" name="landgoed_id" value={id} />
-            <input type="hidden" name="id" value={o.id} />
-            <button className="btn btn-primary btn-sm">Accordeer</button>
-          </form>
-          <form action={wijsAfObject}>
-            <input type="hidden" name="landgoed_id" value={id} />
-            <input type="hidden" name="id" value={o.id} />
-            <button
-              className="btn btn-ghost btn-sm"
-              style={{ color: "var(--red)" }}
-            >
-              Wijs af
-            </button>
-          </form>
-        </div>
-        {(voorstelKinderen.get(o.id) ?? []).map((k) =>
-          renderVoorstel(k, diepte + 1),
-        )}
-      </Fragment>
-    );
-  }
 
   // Eén catalogus-rij (recursief: onderdelen ingesprongen onder hun hoofdobject).
   function renderTak(o: Obj, diepte: number) {
@@ -419,23 +340,16 @@ export default async function StamgegevensPage({
 
         {/* Review-wachtrij */}
         {voorgesteldeObjecten.length > 0 && (
-          <div
-            className="card mb-5 p-4"
-            style={{ borderColor: "var(--primary-mid)" }}
-          >
-            <div className="mb-1 text-[14px] font-semibold">
-              Te controleren ({voorgesteldeObjecten.length})
-            </div>
-            <p className="mb-3 text-[12px]" style={{ color: "var(--text-3)" }}>
-              Onderdelen staan ingesprongen onder hun hoofdobject. Koppelingen
-              (beheerd door, grenst aan…) staan als grijs regeltje onder het object
-              en lopen mee bij accorderen.
-            </p>
-
-            <div className="flex flex-col gap-2">
-              {topVoorstellen.map((o) => renderVoorstel(o, 0))}
-            </div>
-          </div>
+          <VoorstelReview
+            alleVoorstellen={voorgesteldeObjecten}
+            verbanden={voorgesteldeVerbandItems}
+            naamLijst={naamLijst}
+            categorieLabel={CATEGORIE_LABEL}
+            landgoedId={id}
+            accordeerObject={accordeerObject}
+            wijsAfObject={wijsAfObject}
+            voegSamen={voegSamen}
+          />
         )}
 
         {/* Handmatig toevoegen */}
