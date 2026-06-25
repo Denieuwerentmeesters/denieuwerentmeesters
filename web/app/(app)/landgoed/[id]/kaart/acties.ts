@@ -23,6 +23,8 @@ function merc3857(lon: number, lat: number): [number, number] {
 // Basis: de hoofdlocatie van het landgoed (adres/gemeente/provincie/coordinaat).
 export async function setBasisLocatie(fd: FormData) {
   const landgoed_id = String(fd.get("landgoed_id"));
+  const lat = num(fd, "lat");
+  const lon = num(fd, "lon");
   const supabase = await createClient();
   await supabase
     .from("landgoed")
@@ -32,10 +34,97 @@ export async function setBasisLocatie(fd: FormData) {
       plaats: str(fd, "plaats"),
       gemeente: str(fd, "gemeente"),
       provincie: str(fd, "provincie"),
-      lat: num(fd, "lat"),
-      lon: num(fd, "lon"),
+      lat,
+      lon,
     })
     .eq("id", landgoed_id);
+  // Gebiedsligging (Natura 2000 + NNN) meteen meebepalen voor de matchmotor
+  // (best-effort; faalt stil als de migraties 0015/0016 nog niet zijn toegepast).
+  if (lat != null && lon != null) {
+    await bewaarGebiedsligging(supabase, landgoed_id, lat, lon);
+  }
+  revalidatePath(`/landgoed/${landgoed_id}/kaart`);
+}
+
+// ── Gebiedsligging via PDOK-WMS (Natura 2000 + NNN), server-side (geen CORS) ──
+// Beide PDOK-services zijn INSPIRE-geharmoniseerd; per punt vragen we of er een
+// feature ligt (GetFeatureInfo). Mirrort het perceel-lookup-patroon.
+const NATURA2000_WMS = "https://service.pdok.nl/rvo/natura2000/wms/v1_0";
+const NNN_WMS =
+  "https://service.pdok.nl/provincies/natuurnetwerk-nederland/wms/v1_0";
+
+async function puntInWmsLaag(
+  service: string,
+  layer: string,
+  lat: number,
+  lon: number,
+): Promise<{ hit: boolean; props: Record<string, unknown> }> {
+  const [x, y] = merc3857(lon, lat);
+  const d = 50;
+  const bbox = `${x - d},${y - d},${x + d},${y + d}`;
+  const url =
+    `${service}?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetFeatureInfo` +
+    `&LAYERS=${layer}&QUERY_LAYERS=${layer}&CRS=EPSG:3857&BBOX=${bbox}` +
+    "&WIDTH=256&HEIGHT=256&I=128&J=128&INFO_FORMAT=application/json&FEATURE_COUNT=1";
+  const res = await fetch(url);
+  const gj = await res.json();
+  const f = gj?.features?.[0];
+  return {
+    hit: Boolean(f),
+    props: (f?.properties ?? {}) as Record<string, unknown>,
+  };
+}
+
+// Bepaalt Natura 2000 + NNN en schrijft het naar het landgoed. Twee losse
+// updates zodat de migraties 0015/0016 onafhankelijk toegepast kunnen worden;
+// elke update faalt stil als z'n kolommen nog niet bestaan.
+async function bewaarGebiedsligging(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  landgoed_id: string,
+  lat: number,
+  lon: number,
+) {
+  if (!Number.isFinite(lat) || !Number.isFinite(lon)) return;
+  try {
+    const n = await puntInWmsLaag(NATURA2000_WMS, "natura2000", lat, lon);
+    const gebied = n.hit
+      ? String(n.props.naamN2K ?? n.props.naam ?? n.props.gebiedsnaam ?? "") ||
+        null
+      : null;
+    await supabase
+      .from("landgoed")
+      .update({
+        ligt_in_natura2000: n.hit,
+        natura2000_gebied: gebied,
+        natura2000_gecontroleerd_op: new Date().toISOString(),
+      })
+      .eq("id", landgoed_id);
+  } catch {
+    // PDOK onbereikbaar -> overslaan; volgende controle probeert opnieuw.
+  }
+  try {
+    const m = await puntInWmsLaag(NNN_WMS, "PS.ProtectedSite", lat, lon);
+    await supabase
+      .from("landgoed")
+      .update({
+        ligt_in_nnn: m.hit,
+        nnn_gecontroleerd_op: new Date().toISOString(),
+      })
+      .eq("id", landgoed_id);
+  } catch {
+    // idem
+  }
+}
+
+// Handmatige (her)controle vanaf de kaart — handig voor landgoederen die al een
+// basislocatie hadden voordat deze lagen bestonden.
+export async function controleerGebiedsligging(fd: FormData) {
+  const landgoed_id = String(fd.get("landgoed_id"));
+  const lat = num(fd, "lat");
+  const lon = num(fd, "lon");
+  if (lat == null || lon == null) return;
+  const supabase = await createClient();
+  await bewaarGebiedsligging(supabase, landgoed_id, lat, lon);
   revalidatePath(`/landgoed/${landgoed_id}/kaart`);
 }
 

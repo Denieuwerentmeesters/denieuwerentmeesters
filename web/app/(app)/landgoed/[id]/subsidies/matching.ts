@@ -1,20 +1,35 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { scoorRelevantie } from "@/lib/ai";
 
 // Matching: catalogus-regeling -> per-landgoed kans.
-//   harde poort (criteria) -> score (scoorRelevantie) -> "al in gebruik"-suppressie
+//   gewogen criteria (eis/pré/uitsluiting) -> berekende score -> "al in gebruik"-suppressie
 //   -> persist als subsidie soort='kans' (idempotent op landgoed+regeling).
-// Draait als server action onder RLS (ingelogd lid); geen service-role nodig.
+// De score wordt BEREKEND uit de criteria (geen AI-call), dus deterministisch en
+// herleidbaar. Draait als server action onder RLS (ingelogd lid); geen service-role nodig.
 
 type Db = SupabaseClient;
+
+// Eén machine-leesbaar matchcriterium op een regeling (laag §7).
+type Criterium = {
+  regeling_id: string;
+  omschrijving: string;
+  veld: string | null;
+  operator: string | null;
+  waarde: string | null;
+  verplicht: boolean;
+  soort: string | null; // 'eis' | 'pre' | 'uitsluiting' (canoniek voor matching)
+  gewicht: number | null; // punten die een vervulde pré bijdraagt
+};
 
 type Profiel = {
   provincie: string | null;
   gemeente: string | null;
   nsw_status: string | null;
+  rechtsvorm: string | null; // aanvragerstype: particulier/bv/stichting/collectief/...
   hectare: number | null;
   natuurbeheertypes: string[];
   agrarisch: boolean;
+  ligt_in_natura2000: boolean | null; // null = nog niet gecontroleerd (onzeker)
+  ligt_in_nnn: boolean | null; // idem; vaak een pré ("binnen NNN makkelijker subsidie")
   themas: string[];
   trefwoorden: string[];
   drempel: number;
@@ -30,10 +45,20 @@ function profielWaarde(p: Profiel, veld: string): string | null {
       return p.gemeente;
     case "nsw_status":
       return p.nsw_status;
+    case "rechtsvorm":
+      return p.rechtsvorm;
     case "hectare_min":
       return p.hectare != null ? String(p.hectare) : null;
     case "agrarisch":
       return p.agrarisch ? "ja" : "nee";
+    case "ligt_in_natura2000":
+      return p.ligt_in_natura2000 == null
+        ? null
+        : p.ligt_in_natura2000
+          ? "ja"
+          : "nee";
+    case "ligt_in_nnn":
+      return p.ligt_in_nnn == null ? null : p.ligt_in_nnn ? "ja" : "nee";
     case "natuurbeheertype":
       return p.natuurbeheertypes.join(", ") || null;
     default:
@@ -71,11 +96,64 @@ function toetsCriterium(
   }
 }
 
+type RegelingOordeel = {
+  matcht: boolean; // false => valt af (eis gefaald of uitsluiting geraakt)
+  score: number; // 50..100 bij een match, 0 bij afvallen
+  eisenVoldaan: string[]; // vervulde harde eisen (voor de redenering)
+  meegeteld: { omschrijving: string; gewicht: number }[]; // vervulde pré's
+  onzeker: string[]; // criteria die niet machinaal te toetsen waren
+  afvalreden: string | null; // welk eis/uitsluiting de regeling liet afvallen
+};
+
+// Berekent de match-score uit de criteria:
+//   eis niet voldaan  -> valt af
+//   uitsluiting geraakt -> valt af
+//   anders: basis 50 + gewicht per vervulde pré, gecapt op 100.
+// Een onbekende profielwaarde ('onzeker') laat een eis/uitsluiting NIET afvallen
+// maar wordt gevlagd ("controleer handmatig").
+function scoorRegeling(p: Profiel, cs: Criterium[]): RegelingOordeel {
+  let score = 50;
+  const eisenVoldaan: string[] = [];
+  const meegeteld: { omschrijving: string; gewicht: number }[] = [];
+  const onzeker: string[] = [];
+
+  for (const c of cs) {
+    const soort = c.soort ?? (c.verplicht ? "eis" : "pre");
+    const uitslag = toetsCriterium(p, c);
+    if (soort === "uitsluiting") {
+      if (uitslag === "voldoet")
+        return { matcht: false, score: 0, eisenVoldaan, meegeteld, onzeker, afvalreden: c.omschrijving };
+      if (uitslag === "onzeker") onzeker.push(c.omschrijving);
+    } else if (soort === "pre") {
+      if (uitslag === "voldoet") {
+        const g = c.gewicht ?? 10;
+        score += g;
+        meegeteld.push({ omschrijving: c.omschrijving, gewicht: g });
+      }
+    } else {
+      // eis
+      if (uitslag === "voldoet_niet")
+        return { matcht: false, score: 0, eisenVoldaan, meegeteld, onzeker, afvalreden: c.omschrijving };
+      if (uitslag === "onzeker") onzeker.push(c.omschrijving);
+      else eisenVoldaan.push(c.omschrijving);
+    }
+  }
+
+  return {
+    matcht: true,
+    score: Math.min(100, score),
+    eisenVoldaan,
+    meegeteld,
+    onzeker,
+    afvalreden: null,
+  };
+}
+
 async function laadProfiel(db: Db, landgoedId: string): Promise<Profiel> {
   const [{ data: lg }, { data: omg }, { data: stam }] = await Promise.all([
     db
       .from("landgoed")
-      .select("provincie, gemeente, nsw_status, hectare")
+      .select("provincie, gemeente, nsw_status, rechtsvorm, hectare, ligt_in_natura2000, ligt_in_nnn")
       .eq("id", landgoedId)
       .maybeSingle(),
     db
@@ -100,13 +178,74 @@ async function laadProfiel(db: Db, landgoedId: string): Promise<Profiel> {
     provincie: lg?.provincie ?? null,
     gemeente: lg?.gemeente ?? null,
     nsw_status: lg?.nsw_status ?? null,
+    rechtsvorm: lg?.rechtsvorm ?? null,
     hectare: lg?.hectare ?? null,
     natuurbeheertypes: types,
     agrarisch,
+    ligt_in_natura2000: lg?.ligt_in_natura2000 ?? null,
+    ligt_in_nnn: lg?.ligt_in_nnn ?? null,
     themas: omg?.themas ?? [],
     trefwoorden: omg?.trefwoorden ?? [],
     drempel: omg?.drempel ?? 60,
   };
+}
+
+// Eén kandidaat-regeling uit de catalogus (velden die de matchmotor nodig heeft).
+type Kandidaat = {
+  id: string;
+  naam: string;
+  organisatie: string | null;
+  categorie: string | null;
+  samenvatting: string | null;
+  scope: string | null;
+  provincie: string | null;
+  gemeenten: string[] | null;
+  is_nieuw: boolean;
+  is_tijdelijk: boolean;
+  openstelling_tot: string | null;
+};
+
+const REGELING_VELDEN =
+  "id, naam, organisatie, categorie, samenvatting, scope, provincie, gemeenten, is_nieuw, is_tijdelijk, openstelling_tot";
+
+// Haalt ALLE geaccordeerde regelingen op, gepagineerd. Supabase/PostgREST kapt
+// een gewone select stil af op ~1000 rijen; met een groeiende catalogus zouden
+// regelingen ongemerkt verdwijnen. Stabiele volgorde op id voor sluitende ranges.
+async function alleGeaccordeerdeRegelingen(db: Db): Promise<Kandidaat[]> {
+  const PAG = 1000;
+  const out: Kandidaat[] = [];
+  for (let van = 0; ; van += PAG) {
+    const { data, error } = await db
+      .from("regeling")
+      .select(REGELING_VELDEN)
+      .eq("geaccordeerd", true)
+      .order("id", { ascending: true })
+      .range(van, van + PAG - 1);
+    if (error || !data || data.length === 0) break;
+    out.push(...(data as unknown as Kandidaat[]));
+    if (data.length < PAG) break;
+  }
+  return out;
+}
+
+// Geografische poort. nationaal: altijd. provinciaal: alleen bij gelijke provincie.
+// gemeentelijk: alleen als de gemeente van het landgoed in de regeling staat —
+// voorkomt valse matches op lokale subsidies van ándere gemeenten.
+function passendVoor(r: Kandidaat, p: Profiel): boolean {
+  if (r.scope === "nationaal") return true;
+  if (r.scope === "gemeentelijk") {
+    if (!p.gemeente) return false;
+    const g = p.gemeente.toLowerCase();
+    return (r.gemeenten ?? []).some((x) => x?.toLowerCase() === g);
+  }
+  // provinciaal (of scope zonder provincie): match op provincie; provincie-loze
+  // regelingen blijven als landelijk-achtige kandidaat door.
+  if (r.provincie)
+    return (
+      Boolean(p.provincie) &&
+      r.provincie.toLowerCase() === p.provincie!.toLowerCase()
+    );
+  return true;
 }
 
 export type KansResultaat = {
@@ -122,20 +261,10 @@ export async function zoekKansen(
 ): Promise<KansResultaat> {
   const p = await laadProfiel(db, landgoedId);
 
-  // Kandidaten: geaccordeerde regelingen, landelijk of passend bij de provincie.
-  const { data: regelingen } = await db
-    .from("regeling")
-    .select(
-      "id, naam, organisatie, categorie, samenvatting, scope, provincie, is_nieuw, is_tijdelijk, openstelling_tot",
-    )
-    .eq("geaccordeerd", true);
-
-  const passend = (regelingen ?? []).filter(
-    (r) =>
-      r.scope === "nationaal" ||
-      !r.provincie ||
-      (p.provincie && r.provincie?.toLowerCase() === p.provincie.toLowerCase()),
-  );
+  // Kandidaten: alle geaccordeerde regelingen (gepagineerd), gefilterd op de
+  // geografische poort (nationaal / provinciaal / gemeentelijk-scherp).
+  const regelingen = await alleGeaccordeerdeRegelingen(db);
+  const passend = regelingen.filter((r) => passendVoor(r, p));
 
   // "Al in gebruik": bestaande subsidies van dit landgoed met regeling_id.
   const { data: bestaand } = await db
@@ -157,20 +286,13 @@ export async function zoekKansen(
   let onderdrukt = 0;
   let verleng = 0;
 
-  // Geaccordeerde criteria per regeling ophalen (harde poort).
-  type Criterium = {
-    regeling_id: string;
-    veld: string | null;
-    operator: string | null;
-    waarde: string | null;
-    verplicht: boolean;
-  };
+  // Geaccordeerde criteria per regeling ophalen (de gewogen poort + pré's).
   const ids = passend.map((r) => r.id);
   const criteriaPer = new Map<string, Criterium[]>();
   if (ids.length) {
     const { data: criteria } = await db
       .from("regeling_criterium")
-      .select("regeling_id, veld, operator, waarde, verplicht")
+      .select("regeling_id, omschrijving, veld, operator, waarde, verplicht, soort, gewicht")
       .in("regeling_id", ids)
       .eq("geaccordeerd", true);
     ((criteria ?? []) as unknown as Criterium[]).forEach((c) => {
@@ -181,16 +303,10 @@ export async function zoekKansen(
   }
 
   for (const r of passend) {
-    // Harde poort: faalt een verplicht, machine-leesbaar criterium -> overslaan.
+    // Berekende match: eis-faal/uitsluiting -> valt af; anders basis 50 + pré's.
     const cs = criteriaPer.get(r.id) ?? [];
-    const faalt = cs.some(
-      (c) =>
-        c.verplicht && toetsCriterium(p, c) === "voldoet_niet",
-    );
-    if (faalt) continue;
-    const onzeker = cs.some(
-      (c) => c.verplicht && toetsCriterium(p, c) === "onzeker",
-    );
+    const oordeel = scoorRegeling(p, cs);
+    if (!oordeel.matcht) continue;
 
     // Suppressie: al in gebruik -> alleen tonen als verleng-signaal bij naderende deadline.
     const reedsInGebruik = inGebruik.get(r.id);
@@ -205,24 +321,20 @@ export async function zoekKansen(
       continue;
     }
 
-    // Score via bestaande relevantie-primitive.
-    const oordeel = await scoorRelevantie(
-      { titel: r.naam, tekst: r.samenvatting ?? "" },
-      { provincie: p.provincie ?? undefined, themas: p.themas, trefwoorden: p.trefwoorden },
-    );
-    const score = oordeel?.relevantie_score ?? 50; // fallback zonder AI-key
-    if (!reedsInGebruik && score < p.drempel) {
-      onderdrukt++;
-      continue;
-    }
-
-    const redenering = [
-      oordeel?.motivering,
-      onzeker ? "Let op: niet alle criteria machinaal te toetsen — controleer handmatig." : null,
-      isVerleng ? "Loopt binnenkort af — heraanvraag/verlenging." : null,
-    ]
-      .filter(Boolean)
-      .join(" ");
+    // Transparante redenering: opgebouwd uit de vervulde/onzekere criteria.
+    const eisDeel = oordeel.eisenVoldaan.length
+      ? `Komt in aanmerking (${oordeel.eisenVoldaan.map((e) => `${e} ✓`).join(", ")}).`
+      : "Komt in aanmerking.";
+    const preDeel = oordeel.meegeteld.length
+      ? ` Pré's: ${oordeel.meegeteld.map((m) => `${m.omschrijving} ✓ (+${m.gewicht})`).join(", ")}.`
+      : "";
+    const onzekerDeel = oordeel.onzeker.length
+      ? ` Let op: niet alle criteria machinaal te toetsen (${oordeel.onzeker.join("; ")}) — controleer handmatig.`
+      : "";
+    const verlengDeel = isVerleng
+      ? " Loopt binnenkort af — heraanvraag/verlenging."
+      : "";
+    const redenering = `${eisDeel}${preDeel}${onzekerDeel}${verlengDeel}`.trim();
 
     await db.from("subsidie").upsert(
       {
@@ -234,7 +346,7 @@ export async function zoekKansen(
         organisatie: r.organisatie,
         categorie: r.categorie ?? "subsidie",
         status: "verkennen",
-        match_score: score,
+        match_score: oordeel.score,
         redenering: redenering || null,
         deadline: r.openstelling_tot ?? null,
       },

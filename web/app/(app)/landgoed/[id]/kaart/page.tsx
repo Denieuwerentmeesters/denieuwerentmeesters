@@ -7,6 +7,7 @@ import {
   lookupGebouw,
   verwijderObject,
   wisBasis,
+  controleerGebiedsligging,
 } from "./acties";
 
 function haTekst(m2: unknown): string | null {
@@ -184,11 +185,14 @@ export default async function KaartPage({
           objecten={geplaatst}
           koppelbaar={koppelbaar}
           basisIngesteld={basisIngesteld}
+          lat={landgoed?.lat ?? null}
+          lon={landgoed?.lon ?? null}
           setBasisLocatie={setBasisLocatie}
           plaatsOpKaart={plaatsOpKaart}
           lookupPerceel={lookupPerceel}
           lookupGebouw={lookupGebouw}
           verwijderObject={verwijderObject}
+          controleerGebiedsligging={controleerGebiedsligging}
         />
       </div>
     </div>

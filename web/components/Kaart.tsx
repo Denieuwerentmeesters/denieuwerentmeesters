@@ -57,6 +57,9 @@ const PDOK_TILES =
   "https://service.pdok.nl/brt/achtergrondkaart/wmts/v2_0/standaard/EPSG:3857/{z}/{x}/{y}.png";
 const KADASTER_WMS = "https://service.pdok.nl/kadaster/kadastralekaart/wms/v5_0";
 const BAG_WMS = "https://service.pdok.nl/lv/bag/wms/v2_0";
+const NATURA2000_WMS = "https://service.pdok.nl/rvo/natura2000/wms/v1_0";
+const NNN_WMS =
+  "https://service.pdok.nl/provincies/natuurnetwerk-nederland/wms/v1_0";
 
 const LEEG: Basis = {
   adres: "",
@@ -142,27 +145,35 @@ export default function Kaart({
   objecten,
   koppelbaar,
   basisIngesteld,
+  lat,
+  lon,
   setBasisLocatie,
   plaatsOpKaart,
   lookupPerceel,
   lookupGebouw,
   verwijderObject,
+  controleerGebiedsligging,
 }: {
   landgoedId: string;
   objecten: PlaatsObject[];
   koppelbaar: { id: string; naam: string; categorie: string }[];
   basisIngesteld: boolean;
+  lat: number | null;
+  lon: number | null;
   setBasisLocatie: (fd: FormData) => Promise<void>;
   plaatsOpKaart: (fd: FormData) => Promise<void>;
   lookupPerceel: (lat: number, lon: number) => Promise<LookupResult | null>;
   lookupGebouw: (lat: number, lon: number) => Promise<LookupResult | null>;
   verwijderObject: (fd: FormData) => Promise<void>;
+  controleerGebiedsligging: (fd: FormData) => Promise<void>;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<LMap | null>(null);
   const tempRef = useRef<CircleMarker | null>(null);
   const kadRef = useRef<TileLayer | null>(null);
   const bagRef = useRef<TileLayer | null>(null);
+  const natRef = useRef<TileLayer | null>(null);
+  const nnnRef = useRef<TileLayer | null>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const randRef = useRef<any>(null);
   // Overzichtslaag: alle aangevinkte percelen/gebouwen, altijd zichtbaar.
@@ -175,6 +186,8 @@ export default function Kaart({
   const modeRef = useRef<Mode>("basis");
 
   const [mode, setMode] = useState<Mode>("basis");
+  const [toonNatura, setToonNatura] = useState(false);
+  const [toonNnn, setToonNnn] = useState(false);
   const [punt, setPunt] = useState<{ lat: number; lon: number } | null>(null);
   const [basis, setBasis] = useState<Basis>(LEEG);
   const [resultaat, setResultaat] = useState<Resultaat | null>(null);
@@ -263,6 +276,24 @@ export default function Kaart({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [objecten]);
 
+  // Natura 2000-overlay aan/uit op basis van de toggle.
+  useEffect(() => {
+    const map = mapRef.current;
+    const laag = natRef.current;
+    if (!map || !laag) return;
+    if (toonNatura) laag.addTo(map);
+    else laag.remove();
+  }, [toonNatura]);
+
+  // NNN-overlay aan/uit op basis van de toggle.
+  useEffect(() => {
+    const map = mapRef.current;
+    const laag = nnnRef.current;
+    if (!map || !laag) return;
+    if (toonNnn) laag.addTo(map);
+    else laag.remove();
+  }, [toonNnn]);
+
   useEffect(() => {
     let cancelled = false;
     (async () => {
@@ -294,6 +325,28 @@ export default function Kaart({
         attribution: "© BAG",
       });
       bagRef.current!.addTo(map);
+      // Natura 2000-overlay: standaard uit, via toggle aan/uit.
+      natRef.current = L.tileLayer.wms(NATURA2000_WMS, {
+        layers: "natura2000",
+        styles: "",
+        format: "image/png",
+        transparent: true,
+        version: "1.3.0",
+        opacity: 0.5,
+        maxZoom: 19,
+        attribution: "© Natura 2000 / RVO (PDOK)",
+      });
+      // NNN-overlay: standaard uit, via toggle aan/uit.
+      nnnRef.current = L.tileLayer.wms(NNN_WMS, {
+        layers: "PS.ProtectedSite",
+        styles: "",
+        format: "image/png",
+        transparent: true,
+        version: "1.3.0",
+        opacity: 0.45,
+        maxZoom: 19,
+        attribution: "© Natuurnetwerk Nederland / Provincies (PDOK)",
+      });
       LRef.current = L;
       mapRef.current = map;
 
@@ -396,6 +449,36 @@ export default function Kaart({
             {lbl}
           </button>
         ))}
+      </div>
+
+      {/* Kaartlagen + gebiedsligging */}
+      <div className="flex flex-wrap items-center gap-3">
+        <label className="flex items-center gap-1.5 text-[12.5px]" style={{ color: "var(--text-2)" }}>
+          <input
+            type="checkbox"
+            checked={toonNatura}
+            onChange={(e) => setToonNatura(e.target.checked)}
+          />
+          Natura 2000 tonen
+        </label>
+        <label className="flex items-center gap-1.5 text-[12.5px]" style={{ color: "var(--text-2)" }}>
+          <input
+            type="checkbox"
+            checked={toonNnn}
+            onChange={(e) => setToonNnn(e.target.checked)}
+          />
+          NNN tonen
+        </label>
+        {lat != null && lon != null && (
+          <form action={controleerGebiedsligging}>
+            <input type="hidden" name="landgoed_id" value={landgoedId} />
+            <input type="hidden" name="lat" value={lat} />
+            <input type="hidden" name="lon" value={lon} />
+            <SubmitKnop className="btn btn-ghost btn-sm" pendingTekst="Controleren…">
+              Controleer gebiedsligging
+            </SubmitKnop>
+          </form>
+        )}
       </div>
 
       <p className="text-[12px]" style={{ color: "var(--text-3)" }}>
