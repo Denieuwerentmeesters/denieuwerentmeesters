@@ -3,7 +3,7 @@ import { NextResponse, type NextRequest } from "next/server";
 
 // Ververst de Supabase-sessie bij elke request en beschermt de app-routes.
 // Publieke paden: /login, /uitnodiging en de landingsroute "/".
-const PUBLIEKE_PADEN = ["/login", "/uitnodiging", "/auth"];
+const PUBLIEKE_PADEN = ["/login", "/uitnodiging", "/auth", "/api/extractie", "/api/subsidie"];
 
 export async function updateSession(request: NextRequest) {
   let response = NextResponse.next({ request });
