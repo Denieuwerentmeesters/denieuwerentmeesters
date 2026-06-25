@@ -1,8 +1,8 @@
 # Landgoedplatform — Plan
 
-**De Nieuwe Rentmeesters** · Algemeen plan · versie 1.4 · juni 2026
+**De Nieuwe Rentmeesters** · Algemeen plan · versie 1.5 · juni 2026
 
-*Aangescherpt na validatiegesprekken met Frederik van Boetzelaer en Uko. In v1.2 toegevoegd: de Documentmodule (visievorming met AI), het expert-spoor als verdienmodel, en een verduidelijking dat de modulaire niveaus over overzicht gaan, niet over prijs. In v1.3 uitgewerkt: de Documentmodule werkt met **documentmakers** — korte vragenlijsten in gewone taal per documenttype, met de kennisbank die voor-invult en het principe "liever een gat dan een aanname".*
+*Aangescherpt na validatiegesprekken met Frederik van Boetzelaer en Uko. In v1.2 toegevoegd: de Documentmodule (visievorming met AI), het expert-spoor als verdienmodel, en een verduidelijking dat de modulaire niveaus over overzicht gaan, niet over prijs. In v1.3 uitgewerkt: de Documentmodule werkt met **documentmakers** — korte vragenlijsten in gewone taal per documenttype, met de kennisbank die voor-invult en het principe "liever een gat dan een aanname". In v1.5 toegevoegd (na het sparren met Hugo): de **stamgegevens** als ruggengraat van het platform — alle basisobjecten van een landgoed in één registratie, met onderlinge koppelingen die de AI voorstelt en de gebruiker accordeert. We bouwen "ruggengraat eerst, vullen mee".*
 
 *In v1.4 aangescherpt na het overleg De Zeemeeuw (Reinoud, Steven, Hugo, 16 juni 2026): de **positionering** verscherpt (een tool vóór de eigenaar/beheerder, niet voor de rentmeester op de achtergrond — "beherend rentmeester light"); het **financiële inzicht** als kerntopic uitgediept (transactiebasis i.p.v. kasbasis, voorzieningen voor groot onderhoud, cashflow als belangrijkste, het aantonen dat een landgoed wel of niet rendabel is); de **boekhoudkoppeling** in twee paden (read-only koppeling nu, extern administratiekantoor later); en de eerste echte bouw vastgelegd op **Ter Hooge als testomgeving**. De definitieve merknaam blijft een werktitel tot de propositie scherp staat.*
 
@@ -70,9 +70,9 @@ De grootste bedreiging voor dit soort software is niet een ontbrekende functie, 
 
 ### De drie niveaus
 
-**Basis** (staat meteen aan): dashboard, documenten, taken, contacten, communicatie, contracten, subsidieradar, omgevingsradar, licht financieel inzicht, incidenten melden en vergaderingen. Dit ordent de dagelijkse rommel, de communicatie eromheen, het geld dat er doorheen loopt en wat er in en om het landgoed speelt.
+**Basis** (staat meteen aan): dashboard, documenten, taken, contacten, communicatie, contracten, **stamgegevens (licht)**, subsidieradar, omgevingsradar, licht financieel inzicht, incidenten melden en vergaderingen. Dit ordent de dagelijkse rommel, de communicatie eromheen, het geld dat er doorheen loopt en wat er in en om het landgoed speelt. De stamgegevens vormen de ruggengraat waar de andere modules aan koppelen; in de basis is dat een lichte lijst (je voert een gebouw of woning op als je het nodig hebt), niet een verplichte inventarisatie vooraf.
 
-**Uitbreiding** (aan te zetten wanneer nodig): percelen & gebouwen, kaart, onderhoud, beheerplan, natuur & bos, projecten, documentmodule.
+**Uitbreiding** (aan te zetten wanneer nodig): percelen & gebouwen op de kaart, de volledige stamgegevens-typologie (lanen, leidingen, watergangen, zones, routes), onderhoud, beheerplan, natuur & bos, projecten, documentmodule.
 
 **Pro** (voor de grotere landgoederen): werkorders met urenregistratie, wagenpark, financiële diepte, meerdere landgoederen tegelijk.
 
@@ -94,6 +94,10 @@ De grootste bedreiging voor dit soort software is niet een ontbrekende functie, 
 
 **Contracten.** Pacht, erfpacht, **huur** en beheerovereenkomsten, met looptijd, bedrag, indexatie en einddatum. Reguliere verhuur — bijvoorbeeld opstallen die aan zorgverleners of bewoners verhuurd worden — telt hierin net zo zwaar als pacht, inclusief indexatie-alerts en servicekosten. Bij veel buitenplaatsen zit de omzet immers in de stenen, niet in de hectares. Met tijdige signalering: contract verloopt, indexatie uitvoeren, keuring vereist.
 
+**Stamgegevens — de ruggengraat.** In de kern legt het platform alle basisobjecten van een landgoed vast: gebouwen, woningen en opstallen, maar ook percelen en pachtpercelen, wegen, paden, bruggen en hekken, watergangen, vijvers en sloten, bomenlanen, kabels en leidingen, natuurbeheertypen, wandelroutes, onderhoudszones en risicoplekken. Bijna alles wat je in de andere modules doet, hangt hieraan. Je voert Mevrouw Jansen op als contact, tagt haar als huurder en koppelt haar aan Woning A; haar huurcontract koppel je aan diezelfde Woning A én aan haar. Betaalt ze de huur niet, dan signaleert het platform dat uit bank- en contractgegevens en zet meteen een aanmaning klaar met het juiste adres. Vraagt een veiligheidsvoorschrift om periodieke inspectie, dan koppel je dat aan het object en maakt de AI op vaste momenten een inspectie-taak aan; het rapport komt er na afloop bij te hangen. Vraagt de brandweer "alle inspecties van dit gebouw", dan heb je dat in één klik.
+
+Het bijzondere: die koppelingen maak je niet handmatig. **De AI stelt ze voor en jij accordeert** — dat voelt natuurlijker en houdt het werk laag. In de basis is dit een lichte lijst (een object opvoeren als je het nodig hebt); de kaart en de volledige typologie zitten in de uitbreiding. Zo geeft het platform vanaf dag één waarde zonder dat je eerst het hele landgoed hoeft in te tekenen.
+
 **Subsidieradar.** Signaleert proactief welke subsidies en regelingen spelen — landelijk en per provincie, tot op lokaal niveau (gemeente, verordeningen, SIM voor monumentale opstallen). Hier zit ook de **CO2- en carbon-kant**: per perceel zien welke koolstof- en groenblauwe verdienkansen er liggen (akkerranden, natuurinclusieve diensten, carbon credits, ANLb). Dit is wat een gewone rentmeester niet biedt: zien wat eraan komt — en wat er te verdienen valt — vóórdat het te laat is.
 
 **Licht financieel inzicht.** Een read-only koppeling met de bank en/of het boekhoudpakket (Moneybird, Exact, e-Boekhouden) trekt de cijfers het dashboard in: openstaande facturen, achterstallige huren, kosten per categorie/perceel/gebouw, winst/verlies en — het belangrijkste voor een landgoed — een **cashflowprognose van ongeveer anderhalf jaar**. Geen vol boekhoudsysteem en geen overstap — je houdt je eigen administratie, wij maken het inzichtelijk. Alleen al het uitlezen van de bankgegevens geeft direct grip op de maandelijkse en jaarlijkse kosten. Dit is voor de kleinere eigenaar vaak de laagdrempeligste reden om te beginnen.
@@ -110,7 +114,7 @@ Het écht waardevolle zit een stap dieper. Veel landgoederen boeken op **kasbasi
 
 ### Uitbreiding
 
-**Percelen & gebouwen.** Per landgoed vastleggen welke percelen erbij horen, hoe groot ze zijn, welke pacht of huur erop rust en wanneer die afloopt, en welke subsidies zijn toegekend. Per gebouw: onderhoud, monumentstatus, functie, contracten, verzekering, keuringen. Eerst als overzichtelijke lijst; de kaart komt er later bovenop.
+**Percelen & gebouwen (verdieping op de stamgegevens).** Bouwt voort op de lichte stamgegevens uit de basis. Hier verrijk je percelen en gebouwen met detail: hoe groot ze zijn, welke pacht of huur erop rust en wanneer die afloopt, welke subsidies zijn toegekend, en per gebouw onderhoud, monumentstatus, functie, contracten, verzekering en keuringen. Ook de volledige typologie van ruimtelijke objecten — lanen, leidingen, watergangen, zones, routes — hoort hier. Eerst als overzichtelijke lijst; de kaart komt er later bovenop.
 
 **Kaart.** Een kaart van het landgoed waarop je percelen en gebouwen aanklikt en hun gegevens ziet. Gebaseerd op open kadasterdata. Dit is technisch het lastigste onderdeel en komt daarom bewust later.
 
@@ -162,9 +166,9 @@ Voor de bouw geldt voorlopig een **werktitel**; de definitieve merknaam (en bijb
 
 | Fase | Wat erin komt | Wat je dan hebt |
 |---|---|---|
-| **0 — Fundament** | De technische basis: inloggen, landgoederen, rechten (incl. kijker-rol). | Een werkende, veilige basis. |
-| **1 — Communicatie & basis** | Documenten, taken, contacten, contracten (pacht én huur), subsidieradar, omgevingsradar, licht financieel inzicht (bank-/Moneybird-/Exact-koppeling), incidenten melden, vergaderingen (opnemen → notulen → taken), en het toewijzen van taken intern en extern. | De dagelijkse praktijk, het kostenoverzicht en de signalering werken. Klaar om met een eerste klant te testen. |
-| **2 — Percelen, gebouwen & kaart** | Eerst de gronden en gebouwen als lijst, daarna de kaart. | Het landgoed in beeld, met pacht, huur en subsidie eraan. |
+| **0 — Fundament** | De technische basis: inloggen, landgoederen, rechten (incl. kijker-rol). **Plus de stamgegevens-ruggengraat** in de database — de registratie van basisobjecten en de koppellaag waaraan elke latere module hangt. | Een werkende, veilige basis met de ruggengraat eronder. |
+| **1 — Communicatie & basis** | Documenten, taken, contacten, contracten (pacht én huur), **een lichte stamgegevens-lijst** (objecten opvoeren en koppelen, met AI-koppelvoorstel), subsidieradar, omgevingsradar, licht financieel inzicht (bank-/Moneybird-/Exact-koppeling), incidenten melden, vergaderingen (opnemen → notulen → taken), en het toewijzen van taken intern en extern. | De dagelijkse praktijk, het kostenoverzicht en de signalering werken — en koppelingen tussen contacten, contracten en objecten lopen al. Klaar om met een eerste klant te testen. |
+| **2 — Percelen, gebouwen & kaart** | De stamgegevens verrijken: de volledige objecttypologie (lanen, leidingen, watergangen, zones, routes), percelen en gebouwen met detail, en dan de kaart bovenop. | Het landgoed in beeld, met pacht, huur en subsidie eraan. |
 | **3 — Beheerplan & onderhoud** | Meerjarenplan, onderhoud (met reserveringen), natuur & bos, projecten. | Planmatig beheer dat zichzelf vertaalt naar taken. |
 | **4 — Verdieping & visievorming** | Slimmere AI (incl. contractvoorbereiding-keten), de **Documentmodule** (visievorming uit vergaderingen, documenten, wetgeving en verordeningen), het **expert-spoor** (concept → echte expert), rapportages, carbon-/verdienkansen. | Het platform wordt proactief én helpt visies vormen — met experts achter de hand. |
 | **5 — Pro & koppelingen** | Werkorders, wagenpark, financiële diepte, uitgebreide boekhoud-integraties, en het pad richting een vast extern administratiekantoor/agent (factuur scannen → goedkeuren → betalen → bijwerken). | Voor grotere landgoederen en integraties. |
@@ -172,6 +176,8 @@ Voor de bouw geldt voorlopig een **werktitel**; de definitieve merknaam (en bijb
 Een mooi moment om te valideren ligt na Fase 1: dan kan een eerste klant — Ter Hooge zelf, of een warm contact — echt met het systeem werken, inclusief direct financieel inzicht, vóórdat we aan het lastigere kaartwerk beginnen.
 
 ## 8. Wat het bijzonder maakt
+
+**Alles hangt samen.** Onder het platform ligt één ruggengraat van stamgegevens: de basisobjecten van het landgoed, met onderlinge koppelingen die de AI voorstelt en jij accordeert. Daardoor weet het systeem dat een contract bij een gebouw hoort, een huurder bij een woning, een inspectie bij een object — en kan het sneller en nauwkeuriger analyseren, signaleren en rapporteren dan losse lijstjes ooit kunnen. Handmatig koppelen wordt het uitzonderingsgeval.
 
 **Proactief, maar rustig.** Twee radars signaleren wat eraan komt: subsidies en carbon-kansen aan de ene kant, en relevant nieuws — bijeenkomsten, beleids- en regelwijzigingen die jouw landgoed raken — aan de andere kant. Streng gefilterd, zodat alleen het relevante doorkomt en het dashboard nooit dichtslibt. Iets wat de gemiddelde rentmeester niet doet.
 

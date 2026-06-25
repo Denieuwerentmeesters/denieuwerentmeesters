@@ -1,6 +1,6 @@
 # Landgoedplatform — Technisch document
 
-**De Nieuwe Rentmeesters** · Architectuur, tech stack en datamodel · versie 1.5 · juni 2026
+**De Nieuwe Rentmeesters** · Architectuur, tech stack en datamodel · versie 1.6 · juni 2026
 
 Dit is het technische document voor de bouw van het platform. Het bevat de architectuur, de tech stack, het volledige datamodel met SQL, de beveiliging (Row Level Security), de mappenstructuur, de risico-inschatting en de Claude Code-prompts per module. Het algemene plan (doelgroep, modules in gewone taal, positionering) staat in een apart document (versie 1.1).
 
@@ -31,6 +31,11 @@ Dit is het technische document voor de bouw van het platform. Het bevat de archi
 > - **Financieel dashboard — gespecificeerd.** Gewenst: openstaande facturen, achterstallige huren, **cashflowprognose ~1,5 jaar** (verreweg het belangrijkst), gebudgetteerd vs. werkelijk groot onderhoud, enkele kernratio's, halfjaarlijks een geüpdatete balans, maandelijks een W&V. Voor een landgoed is **cashflow leidend; de balans minder relevant**.
 > - **Eerste echte bouw: Ter Hooge als testomgeving.** E-mail koppelen + uitlezen, bankkoppeling, gegevens importeren — een werkende tool voor het eigen landgoed én de eerste tastbare mock-up (te tonen aan Chris ~3 weken, daarna Frederik/Uko). Ijkpunt eind augustus.
 > - **Naam = werktitel.** Definitieve merknaam (en bijbehorende login/database-instances) geparkeerd tot de propositie scherp staat.
+
+> **Wat is nieuw in versie 1.6** (na het sparren met Hugo over stamgegevens als fundament):
+> - **Stamgegevens-ruggengraat als kern.** De smalle `object`-tabel (alleen gebouwen) is vervangen door één brede registratie `stamobject` voor álle fysieke/ruimtelijke objecten van een landgoed: gebouwen, woningen, opstallen, pachtpercelen, natuurbeheertypen, wandelroutes, kabels/leidingen, bomenlanen, waterlopen/watergangen/sloten/vijvers, onderhoudszones, risicoplekken, wegen/paden/bruggen/hekken. Eén tabel met een **categorie**-typologie, een **geometrie_type** (punt/lijn/vlak/geen), een optioneel **PostGIS-geom**-veld (pas gevuld als de kaart aan gaat), een **jsonb `kenmerken`** voor categorie-specifieke velden, en een **zelf-FK** voor hiërarchie (woning binnen gebouw, opstal op perceel). `perceel` blijft als aparte **kadastrale** bron (PDOK) en is koppelbaar.
+> - **Centrale koppellaag `verband`.** Een polymorfe tabel die wíllekeurig record A aan record B koppelt (contract↔stamobject, relatie↔stamobject, inspectie↔stamobject, subsidie↔perceel, taak↔stamobject …). Elk verband draagt een **rol** ('huurder_van','betreft','gelegen_op','inspectie_van') en een **status** ('voorgesteld','geaccordeerd','afgewezen'): de AI stelt koppelingen voor, de gebruiker accordeert. Sterke 1:N-relaties (alles → `landgoed`) blijven directe FK's; `verband` dekt het N:M-web. (Tabelnaam `verband` om verwarring met de integratie-`koppeling` uit Deel V te vermijden; functioneel zijn dit "de koppelingen tussen je gegevens".)
+> - **Bouwvolgorde "ruggengraat eerst, vullen mee".** De datamodel-spine (`stamobject` + `verband` + RLS) verhuist naar **Fase 0/fundament**, zodat elke module er vanaf dag één aan kan koppelen. Een lichte stamgegevens-**lijst** (handmatig een woning/gebouw/perceel opvoeren, plus het AI-koppelvoorstel) komt in **Fase 1**. De zware ruimtelijke laag (volledige lijn/vlak-typologie, bulk-import PDOK, de **kaart** op `geom`) blijft **Fase 2**. Zo blijft "dag-1-waarde zonder instellingen" overeind: je kúnt Mevrouw Jansen meteen aan Woning A koppelen, maar je wordt niet gedwongen eerst het hele landgoed in te tekenen.
 
 ## Inhoud
 
@@ -92,9 +97,10 @@ Alles draait om de tabel `landgoed`. Elke andere tabel die landgoed-specifiek is
 - `lidmaatschap` — de koppeling tussen gebruiker en landgoed, mét rol. Dit is de toegangscontrole. Eén rij per (gebruiker × landgoed)-combinatie.
 - `module_instelling` — per landgoed per module een aan/uit-vlag mét niveau (basis/uitbreiding/pro).
 - `document` — alle documenten. Veld `scope` onderscheidt nationaal van landgoed. Bestand in Supabase Storage; tabel houdt verwijzing en metadata bij. (In v1.1 uitgebreid met versiebeheer t.b.v. de contractvoorbereiding-keten.)
-- `perceel` — kadastrale percelen per landgoed. Gekoppeld aan kaartdata (PDOK).
+- `perceel` — kadastrale percelen per landgoed (de juridische/kadastrale bron, PDOK). Koppelbaar aan `stamobject`.
 - `contract` — erfpacht, pacht, **huur**, beheerovereenkomsten. Per landgoed. (In v1.1 uitgebreid met indexatie en servicekosten.)
-- `object` — gebouwen en bouwwerken (kasteel, oranjerie, boerderij). Per landgoed.
+- `stamobject` — **(v1.6, de ruggengraat)** één brede registratie voor álle fysieke/ruimtelijke objecten: gebouwen, woningen, opstallen, pachtpercelen, natuurbeheertypen, wandelroutes, kabels/leidingen, bomenlanen, waterlopen/watergangen/sloten/vijvers, onderhoudszones, risicoplekken, wegen/paden/bruggen/hekken. Eén `categorie`-typologie, een `geometrie_type` (punt/lijn/vlak/geen), een optioneel PostGIS-`geom` (gevuld zodra de kaart aan gaat), een `kenmerken` jsonb voor categorie-specifieke velden, en een zelf-FK `bovenliggend_id` voor hiërarchie. Vervangt de oude smalle `object`-tabel.
+- `verband` — **(v1.6, de koppellaag)** koppelt willekeurig record A aan record B (contract↔stamobject, relatie↔stamobject, inspectie↔stamobject, subsidie↔perceel …) met een `rol` en een `status` ('voorgesteld'/'geaccordeerd'/'afgewezen'). Dit is het mechanisme "AI stelt een koppeling voor, gebruiker accordeert". Per landgoed (draagt zelf `landgoed_id` voor RLS).
 - `relatie` — pachters, huurders, overheden, adviseurs, dienstverleners. Per landgoed.
 - `subsidie` — subsidie- en verdienkansen (incl. carbon/groenblauw). Nationaal of landgoed-specifiek gematcht.
 - `taak` en `agenda_item` — acties en afspraken per landgoed.
@@ -106,20 +112,34 @@ Alles draait om de tabel `landgoed`. Elke andere tabel die landgoed-specifiek is
 profiel ──< lidmaatschap >── landgoed
                                │
                                ├──< document (scope: nationaal | landgoed)
-                               ├──< perceel
-                               ├──< object
-                               ├──< contract
-                               ├──< relatie
-                               ├──< subsidie
-                               ├──< taak
-                               ├──< agenda_item
+                               ├──< perceel ─────────┐
+                               ├──< stamobject ──┐   │  (zelf-FK: bovenliggend_id)
+                               ├──< contract     │   │
+                               ├──< relatie      │   │
+                               ├──< subsidie     │   │
+                               ├──< taak         │   │
+                               ├──< agenda_item  │   │
+                               ├──< verband >────┴───┘  (koppelt elk record aan elk record,
+                               │                         met rol + status voorgesteld/geaccordeerd)
                                ├──< financiele_bron ──< transactie
                                ├──< omgevingsbron ──< omgevingsbericht
                                ├──< project ──< project_besluit
                                └──< module_instelling
 ```
 
-Lees `──<` als "heeft meerdere". Eén landgoed heeft meerdere documenten; één gebruiker heeft meerdere lidmaatschappen.
+Lees `──<` als "heeft meerdere". Eén landgoed heeft meerdere documenten; één gebruiker heeft meerdere lidmaatschappen. `verband` is geen gewone "heeft meerdere"-tak maar de **koppellaag**: het legt N:M-relaties tussen alle andere records — vooral tussen `stamobject` en de rest (contract, relatie, taak, subsidie, en later inspectie/voorschrift).
+
+### De stamgegevens-ruggengraat (v1.6)
+
+Hugo's kernpunt: bijna alles wat je in de andere modules doet, hangt aan de basisgegevens van het landgoed. Mevrouw Jansen (relatie, getagd 'huurder') koppelt aan Woning A (`stamobject`, categorie 'woning'); haar huurcontract (`contract`) koppelt aan diezelfde Woning A én aan Mevrouw Jansen; een veiligheidsvoorschrift leidt tot een periodieke inspectie-`taak` die na afloop met een inspectierapport-`document` aan datzelfde object hangt. Vraag de brandweer dan "alle inspecties van dit object", dan is dat één query over `verband`.
+
+Twee bouwstenen maken dat mogelijk:
+
+1. **`stamobject` — de brede registratie.** Eén tabel voor alle fysieke/ruimtelijke objecten, onderscheiden door `categorie` en `geometrie_type` (punt/lijn/vlak/geen). Categorie-specifieke velden gaan in `kenmerken` (jsonb), zodat een nieuw objecttype geen schemawijziging vraagt. Het `geom`-veld (PostGIS) is **optioneel** en wordt pas gevuld als de kaart-module aan gaat — tot die tijd is `stamobject` gewoon een lijst.
+
+2. **`verband` — de koppellaag met AI-voorstel.** In plaats van overal handmatige koppelvelden, legt één polymorfe tabel relaties tussen records vast, mét een `status`. De AI stelt een koppeling voor (`status='voorgesteld'`, met een leesbare onderbouwing in `voorstel_reden`); de gebruiker accordeert of wijst af. Handmatig koppelen blijft kan, maar is het uitzonderingsgeval. Sterke, altijd-aanwezige 1:N-relaties (elk record → zijn `landgoed`) blijven gewone FK's; `verband` is voor het bredere web.
+
+**Bouwvolgorde — "ruggengraat eerst, vullen mee".** De spine (`stamobject` + `verband` + RLS) hoort bij het **fundament** (Fase 0), zodat elke latere module er meteen aan koppelt. Een lichte **lijst**-UI om handmatig objecten op te voeren komt in **Fase 1** (genoeg om contacten en contracten te koppelen). De zware ruimtelijke laag — volledige lijn/vlak-typologie, PDOK-bulkimport en de **kaart** bovenop `geom` — blijft **Fase 2**. Zo dwingt niets de gebruiker om eerst het hele landgoed in te tekenen voordat het platform waarde geeft.
 
 ## 4. De beveiliging — Row Level Security
 
@@ -333,16 +353,55 @@ create table perceel (
   gebruik text
 );
 
--- OBJECT (gebouwen)
-create table object (
+-- STAMOBJECT (v1.6 — de brede registratie; vervangt de oude 'object'-tabel)
+-- PostGIS pas nodig voor de kaart (Fase 2); tot dan blijft 'geom' leeg en is dit een lijst.
+create extension if not exists postgis;
+
+create table stamobject (
   id uuid primary key default gen_random_uuid(),
   landgoed_id uuid not null references landgoed(id) on delete cascade,
+  categorie text not null check (categorie in (
+    'gebouw','woning','opstal',                 -- rood / bouwwerken
+    'pachtperceel','natuurbeheertype','onderhoudszone','risicoplek',  -- vlakken / zones
+    'wandelroute','weg_pad','bomenlaan','kabel_leiding','waterloop',  -- lijnen
+    'brug','hek','vijver_sloot','overig'        -- punten / overig
+  )),
+  geometrie_type text not null default 'geen'
+    check (geometrie_type in ('punt','lijn','vlak','geen')),
   naam text not null,
-  type text,
-  bouwjaar int,
-  monument_status text,
-  beschrijving text
+  code text,                                    -- eigen referentie/nummer
+  status text,                                  -- bv. 'actief','buiten gebruik'
+  beschrijving text,
+  kenmerken jsonb default '{}'::jsonb,          -- categorie-specifiek: bouwjaar, monument_status, boomsoort, materiaal...
+  perceel_id uuid references perceel(id) on delete set null,   -- op welk kadastraal perceel het ligt
+  bovenliggend_id uuid references stamobject(id) on delete set null,  -- hiërarchie: woning in gebouw, opstal op erf
+  geom geometry,                                -- PostGIS; optioneel, gevuld zodra de kaart aan gaat
+  aangemaakt_op timestamptz default now()
 );
+create index on stamobject (landgoed_id);
+create index on stamobject (landgoed_id, categorie);
+create index on stamobject using gist (geom);
+
+-- VERBAND (v1.6 — de koppellaag: koppelt elk record aan elk record, met rol + accordering)
+-- N.B. tabelnaam 'verband' om verwarring met de integratie-'koppeling' (Deel V) te vermijden.
+create table verband (
+  id uuid primary key default gen_random_uuid(),
+  landgoed_id uuid not null references landgoed(id) on delete cascade,  -- voor RLS
+  bron_type text not null,        -- bv. 'contract','relatie','taak','document','subsidie'
+  bron_id   uuid not null,
+  doel_type text not null,        -- meestal 'stamobject', soms 'perceel','relatie'
+  doel_id   uuid not null,
+  rol text,                       -- 'huurder_van','betreft','gelegen_op','inspectie_van',...
+  status text not null default 'geaccordeerd'
+    check (status in ('voorgesteld','geaccordeerd','afgewezen')),
+  voorstel_reden text,            -- leesbare AI-onderbouwing bij status='voorgesteld'
+  aangemaakt_door uuid references profiel(id),
+  aangemaakt_op timestamptz default now(),
+  unique (bron_type, bron_id, doel_type, doel_id, rol)
+);
+create index on verband (landgoed_id);
+create index on verband (doel_type, doel_id);
+create index on verband (bron_type, bron_id);
 
 -- RELATIE (pachters, huurders, overheden, adviseurs, dienstverleners)
 create table relatie (
@@ -425,7 +484,8 @@ alter table module_instelling  enable row level security;
 alter table document           enable row level security;
 alter table document_type      enable row level security;
 alter table perceel            enable row level security;
-alter table object             enable row level security;
+alter table stamobject         enable row level security;
+alter table verband            enable row level security;
 alter table relatie            enable row level security;
 alter table contract           enable row level security;
 alter table subsidie           enable row level security;
@@ -488,7 +548,7 @@ create policy "documenttype zien" on document_type for select using (true);
 create policy "documenttype beheren" on document_type for all
   using (is_admin()) with check (is_admin());
 
--- PERCEEL, OBJECT, RELATIE, CONTRACT, TAAK, AGENDA_ITEM: zelfde patroon
+-- PERCEEL, STAMOBJECT, VERBAND, RELATIE, CONTRACT, TAAK, AGENDA_ITEM: zelfde patroon
 -- (leden lezen; eigenaar/rentmeester/admin beheren). Voorbeeld perceel:
 create policy "perceel zien" on perceel for select
   using (is_lid_van(landgoed_id) or is_admin());
@@ -496,9 +556,17 @@ create policy "perceel beheren" on perceel for all
   using (rol_op(landgoed_id) in ('eigenaar','rentmeester') or is_admin())
   with check (rol_op(landgoed_id) in ('eigenaar','rentmeester') or is_admin());
 
-create policy "object zien" on object for select
+create policy "stamobject zien" on stamobject for select
   using (is_lid_van(landgoed_id) or is_admin());
-create policy "object beheren" on object for all
+create policy "stamobject beheren" on stamobject for all
+  using (rol_op(landgoed_id) in ('eigenaar','rentmeester') or is_admin())
+  with check (rol_op(landgoed_id) in ('eigenaar','rentmeester') or is_admin());
+
+-- VERBAND: leden lezen (ook AI-voorstellen, zodat ze geaccordeerd kunnen worden);
+-- eigenaar/rentmeester/admin beheren. Elk verband draagt landgoed_id, dus standaard patroon.
+create policy "verband zien" on verband for select
+  using (is_lid_van(landgoed_id) or is_admin());
+create policy "verband beheren" on verband for all
   using (rol_op(landgoed_id) in ('eigenaar','rentmeester') or is_admin())
   with check (rol_op(landgoed_id) in ('eigenaar','rentmeester') or is_admin());
 
@@ -785,7 +853,7 @@ create table transactie (
   categorie text,                    -- door AI voorgesteld, door gebruiker te corrigeren
   richting text generated always as (case when bedrag >= 0 then 'in' else 'uit' end) stored,
   perceel_id uuid references perceel(id) on delete set null,
-  object_id uuid references object(id) on delete set null,
+  stamobject_id uuid references stamobject(id) on delete set null,
   contract_id uuid references contract(id) on delete set null,
   extern_id text,                    -- id bij de bron, om dubbele import te voorkomen
   aangemaakt_op timestamptz default now(),
@@ -974,7 +1042,7 @@ create table project (
   besteed numeric,
   startdatum date,
   streefdatum date,
-  object_id uuid references object(id) on delete set null,
+  stamobject_id uuid references stamobject(id) on delete set null,
   perceel_id uuid references perceel(id) on delete set null,
   aangemaakt_op timestamptz default now()
 );
@@ -1049,7 +1117,7 @@ create table beheerplan (
   startjaar int,
   eindjaar int,
   perceel_id uuid references perceel(id) on delete set null,
-  object_id uuid references object(id) on delete set null,
+  stamobject_id uuid references stamobject(id) on delete set null,
   aangemaakt_op timestamptz default now()
 );
 
@@ -1733,17 +1801,15 @@ alter table perceel add column erfdienstbaarheden text;
 alter table perceel add column notitie text;
 alter table perceel add column contract_id uuid references contract(id) on delete set null;
 
--- Object (gebouw) uitbreiden
-alter table object add column geometrie jsonb;
-alter table object add column bag_id text;
-alter table object add column oppervlakte numeric;
-alter table object add column functie text;                   -- bewoond, verhuurd, erfpacht...
-alter table object add column conditie_nen2767 int;           -- 1 (uitstekend) - 6 (zeer slecht)
-alter table object add column taxatiewaarde numeric;
-alter table object add column verzekering text;
-alter table object add column energielabel text;
-alter table object add column notitie text;
-alter table object add column contract_id uuid references contract(id) on delete set null;
+-- Stamobject verrijken voor de kaart-fase (v1.6).
+-- 'geom' bestaat al op stamobject; vul hem in deze fase met de PDOK/BAG-geometrie.
+-- Categorie-specifieke gebouwvelden gaan in kenmerken (jsonb), bv.:
+--   {"bag_id":"...","functie":"verhuurd","conditie_nen2767":3,
+--    "taxatiewaarde":250000,"verzekering":"...","energielabel":"C"}
+-- Cross-category structuur als echte kolom:
+alter table stamobject add column oppervlakte numeric;
+alter table stamobject add column contract_id uuid references contract(id) on delete set null;
+alter table stamobject add column notitie text;
 
 -- Koppeling perceel <-> subsidie (meerdere subsidies per perceel)
 create table perceel_subsidie (
@@ -1776,7 +1842,7 @@ Koppel een perceel van Ter Hooge en controleer dat de getekende grens exact over
 
 ### 5. Plek in de fasering
 
-Percelen/gebouwen als **lijst** komen vroeg (Fase 2); de **kaartweergave via PDOK** wordt een afgebakende fase waarin het coördinaten- en PDOK-werk geïsoleerd wordt aangepakt (hoog technisch risico). Zo loopt de rest geen vertraging op.
+De stamgegevens-**ruggengraat** (`stamobject` + `verband` + RLS) hoort bij het fundament (Fase 0); een lichte stamgegevens-**lijst** met handmatig opvoeren + AI-koppelvoorstel komt in Fase 1. De volledige typologie (lijn/vlak), PDOK-bulkimport en de **kaartweergave** worden een afgebakende Fase 2 waarin het coördinaten- en PDOK-werk geïsoleerd wordt aangepakt (hoog technisch risico). Zo loopt de rest geen vertraging op.
 
 ---
 
@@ -1791,7 +1857,7 @@ Percelen/gebouwen als **lijst** komen vroeg (Fase 2); de **kaartweergave via PDO
 | Bankkoppeling / financieel inzicht (v1.1) | **Middel** | Bestandsimport (CSV/MT940) is laag risico en de aanbevolen start. Een live PSD2-aggregator (en de Moneybird/e-Boekhouden-API's) voegt OAuth, tokens en een verwerkersafspraak toe — middel, en daarom optioneel/later. |
 | Omgevingsradar (v1.1) | **Laag–Middel** | Mail-ingestie (webhook) en RSS zijn standaardwerk; de kwaliteit zit in de AI-relevantiefilter en het profiel per landgoed — finetuning, geen blokkade. |
 | Communicatie intern/extern | **Laag** | mailto (extern) en e-mailmelding (intern) zijn standaardwerk. Geschikt om vroeg te doen. |
-| Fundament (database, login, RLS) | **Laag** | Bekend terrein, goed gedocumenteerd. |
+| Fundament (database, login, RLS) | **Laag** | Bekend terrein, goed gedocumenteerd. Incl. de stamgegevens-ruggengraat (`stamobject` + `verband`): standaard tabellen + RLS, laag risico. PostGIS-extensie nu aanzetten, `geom` pas vullen in Fase 2. |
 | Beheerplan, contracten, projecten, documenten, incidenten | **Laag** | Standaard datawerk op het fundament. |
 
 **Conclusie:** begin met fundament en de lichte, waardevolle basismodules (laag risico, hoge waarde), houd de transcriptie als laatste binnen Fase 1, en isoleer het kaartwerk in een eigen fase.
@@ -1800,9 +1866,9 @@ Percelen/gebouwen als **lijst** komen vroeg (Fase 2); de **kaartweergave via PDO
 
 | Fase | Technische inhoud |
 |---|---|
-| **0 — Fundament** | Supabase-project, database + RLS, Next.js op Vercel, Supabase-clients (browser/server/middleware), login, landgoed-overzicht, dashboard-skelet, admin-paneel, `module_instelling` met niveaus. |
-| **1 — Communicatie & basis** | Gebruikersbeheer (uitnodigingen, wachtwoord-reset). Documenten (zonder opslag-zwaarte), taken, contacten (relatie-uitbreiding), `notificatie` + e-mailmelding, mailto-flow voor externe taken, contracten (pacht **én huur**, indexatie-signalering), subsidieradar (incl. carbon), **omgevingsradar** (mail/RSS-ingestie + AI-relevantiefilter), **licht financieel inzicht** (bestandsimport + optioneel Moneybird), **incidenten**, en **vergaderingen** (als laatste, vanwege transcriptie). |
-| **2 — Percelen, gebouwen & kaart** | `perceel`/`object`-uitbreidingen + `perceel_subsidie` als lijst-CRUD eerst. Daarna Leaflet + PDOK OGC API Features in WGS84, percelen/gebouwen aanklikken en koppelen. |
+| **0 — Fundament** | Supabase-project, database + RLS, Next.js op Vercel, Supabase-clients (browser/server/middleware), login, landgoed-overzicht, dashboard-skelet, admin-paneel, `module_instelling` met niveaus. **Plus de stamgegevens-ruggengraat:** `stamobject` + `verband` + RLS, PostGIS-extensie aan (`geom` nog leeg). Zo kan elke latere module er meteen aan koppelen. |
+| **1 — Communicatie & basis** | Gebruikersbeheer (uitnodigingen, wachtwoord-reset). Documenten (zonder opslag-zwaarte), taken, contacten (relatie-uitbreiding), `notificatie` + e-mailmelding, mailto-flow voor externe taken, contracten (pacht **én huur**, indexatie-signalering), subsidieradar (incl. carbon), **omgevingsradar** (mail/RSS-ingestie + AI-relevantiefilter), **licht financieel inzicht** (bestandsimport + optioneel Moneybird), **incidenten**, en **vergaderingen** (als laatste, vanwege transcriptie). **Lichte stamgegevens-lijst:** handmatig een woning/gebouw/perceel opvoeren en via `verband` koppelen aan contacten/contracten/incidenten, met AI-koppelvoorstel (status 'voorgesteld' → accorderen). Nog geen kaart. |
+| **2 — Percelen, gebouwen & kaart** | `perceel`/`stamobject`-uitbreidingen + `perceel_subsidie`, en de volledige objecttypologie (lijn/vlak: lanen, leidingen, watergangen, zones, routes) als lijst-CRUD. Daarna Leaflet + PDOK OGC API Features in WGS84: percelen/gebouwen aanklikken, koppelen en `stamobject.geom` vullen. |
 | **3 — Beheerplan, onderhoud & projecten** | `beheerplan` + `beheermaatregel`, maatregel-naar-taak, onderhoud/MJOP, `natuur_element` + `biodiversiteit_waarneming`, **`project` + `project_besluit`**. |
 | **4 — Verdieping & slimmere AI** | AI-laag uitbouwen, **contractvoorbereiding-keten** (`document_versie` + `review_verzoek`), **documentmodule/visievorming** (`document_bron`, synthese uit 4 bronnen), **expert-spoor** (`expert` + `expert_verzoek`, admin-bemiddeling), rapportage/export, verfijning omgevings- en financiële AI, carbon-/verdienkansen. |
 | **5 — Pro & koppelingen** | `werkorder`, `machine`, **financiële diepte** (rendement per perceel/activiteit), e-mail (Vimex IMAP), bank-aggregator (PSD2) en zwaardere boekhoudkoppeling. |
