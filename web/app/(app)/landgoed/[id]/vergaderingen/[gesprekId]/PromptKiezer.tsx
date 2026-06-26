@@ -22,6 +22,7 @@ export function PromptKiezer({
   aiAan: boolean;
 }) {
   const [geselecteerd, setGeselecteerd] = useState<Set<string>>(new Set());
+  const [customPrompt, setCustomPrompt] = useState("");
   const [pending, startTransition] = useTransition();
 
   function toggle(id: string) {
@@ -33,18 +34,26 @@ export function PromptKiezer({
     });
   }
 
+  const aantalActief = geselecteerd.size + (customPrompt.trim() ? 1 : 0);
+
   function verwerk() {
-    if (!geselecteerd.size) return;
+    if (!aantalActief) return;
     const fd = new FormData();
     fd.set("gesprek_id", gesprekId);
     fd.set("landgoed_id", landgoedId);
     for (const id of geselecteerd) fd.append("sjabloon_id", id);
-    startTransition(() => voerPromptsUit(fd).then(() => setGeselecteerd(new Set())));
+    if (customPrompt.trim()) fd.set("custom_prompt", customPrompt.trim());
+    startTransition(() =>
+      voerPromptsUit(fd).then(() => {
+        setGeselecteerd(new Set());
+        setCustomPrompt("");
+      })
+    );
   }
 
   return (
-    <div>
-      <div className="flex flex-wrap gap-2 mb-3">
+    <div className="flex flex-col gap-3">
+      <div className="flex flex-wrap gap-2">
         {sjablonen.map((s) => {
           const actief = geselecteerd.has(s.id);
           return (
@@ -64,7 +73,21 @@ export function PromptKiezer({
           );
         })}
       </div>
-      {geselecteerd.size > 0 && (
+
+      {/* Eigen prompt */}
+      <div className="flex flex-col gap-1">
+        <label className="label-up">Of geef een eigen opdracht</label>
+        <textarea
+          className="input w-full text-[13px]"
+          rows={2}
+          placeholder="Bijv. Schrijf een korte samenvatting voor de nieuwsbrief…"
+          value={customPrompt}
+          onChange={(e) => setCustomPrompt(e.target.value)}
+          disabled={!aiAan || pending}
+        />
+      </div>
+
+      {aantalActief > 0 && (
         <button
           type="button"
           onClick={verwerk}
@@ -72,12 +95,12 @@ export function PromptKiezer({
           className="btn btn-primary"
         >
           {pending
-            ? `Bezig met ${geselecteerd.size} bewerking${geselecteerd.size > 1 ? "en" : ""}…`
-            : `▶ Verwerk ${geselecteerd.size} geselecteerde bewerking${geselecteerd.size > 1 ? "en" : ""}`}
+            ? `Bezig met verwerken…`
+            : `▶ Verwerk ${aantalActief} bewerking${aantalActief > 1 ? "en" : ""}`}
         </button>
       )}
       {!aiAan && (
-        <p className="mt-2 text-[12px]" style={{ color: "var(--text-3)" }}>
+        <p className="text-[12px]" style={{ color: "var(--text-3)" }}>
           AI staat uit — voeg ANTHROPIC_API_KEY toe.
         </p>
       )}

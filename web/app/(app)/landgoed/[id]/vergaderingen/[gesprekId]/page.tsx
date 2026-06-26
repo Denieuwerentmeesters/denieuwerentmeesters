@@ -187,7 +187,7 @@ export default async function GesprekDetailPage({
           return (
             <section key={b.id} className="card p-5">
               <div className="flex items-center gap-2 mb-3">
-                <h2 className="text-[14px] font-semibold">{s?.titel ?? "Bewerking"}</h2>
+                <h2 className="text-[14px] font-semibold">{s?.titel ?? "Eigen opdracht"}</h2>
                 <span className="tag tag-green">AI-output</span>
               </div>
               <div className="whitespace-pre-wrap text-[13px]" style={{ color: "var(--text-1)" }}>

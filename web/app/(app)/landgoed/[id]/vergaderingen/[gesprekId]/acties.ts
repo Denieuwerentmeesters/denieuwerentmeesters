@@ -119,6 +119,18 @@ export async function voerPromptsUit(fd: FormData) {
     }
   }
 
+  // Eigen vrije prompt — elke uitvoering voegt een nieuw resultaat toe
+  const custom_prompt = String(fd.get("custom_prompt") ?? "").trim();
+  if (custom_prompt) {
+    const output = await verwerkPrompt(transcript.tekst, custom_prompt);
+    await supabase.from("gesprek_bewerking").insert({
+      gesprek_id,
+      prompt_sjabloon_id: null,
+      output_tekst: output ?? "(AI niet beschikbaar)",
+      status: "concept",
+    });
+  }
+
   await supabase.from("gesprek").update({ status: "verwerkt" }).eq("id", gesprek_id);
   revalidatePath(`/landgoed/${landgoed_id}/vergaderingen/${gesprek_id}`);
 }
