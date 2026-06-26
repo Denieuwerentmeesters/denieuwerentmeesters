@@ -2,6 +2,35 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
+import { transcribeer } from "@/lib/transcriptie";
+
+// Transcribeert audio, maakt direct een gesprek aan en stuurt door naar de detailpagina.
+export async function maakGesprekVanAudio(fd: FormData) {
+  const landgoed_id = String(fd.get("landgoed_id"));
+  const bestand = fd.get("audio") as File | null;
+  if (!bestand || bestand.size === 0) return { fout: "Geen audio ontvangen." };
+
+  const buffer = Buffer.from(await bestand.arrayBuffer());
+  const tekst = await transcribeer(buffer, bestand.type, bestand.name);
+  if (!tekst) return { fout: "Transcriptie mislukt — controleer de GROQ_API_KEY." };
+
+  const supabase = await createClient();
+  const vandaag = new Date().toLocaleDateString("nl-NL", { day: "numeric", month: "long" });
+  const titel = `Opname ${vandaag}`;
+  const datum = new Date().toISOString().slice(0, 10);
+
+  const { data: gesprek } = await supabase
+    .from("gesprek")
+    .insert({ landgoed_id, titel, datum, status: "getranscribeerd" })
+    .select("id")
+    .single();
+
+  if (!gesprek) return { fout: "Gesprek aanmaken mislukt." };
+
+  await supabase.from("gesprek_transcript").insert({ gesprek_id: gesprek.id, tekst });
+
+  redirect(`/landgoed/${landgoed_id}/vergaderingen/${gesprek.id}`);
+}
 
 export async function maakGesprek(fd: FormData) {
   const landgoed_id = String(fd.get("landgoed_id"));

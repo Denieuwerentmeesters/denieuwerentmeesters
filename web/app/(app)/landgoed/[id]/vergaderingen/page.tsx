@@ -1,5 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
+import { transcriptiesBeschikbaar } from "@/lib/transcriptie";
 import { maakGesprek } from "./acties";
+import { OpnameKnop } from "./OpnameKnop";
 
 export default async function VergaderingenPage({
   params,
@@ -8,6 +10,7 @@ export default async function VergaderingenPage({
 }) {
   const { id } = await params;
   const supabase = await createClient();
+  const groqAan = transcriptiesBeschikbaar();
 
   const { data: gesprekken } = await supabase
     .from("gesprek")
@@ -32,31 +35,49 @@ export default async function VergaderingenPage({
         <header className="mb-6">
           <h1 className="text-[22px] font-bold">Vergaderingen</h1>
           <p className="mt-1 text-[13px]" style={{ color: "var(--text-2)" }}>
-            Plak een transcript — kies daarna welke bewerkingen de AI uitvoert.
+            Neem op of plak een transcript — de AI maakt notulen, besluiten en taken.
           </p>
         </header>
 
-        <form action={maakGesprek} className="card mb-6 flex flex-col gap-3 p-5">
-          <input type="hidden" name="landgoed_id" value={id} />
-          <div className="flex flex-wrap gap-3">
-            <div className="flex-1" style={{ minWidth: 220 }}>
-              <label className="label-up mb-1 block">Titel</label>
-              <input className="input w-full" name="titel" placeholder="Bijv. Bestuursoverleg juni" required />
+        {/* ── Opnemen ─────────────────────────────────────────────────── */}
+        <div className="card mb-4 p-5">
+          <div className="label-up mb-3">Nieuw gesprek starten</div>
+          <OpnameKnop landgoedId={id} beschikbaar={groqAan} />
+          {!groqAan && (
+            <p className="text-[12.5px] mt-1" style={{ color: "var(--text-3)" }}>
+              GROQ_API_KEY ontbreekt — opname niet beschikbaar.
+            </p>
+          )}
+        </div>
+
+        {/* ── Of handmatig aanmaken ────────────────────────────────────── */}
+        <details className="card mb-6">
+          <summary className="cursor-pointer px-5 py-4 text-[13px] font-medium" style={{ color: "var(--text-2)" }}>
+            Of maak een gesprek handmatig aan (met geplakt transcript)
+          </summary>
+          <form action={maakGesprek} className="flex flex-col gap-3 px-5 pb-5 pt-3">
+            <input type="hidden" name="landgoed_id" value={id} />
+            <div className="flex flex-wrap gap-3">
+              <div className="flex-1" style={{ minWidth: 220 }}>
+                <label className="label-up mb-1 block">Titel</label>
+                <input className="input w-full" name="titel" placeholder="Bijv. Bestuursoverleg juni" required />
+              </div>
+              <div>
+                <label className="label-up mb-1 block">Datum</label>
+                <input className="input" type="date" name="datum" />
+              </div>
             </div>
             <div>
-              <label className="label-up mb-1 block">Datum</label>
-              <input className="input" type="date" name="datum" />
+              <label className="label-up mb-1 block">Transcript</label>
+              <textarea className="input w-full" name="transcript" rows={5} placeholder="Plak hier het transcript of de aantekeningen…" />
             </div>
-          </div>
-          <div>
-            <label className="label-up mb-1 block">Transcript (optioneel — je kunt het ook op de detailpagina plakken)</label>
-            <textarea className="input w-full" name="transcript" rows={5} placeholder="Plak hier het transcript of de aantekeningen…" />
-          </div>
-          <div>
-            <button type="submit" className="btn btn-primary">Gesprek aanmaken →</button>
-          </div>
-        </form>
+            <div>
+              <button type="submit" className="btn btn-primary">Gesprek aanmaken →</button>
+            </div>
+          </form>
+        </details>
 
+        {/* ── Lijst ───────────────────────────────────────────────────── */}
         <div className="flex flex-col gap-3">
           {(gesprekken ?? []).length === 0 && (
             <div className="card p-5 text-[13px]" style={{ color: "var(--text-2)" }}>
