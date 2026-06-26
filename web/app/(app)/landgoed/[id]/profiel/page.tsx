@@ -226,31 +226,6 @@ export default async function ProfielPage({
 
   const verdelingRijen = [...verdeling.entries()].sort((a, b) => b[1] - a[1]);
 
-  // ── Rijksmonumenten ──
-  // Twee bronnen: (1) aparte rijksmonument-objecten (via RCE-sweep profielpagina),
-  // (2) geaccordeerde gebouwen met is_rijksmonument=true in kenmerken (via kaart-klik).
-  const GEBOUW_CATS_SET = new Set(["gebouw", "woning", "opstal"]);
-  const monumenten = objs.filter((o) => o.categorie === "rijksmonument");
-  const monGeaccordeerd = monumenten.filter((o) => o.geaccordeerd);
-
-  // Gebouwen die via de kaart als monument zijn gedetecteerd (geaccordeerd=true want handmatig geplaatst).
-  const gebouwMonumenten = objs.filter(
-    (o) =>
-      o.geaccordeerd &&
-      GEBOUW_CATS_SET.has(o.categorie) &&
-      (o.kenmerken as { is_rijksmonument?: unknown })?.is_rijksmonument === true,
-  );
-  // Gecombineerde teller + nummers (beide bronnen).
-  const monumentNrs = [
-    ...monGeaccordeerd.map(
-      (o) => (o.kenmerken as { rijksmonument_nummer?: unknown })?.rijksmonument_nummer,
-    ),
-    ...gebouwMonumenten.map(
-      (o) => (o.kenmerken as { rijksmonument_nummer?: unknown })?.rijksmonument_nummer,
-    ),
-  ].filter(Boolean);
-  const aantalMonumenten = monGeaccordeerd.length + gebouwMonumenten.length;
-  const monGecontroleerd = datumKort(landgoed?.monumenten_gecontroleerd_op);
   const bgtGecontroleerd = datumKort(landgoed?.bodemgebruik_gecontroleerd_op);
 
   // Hoeveel percelen hebben al een BGT-waarde?
@@ -429,21 +404,6 @@ export default async function ProfielPage({
                 .join(" · ") || "verdeling nog niet ingedeeld"}
             </div>
             <div className="mt-2 text-[11px] opacity-70">{oppervlakteBron}</div>
-          </div>
-
-          {/* Rijksmonumenten */}
-          <div className="card p-5">
-            <div className="label-up">Rijksmonumenten</div>
-            <div className="mt-1 text-[30px] font-bold">{aantalMonumenten}</div>
-            <div className="text-[12px]" style={{ color: "var(--text-2)" }}>
-              {monumentNrs.length
-                ? `nrs ${monumentNrs.slice(0, 4).join(", ")}${monumentNrs.length > 4 ? "…" : ""}`
-                : "nog niet gecontroleerd"}
-            </div>
-            <Bron>
-              RCE Rijksmonumentenregister
-              {monGecontroleerd ? ` · ${monGecontroleerd}` : ""}
-            </Bron>
           </div>
 
           {/* NSW-status */}
