@@ -7,6 +7,26 @@ import {
   extraheerActiepuntenMetMatching,
   type Contact,
 } from "@/lib/ai";
+import { transcribeer } from "@/lib/transcriptie";
+
+export async function transcribeerAudio(fd: FormData) {
+  const gesprek_id = String(fd.get("gesprek_id"));
+  const landgoed_id = String(fd.get("landgoed_id"));
+  const bestand = fd.get("audio") as File | null;
+  if (!bestand || bestand.size === 0) return { fout: "Geen audiobestand ontvangen." };
+
+  const buffer = Buffer.from(await bestand.arrayBuffer());
+  const tekst = await transcribeer(buffer, bestand.type, bestand.name);
+  if (!tekst) return { fout: "Transcriptie mislukt — controleer de GROQ_API_KEY." };
+
+  const supabase = await createClient();
+  await supabase.from("gesprek_transcript").delete().eq("gesprek_id", gesprek_id);
+  await supabase.from("gesprek_transcript").insert({ gesprek_id, tekst });
+  await supabase.from("gesprek").update({ status: "getranscribeerd" }).eq("id", gesprek_id);
+
+  revalidatePath(`/landgoed/${landgoed_id}/vergaderingen/${gesprek_id}`);
+  return { tekst };
+}
 
 export async function slaTranscriptOp(fd: FormData) {
   const gesprek_id = String(fd.get("gesprek_id"));

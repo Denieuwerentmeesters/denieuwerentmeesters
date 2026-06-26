@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { notFound } from "next/navigation";
 import { aiBeschikbaar } from "@/lib/ai";
+import { transcriptiesBeschikbaar } from "@/lib/transcriptie";
 import {
   slaTranscriptOp,
   bevestigActie,
@@ -8,6 +9,7 @@ import {
   ruimTranscriptOp,
 } from "./acties";
 import { PromptKiezer } from "./PromptKiezer";
+import { AudioOpname } from "./AudioOpname";
 
 type Params = { id: string; gesprekId: string };
 
@@ -47,6 +49,7 @@ export default async function GesprekDetailPage({
 
   const heeftTranscript = Boolean(transcriptRow?.tekst);
   const aiAan = aiBeschikbaar();
+  const groqAan = transcriptiesBeschikbaar();
 
   const STATUS_TAG: Record<string, string> = {
     nieuw: "tag-gray",
@@ -99,10 +102,23 @@ export default async function GesprekDetailPage({
         {/* ── Laag 1: Transcript ─────────────────────────────────────────── */}
         <section className="card p-5">
           <h2 className="text-[14px] font-semibold mb-3">Transcript</h2>
+
+          {/* Opnemen / uploaden */}
+          {gesprek.status !== "opgeruimd" && (
+            <div className="mb-5 pb-5" style={{ borderBottom: "1px solid var(--border)" }}>
+              <AudioOpname
+                gesprekId={gesprekId}
+                landgoedId={id}
+                transcriptiesBeschikbaar={groqAan}
+              />
+            </div>
+          )}
+
+          {/* Handmatig plakken / bewerken */}
           {heeftTranscript ? (
             <details>
               <summary className="cursor-pointer text-[13px] font-medium" style={{ color: "var(--primary)" }}>
-                Transcript tonen / bewerken
+                Transcript handmatig tonen / bewerken
               </summary>
               <form action={slaTranscriptOp} className="mt-3 flex flex-col gap-2">
                 <input type="hidden" name="gesprek_id" value={gesprekId} />
@@ -119,20 +135,25 @@ export default async function GesprekDetailPage({
               </form>
             </details>
           ) : (
-            <form action={slaTranscriptOp} className="flex flex-col gap-2">
-              <input type="hidden" name="gesprek_id" value={gesprekId} />
-              <input type="hidden" name="landgoed_id" value={id} />
-              <textarea
-                className="input w-full"
-                name="tekst"
-                rows={8}
-                placeholder="Plak hier het transcript of de aantekeningen…"
-                required
-              />
-              <div>
-                <button type="submit" className="btn btn-primary">Transcript opslaan</button>
-              </div>
-            </form>
+            <details>
+              <summary className="cursor-pointer text-[13px] font-medium" style={{ color: "var(--text-2)" }}>
+                Of plak een transcript handmatig
+              </summary>
+              <form action={slaTranscriptOp} className="mt-3 flex flex-col gap-2">
+                <input type="hidden" name="gesprek_id" value={gesprekId} />
+                <input type="hidden" name="landgoed_id" value={id} />
+                <textarea
+                  className="input w-full"
+                  name="tekst"
+                  rows={6}
+                  placeholder="Plak hier het transcript of de aantekeningen…"
+                  required
+                />
+                <div>
+                  <button type="submit" className="btn btn-ghost btn-sm">Transcript opslaan</button>
+                </div>
+              </form>
+            </details>
           )}
         </section>
 
