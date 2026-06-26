@@ -5,6 +5,7 @@ import {
   accordeerMonument,
   verwijderMonument,
   bewaarProfiel,
+  haalBGTBodemgebruik,
 } from "./acties";
 
 // ── Hulpfuncties ──
@@ -21,13 +22,24 @@ function datumKort(iso: unknown): string | null {
 
 const PERCEEL_CATS = new Set(["pachtperceel", "perceel"]);
 
-// Perceel-/grondgebruik -> verdeling. Eerst expliciet `gebruik`, anders de
-// categorie. Bewust grof; honest label op de tegel ("afgeleid").
-function soortVanObject(categorie: string, gebruik: string | null): string {
+// Perceel-/grondgebruik -> verdeling.
+// Volgorde: gebruik_bgt (BGT automatisch) → gebruik (handmatig) → categorie.
+const GELDIGE_SOORTEN = new Set([
+  "Bos & laanstructuur",
+  "Weiland (pacht)",
+  "Park & tuinen",
+  "Water",
+]);
+function soortVanObject(
+  categorie: string,
+  gebruik: string | null,
+  gebruik_bgt: string | null,
+): string {
+  if (gebruik_bgt && GELDIGE_SOORTEN.has(gebruik_bgt)) return gebruik_bgt;
   const t = `${gebruik ?? ""} ${categorie}`.toLowerCase();
   if (/bos|laan|hout|park.?bos/.test(t)) return "Bos & laanstructuur";
   if (/weide|weiland|gras|pacht|agrar|landbouw/.test(t)) return "Weiland (pacht)";
-  if (/park|tuin|gazon/.test(t)) return "Park & tuinen";
+  if (/park|tuin|gazon|natuur/.test(t)) return "Park & tuinen";
   if (/water|vijver|sloot|vecht|gracht|waterloop/.test(t)) return "Water";
   return "Nog niet ingedeeld";
 }
@@ -60,7 +72,7 @@ export default async function ProfielPage({
     supabase
       .from("landgoed")
       .select(
-        "naam, gemeente, provincie, plaats, hectare, nsw_status, nsw_sinds, nsw_openstelling_dagen, nsw_nummer, eigendomsvorm, rechtsvorm, lat, lon, monumenten_gecontroleerd_op",
+        "naam, gemeente, provincie, plaats, hectare, nsw_status, nsw_sinds, nsw_openstelling_dagen, nsw_nummer, eigendomsvorm, rechtsvorm, lat, lon, monumenten_gecontroleerd_op, bodemgebruik_gecontroleerd_op",
       )
       .eq("id", id)
       .maybeSingle(),
@@ -82,6 +94,7 @@ export default async function ProfielPage({
     const k = (o.kenmerken ?? {}) as {
       oppervlakte_m2?: unknown;
       gebruik?: string | null;
+      gebruik_bgt?: string | null;
       kadastrale_gemeente?: unknown;
       sectie?: unknown;
       perceelnummer?: unknown;
@@ -91,7 +104,11 @@ export default async function ProfielPage({
     const m2 = Number(k.oppervlakte_m2);
     if (Number.isFinite(m2)) {
       perceelM2 += m2;
-      const soort = soortVanObject(o.categorie, k.gebruik ?? null);
+      const soort = soortVanObject(
+        o.categorie,
+        (k.gebruik as string | null) ?? null,
+        (k.gebruik_bgt as string | null) ?? null,
+      );
       verdeling.set(soort, (verdeling.get(soort) ?? 0) + m2);
     }
     // Kadastrale aanduiding groeperen
@@ -125,6 +142,15 @@ export default async function ProfielPage({
     .map((o) => (o.kenmerken as { rijksmonument_nummer?: unknown })?.rijksmonument_nummer)
     .filter(Boolean);
   const monGecontroleerd = datumKort(landgoed?.monumenten_gecontroleerd_op);
+  const bgtGecontroleerd = datumKort(landgoed?.bodemgebruik_gecontroleerd_op);
+
+  // Hoeveel percelen hebben al een BGT-waarde?
+  const heeftBGT = objs.some(
+    (o) =>
+      PERCEEL_CATS.has(o.categorie) &&
+      o.geaccordeerd &&
+      (o.kenmerken as { gebruik_bgt?: unknown })?.gebruik_bgt,
+  );
 
   // ── NSW ──
   const nswActief = (landgoed?.nsw_status ?? "").toLowerCase();
@@ -238,7 +264,17 @@ export default async function ProfielPage({
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
           {/* Oppervlakteverdeling */}
           <div className="card p-5">
-            <h2 className="mb-3 text-[15px] font-bold">Oppervlakteverdeling</h2>
+            <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+              <h2 className="text-[15px] font-bold">Oppervlakteverdeling</h2>
+              {heeftPercelen && (
+                <form action={haalBGTBodemgebruik}>
+                  <input type="hidden" name="landgoed_id" value={id} />
+                  <button className="btn btn-ghost btn-sm">
+                    Bodemgebruik ophalen (BGT)
+                  </button>
+                </form>
+              )}
+            </div>
             {verdelingRijen.length === 0 ? (
               <p className="text-[13px]" style={{ color: "var(--text-2)" }}>
                 Nog geen percelen met oppervlakte. Plaats percelen op de{" "}
@@ -277,7 +313,10 @@ export default async function ProfielPage({
               </div>
             )}
             <Bron>
-              Afgeleid uit perceelgebruik — verfijn het gebruik per perceel in{" "}
+              {heeftBGT
+                ? `BGT bodemgebruik · ${bgtGecontroleerd ?? "datum onbekend"} — `
+                : "Afgeleid uit perceelgebruik — "}
+              verfijn handmatig per perceel in{" "}
               <Link href={`/landgoed/${id}/stamgegevens`} className="underline">
                 Stamgegevens
               </Link>

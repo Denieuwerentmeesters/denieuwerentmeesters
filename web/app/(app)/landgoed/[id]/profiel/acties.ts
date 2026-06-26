@@ -199,6 +199,111 @@ export async function verwijderMonument(fd: FormData) {
   revalidatePath(`/landgoed/${landgoed_id}/profiel`);
 }
 
+// ── BGT Bodemgebruik (automatisch, per perceel-centroïde) ──
+//
+// BGT begroeidterreindeel geeft de fysieke situatie (wat er staat), wat voor
+// oppervlakteverdeling nuttiger is dan de juridische bestemming. Query via
+// PDOK OGC API Features — geen CORS-probleem server-side.
+//
+const BGT_BASE = "https://api.pdok.nl/lv/bgt/ogc/v1/collections";
+
+// fysiek_voorkomen waarden → onze verdeling-categorieën
+const BGT_SOORT: Record<string, string> = {
+  loofbos: "Bos & laanstructuur",
+  naaldbos: "Bos & laanstructuur",
+  "gemengd bos": "Bos & laanstructuur",
+  bosplantsoen: "Bos & laanstructuur",
+  "grasland agrarisch": "Weiland (pacht)",
+  bouwland: "Weiland (pacht)",
+  fruitteelt: "Weiland (pacht)",
+  "grasland overig": "Park & tuinen",
+  groenvoorziening: "Park & tuinen",
+  heesters: "Park & tuinen",
+  planten: "Park & tuinen",
+  heide: "Park & tuinen",
+  duin: "Park & tuinen",
+  moeras: "Water",
+  rietland: "Water",
+};
+
+async function bgtSoortOpCentroide(
+  lat: number,
+  lon: number,
+): Promise<string | null> {
+  // Kleine bbox (~25 m) rond centroïde; neem het eerste actuele BGT-object.
+  const d = 0.0003;
+  const bbox = `${lon - d},${lat - d},${lon + d},${lat + d}`;
+  const params = `bbox=${bbox}&limit=5&f=json`;
+
+  try {
+    const [begroeid, water] = await Promise.all([
+      fetch(`${BGT_BASE}/begroeidterreindeel/items?${params}`).then((r) =>
+        r.json(),
+      ),
+      fetch(`${BGT_BASE}/waterdeel/items?${params}`).then((r) => r.json()),
+    ]);
+
+    // Waterdeel heeft voorrang als het er is.
+    if ((water?.features?.length ?? 0) > 0) return "Water";
+
+    // Bepaal meest voorkomende fysiek_voorkomen (filter historisch)
+    const counts = new Map<string, number>();
+    for (const f of begroeid?.features ?? []) {
+      const p = f.properties ?? {};
+      if (p.termination_date) continue; // historisch object
+      const fv: string = p.fysiek_voorkomen ?? "";
+      if (fv) counts.set(fv, (counts.get(fv) ?? 0) + 1);
+    }
+    if (counts.size === 0) return null;
+    const dominant = [...counts.entries()].sort((a, b) => b[1] - a[1])[0][0];
+    return BGT_SOORT[dominant] ?? null;
+  } catch {
+    return null;
+  }
+}
+
+export async function haalBGTBodemgebruik(fd: FormData) {
+  const landgoed_id = String(fd.get("landgoed_id"));
+  if (!landgoed_id) return;
+  const supabase = await createClient();
+
+  const { data: percelen } = await supabase
+    .from("stamobject")
+    .select("id, kenmerken")
+    .eq("landgoed_id", landgoed_id)
+    .in("categorie", ["perceel", "pachtperceel"])
+    .eq("geaccordeerd", true);
+
+  if (!percelen?.length) {
+    await supabase
+      .from("landgoed")
+      .update({ bodemgebruik_gecontroleerd_op: new Date().toISOString() })
+      .eq("id", landgoed_id);
+    revalidatePath(`/landgoed/${landgoed_id}/profiel`);
+    return;
+  }
+
+  await Promise.all(
+    percelen.map(async (p) => {
+      const k = (p.kenmerken ?? {}) as { lat?: number; lon?: number };
+      if (!k.lat || !k.lon) return;
+      const soort = await bgtSoortOpCentroide(k.lat, k.lon);
+      if (!soort) return;
+      await supabase
+        .from("stamobject")
+        .update({ kenmerken: { ...((p.kenmerken as object) ?? {}), gebruik_bgt: soort } })
+        .eq("id", p.id);
+    }),
+  );
+
+  await supabase
+    .from("landgoed")
+    .update({ bodemgebruik_gecontroleerd_op: new Date().toISOString() })
+    .eq("id", landgoed_id);
+
+  revalidatePath(`/landgoed/${landgoed_id}/profiel`);
+}
+
 // ── Handmatig profiel (NSW + juridisch) ──
 // NSW-rangschikking is niet-openbaar -> eigenaar-invoer. eigendomsvorm/rechtsvorm
 // bestonden al op landgoed; hier samen bewerkbaar gemaakt.
