@@ -2,10 +2,6 @@ import { Fragment } from "react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import {
-  controleerRijksmonumenten,
-  hercontroleMonumentenGebouwen,
-  accordeerMonument,
-  verwijderMonument,
   bewaarProfiel,
   haalBGTBodemgebruik,
 } from "./acties";
@@ -236,7 +232,7 @@ export default async function ProfielPage({
   const GEBOUW_CATS_SET = new Set(["gebouw", "woning", "opstal"]);
   const monumenten = objs.filter((o) => o.categorie === "rijksmonument");
   const monGeaccordeerd = monumenten.filter((o) => o.geaccordeerd);
-  const monVoorgesteld = monumenten.filter((o) => !o.geaccordeerd);
+
   // Gebouwen die via de kaart als monument zijn gedetecteerd (geaccordeerd=true want handmatig geplaatst).
   const gebouwMonumenten = objs.filter(
     (o) =>
@@ -340,10 +336,7 @@ export default async function ProfielPage({
     const opp = Number.isFinite(m2)
       ? isGebouw ? `${m2} m²` : `${(m2 / 10000).toLocaleString("nl-NL", { maximumFractionDigits: 2 })} ha`
       : null;
-    const monumentLabel =
-      isGebouw && kn.is_rijksmonument === true
-        ? `Rijksmonument${kn.rijksmonument_nummer ? ` #${String(kn.rijksmonument_nummer)}` : ""}${kn.rijksmonument_categorie ? ` · ${String(kn.rijksmonument_categorie)}` : ""}`
-        : null;
+    const isMonumentGebouw = isGebouw && kn.is_rijksmonument === true;
     const detail = [
       o.beschrijving,
       kn.adres ? String(kn.adres) : null,
@@ -351,11 +344,22 @@ export default async function ProfielPage({
       kn.bouwjaar ? `bouwjaar ${String(kn.bouwjaar)}` : null,
       kn.pandstatus ? String(kn.pandstatus) : null,
       kn.gebruik ? String(kn.gebruik) : null,
-      monumentLabel,
     ].filter(Boolean).join(" · ");
     return (
       <Fragment key={o.id}>
         <div style={{ marginLeft: diepte * 18 }}>
+          {isMonumentGebouw && (
+            <div className="mb-1 ml-1 mt-1">
+              <span
+                className="inline-flex items-center gap-1 rounded px-1.5 py-0.5 text-[11px] font-semibold"
+                style={{ background: "#fef3c7", color: "#92400e" }}
+              >
+                Rijksmonument
+                {kn.rijksmonument_nummer != null ? ` #${String(kn.rijksmonument_nummer)}` : ""}
+                {kn.rijksmonument_categorie != null ? ` · ${String(kn.rijksmonument_categorie)}` : ""}
+              </span>
+            </div>
+          )}
           <ObjectBewerken
             object={{ id: o.id, naam: o.naam, categorie: o.categorie, beschrijving: o.beschrijving, gebruik: kn.gebruik != null ? String(kn.gebruik) : null }}
             detail={detail}
@@ -434,9 +438,7 @@ export default async function ProfielPage({
             <div className="text-[12px]" style={{ color: "var(--text-2)" }}>
               {monumentNrs.length
                 ? `nrs ${monumentNrs.slice(0, 4).join(", ")}${monumentNrs.length > 4 ? "…" : ""}`
-                : monVoorgesteld.length
-                  ? `${monVoorgesteld.length} voorstel(len) — accordeer hieronder`
-                  : "nog niet gecontroleerd"}
+                : "nog niet gecontroleerd"}
             </div>
             <Bron>
               RCE Rijksmonumentenregister
@@ -551,173 +553,6 @@ export default async function ProfielPage({
             </dl>
             <Bron>Kadaster/PDOK (percelen) + handmatige invoer (juridisch)</Bron>
           </div>
-        </div>
-
-        {/* Monumenten controleren / cureren */}
-        <div className="card mt-4 p-5">
-          <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
-            <h2 className="text-[15px] font-bold">Rijksmonumenten controleren</h2>
-            <div className="flex flex-wrap gap-2">
-              <form action={controleerRijksmonumenten}>
-                <input type="hidden" name="landgoed_id" value={id} />
-                <button
-                  className="btn btn-ghost btn-sm"
-                  disabled={!basisIngesteld}
-                  title={
-                    basisIngesteld
-                      ? undefined
-                      : "Bepaal eerst de basislocatie op de kaart"
-                  }
-                >
-                  Controleer omgeving (RCE)
-                </button>
-              </form>
-              <form action={hercontroleMonumentenGebouwen}>
-                <input type="hidden" name="landgoed_id" value={id} />
-                <SubmitKnop className="btn btn-ghost btn-sm" pendingTekst="Bezig…">
-                  Hercontroleer gebouwen
-                </SubmitKnop>
-              </form>
-            </div>
-          </div>
-          {!basisIngesteld && (
-            <p className="text-[13px]" style={{ color: "var(--text-2)" }}>
-              Bepaal eerst de basislocatie op de{" "}
-              <Link href={`/landgoed/${id}/kaart`} className="underline">
-                kaart
-              </Link>
-              ; dan kan het RCE-register rond het landgoed worden bevraagd.
-            </p>
-          )}
-          {monVoorgesteld.length > 0 && (
-            <div className="mb-3">
-              <div className="label-up mb-2">
-                Voorgesteld ({monVoorgesteld.length}) — horen deze bij het landgoed?
-              </div>
-              <ul className="flex flex-col gap-2">
-                {monVoorgesteld.map((m) => {
-                  const k = (m.kenmerken ?? {}) as { url?: string };
-                  return (
-                    <li
-                      key={m.id}
-                      className="flex flex-wrap items-center justify-between gap-2 rounded-md p-2"
-                      style={{ background: "var(--bg)" }}
-                    >
-                      <span className="text-[13px]">
-                        {k.url ? (
-                          <a href={k.url} target="_blank" rel="noreferrer" className="underline">
-                            {m.naam}
-                          </a>
-                        ) : (
-                          m.naam
-                        )}
-                      </span>
-                      <span className="flex gap-2">
-                        <form action={accordeerMonument}>
-                          <input type="hidden" name="landgoed_id" value={id} />
-                          <input type="hidden" name="id" value={m.id} />
-                          <button className="btn btn-primary btn-sm">Hoort erbij</button>
-                        </form>
-                        <form action={verwijderMonument}>
-                          <input type="hidden" name="landgoed_id" value={id} />
-                          <input type="hidden" name="id" value={m.id} />
-                          <button
-                            className="btn btn-ghost btn-sm"
-                            style={{ color: "var(--red)" }}
-                          >
-                            Verwijderen
-                          </button>
-                        </form>
-                      </span>
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
-          )}
-          {(monGeaccordeerd.length > 0 || gebouwMonumenten.length > 0) && (
-            <div>
-              <div className="label-up mb-2">
-                Bevestigd ({monGeaccordeerd.length + gebouwMonumenten.length})
-              </div>
-              <ul className="flex flex-col gap-1 text-[13px]">
-                {monGeaccordeerd.map((m) => {
-                  const k = (m.kenmerken ?? {}) as { url?: string };
-                  return (
-                    <li key={m.id} className="flex items-center justify-between gap-2">
-                      <span>
-                        {k.url ? (
-                          <a href={k.url} target="_blank" rel="noreferrer" className="underline">
-                            {m.naam}
-                          </a>
-                        ) : (
-                          m.naam
-                        )}
-                      </span>
-                      <form action={verwijderMonument}>
-                        <input type="hidden" name="landgoed_id" value={id} />
-                        <input type="hidden" name="id" value={m.id} />
-                        <button
-                          className="btn btn-ghost btn-sm"
-                          style={{ color: "var(--red)" }}
-                        >
-                          Verwijderen
-                        </button>
-                      </form>
-                    </li>
-                  );
-                })}
-                {gebouwMonumenten.map((m) => {
-                  const k = (m.kenmerken ?? {}) as {
-                    rijksmonument_url?: string;
-                    rijksmonument_nummer?: unknown;
-                    rijksmonument_categorie?: unknown;
-                  };
-                  const label = [
-                    m.naam,
-                    k.rijksmonument_categorie ? String(k.rijksmonument_categorie) : null,
-                  ]
-                    .filter(Boolean)
-                    .join(" · ");
-                  return (
-                    <li key={m.id} className="flex items-center justify-between gap-2">
-                      <span className="flex items-center gap-2">
-                        {k.rijksmonument_url ? (
-                          <a
-                            href={k.rijksmonument_url}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="underline"
-                          >
-                            {label}
-                          </a>
-                        ) : (
-                          label
-                        )}
-                        <span
-                          className="rounded px-1.5 py-0.5 text-[11px] font-semibold"
-                          style={{ background: "#fef3c7", color: "#92400e" }}
-                        >
-                          gebouw
-                        </span>
-                      </span>
-                      <Link
-                        href={`/landgoed/${id}/object/${m.id}`}
-                        className="btn btn-ghost btn-sm"
-                      >
-                        Details
-                      </Link>
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
-          )}
-          <Bron>
-            Bron: RCE Rijksmonumentenregister (WFS). Voorstellen rond de basislocatie;
-            de eigenaar bevestigt welke tot het landgoed horen. Gebouwen worden automatisch
-            gedetecteerd bij plaatsing op de kaart.
-          </Bron>
         </div>
 
         {/* Profiel bewerken */}
