@@ -30,6 +30,7 @@ const TYPE_LABELS: Record<string, string> = {
   agendapunt: "Agendapunt",
   documentintake: "Document",
   informatie: "Informatie",
+  contact: "Contact",
 };
 
 const TYPE_COLORS: Record<string, string> = {
@@ -37,6 +38,7 @@ const TYPE_COLORS: Record<string, string> = {
   agendapunt: "tag-blue",
   documentintake: "tag-purple",
   informatie: "tag-gray",
+  contact: "tag-green",
 };
 
 function VeldInput({
@@ -110,37 +112,59 @@ function Bewerkformulier({
       <input type="hidden" name="type" value={voorstel.type} />
 
       <div className="mb-4 grid gap-3" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))" }}>
+        {/* Type-selector */}
+        <div className="col-span-full">
+          <label className="label-up mb-1 block">Type</label>
+          <select className="input" name="type" defaultValue={voorstel.type}>
+            <option value="taak">Taak</option>
+            <option value="agendapunt">Agendapunt</option>
+            <option value="contact">Contact</option>
+            <option value="documentintake">Document</option>
+            <option value="informatie">Informatie</option>
+          </select>
+        </div>
+
         <VeldInput label="Titel" name="titel" defaultValue={voorstel.titel} required />
 
         {voorstel.type === "taak" && (
           <>
-            <VeldInput label="Omschrijving" name="omschrijving" defaultValue={v.omschrijving} />
-            <VeldInput label="Deadline" name="deadline" defaultValue={v.deadline} type="date" />
+            <VeldInput label="Omschrijving" name="omschrijving" defaultValue={v.omschrijving as string} />
+            <VeldInput label="Deadline" name="deadline" defaultValue={v.deadline as string} type="date" />
             <div>
               <label className="label-up mb-1 block">Prioriteit</label>
-              <select className="input w-full" name="prioriteit" defaultValue={v.prioriteit ?? ""}>
+              <select className="input w-full" name="prioriteit" defaultValue={(v.prioriteit as string) ?? ""}>
                 <option value="">—</option>
                 <option value="hoog">Hoog</option>
                 <option value="midden">Midden</option>
                 <option value="laag">Laag</option>
               </select>
             </div>
-            <PersoonDropdown name="toegewezen_aan" leden={leden} defaultValue={v.toegewezen_aan} />
+            <PersoonDropdown name="toegewezen_aan" leden={leden} defaultValue={v.toegewezen_aan as string} />
           </>
         )}
 
         {voorstel.type === "agendapunt" && (
           <>
-            <VeldInput label="Datum" name="datum" defaultValue={v.datum} type="date" required />
-            <VeldInput label="Tijd" name="tijd" defaultValue={v.tijd} type="time" />
-            <VeldInput label="Locatie" name="locatie" defaultValue={v.plaats ?? v.locatie} />
-            <PersoonDropdown name="toegewezen_aan" leden={leden} defaultValue={v.toegewezen_aan} />
+            <VeldInput label="Datum" name="datum" defaultValue={v.datum as string} type="date" required />
+            <VeldInput label="Tijd" name="tijd" defaultValue={v.tijd as string} type="time" />
+            <VeldInput label="Locatie" name="locatie" defaultValue={(v.plaats ?? v.locatie) as string} />
+            <PersoonDropdown name="toegewezen_aan" leden={leden} defaultValue={v.toegewezen_aan as string} />
+          </>
+        )}
+
+        {voorstel.type === "contact" && (
+          <>
+            <VeldInput label="Naam" name="contact_naam" defaultValue={(v.naam as string) ?? voorstel.titel} required />
+            <VeldInput label="Organisatie" name="contact_organisatie" defaultValue={v.organisatie as string} />
+            <VeldInput label="E-mail" name="contact_email" defaultValue={v.email as string} type="email" />
+            <VeldInput label="Telefoon" name="contact_telefoon" defaultValue={v.telefoon as string} />
+            <VeldInput label="Omschrijving / verantwoordelijkheden" name="contact_omschrijving" defaultValue={v.omschrijving as string} />
           </>
         )}
 
         {voorstel.type === "documentintake" && (
           <>
-            <VeldInput label="Kernvraag" name="kernvraag" defaultValue={v.kernvraag} />
+            <VeldInput label="Kernvraag" name="kernvraag" defaultValue={v.kernvraag as string} />
             <VeldInput label="Samenvatting" name="samenvatting" defaultValue={voorstel.samenvatting} />
           </>
         )}

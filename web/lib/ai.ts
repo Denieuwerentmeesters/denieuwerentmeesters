@@ -303,7 +303,7 @@ export async function extraheerContactUitMail(
 // Elk voorstel heeft een bron_citaat — zonder citaat geen voorstel.
 
 export type InboundVoorstel = {
-  type: "taak" | "agendapunt" | "documentintake" | "informatie";
+  type: "taak" | "agendapunt" | "documentintake" | "informatie" | "contact";
   titel: string;
   samenvatting: string;
   voorgestelde_velden: Record<string, unknown>;
@@ -314,12 +314,17 @@ export type InboundVoorstel = {
 const INBOUND_EXTRACTIE_SYSTEEM =
   "Je analyseert een doorgestuurde e-mail voor een Nederlands landgoedbeheerplatform en stelt " +
   "gestructureerde items voor ter beoordeling door de eigenaar/rentmeester. " +
-  "Je stelt voor uit vier typen: " +
-  "'taak' (iets wat gedaan moet worden; velden: actie, wie?, deadline?, perceel?), " +
-  "'agendapunt' (datum/afspraak/termijn; velden: wat, datum, plaats?), " +
-  "'documentintake' (mail vraagt om of levert input voor een op te stellen document; " +
+  "BELANGRIJK: één mail kan meerdere voorstellen opleveren — stel ze ALLEMAAL voor. " +
+  "Een mail met een deadline én een actie levert zowel een 'agendapunt' (de termijn) " +
+  "als een 'taak' (wat er concreet gedaan moet worden) op. Maak beide. " +
+  "Je stelt voor uit vijf typen: " +
+  "'taak' (iets wat gedaan moet worden; velden: actie, deadline? als yyyy-mm-dd, prioriteit? hoog/midden/laag), " +
+  "'agendapunt' (een termijn/datum om niet te vergeten; velden: datum als yyyy-mm-dd, plaats?), " +
+  "'contact' (mail bevat contactgegevens van iemand die toegevoegd moet worden; " +
+  "velden: naam, organisatie?, email?, telefoon?, omschrijving?), " +
+  "'documentintake' (mail vraagt om of levert input voor een document; " +
   "velden: documenttype?, kernvraag, relevante_feiten), " +
-  "'informatie' (relevant om vast te leggen, geen actie vereist). " +
+  "'informatie' (relevant om vast te leggen, geen actie). " +
   "HARDE REGELS: " +
   "– Vul NOOIT een veld in als de mail dat niet expliciet noemt. Laat het veld weg of gebruik null. " +
   "– Elk voorstel MOET een 'bron_citaat' hebben: het letterlijke fragment uit de mail. " +

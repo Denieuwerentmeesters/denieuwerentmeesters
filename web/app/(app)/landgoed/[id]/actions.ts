@@ -186,7 +186,25 @@ export async function bevestigInboundVoorstel(fd: FormData) {
 
   let gekoppeld_object_id: string | null = null;
 
-  if (type === "taak") {
+  if (type === "contact") {
+    const naam = tekst(fd, "contact_naam");
+    if (naam) {
+      const { data: relatie } = await supabase
+        .from("relatie")
+        .insert({
+          landgoed_id,
+          naam,
+          organisatie: tekst(fd, "contact_organisatie"),
+          email: tekst(fd, "contact_email"),
+          telefoon: tekst(fd, "contact_telefoon"),
+          omschrijving: tekst(fd, "contact_omschrijving"),
+          status: "actief",
+        })
+        .select("id")
+        .single();
+      gekoppeld_object_id = relatie?.id ?? null;
+    }
+  } else if (type === "taak") {
     const { data: taak } = await supabase
       .from("taak")
       .insert({
@@ -233,6 +251,7 @@ export async function bevestigInboundVoorstel(fd: FormData) {
   revalidatePath(`/landgoed/${landgoed_id}/inbox`);
   revalidatePath(`/landgoed/${landgoed_id}/taken`);
   revalidatePath(`/landgoed/${landgoed_id}/agenda`);
+  revalidatePath(`/landgoed/${landgoed_id}/contacten`);
 }
 
 export async function verWerpInboundVoorstel(fd: FormData) {
