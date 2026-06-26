@@ -62,27 +62,63 @@ export function OpnameKnop({
 
   const fmt = (s: number) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
 
+  async function uploadBestand(bestand: File) {
+    setFout(null);
+    setStatus("verwerken");
+    const fd = new FormData();
+    fd.set("landgoed_id", landgoedId);
+    fd.set("audio", bestand);
+    const resultaat = await maakGesprekVanAudio(fd);
+    if (resultaat && "fout" in resultaat) {
+      setFout(resultaat.fout ?? "Onbekende fout");
+      setStatus("fout");
+    }
+  }
+
   if (!beschikbaar) return null;
 
   return (
-    <div className="flex flex-col gap-2">
-      {status === "idle" || status === "fout" ? (
-        <button type="button" onClick={start} className="btn btn-primary">
-          ● Start opname
-        </button>
-      ) : status === "opnemen" ? (
-        <div className="flex items-center gap-3">
-          <span className="inline-block w-2.5 h-2.5 rounded-full animate-pulse" style={{ background: "var(--red)" }} />
-          <span className="font-mono text-[14px]">{fmt(seconden)}</span>
-          <button type="button" onClick={stop} className="btn btn-ghost btn-sm">
-            ■ Stop en transcribeer
+    <div className="flex flex-col gap-3">
+      {/* Live opnemen */}
+      <div className="flex flex-wrap items-center gap-3">
+        {status === "idle" || status === "fout" ? (
+          <button type="button" onClick={start} className="btn btn-primary">
+            ● Start opname
           </button>
-        </div>
-      ) : (
-        <div className="text-[13px]" style={{ color: "var(--text-2)" }}>
-          Bezig met transcriberen…
+        ) : status === "opnemen" ? (
+          <>
+            <span className="inline-block w-2.5 h-2.5 rounded-full animate-pulse" style={{ background: "var(--red)" }} />
+            <span className="font-mono text-[14px]">{fmt(seconden)}</span>
+            <button type="button" onClick={stop} className="btn btn-ghost btn-sm">
+              ■ Stop en transcribeer
+            </button>
+          </>
+        ) : (
+          <span className="text-[13px]" style={{ color: "var(--text-2)" }}>Bezig met transcriberen…</span>
+        )}
+      </div>
+
+      {/* Bestand uploaden */}
+      {(status === "idle" || status === "fout") && (
+        <div className="flex items-center gap-2">
+          <label
+            className="btn btn-ghost btn-sm cursor-pointer"
+            style={{ display: "inline-flex", alignItems: "center" }}
+          >
+            ↑ Upload audiobestand (m4a, mp3, wav…)
+            <input
+              type="file"
+              accept=".m4a,.mp3,.mp4,.wav,.webm,.ogg,audio/*"
+              className="sr-only"
+              onChange={(e) => {
+                const f = e.target.files?.[0];
+                if (f) uploadBestand(f);
+              }}
+            />
+          </label>
         </div>
       )}
+
       {fout && <p className="text-[12.5px]" style={{ color: "var(--red)" }}>{fout}</p>}
     </div>
   );
