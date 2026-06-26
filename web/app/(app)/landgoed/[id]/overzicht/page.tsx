@@ -33,6 +33,7 @@ export default async function OverzichtPage({
     vergaderingen,
     alleTagken,
     ledenRaw,
+    relatiesRaw,
   ] = await Promise.all([
     supabase
       .from("taak")
@@ -86,6 +87,11 @@ export default async function OverzichtPage({
       .from("lidmaatschap")
       .select("gebruiker_id, profiel(id, naam, email)")
       .eq("landgoed_id", id),
+    supabase
+      .from("relatie")
+      .select("id, naam")
+      .eq("landgoed_id", id)
+      .order("naam"),
   ]);
 
   // Kalender events
@@ -115,6 +121,11 @@ export default async function OverzichtPage({
     const p = l.profiel;
     return { id: p?.id ?? l.gebruiker_id, naam: p?.naam ?? p?.email ?? l.gebruiker_id };
   });
+  // Contacten (relaties) voor dropdown — waarde-prefix "c:<naam>" zodat server action het onderscheidt
+  const relatieOpties = ((relatiesRaw.data ?? []) as { id: string; naam: string }[]).map((r) => ({
+    value: `c:${r.naam}`,
+    naam: r.naam,
+  }));
 
   // Gecombineerde lijst: taken + agendapunten
   type TaakRaw = { id: string; titel: string; prioriteit: string | null; status: string; deadline: string | null; toegewezen_aan: string | null; profiel: { naam: string | null; email: string | null } | null };
@@ -196,7 +207,7 @@ export default async function OverzichtPage({
         {/* Taken en agendapunten */}
         <div className="mb-8">
           <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
-            <h2 className="text-[16px] font-bold">Taken en agenda</h2>
+            <h2 className="text-[16px] font-bold">Taken en agendapunten</h2>
             <div className="flex gap-2">
               {/* Nieuw agendapunt */}
               <details className="relative">
@@ -207,7 +218,7 @@ export default async function OverzichtPage({
                   className="absolute right-0 top-full z-10 mt-1 w-[360px] rounded-[10px] border p-4 shadow-lg"
                   style={{ background: "white", borderColor: "var(--border)" }}
                 >
-                  <form action={nieuwAgendaItem} className="flex flex-col gap-3">
+                  <form action={nieuwAgendaItem} className="flex flex-col gap-3" encType="multipart/form-data">
                     <input type="hidden" name="landgoed_id" value={id} />
                     <label className="flex flex-col gap-1 text-[12.5px]">
                       <span style={{ color: "var(--text-2)" }}>Titel</span>
@@ -228,12 +239,31 @@ export default async function OverzichtPage({
                       <input className="input" name="locatie" placeholder="Optioneel" />
                     </label>
                     <label className="flex flex-col gap-1 text-[12.5px]">
+                      <span style={{ color: "var(--text-2)" }}>Omschrijving</span>
+                      <textarea className="input" name="omschrijving" rows={3} placeholder="Optionele toelichting…" />
+                    </label>
+                    <label className="flex flex-col gap-1 text-[12.5px]">
+                      <span style={{ color: "var(--text-2)" }}>Bijlage</span>
+                      <input className="input" type="file" name="bijlage" />
+                    </label>
+                    <label className="flex flex-col gap-1 text-[12.5px]">
                       <span style={{ color: "var(--text-2)" }}>Toegewezen aan</span>
                       <select className="input" name="toegewezen_aan" defaultValue="">
                         <option value="">— niemand —</option>
-                        {leden.map((l) => (
-                          <option key={l.id} value={l.id}>{l.naam}</option>
-                        ))}
+                        {leden.length > 0 && (
+                          <optgroup label="Gebruikers">
+                            {leden.map((l) => (
+                              <option key={l.id} value={`u:${l.id}`}>{l.naam}</option>
+                            ))}
+                          </optgroup>
+                        )}
+                        {relatieOpties.length > 0 && (
+                          <optgroup label="Contacten">
+                            {relatieOpties.map((r) => (
+                              <option key={r.value} value={r.value}>{r.naam}</option>
+                            ))}
+                          </optgroup>
+                        )}
                       </select>
                     </label>
                     <button type="submit" className="btn btn-primary btn-sm">Toevoegen</button>
@@ -250,11 +280,15 @@ export default async function OverzichtPage({
                   className="absolute right-0 top-full z-10 mt-1 w-[360px] rounded-[10px] border p-4 shadow-lg"
                   style={{ background: "white", borderColor: "var(--border)" }}
                 >
-                  <form action={nieuweTaak} className="flex flex-col gap-3">
+                  <form action={nieuweTaak} className="flex flex-col gap-3" encType="multipart/form-data">
                     <input type="hidden" name="landgoed_id" value={id} />
                     <label className="flex flex-col gap-1 text-[12.5px]">
                       <span style={{ color: "var(--text-2)" }}>Taak</span>
                       <input className="input" name="titel" placeholder="Wat moet er gebeuren?" required />
+                    </label>
+                    <label className="flex flex-col gap-1 text-[12.5px]">
+                      <span style={{ color: "var(--text-2)" }}>Omschrijving</span>
+                      <textarea className="input" name="omschrijving" rows={3} placeholder="Optionele toelichting…" />
                     </label>
                     <div className="grid grid-cols-2 gap-3">
                       <label className="flex flex-col gap-1 text-[12.5px]">
@@ -266,18 +300,33 @@ export default async function OverzichtPage({
                         <select className="input" name="prioriteit" defaultValue="">
                           <option value="">—</option>
                           <option value="hoog">Hoog</option>
-                          <option value="midden">Midden</option>
+                          <option value="middel">Middel</option>
                           <option value="laag">Laag</option>
                         </select>
                       </label>
                     </div>
                     <label className="flex flex-col gap-1 text-[12.5px]">
+                      <span style={{ color: "var(--text-2)" }}>Bijlage</span>
+                      <input className="input" type="file" name="bijlage" />
+                    </label>
+                    <label className="flex flex-col gap-1 text-[12.5px]">
                       <span style={{ color: "var(--text-2)" }}>Toegewezen aan</span>
                       <select className="input" name="toegewezen_aan" defaultValue="">
                         <option value="">— niemand —</option>
-                        {leden.map((l) => (
-                          <option key={l.id} value={l.id}>{l.naam}</option>
-                        ))}
+                        {leden.length > 0 && (
+                          <optgroup label="Gebruikers">
+                            {leden.map((l) => (
+                              <option key={l.id} value={`u:${l.id}`}>{l.naam}</option>
+                            ))}
+                          </optgroup>
+                        )}
+                        {relatieOpties.length > 0 && (
+                          <optgroup label="Contacten">
+                            {relatieOpties.map((r) => (
+                              <option key={r.value} value={r.value}>{r.naam}</option>
+                            ))}
+                          </optgroup>
+                        )}
                       </select>
                     </label>
                     <button type="submit" className="btn btn-primary btn-sm">Toevoegen</button>

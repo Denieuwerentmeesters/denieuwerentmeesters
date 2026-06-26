@@ -35,6 +35,7 @@ export default function TakenAgendaLijst({
   const [filterVan, setFilterVan] = useState("");
   const [filterTot, setFilterTot] = useState("");
   const [toonAfgerond, setToonAfgerond] = useState(false);
+  const [toonFilters, setToonFilters] = useState(false);
 
   const gefilterd = useMemo(() => {
     return items
@@ -58,6 +59,16 @@ export default function TakenAgendaLijst({
 
   return (
     <div>
+      <div className="mb-3 flex justify-end">
+        <button
+          type="button"
+          className="btn btn-ghost btn-sm"
+          onClick={() => setToonFilters((v) => !v)}
+        >
+          {toonFilters ? "Verberg zoekbalk" : "Zoek taak of agendapunt"}
+        </button>
+      </div>
+      {toonFilters && (
       <div className="card mb-4 flex flex-wrap items-center gap-3 p-3">
         <input
           className="input min-w-[200px] flex-1"
@@ -100,6 +111,7 @@ export default function TakenAgendaLijst({
           Afgerond
         </label>
       </div>
+      )}
 
       <div className="card divide-y" style={{ borderColor: "var(--border)" }}>
         {gefilterd.length === 0 && (

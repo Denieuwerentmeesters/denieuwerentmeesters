@@ -9,16 +9,20 @@ export default async function AgendaPage({
   const { id } = await params;
   const supabase = await createClient();
 
-  // Leden voor toewijzings-dropdown
-  const { data: ledenRaw } = await supabase
-    .from("lidmaatschap")
-    .select("gebruiker_id, profiel(id, naam, email)")
-    .eq("landgoed_id", id);
+  // Leden + contacten voor toewijzings-dropdown
+  const [ledenRaw, relatiesRaw] = await Promise.all([
+    supabase.from("lidmaatschap").select("gebruiker_id, profiel(id, naam, email)").eq("landgoed_id", id),
+    supabase.from("relatie").select("id, naam").eq("landgoed_id", id).order("naam"),
+  ]);
 
-  const leden = (ledenRaw ?? []).map((l) => {
+  const leden = (ledenRaw.data ?? []).map((l) => {
     const p = (l.profiel as unknown) as { id: string; naam: string | null; email: string | null } | null;
     return { id: p?.id ?? l.gebruiker_id, naam: p?.naam ?? p?.email ?? l.gebruiker_id };
   });
+  const relatieOpties = ((relatiesRaw.data ?? []) as { id: string; naam: string }[]).map((r) => ({
+    value: `c:${r.naam}`,
+    naam: r.naam,
+  }));
 
   // Agenda items
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -88,11 +92,20 @@ export default async function AgendaPage({
             <label className="label-up mb-1 block">Toegewezen aan</label>
             <select className="input" name="toegewezen_aan" defaultValue="">
               <option value="">— niemand —</option>
-              {leden.map((l) => (
-                <option key={l.id} value={l.id}>
-                  {l.naam}
-                </option>
-              ))}
+              {leden.length > 0 && (
+                <optgroup label="Gebruikers">
+                  {leden.map((l) => (
+                    <option key={l.id} value={`u:${l.id}`}>{l.naam}</option>
+                  ))}
+                </optgroup>
+              )}
+              {relatieOpties.length > 0 && (
+                <optgroup label="Contacten">
+                  {relatieOpties.map((r) => (
+                    <option key={r.value} value={r.value}>{r.naam}</option>
+                  ))}
+                </optgroup>
+              )}
             </select>
           </div>
           <button type="submit" className="btn btn-primary">

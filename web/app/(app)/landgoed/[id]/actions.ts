@@ -12,18 +12,53 @@ function getal(fd: FormData, k: string) {
   return v === null ? null : Number(v.replace(",", "."));
 }
 
+// ── Hulp: bijlage uploaden ──
+async function uploadBijlage(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  landgoed_id: string,
+  map: string,
+  file: File,
+): Promise<{ pad: string; naam: string } | null> {
+  if (!file || file.size === 0) return null;
+  const ext = file.name.split(".").pop() ?? "bin";
+  const pad = `${landgoed_id}/${map}/${Date.now()}.${ext}`;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { error } = await (supabase as any).storage.from("documenten").upload(pad, file);
+  if (error) return null;
+  return { pad, naam: file.name };
+}
+
+// ── Hulp: toewijzing-waarde parsen ──
+// Waarde "u:<uuid>" → profiel-UUID; "c:<naam>" → contactnaam; leeg → null
+function parseToewijzing(waarde: string | null): { toegewezen_aan: string | null; toegewezen_aan_naam: string | null } {
+  if (!waarde) return { toegewezen_aan: null, toegewezen_aan_naam: null };
+  if (waarde.startsWith("u:")) {
+    const uuid = waarde.slice(2);
+    return { toegewezen_aan: uuid, toegewezen_aan_naam: null };
+  }
+  if (waarde.startsWith("c:")) {
+    return { toegewezen_aan: null, toegewezen_aan_naam: waarde.slice(2) };
+  }
+  return { toegewezen_aan: null, toegewezen_aan_naam: null };
+}
+
 // ── Taken ──
 export async function nieuweTaak(fd: FormData) {
   const landgoed_id = String(fd.get("landgoed_id"));
   const titel = tekst(fd, "titel");
   if (!titel) return;
   const supabase = await createClient();
+  const toewijzing = parseToewijzing(tekst(fd, "toegewezen_aan"));
+  const bijlage = await uploadBijlage(supabase, landgoed_id, "taken", fd.get("bijlage") as File);
   await supabase.from("taak").insert({
     landgoed_id,
     titel,
+    omschrijving: tekst(fd, "omschrijving"),
     prioriteit: tekst(fd, "prioriteit"),
     deadline: tekst(fd, "deadline"),
-    toegewezen_aan: tekst(fd, "toegewezen_aan"),
+    ...toewijzing,
+    bijlage_pad: bijlage?.pad ?? null,
+    bijlage_naam: bijlage?.naam ?? null,
     status: "open",
   });
   revalidatePath(`/landgoed/${landgoed_id}/overzicht`);
@@ -36,6 +71,8 @@ export async function nieuwAgendaItem(fd: FormData) {
   const datum = tekst(fd, "datum");
   if (!titel || !datum) return;
   const supabase = await createClient();
+  const toewijzing = parseToewijzing(tekst(fd, "toegewezen_aan"));
+  const bijlage = await uploadBijlage(supabase, landgoed_id, "agenda", fd.get("bijlage") as File);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   await (supabase as any).from("agenda_item").insert({
     landgoed_id,
@@ -43,7 +80,10 @@ export async function nieuwAgendaItem(fd: FormData) {
     datum,
     tijd: tekst(fd, "tijd"),
     locatie: tekst(fd, "locatie"),
-    toegewezen_aan: tekst(fd, "toegewezen_aan"),
+    omschrijving: tekst(fd, "omschrijving"),
+    ...toewijzing,
+    bijlage_pad: bijlage?.pad ?? null,
+    bijlage_naam: bijlage?.naam ?? null,
   });
   revalidatePath(`/landgoed/${landgoed_id}/overzicht`);
 }
