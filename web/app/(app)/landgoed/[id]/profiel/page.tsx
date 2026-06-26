@@ -3,6 +3,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import {
   controleerRijksmonumenten,
+  hercontroleMonumentenGebouwen,
   accordeerMonument,
   verwijderMonument,
   bewaarProfiel,
@@ -556,20 +557,28 @@ export default async function ProfielPage({
         <div className="card mt-4 p-5">
           <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
             <h2 className="text-[15px] font-bold">Rijksmonumenten controleren</h2>
-            <form action={controleerRijksmonumenten}>
-              <input type="hidden" name="landgoed_id" value={id} />
-              <button
-                className="btn btn-ghost btn-sm"
-                disabled={!basisIngesteld}
-                title={
-                  basisIngesteld
-                    ? undefined
-                    : "Bepaal eerst de basislocatie op de kaart"
-                }
-              >
-                Controleer (RCE)
-              </button>
-            </form>
+            <div className="flex flex-wrap gap-2">
+              <form action={controleerRijksmonumenten}>
+                <input type="hidden" name="landgoed_id" value={id} />
+                <button
+                  className="btn btn-ghost btn-sm"
+                  disabled={!basisIngesteld}
+                  title={
+                    basisIngesteld
+                      ? undefined
+                      : "Bepaal eerst de basislocatie op de kaart"
+                  }
+                >
+                  Controleer omgeving (RCE)
+                </button>
+              </form>
+              <form action={hercontroleMonumentenGebouwen}>
+                <input type="hidden" name="landgoed_id" value={id} />
+                <SubmitKnop className="btn btn-ghost btn-sm" pendingTekst="Bezig…">
+                  Hercontroleer gebouwen
+                </SubmitKnop>
+              </form>
+            </div>
           </div>
           {!basisIngesteld && (
             <p className="text-[13px]" style={{ color: "var(--text-2)" }}>

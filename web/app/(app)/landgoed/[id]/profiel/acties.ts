@@ -199,6 +199,79 @@ export async function verwijderMonument(fd: FormData) {
   revalidatePath(`/landgoed/${landgoed_id}/profiel`);
 }
 
+// ── Retroactieve monument-check voor bestaande gebouwen ──
+// Loopt alle geaccordeerde gebouwen langs en controleert via RCE WFS of ze
+// een rijksmonument zijn. Werkt ook voor gebouwen die vóór deze feature zijn
+// geplaatst (toen is_rijksmonument nog niet werd opgeslagen).
+export async function hercontroleMonumentenGebouwen(fd: FormData) {
+  const landgoed_id = String(fd.get("landgoed_id"));
+  const supabase = await createClient();
+
+  const { data: gebouwen } = await supabase
+    .from("stamobject")
+    .select("id, kenmerken")
+    .eq("landgoed_id", landgoed_id)
+    .eq("geaccordeerd", true)
+    .in("categorie", ["gebouw", "woning", "opstal"]);
+
+  if (!gebouwen?.length) {
+    revalidatePath(`/landgoed/${landgoed_id}/profiel`);
+    return;
+  }
+
+  for (const g of gebouwen) {
+    const k = (g.kenmerken ?? {}) as Record<string, unknown>;
+    const lat = Number(k.lat);
+    const lon = Number(k.lon);
+    if (!Number.isFinite(lat) || !Number.isFinite(lon)) continue;
+
+    // RCE-check: kleine bbox (30 m) rond het gebouw-punt.
+    const [x, y] = merc3857(lon, lat);
+    const d = 30;
+    const bbox = `${x - d},${y - d},${x + d},${y + d},urn:ogc:def:crs:EPSG::3857`;
+    const url =
+      `${RCE_WFS}?SERVICE=WFS&VERSION=2.0.0&REQUEST=GetFeature` +
+      `&TYPENAMES=${RCE_LAAG}&COUNT=1&BBOX=${bbox}&OUTPUTFORMAT=application/json`;
+
+    let mon: Record<string, unknown> = {
+      is_rijksmonument: false,
+      rijksmonument_nummer: null,
+      rijksmonument_categorie: null,
+      rijksmonument_url: null,
+    };
+    try {
+      const res = await fetch(url);
+      const gj = await res.json();
+      const f = gj?.features?.[0];
+      if (f) {
+        const p = (f.properties ?? {}) as Record<string, unknown>;
+        mon = {
+          is_rijksmonument: true,
+          rijksmonument_nummer:
+            p.rijksmonument_nummer != null ? String(p.rijksmonument_nummer) : null,
+          rijksmonument_categorie:
+            typeof p.subcategorie === "string" && p.subcategorie
+              ? p.subcategorie
+              : typeof p.hoofdcategorie === "string" && p.hoofdcategorie
+                ? p.hoofdcategorie
+                : null,
+          rijksmonument_url:
+            typeof p.rijksmonumenturl === "string" ? p.rijksmonumenturl : null,
+        };
+      }
+    } catch {
+      continue; // stil falen: dit gebouw overslaan
+    }
+
+    await supabase
+      .from("stamobject")
+      .update({ kenmerken: { ...k, ...mon } })
+      .eq("id", g.id);
+  }
+
+  revalidatePath(`/landgoed/${landgoed_id}/profiel`);
+}
+
 // ── BGT Bodemgebruik (automatisch, per perceel-centroïde) ──
 //
 // BGT begroeidterreindeel geeft de fysieke situatie (wat er staat), wat voor
