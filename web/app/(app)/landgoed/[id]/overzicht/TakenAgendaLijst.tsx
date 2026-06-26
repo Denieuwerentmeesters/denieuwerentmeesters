@@ -268,16 +268,8 @@ export default function TakenAgendaLijst({
               style={{ borderColor: "var(--border)" }}
             >
               <span
-                className="tag shrink-0 text-center"
-                style={{
-                  width: "56px",
-                  background:
-                    item.type === "taak"
-                      ? "var(--primary-muted)"
-                      : "var(--bg)",
-                  color: "var(--text-2)",
-                  fontVariant: "all-small-caps",
-                }}
+                className={`tag shrink-0 text-center ${item.type === "taak" ? "tag-amber" : "tag-green"}`}
+                style={{ width: "56px", fontVariant: "all-small-caps" }}
               >
                 {item.type === "taak" ? "Taak" : "Agenda"}
               </span>
