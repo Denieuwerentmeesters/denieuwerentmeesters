@@ -27,18 +27,29 @@ export default async function LandgoedLayout({
     .maybeSingle();
   if (!landgoed) redirect("/landgoederen");
 
-  // Open taken voor de badge.
+  // Open taken + inbox-voorstellen voor badges.
   const { count: openTaken } = await supabase
     .from("taak")
     .select("id", { count: "exact", head: true })
     .eq("landgoed_id", id)
     .eq("status", "open");
 
+  const { count: inboxConcept } = await supabase
+    .from("inbound_extractie")
+    .select("id", { count: "exact", head: true })
+    .eq("landgoed_id", id)
+    .eq("status", "concept");
+
   const naam = user.email ?? "Gebruiker";
   const initialen = naam.slice(0, 2).toUpperCase();
 
   const items = [
     { href: `/landgoed/${id}/profiel`, label: "Profiel" },
+    {
+      href: `/landgoed/${id}/inbox`,
+      label: "Inbox",
+      badge: inboxConcept ?? undefined,
+    },
     { href: `/landgoed/${id}/overzicht`, label: "Overzicht" },
     { href: `/landgoed/${id}/stamgegevens`, label: "Stamgegevens" },
     { href: `/landgoed/${id}/kaart`, label: "Kaart" },

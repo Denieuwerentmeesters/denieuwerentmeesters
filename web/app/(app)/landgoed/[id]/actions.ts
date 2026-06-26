@@ -138,6 +138,82 @@ export async function afwijsExtractie(fd: FormData) {
   revalidatePath(`/landgoed/${landgoed_id}/contacten`);
 }
 
+// ── Inbox (inbound_extractie) ──
+export async function bevestigInboundVoorstel(fd: FormData) {
+  const landgoed_id = String(fd.get("landgoed_id"));
+  const voorstel_id = String(fd.get("voorstel_id"));
+  const supabase = await createClient();
+
+  const { data: voorstel } = await supabase
+    .from("inbound_extractie")
+    .select("type, titel, voorgestelde_velden")
+    .eq("id", voorstel_id)
+    .eq("landgoed_id", landgoed_id)
+    .single();
+
+  if (!voorstel) return;
+
+  const velden = (voorstel.voorgestelde_velden ?? {}) as Record<string, string | null>;
+  let gekoppeld_object_id: string | null = null;
+
+  if (voorstel.type === "taak") {
+    const { data: taak } = await supabase
+      .from("taak")
+      .insert({
+        landgoed_id,
+        titel: voorstel.titel,
+        deadline: velden.deadline ?? null,
+        status: "open",
+      })
+      .select("id")
+      .single();
+    gekoppeld_object_id = taak?.id ?? null;
+  } else if (voorstel.type === "agendapunt") {
+    const { data: item } = await supabase
+      .from("agenda_item")
+      .insert({
+        landgoed_id,
+        titel: voorstel.titel,
+        datum: velden.datum ?? new Date().toISOString().slice(0, 10),
+        locatie: velden.plaats ?? null,
+      })
+      .select("id")
+      .single();
+    gekoppeld_object_id = item?.id ?? null;
+  }
+
+  const { data: { user } } = await supabase.auth.getUser();
+  await supabase
+    .from("inbound_extractie")
+    .update({
+      status: "bevestigd",
+      gekoppeld_object_id,
+      beoordeeld_door: user?.id ?? null,
+      beoordeeld_op: new Date().toISOString(),
+    })
+    .eq("id", voorstel_id);
+
+  revalidatePath(`/landgoed/${landgoed_id}/inbox`);
+  revalidatePath(`/landgoed/${landgoed_id}/taken`);
+}
+
+export async function verWerpInboundVoorstel(fd: FormData) {
+  const landgoed_id = String(fd.get("landgoed_id"));
+  const voorstel_id = String(fd.get("voorstel_id"));
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  await supabase
+    .from("inbound_extractie")
+    .update({
+      status: "verworpen",
+      beoordeeld_door: user?.id ?? null,
+      beoordeeld_op: new Date().toISOString(),
+    })
+    .eq("id", voorstel_id)
+    .eq("landgoed_id", landgoed_id);
+  revalidatePath(`/landgoed/${landgoed_id}/inbox`);
+}
+
 // ── Contracten ──
 export async function nieuwContract(fd: FormData) {
   const landgoed_id = String(fd.get("landgoed_id"));

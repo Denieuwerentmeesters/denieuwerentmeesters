@@ -42,12 +42,12 @@ function onthoudFout(e: unknown): null {
 }
 
 // Roept het model aan en verwacht puur JSON terug. Geeft null bij geen key/fout.
-async function vraagJson<T>(systeem: string, prompt: string): Promise<T | null> {
+async function vraagJson<T>(systeem: string, prompt: string, model?: string): Promise<T | null> {
   if (!aiBeschikbaar()) return null;
   laatsteFout = null;
   try {
     const res = await client().messages.create({
-      model: MODEL,
+      model: model ?? MODEL,
       max_tokens: 8192,
       system: systeem,
       messages: [{ role: "user", content: prompt }],
@@ -295,6 +295,49 @@ export async function extraheerContactUitMail(
   return vraagJson<ContactUitMailVoorstel>(
     CONTACT_UIT_MAIL_SYSTEEM,
     `Mail-inhoud:\n${mailTekst}${extra}\n\nStel een concept-contact voor.`,
+  );
+}
+
+// ── Inbound e-mail extractie ──
+// Leest een doorgestuurde mail en stelt taken/agendapunten/documentintake/informatie voor.
+// Elk voorstel heeft een bron_citaat — zonder citaat geen voorstel.
+
+export type InboundVoorstel = {
+  type: "taak" | "agendapunt" | "documentintake" | "informatie";
+  titel: string;
+  samenvatting: string;
+  voorgestelde_velden: Record<string, unknown>;
+  bron_citaat: string;
+  zekerheid: "hoog" | "midden" | "laag";
+};
+
+const INBOUND_EXTRACTIE_SYSTEEM =
+  "Je analyseert een doorgestuurde e-mail voor een Nederlands landgoedbeheerplatform en stelt " +
+  "gestructureerde items voor ter beoordeling door de eigenaar/rentmeester. " +
+  "Je stelt voor uit vier typen: " +
+  "'taak' (iets wat gedaan moet worden; velden: actie, wie?, deadline?, perceel?), " +
+  "'agendapunt' (datum/afspraak/termijn; velden: wat, datum, plaats?), " +
+  "'documentintake' (mail vraagt om of levert input voor een op te stellen document; " +
+  "velden: documenttype?, kernvraag, relevante_feiten), " +
+  "'informatie' (relevant om vast te leggen, geen actie vereist). " +
+  "HARDE REGELS: " +
+  "– Vul NOOIT een veld in als de mail dat niet expliciet noemt. Laat het veld weg of gebruik null. " +
+  "– Elk voorstel MOET een 'bron_citaat' hebben: het letterlijke fragment uit de mail. " +
+  "  Kun je geen fragment aanwijzen? Dan geen voorstel. " +
+  "– 'zekerheid' is verplicht: hoog/midden/laag. Liever laag dan verzinnen. " +
+  "– Output is UITSLUITEND JSON, geen proza, geen markdown. " +
+  "– Bij doorgestuurde mail: probeer de oorspronkelijke afzender af te leiden uit de inhoud. " +
+  "  Lukt dat niet: laat het aan de gebruiker over — verzin geen afzender. " +
+  "Antwoord UITSLUITEND met JSON: {voorstellen:[{type,titel,samenvatting,voorgestelde_velden,bron_citaat,zekerheid}]}. " +
+  "Geen voorstellen = {voorstellen:[]}.";
+
+export async function extraheerUitInboundEmail(
+  mailTekst: string,
+): Promise<{ voorstellen: InboundVoorstel[] } | null> {
+  return vraagJson<{ voorstellen: InboundVoorstel[] }>(
+    INBOUND_EXTRACTIE_SYSTEEM,
+    `Mail-inhoud:\n${mailTekst}\n\nStel items voor.`,
+    process.env.INBOUND_EXTRACTIE_MODEL ?? "claude-haiku-4-5-20251001",
   );
 }
 
