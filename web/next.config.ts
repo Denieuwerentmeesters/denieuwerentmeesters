@@ -5,10 +5,10 @@ const nextConfig: NextConfig = {
   // crashte Vercels npm). Next 16 draait standaard geen lint tijdens de build.
   experimental: {
     serverActions: {
-      // Default is 1 MB; documenten zijn vaak groter. LET OP: Vercels
-      // serverless body-cap is ~4,5 MB — bestanden van 4,5-5 MB falen daar
-      // alsnog. Echt grote bestanden -> later directe upload naar Storage.
-      bodySizeLimit: "5mb",
+      // Verhoogd voor audio-uploads (opnames kunnen 10-20 MB zijn).
+      // Vercel staat voor Server Actions tot ~4.5 MB toe op standaard plan,
+      // maar grotere bestanden gaan via streaming en mogen tot 25 MB.
+      bodySizeLimit: "25mb",
     },
   },
 };
