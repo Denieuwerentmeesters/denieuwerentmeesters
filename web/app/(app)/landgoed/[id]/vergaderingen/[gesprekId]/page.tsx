@@ -3,11 +3,11 @@ import { notFound } from "next/navigation";
 import { aiBeschikbaar } from "@/lib/ai";
 import {
   slaTranscriptOp,
-  voerPromptUit,
   bevestigActie,
   afwijsActie,
   ruimTranscriptOp,
 } from "./acties";
+import { PromptKiezer } from "./PromptKiezer";
 
 type Params = { id: string; gesprekId: string };
 
@@ -136,34 +136,24 @@ export default async function GesprekDetailPage({
           )}
         </section>
 
-        {/* ── Laag 2: Promptkiezer ───────────────────────────────────────── */}
+        {/* ── Laag 2: Promptkiezer (multi-select) ───────────────────────── */}
         {heeftTranscript && (
           <section className="card p-5">
             <h2 className="text-[14px] font-semibold mb-1">Bewerkingen</h2>
-            <p className="text-[12.5px] mb-4" style={{ color: "var(--text-2)" }}>
-              Kies een bewerking om de AI los te laten op het transcript.
-              {!aiAan && " (AI staat uit — voeg ANTHROPIC_API_KEY toe.)"}
+            <p className="text-[12.5px] mb-3" style={{ color: "var(--text-2)" }}>
+              Selecteer één of meer bewerkingen en klik op Verwerk. Eerder uitgevoerde bewerkingen (↻) worden opnieuw gedraaid.
             </p>
-            <div className="flex flex-wrap gap-2">
-              {(sjablonen ?? []).map((s) => {
-                const al = uitgevoeردIds.has(s.id);
-                return (
-                  <form key={s.id} action={voerPromptUit}>
-                    <input type="hidden" name="gesprek_id" value={gesprekId} />
-                    <input type="hidden" name="landgoed_id" value={id} />
-                    <input type="hidden" name="sjabloon_id" value={s.id} />
-                    <button
-                      type="submit"
-                      className={`btn btn-sm ${al ? "btn-ghost" : "btn-primary"}`}
-                      disabled={!aiAan}
-                    >
-                      {al ? "↻ " : ""}{s.titel}
-                      {s.output_type === "taken" && <span className="ml-1 tag tag-amber" style={{ fontSize: 10 }}>acties</span>}
-                    </button>
-                  </form>
-                );
-              })}
-            </div>
+            <PromptKiezer
+              sjablonen={(sjablonen ?? []).map((s) => ({
+                id: s.id,
+                titel: s.titel,
+                output_type: s.output_type,
+                uitgevoerd: uitgevoeردIds.has(s.id),
+              }))}
+              gesprekId={gesprekId}
+              landgoedId={id}
+              aiAan={aiAan}
+            />
           </section>
         )}
 
