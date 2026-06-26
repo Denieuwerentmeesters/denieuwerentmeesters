@@ -217,8 +217,7 @@ export default function Kalender({
                 <input type="hidden" name="landgoed_id" value={landgoedId} />
                 <input type="hidden" name="id" value={e.agendaId ?? ""} />
                 <button
-                  className="btn btn-ghost btn-sm"
-                  style={{ color: "var(--red)" }}
+                  className="btn btn-ghost btn-sm btn-danger"
                 >
                   Verwijder
                 </button>

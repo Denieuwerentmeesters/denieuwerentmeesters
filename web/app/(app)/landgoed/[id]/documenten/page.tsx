@@ -104,8 +104,7 @@ export default async function DocumentenPage({
                 <input type="hidden" name="pad" value={d.bestand_pad ?? ""} />
                 <button
                   type="submit"
-                  className="btn btn-ghost btn-sm"
-                  style={{ color: "var(--red)" }}
+                  className="btn btn-ghost btn-sm btn-danger"
                 >
                   Verwijderen
                 </button>

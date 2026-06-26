@@ -88,6 +88,14 @@ body {
   opacity: 0.55;
   cursor: not-allowed;
 }
+.btn-danger {
+  color: var(--red);
+}
+.btn-danger:hover {
+  border-color: var(--red);
+  background: var(--red-light);
+  color: var(--red);
+}
 
 .card {
   background: var(--white);

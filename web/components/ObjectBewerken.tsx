@@ -162,8 +162,7 @@ export default function ObjectBewerken({
               <div className="mt-1 flex items-center justify-between">
                 <button
                   type="button"
-                  className="btn btn-ghost btn-sm"
-                  style={{ color: "var(--red)" }}
+                  className="btn btn-ghost btn-sm btn-danger"
                   onClick={async () => {
                     const fd = new FormData();
                     fd.set("landgoed_id", landgoedId);

@@ -192,7 +192,7 @@ function AgendaRij({
       <form action={verwijderAgendaItem}>
         <input type="hidden" name="landgoed_id" value={landgoed_id} />
         <input type="hidden" name="id" value={item.id} />
-        <button type="submit" className="btn btn-ghost btn-sm text-[12px]">
+        <button type="submit" className="btn btn-ghost btn-sm btn-danger text-[12px]">
           Verwijderen
         </button>
       </form>
