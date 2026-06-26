@@ -83,8 +83,15 @@ export default async function ObjectDetailPage({
     oppervlakte_m2?: unknown;
     adres?: unknown;
     gebruik?: unknown;
+    bouwjaar?: unknown;
+    pandstatus?: unknown;
+    is_rijksmonument?: unknown;
+    rijksmonument_nummer?: unknown;
+    rijksmonument_categorie?: unknown;
+    rijksmonument_url?: unknown;
   };
   const isGebouw = GEBOUW_CATS.has(object.categorie);
+  const isMonument = isGebouw && kenmerken.is_rijksmonument === true;
   const rolOpties = isGebouw ? ROL_GEBOUW : ROL_PERCEEL;
 
   // Gekoppelde verbanden naar dit object.
@@ -175,20 +182,82 @@ export default async function ObjectDetailPage({
       <div className="p-7">
         {/* Kop */}
         <header className="mb-6">
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <h1 className="text-[22px] font-bold">{object.naam}</h1>
             <span className="tag tag-gray">{object.categorie}</span>
+            {isMonument && (
+              <span
+                className="inline-flex items-center gap-1 rounded px-2 py-0.5 text-[12px] font-semibold"
+                style={{ background: "#fef3c7", color: "#92400e" }}
+              >
+                Rijksmonument
+                {kenmerken.rijksmonument_nummer
+                  ? ` #${String(kenmerken.rijksmonument_nummer)}`
+                  : ""}
+              </span>
+            )}
           </div>
           <p className="mt-1 text-[13px]" style={{ color: "var(--text-2)" }}>
             {[
               oppervlakte,
               kenmerken.adres ? String(kenmerken.adres) : null,
               kenmerken.gebruik ? String(kenmerken.gebruik) : null,
+              kenmerken.bouwjaar ? `bouwjaar ${String(kenmerken.bouwjaar)}` : null,
+              kenmerken.pandstatus ? String(kenmerken.pandstatus) : null,
             ]
               .filter(Boolean)
               .join(" · ") || "Geen aanvullende gegevens."}
           </p>
         </header>
+
+        {/* ── Monumentstatus ── */}
+        {isMonument && (
+          <section className="mb-7">
+            <h2 className="mb-2 text-[16px] font-bold">Monumentstatus</h2>
+            <div className="card p-4">
+              <div className="flex flex-wrap items-start gap-4">
+                <div>
+                  <div className="label-up mb-1">Status</div>
+                  <div className="text-[14px] font-semibold" style={{ color: "#92400e" }}>
+                    Rijksmonument
+                  </div>
+                </div>
+                {kenmerken.rijksmonument_nummer != null && (
+                  <div>
+                    <div className="label-up mb-1">Nummer</div>
+                    <div className="text-[14px]">
+                      {String(kenmerken.rijksmonument_nummer)}
+                    </div>
+                  </div>
+                )}
+                {kenmerken.rijksmonument_categorie != null && (
+                  <div>
+                    <div className="label-up mb-1">Categorie</div>
+                    <div className="text-[14px]">
+                      {String(kenmerken.rijksmonument_categorie)}
+                    </div>
+                  </div>
+                )}
+              </div>
+              {kenmerken.rijksmonument_url != null && (
+                <div className="mt-3">
+                  <a
+                    href={String(kenmerken.rijksmonument_url)}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-[13px] underline"
+                    style={{ color: "var(--primary)" }}
+                  >
+                    Bekijk in het RCE Rijksmonumentenregister
+                  </a>
+                </div>
+              )}
+              <div className="mt-3 text-[11px]" style={{ color: "var(--text-2)" }}>
+                Bron: RCE Rijksmonumentenregister (WFS) · automatisch gedetecteerd bij plaatsing op de kaart
+              </div>
+            </div>
+          </section>
+        )}
 
         {/* ── Contacten ── */}
         <section className="mb-7">

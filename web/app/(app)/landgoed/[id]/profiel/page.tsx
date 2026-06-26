@@ -230,12 +230,29 @@ export default async function ProfielPage({
   const verdelingRijen = [...verdeling.entries()].sort((a, b) => b[1] - a[1]);
 
   // ── Rijksmonumenten ──
+  // Twee bronnen: (1) aparte rijksmonument-objecten (via RCE-sweep profielpagina),
+  // (2) geaccordeerde gebouwen met is_rijksmonument=true in kenmerken (via kaart-klik).
+  const GEBOUW_CATS_SET = new Set(["gebouw", "woning", "opstal"]);
   const monumenten = objs.filter((o) => o.categorie === "rijksmonument");
   const monGeaccordeerd = monumenten.filter((o) => o.geaccordeerd);
   const monVoorgesteld = monumenten.filter((o) => !o.geaccordeerd);
-  const monumentNrs = monGeaccordeerd
-    .map((o) => (o.kenmerken as { rijksmonument_nummer?: unknown })?.rijksmonument_nummer)
-    .filter(Boolean);
+  // Gebouwen die via de kaart als monument zijn gedetecteerd (geaccordeerd=true want handmatig geplaatst).
+  const gebouwMonumenten = objs.filter(
+    (o) =>
+      o.geaccordeerd &&
+      GEBOUW_CATS_SET.has(o.categorie) &&
+      (o.kenmerken as { is_rijksmonument?: unknown })?.is_rijksmonument === true,
+  );
+  // Gecombineerde teller + nummers (beide bronnen).
+  const monumentNrs = [
+    ...monGeaccordeerd.map(
+      (o) => (o.kenmerken as { rijksmonument_nummer?: unknown })?.rijksmonument_nummer,
+    ),
+    ...gebouwMonumenten.map(
+      (o) => (o.kenmerken as { rijksmonument_nummer?: unknown })?.rijksmonument_nummer,
+    ),
+  ].filter(Boolean);
+  const aantalMonumenten = monGeaccordeerd.length + gebouwMonumenten.length;
   const monGecontroleerd = datumKort(landgoed?.monumenten_gecontroleerd_op);
   const bgtGecontroleerd = datumKort(landgoed?.bodemgebruik_gecontroleerd_op);
 
@@ -322,6 +339,10 @@ export default async function ProfielPage({
     const opp = Number.isFinite(m2)
       ? isGebouw ? `${m2} m²` : `${(m2 / 10000).toLocaleString("nl-NL", { maximumFractionDigits: 2 })} ha`
       : null;
+    const monumentLabel =
+      isGebouw && kn.is_rijksmonument === true
+        ? `Rijksmonument${kn.rijksmonument_nummer ? ` #${String(kn.rijksmonument_nummer)}` : ""}${kn.rijksmonument_categorie ? ` · ${String(kn.rijksmonument_categorie)}` : ""}`
+        : null;
     const detail = [
       o.beschrijving,
       kn.adres ? String(kn.adres) : null,
@@ -329,6 +350,7 @@ export default async function ProfielPage({
       kn.bouwjaar ? `bouwjaar ${String(kn.bouwjaar)}` : null,
       kn.pandstatus ? String(kn.pandstatus) : null,
       kn.gebruik ? String(kn.gebruik) : null,
+      monumentLabel,
     ].filter(Boolean).join(" · ");
     return (
       <Fragment key={o.id}>
@@ -407,7 +429,7 @@ export default async function ProfielPage({
           {/* Rijksmonumenten */}
           <div className="card p-5">
             <div className="label-up">Rijksmonumenten</div>
-            <div className="mt-1 text-[30px] font-bold">{monGeaccordeerd.length}</div>
+            <div className="mt-1 text-[30px] font-bold">{aantalMonumenten}</div>
             <div className="text-[12px]" style={{ color: "var(--text-2)" }}>
               {monumentNrs.length
                 ? `nrs ${monumentNrs.slice(0, 4).join(", ")}${monumentNrs.length > 4 ? "…" : ""}`
@@ -604,9 +626,11 @@ export default async function ProfielPage({
               </ul>
             </div>
           )}
-          {monGeaccordeerd.length > 0 && (
+          {(monGeaccordeerd.length > 0 || gebouwMonumenten.length > 0) && (
             <div>
-              <div className="label-up mb-2">Bevestigd ({monGeaccordeerd.length})</div>
+              <div className="label-up mb-2">
+                Bevestigd ({monGeaccordeerd.length + gebouwMonumenten.length})
+              </div>
               <ul className="flex flex-col gap-1 text-[13px]">
                 {monGeaccordeerd.map((m) => {
                   const k = (m.kenmerken ?? {}) as { url?: string };
@@ -634,12 +658,56 @@ export default async function ProfielPage({
                     </li>
                   );
                 })}
+                {gebouwMonumenten.map((m) => {
+                  const k = (m.kenmerken ?? {}) as {
+                    rijksmonument_url?: string;
+                    rijksmonument_nummer?: unknown;
+                    rijksmonument_categorie?: unknown;
+                  };
+                  const label = [
+                    m.naam,
+                    k.rijksmonument_categorie ? String(k.rijksmonument_categorie) : null,
+                  ]
+                    .filter(Boolean)
+                    .join(" · ");
+                  return (
+                    <li key={m.id} className="flex items-center justify-between gap-2">
+                      <span className="flex items-center gap-2">
+                        {k.rijksmonument_url ? (
+                          <a
+                            href={k.rijksmonument_url}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="underline"
+                          >
+                            {label}
+                          </a>
+                        ) : (
+                          label
+                        )}
+                        <span
+                          className="rounded px-1.5 py-0.5 text-[11px] font-semibold"
+                          style={{ background: "#fef3c7", color: "#92400e" }}
+                        >
+                          gebouw
+                        </span>
+                      </span>
+                      <Link
+                        href={`/landgoed/${id}/object/${m.id}`}
+                        className="btn btn-ghost btn-sm"
+                      >
+                        Details
+                      </Link>
+                    </li>
+                  );
+                })}
               </ul>
             </div>
           )}
           <Bron>
             Bron: RCE Rijksmonumentenregister (WFS). Voorstellen rond de basislocatie;
-            de eigenaar bevestigt welke tot het landgoed horen.
+            de eigenaar bevestigt welke tot het landgoed horen. Gebouwen worden automatisch
+            gedetecteerd bij plaatsing op de kaart.
           </Bron>
         </div>
 
