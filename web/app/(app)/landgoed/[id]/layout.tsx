@@ -2,7 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { uitloggen } from "../../actions";
-import LandgoedNav from "@/components/LandgoedNav";
+import LandgoedNav, { type NavItem } from "@/components/LandgoedNav";
 
 export default async function LandgoedLayout({
   children,
@@ -43,26 +43,24 @@ export default async function LandgoedLayout({
   const naam = user.email ?? "Gebruiker";
   const initialen = naam.slice(0, 2).toUpperCase();
 
-  const items = [
-    { href: `/landgoed/${id}/profiel`, label: "Profiel en Stamgegevens" },
-    {
-      href: `/landgoed/${id}/inbox`,
-      label: "Inbox",
-      badge: inboxConcept ?? undefined,
-    },
-    {
-      href: `/landgoed/${id}/overzicht`,
-      label: "Overzicht (agenda en taken)",
-      badge: openTaken ?? undefined,
-    },
-    { href: `/landgoed/${id}/kaart`, label: "Kaart" },
-    { href: `/landgoed/${id}/documenten`, label: "Documenten" },
-    { href: `/landgoed/${id}/financieel`, label: "Financieel" },
-    { href: `/landgoed/${id}/contacten`, label: "Contacten" },
-    { href: `/landgoed/${id}/contracten`, label: "Contracten" },
-    { href: `/landgoed/${id}/subsidies`, label: "Subsidieradar" },
-    { href: `/landgoed/${id}/omgeving`, label: "Omgevingsradar" },
-    { href: `/landgoed/${id}/vergaderingen`, label: "Vergaderingen" },
+  const items: NavItem[] = [
+    // ── Menu ──
+    { href: `/landgoed/${id}/profiel`,   label: "Profiel en Stamgegevens", icon: "profiel",    group: "Menu" },
+    { href: `/landgoed/${id}/overzicht`, label: "Overzicht (agenda en taken)", icon: "overzicht", group: "Menu",
+      badge: openTaken ?? undefined, badgeKleur: (openTaken ?? 0) > 0 ? "oranje" : "grijs" },
+    { href: `/landgoed/${id}/kaart`,     label: "Kaart",      icon: "kaart",       group: "Menu" },
+    // ── Communicatie ──
+    { href: `/landgoed/${id}/inbox`,     label: "Inbox",      icon: "inbox",       group: "Communicatie",
+      badge: inboxConcept ?? undefined, badgeKleur: (inboxConcept ?? 0) > 0 ? "rood" : "grijs" },
+    { href: `/landgoed/${id}/documenten`, label: "Documenten", icon: "documenten", group: "Communicatie" },
+    { href: `/landgoed/${id}/contacten`, label: "Contacten",  icon: "contacten",   group: "Communicatie" },
+    { href: `/landgoed/${id}/vergaderingen`, label: "Vergaderingen", icon: "vergaderingen", group: "Communicatie" },
+    // ── Beheer ──
+    { href: `/landgoed/${id}/financieel`, label: "Financieel", icon: "financieel", group: "Beheer" },
+    { href: `/landgoed/${id}/contracten`, label: "Contracten", icon: "contracten", group: "Beheer" },
+    // ── Radar ──
+    { href: `/landgoed/${id}/subsidies`, label: "Subsidieradar",  icon: "subsidies", group: "Radar" },
+    { href: `/landgoed/${id}/omgeving`,  label: "Omgevingsradar", icon: "omgeving",  group: "Radar" },
   ];
 
   return (
