@@ -167,7 +167,7 @@ function AgendaRij({
         )}
       </div>
       <div className="flex-1">
-        <div className="text-[14px] font-semibold">{item.titel}</div>
+        <a href={`/landgoed/${landgoed_id}/agenda/${item.id}`} className="text-[14px] font-semibold hover:underline">{item.titel}</a>
         <div className="mt-0.5 flex flex-wrap gap-2 text-[12px]" style={{ color: "var(--text-2)" }}>
           {item.locatie && <span>📍 {item.locatie}</span>}
           {item.profiel && (

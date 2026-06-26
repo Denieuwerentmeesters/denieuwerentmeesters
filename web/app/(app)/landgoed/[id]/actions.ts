@@ -271,6 +271,26 @@ export async function verWerpInboundVoorstel(fd: FormData) {
   revalidatePath(`/landgoed/${landgoed_id}/inbox`);
 }
 
+// ── Notities ──
+export async function voegNotitieToe(fd: FormData) {
+  const landgoed_id = String(fd.get("landgoed_id"));
+  const object_type = String(fd.get("object_type"));
+  const object_id = String(fd.get("object_id"));
+  const tekst = String(fd.get("tekst") ?? "").trim();
+  if (!tekst) return;
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  await (supabase as any).from("notitie").insert({
+    landgoed_id,
+    object_type,
+    object_id,
+    tekst,
+    geschreven_door: user?.id ?? null,
+  });
+  revalidatePath(`/landgoed/${landgoed_id}/taak/${object_id}`);
+  revalidatePath(`/landgoed/${landgoed_id}/agenda/${object_id}`);
+}
+
 // ── Contracten ──
 export async function nieuwContract(fd: FormData) {
   const landgoed_id = String(fd.get("landgoed_id"));

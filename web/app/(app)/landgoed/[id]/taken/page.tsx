@@ -102,8 +102,9 @@ export default async function TakenPage({
                 style={{ borderColor: "var(--border)" }}
               >
                 <div className="flex-1">
-                  <div
-                    className="text-[14px] font-semibold"
+                  <a
+                    href={`/landgoed/${id}/taak/${t.id}`}
+                    className="text-[14px] font-semibold hover:underline"
                     style={
                       afgerond
                         ? { color: "var(--text-3)", textDecoration: "line-through" }
@@ -111,7 +112,7 @@ export default async function TakenPage({
                     }
                   >
                     {t.titel}
-                  </div>
+                  </a>
                   <div
                     className="mt-0.5 flex flex-wrap items-center gap-2 text-[12px]"
                     style={{ color: "var(--text-2)" }}

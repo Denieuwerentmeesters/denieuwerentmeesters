@@ -322,7 +322,8 @@ const INBOUND_EXTRACTIE_SYSTEEM =
   "'agendapunt' (een termijn/datum om niet te vergeten; velden: datum als yyyy-mm-dd, plaats?), " +
   "'contact' (mail bevat contactgegevens van iemand die toegevoegd moet worden; " +
   "velden: naam, organisatie?, email?, telefoon?, omschrijving?), " +
-  "'documentintake' (mail vraagt om of levert input voor een document; " +
+  "'documentintake' (ALLEEN als de mail expliciet vraagt een document op te stellen, " +
+  "een brief te schrijven, of als er een bijlage bij zit die opgeslagen moet worden; " +
   "velden: documenttype?, kernvraag, relevante_feiten), " +
   "'informatie' (relevant om vast te leggen, geen actie). " +
   "HARDE REGELS: " +
