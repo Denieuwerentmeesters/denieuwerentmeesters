@@ -721,11 +721,8 @@ export default async function ProfielPage({
         </div>
 
         {/* Profiel bewerken */}
-        <details id="bewerken" className="card mt-4 p-5">
-          <summary className="cursor-pointer text-[15px] font-bold">
-            Profiel bewerken
-          </summary>
-          <form action={bewaarProfiel} className="mt-4 flex flex-col gap-4">
+        <div id="bewerken" className="card mt-4 p-5">
+          <form action={bewaarProfiel} className="flex flex-col gap-4">
             <input type="hidden" name="landgoed_id" value={id} />
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               <Veld label="NSW-status" name="nsw_status" defaultValue={landgoed?.nsw_status} placeholder="bv. actief / gerangschikt" />
@@ -746,7 +743,7 @@ export default async function ProfielPage({
             NSW-gegevens zijn niet-openbaar en komen van de eigenaar/RVO-beschikking.
             Oppervlakte uit percelen heeft voorrang; het handmatige veld is een fallback.
           </Bron>
-        </details>
+        </div>
 
         {/* ── Stamgegevens ── */}
         <div
