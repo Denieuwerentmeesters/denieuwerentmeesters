@@ -384,6 +384,32 @@ export default async function ProfielPage({
           </div>
         </header>
 
+        {/* Profiel bewerken — uitklapbaar direct onder de kop */}
+        <details id="bewerken" className="card mb-5 p-5">
+          <summary className="cursor-pointer text-[14px] font-semibold">
+            Profiel bewerken
+          </summary>
+          <form action={bewaarProfiel} className="mt-4 flex flex-col gap-4">
+            <input type="hidden" name="landgoed_id" value={id} />
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+              <Veld label="NSW-status" name="nsw_status" defaultValue={landgoed?.nsw_status} placeholder="bv. actief / gerangschikt" />
+              <Veld label="NSW gerangschikt sinds (jaar)" name="nsw_sinds" defaultValue={landgoed?.nsw_sinds} type="number" placeholder="bv. 2017" />
+              <Veld label="Openstelling (dagen/jaar)" name="nsw_openstelling_dagen" defaultValue={landgoed?.nsw_openstelling_dagen} type="number" placeholder="bv. 40" />
+              <Veld label="NSW-nummer" name="nsw_nummer" defaultValue={landgoed?.nsw_nummer} placeholder="beschikkingskenmerk" />
+              <Veld label="Eigendomsvorm" name="eigendomsvorm" defaultValue={landgoed?.eigendomsvorm} placeholder="bv. Stichting X" />
+              <Veld label="Rechtsvorm (aanvrager)" name="rechtsvorm" defaultValue={landgoed?.rechtsvorm} placeholder="particulier / stichting / bv / …" />
+              <Veld label="Oppervlakte handmatig (ha)" name="hectare" defaultValue={landgoed?.hectare} type="number" placeholder="alleen als er geen percelen zijn" />
+            </div>
+            <div>
+              <button className="btn btn-primary btn-sm" type="submit">Opslaan</button>
+            </div>
+          </form>
+          <Bron>
+            NSW-gegevens zijn niet-openbaar en komen van de eigenaar/RVO-beschikking.
+            Oppervlakte uit percelen heeft voorrang; het handmatige veld is een fallback.
+          </Bron>
+        </details>
+
         {/* Vier kerntegels */}
         <div className="mb-5 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
           {/* Oppervlakte */}
@@ -513,31 +539,6 @@ export default async function ProfielPage({
             </dl>
             <Bron>Kadaster/PDOK (percelen) + handmatige invoer (juridisch)</Bron>
           </div>
-        </div>
-
-        {/* Profiel bewerken */}
-        <div id="bewerken" className="card mt-4 p-5">
-          <form action={bewaarProfiel} className="flex flex-col gap-4">
-            <input type="hidden" name="landgoed_id" value={id} />
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-              <Veld label="NSW-status" name="nsw_status" defaultValue={landgoed?.nsw_status} placeholder="bv. actief / gerangschikt" />
-              <Veld label="NSW gerangschikt sinds (jaar)" name="nsw_sinds" defaultValue={landgoed?.nsw_sinds} type="number" placeholder="bv. 2017" />
-              <Veld label="Openstelling (dagen/jaar)" name="nsw_openstelling_dagen" defaultValue={landgoed?.nsw_openstelling_dagen} type="number" placeholder="bv. 40" />
-              <Veld label="NSW-nummer" name="nsw_nummer" defaultValue={landgoed?.nsw_nummer} placeholder="beschikkingskenmerk" />
-              <Veld label="Eigendomsvorm" name="eigendomsvorm" defaultValue={landgoed?.eigendomsvorm} placeholder="bv. Stichting X" />
-              <Veld label="Rechtsvorm (aanvrager)" name="rechtsvorm" defaultValue={landgoed?.rechtsvorm} placeholder="particulier / stichting / bv / …" />
-              <Veld label="Oppervlakte handmatig (ha)" name="hectare" defaultValue={landgoed?.hectare} type="number" placeholder="alleen als er geen percelen zijn" />
-            </div>
-            <div>
-              <button className="btn btn-primary btn-sm" type="submit">
-                Opslaan
-              </button>
-            </div>
-          </form>
-          <Bron>
-            NSW-gegevens zijn niet-openbaar en komen van de eigenaar/RVO-beschikking.
-            Oppervlakte uit percelen heeft voorrang; het handmatige veld is een fallback.
-          </Bron>
         </div>
 
         {/* ── Stamgegevens ── */}
