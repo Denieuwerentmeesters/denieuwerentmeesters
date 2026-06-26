@@ -145,6 +145,93 @@ export async function maakNotulen(
   );
 }
 
+// ── Gespreksmodule: tekst-prompt verwerken ──
+export async function verwerkPrompt(
+  transcript: string,
+  promptTekst: string,
+): Promise<string | null> {
+  if (!aiBeschikbaar()) return null;
+  const res = await client().messages.create({
+    model: MODEL,
+    max_tokens: 4096,
+    system: "Je bent een assistent voor een Nederlands landgoed. Verwerk het gegeven transcript volgens de instructie. Geef alleen de gevraagde output, geen uitleg of inleiding.",
+    messages: [
+      {
+        role: "user",
+        content: `Instructie:\n${promptTekst}\n\nTranscript:\n${transcript}`,
+      },
+    ],
+  }).catch((e) => { onthoudFout(e); return null; });
+  if (!res) return null;
+  return res.content.filter((b) => b.type === "text").map((b) => (b as { text: string }).text).join("").trim();
+}
+
+// ── Gespreksmodule: actiepunten extraheren met persoon-matching ──
+export type ActiepuntRuw = {
+  omschrijving: string;
+  bron_citaat: string;
+  persoon_naam: string | null;
+  deadline_tekst: string | null;
+};
+
+export type ActiepuntVoorstel = {
+  omschrijving: string;
+  bron_citaat: string;
+  contact_id: string | null;
+  match_status: "zeker" | "kandidaten" | "geen";
+  match_kandidaten: { id: string; naam: string }[] | null;
+  deadline: string | null; // ISO date string
+  deadline_is_interpretatie: boolean;
+};
+
+export type Contact = { id: string; naam: string };
+
+export async function extraheerActiepuntenMetMatching(
+  transcript: string,
+  promptTekst: string,
+  contacten: Contact[],
+): Promise<ActiepuntVoorstel[] | null> {
+  // Stap 1: ruwe actiepunten extraheren (JSON, via prompt uit sjabloon)
+  const ruw = await vraagJson<ActiepuntRuw[]>(
+    "Je bent een assistent voor een Nederlands landgoed. Geef uitsluitend de gevraagde JSON-array terug.",
+    `Instructie:\n${promptTekst}\n\nTranscript:\n${transcript}`,
+  );
+  if (!ruw || !Array.isArray(ruw) || ruw.length === 0) return [];
+
+  // Stap 2: per actiepunt persoon matchen + deadline parsen
+  const vandaag = new Date().toISOString().slice(0, 10);
+  const contactenLijst = contacten.map((c) => `${c.naam} (id: ${c.id})`).join("\n");
+
+  const resultaten = await vraagJson<ActiepuntVoorstel[]>(
+    `Je matcht actiepunten op contactpersonen en parseert deadlines. Vandaag is ${vandaag}. Geef JSON terug. Contacten die bestaan:
+${contactenLijst || "(geen contacten bekend)"}`,
+    `Actiepunten om te verwerken:
+${JSON.stringify(ruw, null, 2)}
+
+Geef voor elk actiepunt terug als JSON-array:
+[{
+  "omschrijving": "...",
+  "bron_citaat": "...",
+  "contact_id": "uuid of null",
+  "match_status": "zeker" | "kandidaten" | "geen",
+  "match_kandidaten": [{id, naam}] of null,
+  "deadline": "YYYY-MM-DD of null",
+  "deadline_is_interpretatie": true
+}]
+
+Regels:
+- match_status "zeker": precies één duidelijke match op naam in de lijst.
+- match_status "kandidaten": meerdere mogelijke matches.
+- match_status "geen": persoon onbekend of geen persoon vermeld.
+- Vul contact_id alleen bij "zeker".
+- Vul match_kandidaten alleen bij "kandidaten".
+- Deadline alleen invullen als het transcript die noemt; anders null.
+- Verzin geen personen of deadlines die het transcript niet noemt.
+- Antwoord UITSLUITEND met de JSON-array.`,
+  );
+  return resultaten;
+}
+
 // ── Stamgegevens-extractie (onboarding) ──
 // AI leest een bron (document/tekst) en stelt stamobjecten + koppelingen voor.
 // Niets verzinnen: laat een veld leeg als de bron het niet noemt ("liever een gat dan een aanname").

@@ -1,6 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
-import { aiBeschikbaar } from "@/lib/ai";
-import { nieuweVergadering } from "./acties";
+import { maakGesprek } from "./acties";
 
 export default async function VergaderingenPage({
   params,
@@ -10,105 +9,73 @@ export default async function VergaderingenPage({
   const { id } = await params;
   const supabase = await createClient();
 
-  const { data: vergaderingen } = await supabase
-    .from("vergadering")
-    .select("id, titel, datum, samenvatting, notulen, status")
+  const { data: gesprekken } = await supabase
+    .from("gesprek")
+    .select("id, titel, datum, status")
     .eq("landgoed_id", id)
-    .order("datum", { ascending: false });
+    .order("aangemaakt_op", { ascending: false });
 
-  const ids = (vergaderingen ?? []).map((v) => v.id);
-  const { data: besluiten } = await supabase
-    .from("vergadering_besluit")
-    .select("vergadering_id, tekst")
-    .in("vergadering_id", ids);
-
-  const besluitPer = new Map<string, string[]>();
-  for (const b of besluiten ?? []) {
-    const a = besluitPer.get(b.vergadering_id) ?? [];
-    a.push(b.tekst);
-    besluitPer.set(b.vergadering_id, a);
-  }
+  const STATUS_TAG: Record<string, string> = {
+    nieuw: "tag-gray",
+    getranscribeerd: "tag-amber",
+    verwerkt: "tag-green",
+    opgeruimd: "tag-gray",
+  };
 
   return (
     <div className="flex flex-col">
-      <div
-        className="bg-white px-7 py-4"
-        style={{ borderBottom: "1px solid var(--border)" }}
-      >
-        <div className="text-[12.5px]" style={{ color: "var(--text-2)" }}>
-          Vergaderingen
-        </div>
+      <div className="bg-white px-7 py-4" style={{ borderBottom: "1px solid var(--border)" }}>
+        <div className="text-[12.5px]" style={{ color: "var(--text-2)" }}>Vergaderingen</div>
       </div>
 
       <div className="p-7">
         <header className="mb-6">
           <h1 className="text-[22px] font-bold">Vergaderingen</h1>
           <p className="mt-1 text-[13px]" style={{ color: "var(--text-2)" }}>
-            Plak een transcript — de AI maakt notulen, besluiten en taken.
-            {!aiBeschikbaar() && " (AI staat uit — voeg ANTHROPIC_API_KEY toe; je transcript wordt wel bewaard.)"}
-          </p>
-          <p className="mt-1 text-[11.5px]" style={{ color: "var(--text-3)" }}>
-            Audio opnemen en automatisch transcriberen volgt later (Railway-worker, fase 2).
+            Plak een transcript — kies daarna welke bewerkingen de AI uitvoert.
           </p>
         </header>
 
-        <form action={nieuweVergadering} className="card mb-5 flex flex-col gap-3 p-4">
+        <form action={maakGesprek} className="card mb-6 flex flex-col gap-3 p-5">
           <input type="hidden" name="landgoed_id" value={id} />
           <div className="flex flex-wrap gap-3">
-            <input className="input flex-1" name="titel" placeholder="Titel (bijv. Bestuursoverleg juni)" required style={{ minWidth: 220 }} />
-            <input className="input" type="date" name="datum" />
+            <div className="flex-1" style={{ minWidth: 220 }}>
+              <label className="label-up mb-1 block">Titel</label>
+              <input className="input w-full" name="titel" placeholder="Bijv. Bestuursoverleg juni" required />
+            </div>
+            <div>
+              <label className="label-up mb-1 block">Datum</label>
+              <input className="input" type="date" name="datum" />
+            </div>
           </div>
-          <textarea className="input" name="transcript" rows={5} placeholder="Plak hier het transcript of de aantekeningen…" />
           <div>
-            <button type="submit" className="btn btn-primary">
-              Vergadering verwerken
-            </button>
+            <label className="label-up mb-1 block">Transcript (optioneel — je kunt het ook op de detailpagina plakken)</label>
+            <textarea className="input w-full" name="transcript" rows={5} placeholder="Plak hier het transcript of de aantekeningen…" />
+          </div>
+          <div>
+            <button type="submit" className="btn btn-primary">Gesprek aanmaken →</button>
           </div>
         </form>
 
         <div className="flex flex-col gap-3">
-          {(vergaderingen ?? []).length === 0 && (
+          {(gesprekken ?? []).length === 0 && (
             <div className="card p-5 text-[13px]" style={{ color: "var(--text-2)" }}>
               Nog geen vergaderingen.
             </div>
           )}
-          {(vergaderingen ?? []).map((v) => (
-            <div key={v.id} className="card p-5">
-              <div className="mb-1 flex items-center gap-2">
-                <span className="text-[15px] font-bold">{v.titel}</span>
-                <span className="tag tag-gray">{v.datum}</span>
-                <span
-                  className={`tag ${v.status === "verwerkt" ? "tag-green" : "tag-amber"}`}
-                >
-                  {v.status}
-                </span>
+          {(gesprekken ?? []).map((g) => (
+            <a
+              key={g.id}
+              href={`/landgoed/${id}/vergaderingen/${g.id}`}
+              className="card block p-5 hover:shadow-sm transition-shadow"
+              style={{ textDecoration: "none", color: "inherit" }}
+            >
+              <div className="flex items-center gap-2">
+                <span className="text-[15px] font-bold">{g.titel}</span>
+                {g.datum && <span className="tag tag-gray">{g.datum}</span>}
+                <span className={`tag ${STATUS_TAG[g.status] ?? "tag-gray"}`}>{g.status}</span>
               </div>
-              {v.samenvatting && (
-                <p className="text-[13px]" style={{ color: "var(--text-2)" }}>
-                  {v.samenvatting}
-                </p>
-              )}
-              {(besluitPer.get(v.id) ?? []).length > 0 && (
-                <div className="mt-3">
-                  <div className="label-up mb-1">Besluiten</div>
-                  <ul className="list-disc pl-5 text-[13px]">
-                    {(besluitPer.get(v.id) ?? []).map((b, i) => (
-                      <li key={i}>{b}</li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-              {v.notulen && (
-                <details className="mt-3">
-                  <summary className="cursor-pointer text-[12.5px] font-semibold" style={{ color: "var(--primary)" }}>
-                    Notulen
-                  </summary>
-                  <div className="mt-2 whitespace-pre-wrap text-[13px]" style={{ color: "var(--text-2)" }}>
-                    {v.notulen}
-                  </div>
-                </details>
-              )}
-            </div>
+            </a>
           ))}
         </div>
       </div>
