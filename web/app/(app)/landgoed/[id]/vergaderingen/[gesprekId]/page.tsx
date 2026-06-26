@@ -91,7 +91,7 @@ export default async function GesprekDetailPage({
               <input type="hidden" name="gesprek_id" value={gesprekId} />
               <input type="hidden" name="landgoed_id" value={id} />
               <button type="submit" className="btn btn-ghost btn-sm btn-danger"
-                onClick={() => confirm("Transcript verwijderen? Dit kan niet ongedaan worden.")}
+                formAction={ruimTranscriptOp}
               >
                 Transcript opruimen (AVG)
               </button>
