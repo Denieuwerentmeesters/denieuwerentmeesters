@@ -23,9 +23,38 @@ export async function nieuweTaak(fd: FormData) {
     titel,
     prioriteit: tekst(fd, "prioriteit"),
     deadline: tekst(fd, "deadline"),
+    toegewezen_aan: tekst(fd, "toegewezen_aan"),
     status: "open",
   });
   revalidatePath(`/landgoed/${landgoed_id}/taken`);
+}
+
+// ── Agenda ──
+export async function nieuwAgendaItem(fd: FormData) {
+  const landgoed_id = String(fd.get("landgoed_id"));
+  const titel = tekst(fd, "titel");
+  const datum = tekst(fd, "datum");
+  if (!titel || !datum) return;
+  const supabase = await createClient();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  await (supabase as any).from("agenda_item").insert({
+    landgoed_id,
+    titel,
+    datum,
+    tijd: tekst(fd, "tijd"),
+    locatie: tekst(fd, "locatie"),
+    toegewezen_aan: tekst(fd, "toegewezen_aan"),
+  });
+  revalidatePath(`/landgoed/${landgoed_id}/agenda`);
+}
+
+export async function verwijderAgendaItem(fd: FormData) {
+  const landgoed_id = String(fd.get("landgoed_id"));
+  const id = String(fd.get("id"));
+  const supabase = await createClient();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  await (supabase as any).from("agenda_item").delete().eq("id", id);
+  revalidatePath(`/landgoed/${landgoed_id}/agenda`);
 }
 
 export async function taakAfronden(fd: FormData) {
@@ -142,40 +171,47 @@ export async function afwijsExtractie(fd: FormData) {
 export async function bevestigInboundVoorstel(fd: FormData) {
   const landgoed_id = String(fd.get("landgoed_id"));
   const voorstel_id = String(fd.get("voorstel_id"));
+  const type = String(fd.get("type"));
   const supabase = await createClient();
 
-  const { data: voorstel } = await supabase
-    .from("inbound_extractie")
-    .select("type, titel, voorgestelde_velden")
-    .eq("id", voorstel_id)
-    .eq("landgoed_id", landgoed_id)
-    .single();
+  // Velden uit het bewerkformulier (of defaults via hidden inputs)
+  const titel = tekst(fd, "titel") ?? "";
+  const deadline = tekst(fd, "deadline");
+  const prioriteit = tekst(fd, "prioriteit");
+  const omschrijving = tekst(fd, "omschrijving");
+  const toegewezen_aan = tekst(fd, "toegewezen_aan");
+  const datum = tekst(fd, "datum");
+  const tijd = tekst(fd, "tijd");
+  const locatie = tekst(fd, "locatie");
 
-  if (!voorstel) return;
-
-  const velden = (voorstel.voorgestelde_velden ?? {}) as Record<string, string | null>;
   let gekoppeld_object_id: string | null = null;
 
-  if (voorstel.type === "taak") {
+  if (type === "taak") {
     const { data: taak } = await supabase
       .from("taak")
       .insert({
         landgoed_id,
-        titel: voorstel.titel,
-        deadline: velden.deadline ?? null,
+        titel,
+        deadline: deadline ?? null,
+        prioriteit: prioriteit ?? null,
+        omschrijving: omschrijving ?? null,
+        toegewezen_aan: toegewezen_aan ?? null,
         status: "open",
       })
       .select("id")
       .single();
     gekoppeld_object_id = taak?.id ?? null;
-  } else if (voorstel.type === "agendapunt") {
-    const { data: item } = await supabase
+  } else if (type === "agendapunt") {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data: item } = await (supabase as any)
       .from("agenda_item")
       .insert({
         landgoed_id,
-        titel: voorstel.titel,
-        datum: velden.datum ?? new Date().toISOString().slice(0, 10),
-        locatie: velden.plaats ?? null,
+        titel,
+        datum: datum ?? new Date().toISOString().slice(0, 10),
+        tijd: tijd ?? null,
+        locatie: locatie ?? null,
+        toegewezen_aan: toegewezen_aan ?? null,
       })
       .select("id")
       .single();
@@ -183,7 +219,8 @@ export async function bevestigInboundVoorstel(fd: FormData) {
   }
 
   const { data: { user } } = await supabase.auth.getUser();
-  await supabase
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  await (supabase as any)
     .from("inbound_extractie")
     .update({
       status: "bevestigd",
@@ -195,6 +232,7 @@ export async function bevestigInboundVoorstel(fd: FormData) {
 
   revalidatePath(`/landgoed/${landgoed_id}/inbox`);
   revalidatePath(`/landgoed/${landgoed_id}/taken`);
+  revalidatePath(`/landgoed/${landgoed_id}/agenda`);
 }
 
 export async function verWerpInboundVoorstel(fd: FormData) {

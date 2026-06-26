@@ -11,10 +11,21 @@ export default async function TakenPage({
 
   const { data: taken } = await supabase
     .from("taak")
-    .select("id, titel, prioriteit, status, deadline")
+    .select("id, titel, prioriteit, status, deadline, toegewezen_aan, profiel(naam, email)")
     .eq("landgoed_id", id)
     .order("status")
     .order("deadline", { nullsFirst: false });
+
+  // Leden voor dropdown
+  const { data: ledenRaw } = await supabase
+    .from("lidmaatschap")
+    .select("gebruiker_id, profiel(id, naam, email)")
+    .eq("landgoed_id", id);
+
+  const leden = (ledenRaw ?? []).map((l) => {
+    const p = (l.profiel as unknown) as { id: string; naam: string | null; email: string | null } | null;
+    return { id: p?.id ?? l.gebruiker_id, naam: p?.naam ?? p?.email ?? l.gebruiker_id };
+  });
 
   return (
     <div className="flex flex-col">
@@ -58,6 +69,17 @@ export default async function TakenPage({
             <label className="label-up mb-1 block">Deadline</label>
             <input className="input" type="date" name="deadline" />
           </div>
+          <div>
+            <label className="label-up mb-1 block">Toegewezen aan</label>
+            <select className="input" name="toegewezen_aan" defaultValue="">
+              <option value="">— niemand —</option>
+              {leden.map((l) => (
+                <option key={l.id} value={l.id}>
+                  {l.naam}
+                </option>
+              ))}
+            </select>
+          </div>
           <button type="submit" className="btn btn-primary">
             Toevoegen
           </button>
@@ -72,6 +94,7 @@ export default async function TakenPage({
           )}
           {(taken ?? []).map((t) => {
             const afgerond = t.status === "afgerond";
+            const persoon = (t.profiel as unknown) as { naam: string | null; email: string | null } | null;
             return (
               <div
                 key={t.id}
@@ -90,10 +113,13 @@ export default async function TakenPage({
                     {t.titel}
                   </div>
                   <div
-                    className="mt-0.5 flex items-center gap-2 text-[12px]"
+                    className="mt-0.5 flex flex-wrap items-center gap-2 text-[12px]"
                     style={{ color: "var(--text-2)" }}
                   >
                     {t.deadline && <span>Deadline {t.deadline}</span>}
+                    {persoon && (
+                      <span>👤 {persoon.naam ?? persoon.email}</span>
+                    )}
                     {t.prioriteit && (
                       <span
                         className={`tag ${

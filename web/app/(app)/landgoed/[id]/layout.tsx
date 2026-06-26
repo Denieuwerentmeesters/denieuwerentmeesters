@@ -58,6 +58,7 @@ export default async function LandgoedLayout({
       label: "Taken",
       badge: openTaken ?? undefined,
     },
+    { href: `/landgoed/${id}/agenda`, label: "Agenda" },
     { href: `/landgoed/${id}/documenten`, label: "Documenten" },
     { href: `/landgoed/${id}/financieel`, label: "Financieel" },
     { href: `/landgoed/${id}/contacten`, label: "Contacten" },
