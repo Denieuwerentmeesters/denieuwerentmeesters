@@ -44,21 +44,18 @@ export default async function LandgoedLayout({
   const initialen = naam.slice(0, 2).toUpperCase();
 
   const items = [
-    { href: `/landgoed/${id}/profiel`, label: "Profiel" },
+    { href: `/landgoed/${id}/profiel`, label: "Profiel en Stamgegevens" },
     {
       href: `/landgoed/${id}/inbox`,
       label: "Inbox",
       badge: inboxConcept ?? undefined,
     },
-    { href: `/landgoed/${id}/overzicht`, label: "Overzicht" },
-    { href: `/landgoed/${id}/stamgegevens`, label: "Stamgegevens" },
-    { href: `/landgoed/${id}/kaart`, label: "Kaart" },
     {
-      href: `/landgoed/${id}/taken`,
-      label: "Taken",
+      href: `/landgoed/${id}/overzicht`,
+      label: "Overzicht (agenda en taken)",
       badge: openTaken ?? undefined,
     },
-    { href: `/landgoed/${id}/agenda`, label: "Agenda" },
+    { href: `/landgoed/${id}/kaart`, label: "Kaart" },
     { href: `/landgoed/${id}/documenten`, label: "Documenten" },
     { href: `/landgoed/${id}/financieel`, label: "Financieel" },
     { href: `/landgoed/${id}/contacten`, label: "Contacten" },

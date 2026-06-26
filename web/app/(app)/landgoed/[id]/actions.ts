@@ -26,7 +26,7 @@ export async function nieuweTaak(fd: FormData) {
     toegewezen_aan: tekst(fd, "toegewezen_aan"),
     status: "open",
   });
-  revalidatePath(`/landgoed/${landgoed_id}/taken`);
+  revalidatePath(`/landgoed/${landgoed_id}/overzicht`);
 }
 
 // ── Agenda ──
@@ -45,7 +45,7 @@ export async function nieuwAgendaItem(fd: FormData) {
     locatie: tekst(fd, "locatie"),
     toegewezen_aan: tekst(fd, "toegewezen_aan"),
   });
-  revalidatePath(`/landgoed/${landgoed_id}/agenda`);
+  revalidatePath(`/landgoed/${landgoed_id}/overzicht`);
 }
 
 export async function verwijderAgendaItem(fd: FormData) {
@@ -54,7 +54,7 @@ export async function verwijderAgendaItem(fd: FormData) {
   const supabase = await createClient();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   await (supabase as any).from("agenda_item").delete().eq("id", id);
-  revalidatePath(`/landgoed/${landgoed_id}/agenda`);
+  revalidatePath(`/landgoed/${landgoed_id}/overzicht`);
 }
 
 export async function taakAfronden(fd: FormData) {
@@ -63,7 +63,7 @@ export async function taakAfronden(fd: FormData) {
   const nieuw = String(fd.get("nieuw_status")) === "afgerond" ? "afgerond" : "open";
   const supabase = await createClient();
   await supabase.from("taak").update({ status: nieuw }).eq("id", id);
-  revalidatePath(`/landgoed/${landgoed_id}/taken`);
+  revalidatePath(`/landgoed/${landgoed_id}/overzicht`);
 }
 
 // ── Contacten ──
