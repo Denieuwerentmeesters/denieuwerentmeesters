@@ -13,11 +13,99 @@ function num(fd: FormData, k: string) {
 }
 
 function merc3857(lon: number, lat: number): [number, number] {
-  const x = (lon * 20037508.342789244) / 180;
+  const k = 20037508.342789244 / 180;
+  const x = lon * k;
   const y =
-    (Math.log(Math.tan(((90 + lat) * Math.PI) / 360)) / (Math.PI / 180)) *
-    (20037508.342789244 / 180);
+    (Math.log(Math.tan(((90 + lat) * Math.PI) / 360)) / (Math.PI / 180)) * k;
   return [x, y];
+}
+
+function invMerc3857(x: number, y: number): [number, number] {
+  const k = 20037508.342789244 / 180;
+  const lon = x / k;
+  const lat = (Math.atan(Math.exp((y * (Math.PI / 180)) / k)) * 360) / Math.PI - 90;
+  return [lon, lat];
+}
+
+// Grof zwaartepunt van een (Multi)Polygon: gemiddelde van alle ringpunten.
+function centroid3857(geom: unknown): [number, number] | null {
+  const acc: number[] = [0, 0];
+  let n = 0;
+  const eat = (c: unknown) => {
+    if (
+      Array.isArray(c) &&
+      c.length >= 2 &&
+      typeof c[0] === "number" &&
+      typeof c[1] === "number"
+    ) {
+      acc[0] += c[0];
+      acc[1] += c[1];
+      n++;
+    } else if (Array.isArray(c)) {
+      for (const x of c) eat(x);
+    }
+  };
+  const g = geom as { coordinates?: unknown };
+  if (!g?.coordinates) return null;
+  eat(g.coordinates);
+  if (n === 0) return null;
+  return [acc[0] / n, acc[1] / n];
+}
+
+// ── RCE Rijksmonumentenregister ──
+const RCE_WFS = "https://services.rce.geovoorziening.nl/rce/wfs";
+const RCE_LAAG = "NationalListedMonumentPolygons";
+
+// Controleer of het aangeklikte punt binnen een rijksmonumentpolygoon valt.
+// Kleine bbox (30 m) omdat we één specifiek gebouw checken.
+async function checkMonumentOpPunt(
+  lat: number,
+  lon: number,
+): Promise<{
+  is_rijksmonument: boolean;
+  rijksmonument_nummer: string | null;
+  rijksmonument_categorie: string | null;
+  rijksmonument_url: string | null;
+}> {
+  const [x, y] = merc3857(lon, lat);
+  const d = 30;
+  const bbox = `${x - d},${y - d},${x + d},${y + d},urn:ogc:def:crs:EPSG::3857`;
+  const url =
+    `${RCE_WFS}?SERVICE=WFS&VERSION=2.0.0&REQUEST=GetFeature` +
+    `&TYPENAMES=${RCE_LAAG}&COUNT=1&BBOX=${bbox}&OUTPUTFORMAT=application/json`;
+  try {
+    const res = await fetch(url);
+    const gj = await res.json();
+    const f = gj?.features?.[0];
+    if (!f)
+      return {
+        is_rijksmonument: false,
+        rijksmonument_nummer: null,
+        rijksmonument_categorie: null,
+        rijksmonument_url: null,
+      };
+    const p = (f.properties ?? {}) as Record<string, unknown>;
+    return {
+      is_rijksmonument: true,
+      rijksmonument_nummer:
+        p.rijksmonument_nummer != null ? String(p.rijksmonument_nummer) : null,
+      rijksmonument_categorie:
+        typeof p.subcategorie === "string" && p.subcategorie
+          ? p.subcategorie
+          : typeof p.hoofdcategorie === "string" && p.hoofdcategorie
+            ? p.hoofdcategorie
+            : null,
+      rijksmonument_url:
+        typeof p.rijksmonumenturl === "string" ? p.rijksmonumenturl : null,
+    };
+  } catch {
+    return {
+      is_rijksmonument: false,
+      rijksmonument_nummer: null,
+      rijksmonument_categorie: null,
+      rijksmonument_url: null,
+    };
+  }
 }
 
 // Basis: de hoofdlocatie van het landgoed (adres/gemeente/provincie/coordinaat).
@@ -210,7 +298,8 @@ export async function lookupPerceel(
   }
 }
 
-// Gebouw opzoeken via PDOK BAG WMS GetFeatureInfo (verblijfsobject + pand).
+// Gebouw opzoeken via PDOK BAG WMS GetFeatureInfo (verblijfsobject + pand)
+// + RCE rijksmonument-check op hetzelfde punt.
 export async function lookupGebouw(
   lat: number,
   lon: number,
@@ -229,9 +318,10 @@ export async function lookupGebouw(
   const url = (layer: string) =>
     `${base}?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetFeatureInfo&LAYERS=${layer}&QUERY_LAYERS=${layer}${common}`;
   try {
-    const [voR, pandR] = await Promise.all([
+    const [voR, pandR, mon] = await Promise.all([
       fetch(url("verblijfsobject")).then((r) => r.json()),
       fetch(url("pand")).then((r) => r.json()),
+      checkMonumentOpPunt(lat, lon),
     ]);
     const vp = voR?.features?.[0]?.properties ?? {};
     const pp = pandR?.features?.[0]?.properties ?? {};
@@ -251,6 +341,10 @@ export async function lookupGebouw(
         oppervlakte_m2: vp.oppervlakte ?? pp.oppervlakte_max ?? null,
         pandstatus: vp.pandstatus ?? pp.status ?? null,
         bouwjaar: vp.bouwjaar ?? pp.bouwjaar ?? null,
+        is_rijksmonument: mon.is_rijksmonument,
+        rijksmonument_nummer: mon.rijksmonument_nummer,
+        rijksmonument_categorie: mon.rijksmonument_categorie,
+        rijksmonument_url: mon.rijksmonument_url,
       },
     };
   } catch {
@@ -305,4 +399,219 @@ export async function plaatsOpKaart(fd: FormData) {
     });
   }
   revalidatePath(`/landgoed/${landgoed_id}/kaart`);
+}
+
+// ── Automatische import: percelen + gebouwen vanuit bbox rond basislocatie ──
+// Gebruikt PDOK Kadaster WFS (percelen) en PDOK BAG WFS (panden) in een
+// straal rond de basislocatie van het landgoed. Resultaten worden als
+// geaccordeerd=false ingevoerd zodat de eigenaar ze kan keuren in de inbox.
+// Rijksmonumenten onder de gevonden gebouwen worden meteen getagd (RCE WFS).
+//
+// Signatuur met _prev zodat dit bruikbaar is met React useActionState.
+export type AutoImportResultaat = {
+  ok: boolean;
+  aantalPercelen: number;
+  aantalGebouwen: number;
+  reden?: string;
+} | null;
+
+const KADASTER_WFS =
+  "https://service.pdok.nl/kadaster/kadastralekaart/wfs/v5_0";
+const BAG_WFS = "https://service.pdok.nl/lv/bag/wfs/v2_0";
+const AUTO_STRAAL_M = 600; // halve zijde van de sweep-bbox in meter
+
+export async function autoImportPercelenEnGebouwen(
+  _prev: AutoImportResultaat,
+  fd: FormData,
+): Promise<AutoImportResultaat> {
+  const landgoed_id = String(fd.get("landgoed_id"));
+  const straal = Number(fd.get("straal") ?? AUTO_STRAAL_M);
+  const supabase = await createClient();
+
+  const { data: lg } = await supabase
+    .from("landgoed")
+    .select("lat, lon")
+    .eq("id", landgoed_id)
+    .maybeSingle();
+  if (lg?.lat == null || lg?.lon == null) {
+    return {
+      ok: false,
+      aantalPercelen: 0,
+      aantalGebouwen: 0,
+      reden: "geen-basislocatie",
+    };
+  }
+
+  const [cx, cy] = merc3857(lg.lon, lg.lat);
+  const s = Number.isFinite(straal) && straal > 0 ? straal : AUTO_STRAAL_M;
+  const bboxParam = `${cx - s},${cy - s},${cx + s},${cy + s},urn:ogc:def:crs:EPSG::3857`;
+
+  // Bestaande percelen + gebouwen ophalen om duplicaten te voorkomen.
+  const { data: bestaande } = await supabase
+    .from("stamobject")
+    .select("kenmerken, categorie")
+    .eq("landgoed_id", landgoed_id)
+    .in("categorie", ["perceel", "pachtperceel", "gebouw", "woning", "opstal"]);
+
+  const bestaandePercelen = new Set(
+    (bestaande ?? [])
+      .filter((o) => ["perceel", "pachtperceel"].includes(o.categorie))
+      .map((o) => (o.kenmerken as Record<string, unknown>)?.identificatie)
+      .filter(Boolean)
+      .map(String),
+  );
+  const bestaandeGebouwen = new Set(
+    (bestaande ?? [])
+      .filter((o) => ["gebouw", "woning", "opstal"].includes(o.categorie))
+      .map((o) => (o.kenmerken as Record<string, unknown>)?.bag_pand_id)
+      .filter(Boolean)
+      .map(String),
+  );
+
+  // Percelen via Kadaster WFS.
+  const perceelUrl =
+    `${KADASTER_WFS}?SERVICE=WFS&VERSION=2.0.0&REQUEST=GetFeature` +
+    `&TYPENAMES=Perceel&COUNT=500&BBOX=${bboxParam}&OUTPUTFORMAT=application/json`;
+
+  // Panden via BAG WFS.
+  const pandUrl =
+    `${BAG_WFS}?SERVICE=WFS&VERSION=2.0.0&REQUEST=GetFeature` +
+    `&TYPENAMES=pand&COUNT=500&BBOX=${bboxParam}&OUTPUTFORMAT=application/json`;
+
+  let perceelFeatures: Array<{
+    properties?: Record<string, unknown>;
+    geometry?: unknown;
+  }> = [];
+  let pandFeatures: Array<{
+    properties?: Record<string, unknown>;
+    geometry?: unknown;
+  }> = [];
+
+  try {
+    const [percRes, pandRes] = await Promise.all([
+      fetch(perceelUrl).then((r) => r.json()),
+      fetch(pandUrl).then((r) => r.json()),
+    ]);
+    perceelFeatures = Array.isArray(percRes?.features) ? percRes.features : [];
+    pandFeatures = Array.isArray(pandRes?.features) ? pandRes.features : [];
+  } catch {
+    return {
+      ok: false,
+      aantalPercelen: 0,
+      aantalGebouwen: 0,
+      reden: "wfs-onbereikbaar",
+    };
+  }
+
+  // Perceel-rijen opbouwen.
+  const perceelRijen: Array<Record<string, unknown>> = [];
+  for (const f of perceelFeatures) {
+    const p = f.properties ?? {};
+    const id = p.identificatieLokaalID;
+    if (!id || bestaandePercelen.has(String(id))) continue;
+    bestaandePercelen.add(String(id));
+
+    let lat: number | null = null;
+    let lon: number | null = null;
+    const c = centroid3857(f.geometry);
+    if (c) [lon, lat] = invMerc3857(c[0], c[1]);
+
+    const gem =
+      typeof p.kadastraleGemeenteWaarde === "string"
+        ? p.kadastraleGemeenteWaarde
+        : "";
+    const label =
+      [gem, p.sectie, p.perceelnummer].filter(Boolean).join(" ") ||
+      String(id) ||
+      "Perceel";
+
+    perceelRijen.push({
+      landgoed_id,
+      naam: label,
+      categorie: "perceel",
+      geometrie_type: lat != null ? "vlak" : "geen",
+      herkomst: "ai",
+      voorstel_reden: `Automatisch gevonden via PDOK Kadaster WFS binnen ${s} m van de basislocatie. Controleer of dit perceel tot het landgoed hoort.`,
+      geaccordeerd: false,
+      kenmerken: {
+        kadastrale_aanduiding: label,
+        kadastrale_gemeente: gem || null,
+        sectie: p.sectie ?? null,
+        perceelnummer: p.perceelnummer ?? null,
+        oppervlakte_m2: p.kadastraleGrootteWaarde ?? null,
+        identificatie: id,
+        lat,
+        lon,
+        geom_3857: f.geometry ?? null,
+      },
+    });
+  }
+
+  // Gebouw-rijen opbouwen + rijksmonument-check per pand (best-effort).
+  const gebouwRijen: Array<Record<string, unknown>> = [];
+  for (const f of pandFeatures) {
+    const p = f.properties ?? {};
+    const bagId = p.identificatie ?? p.id;
+    if (!bagId || bestaandeGebouwen.has(String(bagId))) continue;
+    bestaandeGebouwen.add(String(bagId));
+
+    let lat: number | null = null;
+    let lon: number | null = null;
+    const c = centroid3857(f.geometry);
+    if (c) [lon, lat] = invMerc3857(c[0], c[1]);
+
+    let monData = {
+      is_rijksmonument: false,
+      rijksmonument_nummer: null as string | null,
+      rijksmonument_categorie: null as string | null,
+      rijksmonument_url: null as string | null,
+    };
+    if (lat != null && lon != null) {
+      try {
+        monData = await checkMonumentOpPunt(lat, lon);
+      } catch {
+        // stil falen
+      }
+    }
+
+    const bouwjaar = p.bouwjaar != null ? String(p.bouwjaar) : null;
+    const naam = monData.is_rijksmonument
+      ? `Gebouw (RM ${monData.rijksmonument_nummer ?? "?"})`
+      : bouwjaar
+        ? `Gebouw (${bouwjaar})`
+        : "Gebouw";
+
+    gebouwRijen.push({
+      landgoed_id,
+      naam,
+      categorie: "gebouw",
+      geometrie_type: lat != null ? "vlak" : "geen",
+      herkomst: "ai",
+      voorstel_reden: `Automatisch gevonden via PDOK BAG WFS binnen ${s} m van de basislocatie. Controleer of dit gebouw tot het landgoed hoort.`,
+      geaccordeerd: false,
+      kenmerken: {
+        bag_pand_id: String(bagId),
+        bouwjaar,
+        pandstatus: typeof p.status === "string" ? p.status : null,
+        lat,
+        lon,
+        geom_3857: f.geometry ?? null,
+        ...monData,
+      },
+    });
+  }
+
+  if (perceelRijen.length > 0) {
+    await supabase.from("stamobject").insert(perceelRijen);
+  }
+  if (gebouwRijen.length > 0) {
+    await supabase.from("stamobject").insert(gebouwRijen);
+  }
+
+  revalidatePath(`/landgoed/${landgoed_id}/kaart`);
+  return {
+    ok: true,
+    aantalPercelen: perceelRijen.length,
+    aantalGebouwen: gebouwRijen.length,
+  };
 }
