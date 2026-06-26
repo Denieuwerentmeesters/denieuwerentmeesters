@@ -384,12 +384,10 @@ export default async function ProfielPage({
           </div>
         </header>
 
-        {/* Profiel bewerken — uitklapbaar direct onder de kop */}
-        <details id="bewerken" className="card mb-5 p-5">
-          <summary className="cursor-pointer text-[14px] font-semibold">
-            Profiel bewerken
-          </summary>
-          <form action={bewaarProfiel} className="mt-4 flex flex-col gap-4">
+        {/* Profiel bewerken — verborgen; zichtbaar via #bewerken anchor (CSS :target) */}
+        <style>{`#bewerken{display:none}#bewerken:target{display:block}`}</style>
+        <div id="bewerken" className="card mb-5 p-5">
+          <form action={bewaarProfiel} className="flex flex-col gap-4">
             <input type="hidden" name="landgoed_id" value={id} />
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               <Veld label="NSW-status" name="nsw_status" defaultValue={landgoed?.nsw_status} placeholder="bv. actief / gerangschikt" />
@@ -408,7 +406,7 @@ export default async function ProfielPage({
             NSW-gegevens zijn niet-openbaar en komen van de eigenaar/RVO-beschikking.
             Oppervlakte uit percelen heeft voorrang; het handmatige veld is een fallback.
           </Bron>
-        </details>
+        </div>
 
         {/* Vier kerntegels */}
         <div className="mb-5 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
