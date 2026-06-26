@@ -2,6 +2,7 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 
 function tekst(fd: FormData, k: string) {
   const v = String(fd.get(k) ?? "").trim();
@@ -397,4 +398,5 @@ export async function bewaarProfiel(fd: FormData) {
     })
     .eq("id", landgoed_id);
   revalidatePath(`/landgoed/${landgoed_id}/profiel`);
+  redirect(`/landgoed/${landgoed_id}/profiel`);
 }
