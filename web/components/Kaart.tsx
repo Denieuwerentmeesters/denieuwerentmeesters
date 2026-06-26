@@ -2,7 +2,7 @@
 
 import "leaflet/dist/leaflet.css";
 import Link from "next/link";
-import { useActionState, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type {
   Map as LMap,
   CircleMarker,
@@ -10,7 +10,6 @@ import type {
   LeafletMouseEvent,
 } from "leaflet";
 import SubmitKnop from "@/components/SubmitKnop";
-import type { AutoImportResultaat } from "@/app/(app)/landgoed/[id]/kaart/acties";
 
 type PlaatsObject = {
   id: string;
@@ -52,7 +51,7 @@ type LookupResult = {
   geom: unknown;
 };
 type Resultaat = LookupResult & { soort: "perceel" | "gebouw" };
-type Mode = "basis" | "perceel" | "gebouw" | "auto";
+type Mode = "basis" | "perceel" | "gebouw";
 
 const PDOK_TILES =
   "https://service.pdok.nl/brt/achtergrondkaart/wmts/v2_0/standaard/EPSG:3857/{z}/{x}/{y}.png";
@@ -154,7 +153,6 @@ export default function Kaart({
   lookupGebouw,
   verwijderObject,
   controleerGebiedsligging,
-  autoImportPercelenEnGebouwen,
 }: {
   landgoedId: string;
   objecten: PlaatsObject[];
@@ -168,10 +166,6 @@ export default function Kaart({
   lookupGebouw: (lat: number, lon: number) => Promise<LookupResult | null>;
   verwijderObject: (fd: FormData) => Promise<void>;
   controleerGebiedsligging: (fd: FormData) => Promise<void>;
-  autoImportPercelenEnGebouwen: (
-    prev: AutoImportResultaat,
-    fd: FormData,
-  ) => Promise<AutoImportResultaat>;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<LMap | null>(null);
@@ -200,10 +194,6 @@ export default function Kaart({
   const [bezig, setBezig] = useState(false);
   const [geselecteerd, setGeselecteerd] = useState<string | null>(null);
   const [koppelId, setKoppelId] = useState("");
-  const [autoState, autoAction, autoPending] = useActionState(
-    autoImportPercelenEnGebouwen,
-    null,
-  );
 
   function wisHighlights() {
     if (tempRef.current) {
@@ -449,7 +439,6 @@ export default function Kaart({
             ["basis", "Basis: landgoed-locatie"],
             ["perceel", "Percelen aanklikken"],
             ["gebouw", "Gebouwen aanklikken"],
-            ["auto", "Auto-import"],
           ] as [Mode, string][]
         ).map(([m, lbl]) => (
           <button
@@ -499,9 +488,7 @@ export default function Kaart({
             : "Klik op de hoofdlocatie van het landgoed; adres/gemeente/provincie wordt opgezocht."
           : mode === "perceel"
             ? "Klik op een perceel; randen en oppervlakte worden opgehaald (PDOK Kadaster)."
-            : mode === "gebouw"
-              ? "Klik op een gebouw; adres, oppervlakte, pandstatus en monumentstatus (RCE) worden opgehaald."
-              : "Zoek automatisch alle percelen en gebouwen in een straal rond de basislocatie. Resultaten verschijnen als voorstel in de inbox."}
+            : "Klik op een gebouw; adres, oppervlakte, pandstatus en monumentstatus (RCE) worden opgehaald."}
       </p>
 
       <div
@@ -659,81 +646,6 @@ export default function Kaart({
               </SubmitKnop>
             </div>
           )}
-        </form>
-      )}
-
-      {/* Auto-import paneel */}
-      {mode === "auto" && (
-        <form action={autoAction} className="card p-4">
-          <input type="hidden" name="landgoed_id" value={landgoedId} />
-          <div className="mb-3">
-            <div className="mb-2 text-[14px] font-semibold">
-              Percelen &amp; gebouwen automatisch zoeken
-            </div>
-            <p className="mb-3 text-[12.5px]" style={{ color: "var(--text-2)" }}>
-              Haalt alle kadastrale percelen (PDOK Kadaster WFS) en gebouwen
-              (PDOK BAG WFS) op in de opgegeven straal rond de basislocatie.
-              Gebouwen worden meteen gecontroleerd op rijksmonumentstatus (RCE).
-              Resultaten verschijnen als voorstel in de inbox — u keurt ze
-              zelf goed of af.
-            </p>
-            {!basisIngesteld && (
-              <p
-                className="mb-3 rounded p-2 text-[12.5px]"
-                style={{ background: "var(--bg)", color: "var(--red)" }}
-              >
-                Stel eerst de basislocatie in (modus &ldquo;Basis&rdquo;)
-                voordat u auto-import gebruikt.
-              </p>
-            )}
-            <div className="mb-3 flex items-center gap-3">
-              <label className="text-[13px]" style={{ color: "var(--text-2)" }}>
-                Straal
-              </label>
-              <select className="input w-auto" name="straal" defaultValue="600">
-                <option value="200">200 m (klein perceel)</option>
-                <option value="400">400 m</option>
-                <option value="600">600 m (standaard)</option>
-                <option value="900">900 m</option>
-                <option value="1200">1200 m (groot landgoed)</option>
-              </select>
-            </div>
-          </div>
-
-          {autoState && (
-            <div
-              className="mb-3 rounded p-3 text-[13px]"
-              style={{
-                background: autoState.ok
-                  ? "var(--primary-light)"
-                  : "var(--bg)",
-                color: autoState.ok ? "var(--text)" : "var(--red)",
-              }}
-            >
-              {autoState.ok ? (
-                <>
-                  <span className="font-semibold">Klaar.</span>{" "}
-                  {autoState.aantalPercelen} percelen en{" "}
-                  {autoState.aantalGebouwen} gebouwen toegevoegd als voorstel.
-                  Bekijk de inbox om ze te accorderen.
-                </>
-              ) : autoState.reden === "geen-basislocatie" ? (
-                "Geen basislocatie ingesteld — stel eerst de hoofdlocatie in."
-              ) : autoState.reden === "wfs-onbereikbaar" ? (
-                "PDOK WFS-service tijdelijk niet bereikbaar. Probeer het later opnieuw."
-              ) : (
-                "Er ging iets mis. Probeer het opnieuw."
-              )}
-            </div>
-          )}
-
-          <SubmitKnop
-            className="btn btn-primary"
-            pendingTekst="Bezig met zoeken… (kan ~30 sec duren)"
-            disabled={!basisIngesteld}
-          >
-            Zoek percelen &amp; gebouwen
-          </SubmitKnop>
         </form>
       )}
 

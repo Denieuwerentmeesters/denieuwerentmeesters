@@ -8,7 +8,6 @@ import {
   verwijderObject,
   wisBasis,
   controleerGebiedsligging,
-  autoImportPercelenEnGebouwen,
 } from "./acties";
 
 function haTekst(m2: unknown): string | null {
@@ -194,7 +193,6 @@ export default async function KaartPage({
           lookupGebouw={lookupGebouw}
           verwijderObject={verwijderObject}
           controleerGebiedsligging={controleerGebiedsligging}
-          autoImportPercelenEnGebouwen={autoImportPercelenEnGebouwen}
         />
       </div>
     </div>
