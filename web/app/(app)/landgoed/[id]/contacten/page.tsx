@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { nieuwContact } from "./acties";
 import { bevestigExtractie, afwijsExtractie } from "../actions";
 import type { ExtractieRunRow } from "@/lib/extractie_mail";
+import { ToevoegenToggle } from "@/components/ToevoegenToggle";
 
 function nf(val: string | undefined | null) {
   return !val || val === "niet gevonden" ? null : val;
@@ -189,65 +190,66 @@ export default async function ContactenPage({
         )}
 
         {/* Nieuw contact formulier */}
-        <form action={nieuwContact} className="card mb-5 p-5">
-          <div className="mb-3 text-[13px] font-semibold">Contact toevoegen</div>
-          <input type="hidden" name="landgoed_id" value={id} />
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            <div>
-              <label className="label-up mb-1 block">Naam *</label>
-              <input className="input" name="naam" placeholder="Voor- en achternaam" required />
+        <ToevoegenToggle label="contact toevoegen">
+          <form action={nieuwContact}>
+            <input type="hidden" name="landgoed_id" value={id} />
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              <div>
+                <label className="label-up mb-1 block">Naam *</label>
+                <input className="input" name="naam" placeholder="Voor- en achternaam" required />
+              </div>
+              <div>
+                <label className="label-up mb-1 block">Organisatie</label>
+                <input className="input" name="organisatie" placeholder="Bedrijf / firma" />
+              </div>
+              <div>
+                <label className="label-up mb-1 block">Rol</label>
+                <select className="input" name="rol_type_id" defaultValue="">
+                  <option value="">— geen rol —</option>
+                  {Object.entries(
+                    rollen.reduce<Record<string, typeof rollen>>((acc, r) => {
+                      (acc[r.groep] = acc[r.groep] ?? []).push(r);
+                      return acc;
+                    }, {})
+                  ).map(([groep, items]) => (
+                    <optgroup key={groep} label={GROEP_LABEL[groep] ?? groep}>
+                      {items.map((r) => (
+                        <option key={r.id} value={r.id}>{r.naam}</option>
+                      ))}
+                    </optgroup>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="label-up mb-1 block">E-mail</label>
+                <input className="input" name="email" type="email" placeholder="naam@…" />
+              </div>
+              <div>
+                <label className="label-up mb-1 block">Telefoon</label>
+                <input className="input" name="telefoon" placeholder="06…" />
+              </div>
+              <div>
+                <label className="label-up mb-1 block">Status</label>
+                <select className="input" name="status" defaultValue="actief">
+                  <option value="actief">Actief</option>
+                  <option value="latent">Latent</option>
+                  <option value="gearchiveerd">Gearchiveerd</option>
+                </select>
+              </div>
+              <div className="sm:col-span-2 lg:col-span-3">
+                <label className="label-up mb-1 block">Omschrijving</label>
+                <input className="input" name="omschrijving" placeholder="Korte omschrijving" />
+              </div>
+              <div className="sm:col-span-2 lg:col-span-3">
+                <label className="label-up mb-1 block">Herkomst</label>
+                <input className="input" name="bron" placeholder="bv. doorgestuurd via mail 12-6, aangedragen door Jos" />
+              </div>
             </div>
-            <div>
-              <label className="label-up mb-1 block">Organisatie</label>
-              <input className="input" name="organisatie" placeholder="Bedrijf / firma" />
+            <div className="mt-4">
+              <button type="submit" className="btn btn-primary">Toevoegen</button>
             </div>
-            <div>
-              <label className="label-up mb-1 block">Rol</label>
-              <select className="input" name="rol_type_id" defaultValue="">
-                <option value="">— geen rol —</option>
-                {Object.entries(
-                  rollen.reduce<Record<string, typeof rollen>>((acc, r) => {
-                    (acc[r.groep] = acc[r.groep] ?? []).push(r);
-                    return acc;
-                  }, {})
-                ).map(([groep, items]) => (
-                  <optgroup key={groep} label={GROEP_LABEL[groep] ?? groep}>
-                    {items.map((r) => (
-                      <option key={r.id} value={r.id}>{r.naam}</option>
-                    ))}
-                  </optgroup>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label className="label-up mb-1 block">E-mail</label>
-              <input className="input" name="email" type="email" placeholder="naam@…" />
-            </div>
-            <div>
-              <label className="label-up mb-1 block">Telefoon</label>
-              <input className="input" name="telefoon" placeholder="06…" />
-            </div>
-            <div>
-              <label className="label-up mb-1 block">Status</label>
-              <select className="input" name="status" defaultValue="actief">
-                <option value="actief">Actief</option>
-                <option value="latent">Latent</option>
-                <option value="gearchiveerd">Gearchiveerd</option>
-              </select>
-            </div>
-            <div className="sm:col-span-2 lg:col-span-3">
-              <label className="label-up mb-1 block">Omschrijving</label>
-              <input className="input" name="omschrijving" placeholder="Korte omschrijving" />
-            </div>
-            <div className="sm:col-span-2 lg:col-span-3">
-              <label className="label-up mb-1 block">Herkomst</label>
-              <input className="input" name="bron" placeholder="bv. doorgestuurd via mail 12-6, aangedragen door Jos" />
-            </div>
-          </div>
-          <div className="mt-4">
-            <button type="submit" className="btn btn-primary">Toevoegen</button>
-          </div>
-        </form>
+          </form>
+        </ToevoegenToggle>
 
         {/* Contactenlijst */}
         <div className="card divide-y" style={{ borderColor: "var(--border)" }}>

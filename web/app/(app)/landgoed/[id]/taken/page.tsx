@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { nieuweTaak, taakAfronden } from "../actions";
+import { ToevoegenToggle } from "@/components/ToevoegenToggle";
 
 export default async function TakenPage({
   params,
@@ -51,52 +52,51 @@ export default async function TakenPage({
         </header>
 
         {/* Nieuw */}
-        <form
-          action={nieuweTaak}
-          className="card mb-5 flex flex-wrap items-end gap-3 p-4"
-        >
-          <input type="hidden" name="landgoed_id" value={id} />
-          <div className="min-w-[220px] flex-1">
-            <label className="label-up mb-1 block">Nieuwe taak</label>
-            <input className="input" name="titel" placeholder="Wat moet er gebeuren?" required />
-          </div>
-          <div>
-            <label className="label-up mb-1 block">Prioriteit</label>
-            <select className="input" name="prioriteit" defaultValue="">
-              <option value="">—</option>
-              <option value="hoog">Hoog</option>
-              <option value="middel">Middel</option>
-              <option value="laag">Laag</option>
-            </select>
-          </div>
-          <div>
-            <label className="label-up mb-1 block">Deadline</label>
-            <input className="input" type="date" name="deadline" />
-          </div>
-          <div>
-            <label className="label-up mb-1 block">Toegewezen aan</label>
-            <select className="input" name="toegewezen_aan" defaultValue="">
-              <option value="">— niemand —</option>
-              {leden.length > 0 && (
-                <optgroup label="Gebruikers">
-                  {leden.map((l) => (
-                    <option key={l.id} value={`u:${l.id}`}>{l.naam}</option>
-                  ))}
-                </optgroup>
-              )}
-              {relatieOpties.length > 0 && (
-                <optgroup label="Contacten">
-                  {relatieOpties.map((r) => (
-                    <option key={r.value} value={r.value}>{r.naam}</option>
-                  ))}
-                </optgroup>
-              )}
-            </select>
-          </div>
-          <button type="submit" className="btn btn-primary">
-            Toevoegen
-          </button>
-        </form>
+        <ToevoegenToggle label="taak toevoegen">
+          <form action={nieuweTaak} className="flex flex-wrap items-end gap-3">
+            <input type="hidden" name="landgoed_id" value={id} />
+            <div className="min-w-[220px] flex-1">
+              <label className="label-up mb-1 block">Titel</label>
+              <input className="input" name="titel" placeholder="Wat moet er gebeuren?" required />
+            </div>
+            <div>
+              <label className="label-up mb-1 block">Prioriteit</label>
+              <select className="input" name="prioriteit" defaultValue="">
+                <option value="">—</option>
+                <option value="hoog">Hoog</option>
+                <option value="middel">Middel</option>
+                <option value="laag">Laag</option>
+              </select>
+            </div>
+            <div>
+              <label className="label-up mb-1 block">Deadline</label>
+              <input className="input" type="date" name="deadline" />
+            </div>
+            <div>
+              <label className="label-up mb-1 block">Toegewezen aan</label>
+              <select className="input" name="toegewezen_aan" defaultValue="">
+                <option value="">— niemand —</option>
+                {leden.length > 0 && (
+                  <optgroup label="Gebruikers">
+                    {leden.map((l) => (
+                      <option key={l.id} value={`u:${l.id}`}>{l.naam}</option>
+                    ))}
+                  </optgroup>
+                )}
+                {relatieOpties.length > 0 && (
+                  <optgroup label="Contacten">
+                    {relatieOpties.map((r) => (
+                      <option key={r.value} value={r.value}>{r.naam}</option>
+                    ))}
+                  </optgroup>
+                )}
+              </select>
+            </div>
+            <button type="submit" className="btn btn-primary">
+              Toevoegen
+            </button>
+          </form>
+        </ToevoegenToggle>
 
         {/* Lijst */}
         <div className="card divide-y" style={{ borderColor: "var(--border)" }}>

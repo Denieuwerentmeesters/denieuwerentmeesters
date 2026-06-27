@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { nieuwContract } from "../actions";
+import { ToevoegenToggle } from "@/components/ToevoegenToggle";
 
 function dagenTot(datum: string | null): number | null {
   if (!datum) return null;
@@ -52,71 +53,73 @@ export default async function ContractenPage({
           </p>
         </header>
 
-        <form action={nieuwContract} className="card mb-5 grid grid-cols-2 gap-3 p-4 md:grid-cols-3">
-          <input type="hidden" name="landgoed_id" value={id} />
-          <div className="col-span-2 md:col-span-1">
-            <label className="label-up mb-1 block">Titel</label>
-            <input className="input" name="titel" placeholder="Bijv. Pacht weiland zuid" required />
-          </div>
-          <div>
-            <label className="label-up mb-1 block">Type</label>
-            <select className="input" name="type" defaultValue="pacht">
-              <option value="pacht">Pacht</option>
-              <option value="erfpacht">Erfpacht</option>
-              <option value="huur">Huur</option>
-              <option value="beheer">Beheer</option>
-            </select>
-          </div>
-          <div>
-            <label className="label-up mb-1 block">Partij</label>
-            <input className="input" name="partij" placeholder="Tegenpartij" />
-          </div>
-          <div>
-            <label className="label-up mb-1 block">Bedrag (€/jaar)</label>
-            <input className="input" name="bedrag" inputMode="decimal" placeholder="0" />
-          </div>
-          <div>
-            <label className="label-up mb-1 block">Servicekosten (€)</label>
-            <input className="input" name="servicekosten" inputMode="decimal" placeholder="0" />
-          </div>
-          <div>
-            <label className="label-up mb-1 block">Ingangsdatum</label>
-            <input className="input" type="date" name="ingangsdatum" />
-          </div>
-          <div>
-            <label className="label-up mb-1 block">Einddatum</label>
-            <input className="input" type="date" name="einddatum" />
-          </div>
-          <div>
-            <label className="label-up mb-1 block">Indexatie</label>
-            <select className="input" name="indexatie_type" defaultValue="">
-              <option value="">Geen</option>
-              <option value="CBS-CPI">CBS-CPI</option>
-              <option value="vast %">Vast %</option>
-            </select>
-          </div>
-          <div>
-            <label className="label-up mb-1 block">Volgende indexatie</label>
-            <input className="input" type="date" name="volgende_indexatie" />
-          </div>
-          <div>
-            <label className="label-up mb-1 block">Achterstand (€)</label>
-            <input className="input" name="achterstand" inputMode="decimal" placeholder="0" />
-          </div>
-          <div className="col-span-2 md:col-span-2">
-            <label className="label-up mb-1 block">Notitie achterstand</label>
-            <input
-              className="input"
-              name="achterstand_notitie"
-              placeholder="bijv. herinnering gestuurd 1-6"
-            />
-          </div>
-          <div className="col-span-2 flex items-end md:col-span-3">
-            <button type="submit" className="btn btn-primary">
-              Contract toevoegen
-            </button>
-          </div>
-        </form>
+        <ToevoegenToggle label="contract toevoegen">
+          <form action={nieuwContract} className="grid grid-cols-2 gap-3 md:grid-cols-3">
+            <input type="hidden" name="landgoed_id" value={id} />
+            <div className="col-span-2 md:col-span-1">
+              <label className="label-up mb-1 block">Titel</label>
+              <input className="input" name="titel" placeholder="Bijv. Pacht weiland zuid" required />
+            </div>
+            <div>
+              <label className="label-up mb-1 block">Type</label>
+              <select className="input" name="type" defaultValue="pacht">
+                <option value="pacht">Pacht</option>
+                <option value="erfpacht">Erfpacht</option>
+                <option value="huur">Huur</option>
+                <option value="beheer">Beheer</option>
+              </select>
+            </div>
+            <div>
+              <label className="label-up mb-1 block">Partij</label>
+              <input className="input" name="partij" placeholder="Tegenpartij" />
+            </div>
+            <div>
+              <label className="label-up mb-1 block">Bedrag (€/jaar)</label>
+              <input className="input" name="bedrag" inputMode="decimal" placeholder="0" />
+            </div>
+            <div>
+              <label className="label-up mb-1 block">Servicekosten (€)</label>
+              <input className="input" name="servicekosten" inputMode="decimal" placeholder="0" />
+            </div>
+            <div>
+              <label className="label-up mb-1 block">Ingangsdatum</label>
+              <input className="input" type="date" name="ingangsdatum" />
+            </div>
+            <div>
+              <label className="label-up mb-1 block">Einddatum</label>
+              <input className="input" type="date" name="einddatum" />
+            </div>
+            <div>
+              <label className="label-up mb-1 block">Indexatie</label>
+              <select className="input" name="indexatie_type" defaultValue="">
+                <option value="">Geen</option>
+                <option value="CBS-CPI">CBS-CPI</option>
+                <option value="vast %">Vast %</option>
+              </select>
+            </div>
+            <div>
+              <label className="label-up mb-1 block">Volgende indexatie</label>
+              <input className="input" type="date" name="volgende_indexatie" />
+            </div>
+            <div>
+              <label className="label-up mb-1 block">Achterstand (€)</label>
+              <input className="input" name="achterstand" inputMode="decimal" placeholder="0" />
+            </div>
+            <div className="col-span-2 md:col-span-2">
+              <label className="label-up mb-1 block">Notitie achterstand</label>
+              <input
+                className="input"
+                name="achterstand_notitie"
+                placeholder="bijv. herinnering gestuurd 1-6"
+              />
+            </div>
+            <div className="col-span-2 flex items-end md:col-span-3">
+              <button type="submit" className="btn btn-primary">
+                Contract toevoegen
+              </button>
+            </div>
+          </form>
+        </ToevoegenToggle>
 
         <div className="card divide-y" style={{ borderColor: "var(--border)" }}>
           {(contracten ?? []).length === 0 && (

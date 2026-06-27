@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { aiBeschikbaar } from "@/lib/ai";
 import { nieuwBericht, berichtNaarTaak, slaProfielOp } from "./acties";
+import { ToevoegenToggle } from "@/components/ToevoegenToggle";
 
 export default async function OmgevingPage({
   params,
@@ -77,19 +78,20 @@ export default async function OmgevingPage({
         </details>
 
         {/* Nieuw bericht */}
-        <form action={nieuwBericht} className="card mb-5 flex flex-col gap-3 p-4">
-          <input type="hidden" name="landgoed_id" value={id} />
-          <div className="label-up">Bericht toevoegen (uit nieuwsbrief/mail)</div>
-          <div className="flex flex-wrap gap-3">
-            <input className="input flex-1" name="titel" placeholder="Titel" required style={{ minWidth: 220 }} />
-            <input className="input" type="date" name="bericht_datum" />
-            <input className="input flex-1" name="url" placeholder="URL (optioneel)" style={{ minWidth: 180 }} />
-          </div>
-          <textarea className="input" name="tekst" rows={3} placeholder="Plak de tekst van het bericht — de AI beoordeelt de relevantie." />
-          <div>
-            <button type="submit" className="btn btn-primary">Toevoegen{aiBeschikbaar() ? " + beoordelen" : ""}</button>
-          </div>
-        </form>
+        <ToevoegenToggle label="bericht toevoegen">
+          <form action={nieuwBericht} className="flex flex-col gap-3">
+            <input type="hidden" name="landgoed_id" value={id} />
+            <div className="flex flex-wrap gap-3">
+              <input className="input flex-1" name="titel" placeholder="Titel" required style={{ minWidth: 220 }} />
+              <input className="input" type="date" name="bericht_datum" />
+              <input className="input flex-1" name="url" placeholder="URL (optioneel)" style={{ minWidth: 180 }} />
+            </div>
+            <textarea className="input" name="tekst" rows={3} placeholder="Plak de tekst van het bericht — de AI beoordeelt de relevantie." />
+            <div>
+              <button type="submit" className="btn btn-primary">Toevoegen{aiBeschikbaar() ? " + beoordelen" : ""}</button>
+            </div>
+          </form>
+        </ToevoegenToggle>
 
         {/* Lijst */}
         <div className="flex flex-col gap-3">

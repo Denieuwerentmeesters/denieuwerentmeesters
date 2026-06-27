@@ -5,6 +5,7 @@ import {
   zoekKansenActie,
   leesLopendeUitDocument,
 } from "./acties";
+import { ToevoegenToggle } from "@/components/ToevoegenToggle";
 
 function dagenTot(d: string | null) {
   if (!d) return null;
@@ -140,42 +141,41 @@ export default async function SubsidiesPage({
             Wat {naam} nu al ontvangt — beheren, voldoen aan eisen, verantwoorden.
           </p>
 
-          <form
-            action={nieuweSubsidie}
-            className="card mb-4 grid grid-cols-2 gap-3 p-4 md:grid-cols-4"
-          >
-            <input type="hidden" name="landgoed_id" value={id} />
-            <div className="col-span-2">
-              <label className="label-up mb-1 block">Naam</label>
-              <input className="input" name="naam" placeholder="Bijv. SNL natuurbeheer" required />
-            </div>
-            <div>
-              <label className="label-up mb-1 block">Organisatie</label>
-              <input className="input" name="organisatie" placeholder="RVO, provincie…" />
-            </div>
-            <div>
-              <label className="label-up mb-1 block">Categorie</label>
-              <select className="input" name="categorie" defaultValue="subsidie">
-                <option value="subsidie">Subsidie</option>
-                <option value="carbon">Carbon</option>
-                <option value="groenblauw">Groenblauw</option>
-                <option value="regeling">Regeling</option>
-              </select>
-            </div>
-            <div>
-              <label className="label-up mb-1 block">Bedrag (indicatie)</label>
-              <input className="input" name="bedrag_indicatie" placeholder="€…" />
-            </div>
-            <div>
-              <label className="label-up mb-1 block">Deadline</label>
-              <input className="input" type="date" name="deadline" />
-            </div>
-            <div className="flex items-end">
-              <button type="submit" className="btn btn-primary">
-                Toevoegen
-              </button>
-            </div>
-          </form>
+          <ToevoegenToggle label="subsidie toevoegen">
+            <form action={nieuweSubsidie} className="grid grid-cols-2 gap-3 md:grid-cols-4">
+              <input type="hidden" name="landgoed_id" value={id} />
+              <div className="col-span-2">
+                <label className="label-up mb-1 block">Naam</label>
+                <input className="input" name="naam" placeholder="Bijv. SNL natuurbeheer" required />
+              </div>
+              <div>
+                <label className="label-up mb-1 block">Organisatie</label>
+                <input className="input" name="organisatie" placeholder="RVO, provincie…" />
+              </div>
+              <div>
+                <label className="label-up mb-1 block">Categorie</label>
+                <select className="input" name="categorie" defaultValue="subsidie">
+                  <option value="subsidie">Subsidie</option>
+                  <option value="carbon">Carbon</option>
+                  <option value="groenblauw">Groenblauw</option>
+                  <option value="regeling">Regeling</option>
+                </select>
+              </div>
+              <div>
+                <label className="label-up mb-1 block">Bedrag (indicatie)</label>
+                <input className="input" name="bedrag_indicatie" placeholder="€…" />
+              </div>
+              <div>
+                <label className="label-up mb-1 block">Deadline</label>
+                <input className="input" type="date" name="deadline" />
+              </div>
+              <div className="flex items-end">
+                <button type="submit" className="btn btn-primary">
+                  Toevoegen
+                </button>
+              </div>
+            </form>
+          </ToevoegenToggle>
 
           {/* Datastroom B: lees lopende subsidies uit een document */}
           {(docs ?? []).length > 0 && (

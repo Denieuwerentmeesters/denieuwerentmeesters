@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { nieuwAgendaItem, verwijderAgendaItem } from "../actions";
+import { ToevoegenToggle } from "@/components/ToevoegenToggle";
 
 export default async function AgendaPage({
   params,
@@ -67,51 +68,50 @@ export default async function AgendaPage({
         </header>
 
         {/* Nieuw agendapunt */}
-        <form
-          action={nieuwAgendaItem}
-          className="card mb-6 flex flex-wrap items-end gap-3 p-4"
-        >
-          <input type="hidden" name="landgoed_id" value={id} />
-          <div className="min-w-[220px] flex-1">
-            <label className="label-up mb-1 block">Titel</label>
-            <input className="input" name="titel" placeholder="Wat staat er op de agenda?" required />
-          </div>
-          <div>
-            <label className="label-up mb-1 block">Datum</label>
-            <input className="input" type="date" name="datum" required />
-          </div>
-          <div>
-            <label className="label-up mb-1 block">Tijd</label>
-            <input className="input" type="time" name="tijd" />
-          </div>
-          <div>
-            <label className="label-up mb-1 block">Locatie</label>
-            <input className="input" name="locatie" placeholder="Optioneel" />
-          </div>
-          <div>
-            <label className="label-up mb-1 block">Toegewezen aan</label>
-            <select className="input" name="toegewezen_aan" defaultValue="">
-              <option value="">— niemand —</option>
-              {leden.length > 0 && (
-                <optgroup label="Gebruikers">
-                  {leden.map((l) => (
-                    <option key={l.id} value={`u:${l.id}`}>{l.naam}</option>
-                  ))}
-                </optgroup>
-              )}
-              {relatieOpties.length > 0 && (
-                <optgroup label="Contacten">
-                  {relatieOpties.map((r) => (
-                    <option key={r.value} value={r.value}>{r.naam}</option>
-                  ))}
-                </optgroup>
-              )}
-            </select>
-          </div>
-          <button type="submit" className="btn btn-primary">
-            Toevoegen
-          </button>
-        </form>
+        <ToevoegenToggle label="agendapunt toevoegen">
+          <form action={nieuwAgendaItem} className="flex flex-wrap items-end gap-3">
+            <input type="hidden" name="landgoed_id" value={id} />
+            <div className="min-w-[220px] flex-1">
+              <label className="label-up mb-1 block">Titel</label>
+              <input className="input" name="titel" placeholder="Wat staat er op de agenda?" required />
+            </div>
+            <div>
+              <label className="label-up mb-1 block">Datum</label>
+              <input className="input" type="date" name="datum" required />
+            </div>
+            <div>
+              <label className="label-up mb-1 block">Tijd</label>
+              <input className="input" type="time" name="tijd" />
+            </div>
+            <div>
+              <label className="label-up mb-1 block">Locatie</label>
+              <input className="input" name="locatie" placeholder="Optioneel" />
+            </div>
+            <div>
+              <label className="label-up mb-1 block">Toegewezen aan</label>
+              <select className="input" name="toegewezen_aan" defaultValue="">
+                <option value="">— niemand —</option>
+                {leden.length > 0 && (
+                  <optgroup label="Gebruikers">
+                    {leden.map((l) => (
+                      <option key={l.id} value={`u:${l.id}`}>{l.naam}</option>
+                    ))}
+                  </optgroup>
+                )}
+                {relatieOpties.length > 0 && (
+                  <optgroup label="Contacten">
+                    {relatieOpties.map((r) => (
+                      <option key={r.value} value={r.value}>{r.naam}</option>
+                    ))}
+                  </optgroup>
+                )}
+              </select>
+            </div>
+            <button type="submit" className="btn btn-primary">
+              Toevoegen
+            </button>
+          </form>
+        </ToevoegenToggle>
 
         {/* Aankomend */}
         <section className="mb-8">

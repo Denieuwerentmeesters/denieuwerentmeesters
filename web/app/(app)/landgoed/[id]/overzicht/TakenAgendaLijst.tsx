@@ -47,6 +47,7 @@ export default function TakenAgendaLijst({
   const [openForm, setOpenForm] = useState<"agenda" | "taak" | null>(null);
 
   function toggleForm(form: "agenda" | "taak") {
+    setToonFilters(false);
     setOpenForm((prev) => (prev === form ? null : form));
   }
 
@@ -107,7 +108,7 @@ export default function TakenAgendaLijst({
           <button
             type="button"
             className="btn btn-ghost btn-sm"
-            onClick={() => setToonFilters((v) => !v)}
+            onClick={() => { setOpenForm(null); setToonFilters((v) => !v); }}
           >
             {toonFilters ? "Verberg zoekbalk" : "Zoek taak of agendapunt"}
           </button>
@@ -134,7 +135,7 @@ export default function TakenAgendaLijst({
         {/* Formulier: nieuw agendapunt */}
         {openForm === "agenda" && (
           <div
-            className="absolute right-0 top-full z-10 mt-1 w-full max-w-[380px] rounded-[10px] border p-4 shadow-lg"
+            className="absolute right-0 top-full z-10 mt-1 w-full overflow-hidden rounded-[10px] border p-4 shadow-lg sm:max-w-[380px]"
             style={{ background: "white", borderColor: "var(--border)" }}
           >
             <form action={nieuwAgendaItem} className="flex flex-col gap-3" encType="multipart/form-data">
@@ -180,7 +181,7 @@ export default function TakenAgendaLijst({
         {/* Formulier: nieuwe taak */}
         {openForm === "taak" && (
           <div
-            className="absolute right-0 top-full z-10 mt-1 w-full max-w-[380px] rounded-[10px] border p-4 shadow-lg"
+            className="absolute right-0 top-full z-10 mt-1 w-full overflow-hidden rounded-[10px] border p-4 shadow-lg sm:max-w-[380px]"
             style={{ background: "white", borderColor: "var(--border)" }}
           >
             <form action={nieuweTaak} className="flex flex-col gap-3" encType="multipart/form-data">
@@ -227,47 +228,57 @@ export default function TakenAgendaLijst({
 
       {/* Zoekfilters */}
       {toonFilters && (
-        <div className="card mb-4 flex flex-wrap items-center gap-3 p-3">
-          <input
-            className="input min-w-[200px] flex-1"
-            placeholder="Zoeken op titel…"
-            value={zoek}
-            onChange={(e) => setZoek(e.target.value)}
-          />
-          <select
-            className="input"
-            value={filterUser}
-            onChange={(e) => setFilterUser(e.target.value)}
-          >
-            <option value="">Alle personen</option>
-            {leden.map((l) => (
-              <option key={l.id} value={l.id}>
-                {l.naam}
-              </option>
-            ))}
-          </select>
-          <input
-            className="input"
-            type="date"
-            value={filterVan}
-            onChange={(e) => setFilterVan(e.target.value)}
-            title="Vanaf datum"
-          />
-          <input
-            className="input"
-            type="date"
-            value={filterTot}
-            onChange={(e) => setFilterTot(e.target.value)}
-            title="Tot datum"
-          />
-          <label className="flex cursor-pointer items-center gap-1.5 text-[12.5px]" style={{ color: "var(--text-2)" }}>
+        <div className="card mb-4 grid grid-cols-2 gap-3 p-3 sm:flex sm:flex-wrap sm:items-end">
+          <div className="col-span-2">
+            <label className="label-up mb-1 block">Zoeken op titel</label>
             <input
-              type="checkbox"
-              checked={toonAfgerond}
-              onChange={(e) => setToonAfgerond(e.target.checked)}
+              className="input w-full"
+              placeholder="Zoeken op titel…"
+              value={zoek}
+              onChange={(e) => setZoek(e.target.value)}
             />
-            Afgerond
-          </label>
+          </div>
+          <div className="col-span-2">
+            <label className="label-up mb-1 block">Persoon</label>
+            <select
+              className="input w-full"
+              value={filterUser}
+              onChange={(e) => setFilterUser(e.target.value)}
+            >
+              <option value="">Alle personen</option>
+              {leden.map((l) => (
+                <option key={l.id} value={l.id}>{l.naam}</option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <label className="label-up mb-1 block">Vanaf datum</label>
+            <input
+              className="input w-full"
+              type="date"
+              value={filterVan}
+              onChange={(e) => setFilterVan(e.target.value)}
+            />
+          </div>
+          <div>
+            <label className="label-up mb-1 block">Datum tot</label>
+            <input
+              className="input w-full"
+              type="date"
+              value={filterTot}
+              onChange={(e) => setFilterTot(e.target.value)}
+            />
+          </div>
+          <div className="col-span-2 sm:col-span-1">
+            <label className="flex cursor-pointer items-center gap-1.5 text-[12.5px]" style={{ color: "var(--text-2)" }}>
+              <input
+                type="checkbox"
+                checked={toonAfgerond}
+                onChange={(e) => setToonAfgerond(e.target.checked)}
+              />
+              Afgerond tonen
+            </label>
+          </div>
         </div>
       )}
 
