@@ -81,6 +81,17 @@ const GEBRUIK = [
 const GEBOUW_CATS = new Set(["gebouw", "woning", "opstal"]);
 const PERCEEL_CATS = new Set(["pachtperceel", "perceel"]);
 
+const KAARTGROEPEN: { label: string; categorieen: string[] }[] = [
+  { label: "Gebouwen", categorieen: ["gebouw", "woning", "opstal"] },
+  { label: "Agrarisch", categorieen: ["pachtperceel", "perceel"] },
+  { label: "Natuur", categorieen: ["natuur", "natuurbeheertype", "onderhoudszone"] },
+  { label: "Recreatie", categorieen: ["tuin", "wandelroute", "bomenlaan", "risicoplek"] },
+  { label: "Werken", categorieen: ["bedrijf", "werken"] },
+  { label: "Infrastructuur", categorieen: ["infrastructuur", "weg_pad", "brug", "hek", "kabel_leiding"] },
+  { label: "Water & Klimaat", categorieen: ["water", "waterloop", "vijver_sloot"] },
+  { label: "Overig", categorieen: [] }, // vangnet
+];
+
 function haTekst(m2: unknown): string {
   const n = Number(m2);
   if (!Number.isFinite(n)) return "";
@@ -649,52 +660,70 @@ export default function Kaart({
         </form>
       )}
 
-      {/* Geplaatste objecten */}
-      {objecten.length > 0 && (
-        <div className="card p-4">
-          <div className="mb-2 text-[13px] font-semibold">
-            Geplaatste objecten ({objecten.length})
-          </div>
-          <div className="divide-y" style={{ borderColor: "var(--border)" }}>
-            {objecten.map((o) => (
-              <div
-                key={o.id}
-                className="flex items-center gap-3 py-2.5"
-                style={{
-                  background:
-                    geselecteerd === o.id ? "var(--primary-light)" : undefined,
-                }}
-              >
-                <button
-                  type="button"
-                  onClick={() => selecteer(o)}
-                  className="flex-1 text-left"
-                >
-                  <div className="text-[14px] font-semibold">{o.naam}</div>
-                  <div className="text-[12px]" style={{ color: "var(--text-2)" }}>
-                    {objectDetails(o)}
+      {/* Geplaatste objecten, gegroepeerd */}
+      {objecten.length > 0 && (() => {
+        const catIndex = new Map<string, number>();
+        KAARTGROEPEN.forEach((g, gi) => g.categorieen.forEach((c) => catIndex.set(c, gi)));
+        const groepen: PlaatsObject[][] = KAARTGROEPEN.map(() => []);
+        for (const o of objecten) {
+          const gi = catIndex.get(o.categorie) ?? KAARTGROEPEN.length - 1;
+          groepen[gi].push(o);
+        }
+        return (
+          <div className="flex flex-col gap-3">
+            <div className="text-[13px] font-semibold">
+              Geplaatste objecten ({objecten.length})
+            </div>
+            {KAARTGROEPEN.map((groep, gi) => {
+              const lijst = groepen[gi];
+              if (lijst.length === 0) return null;
+              return (
+                <div key={groep.label} className="card p-4">
+                  <div className="mb-2 text-[12px] font-semibold uppercase tracking-wide" style={{ color: "var(--text-2)" }}>
+                    {groep.label} ({lijst.length})
                   </div>
-                </button>
-                <Link
-                  href={`/landgoed/${landgoedId}/object/${o.id}`}
-                  className="btn btn-ghost btn-sm"
-                >
-                  Details
-                </Link>
-                <form action={verwijderObject}>
-                  <input type="hidden" name="landgoed_id" value={landgoedId} />
-                  <input type="hidden" name="id" value={o.id} />
-                  <button
-                    className="btn btn-ghost btn-sm btn-danger"
-                  >
-                    Verwijder
-                  </button>
-                </form>
-              </div>
-            ))}
+                  <div className="divide-y" style={{ borderColor: "var(--border)" }}>
+                    {lijst.map((o) => (
+                      <div
+                        key={o.id}
+                        className="flex items-center gap-3 py-2.5"
+                        style={{
+                          background:
+                            geselecteerd === o.id ? "var(--primary-light)" : undefined,
+                        }}
+                      >
+                        <button
+                          type="button"
+                          onClick={() => selecteer(o)}
+                          className="flex-1 text-left"
+                        >
+                          <div className="text-[14px] font-semibold">{o.naam}</div>
+                          <div className="text-[12px]" style={{ color: "var(--text-2)" }}>
+                            {objectDetails(o)}
+                          </div>
+                        </button>
+                        <Link
+                          href={`/landgoed/${landgoedId}/object/${o.id}`}
+                          className="btn btn-ghost btn-sm"
+                        >
+                          Details
+                        </Link>
+                        <form action={verwijderObject}>
+                          <input type="hidden" name="landgoed_id" value={landgoedId} />
+                          <input type="hidden" name="id" value={o.id} />
+                          <button className="btn btn-ghost btn-sm btn-danger">
+                            Verwijder
+                          </button>
+                        </form>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              );
+            })}
           </div>
-        </div>
-      )}
+        );
+      })()}
     </div>
   );
 }
