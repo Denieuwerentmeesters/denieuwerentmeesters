@@ -8,15 +8,25 @@ import {
   type Contact,
 } from "@/lib/ai";
 import { transcribeer } from "@/lib/transcriptie";
+import { createServiceClient } from "@/lib/supabase/service";
 
 export async function transcribeerAudio(fd: FormData) {
   const gesprek_id = String(fd.get("gesprek_id"));
   const landgoed_id = String(fd.get("landgoed_id"));
-  const bestand = fd.get("audio") as File | null;
-  if (!bestand || bestand.size === 0) return { fout: "Geen audiobestand ontvangen." };
+  const storage_pad = String(fd.get("storage_pad") ?? "").trim();
+  if (!storage_pad) return { fout: "Geen storage pad ontvangen." };
 
-  const buffer = Buffer.from(await bestand.arrayBuffer());
-  const tekst = await transcribeer(buffer, bestand.type, bestand.name);
+  const service = createServiceClient();
+  const { data: blob, error } = await service.storage.from("audio-opnames").download(storage_pad);
+  if (error || !blob) return { fout: `Download mislukt: ${error?.message}` };
+
+  // Verwijder bestand na download (AVG / opruimen)
+  await service.storage.from("audio-opnames").remove([storage_pad]);
+
+  const ext = storage_pad.split(".").pop() ?? "webm";
+  const mimeType = ext === "m4a" || ext === "mp4" ? "audio/mp4" : ext === "mp3" ? "audio/mpeg" : "audio/webm";
+  const buffer = Buffer.from(await blob.arrayBuffer());
+  const tekst = await transcribeer(buffer, mimeType, `opname.${ext}`);
   if (!tekst) return { fout: "Transcriptie mislukt — controleer de GROQ_API_KEY." };
 
   const supabase = await createClient();
