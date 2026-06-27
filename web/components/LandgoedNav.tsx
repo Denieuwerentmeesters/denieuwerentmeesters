@@ -13,7 +13,7 @@ export type NavItem = {
 };
 
 // ── Kleine SVG-icoontjes (Heroicons outline, 16×16 viewport) ──────────────
-function Icon({ naam, actief }: { naam: string; actief: boolean }) {
+export function Icon({ naam, actief }: { naam: string; actief: boolean }) {
   const kleur = actief ? "rgba(255,255,255,.9)" : "var(--text-3)";
   const props = {
     width: 16,

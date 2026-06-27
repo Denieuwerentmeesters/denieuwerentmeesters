@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { uitloggen } from "../../actions";
 import LandgoedNav, { type NavItem } from "@/components/LandgoedNav";
+import MobileNav from "@/components/MobileNav";
 
 export default async function LandgoedLayout({
   children,
@@ -65,8 +66,21 @@ export default async function LandgoedLayout({
 
   return (
     <div className="flex h-screen overflow-hidden">
+      {/* Mobiel: sticky burger-menu (verborgen op desktop) */}
+      <div className="md:hidden">
+        <MobileNav
+          items={items}
+          landgoedNaam={landgoed.naam}
+          landgoedId={id}
+          userEmail={user.email ?? "Gebruiker"}
+          initialen={initialen}
+          uitloggenAction={uitloggen}
+        />
+      </div>
+
+      {/* Desktop: vaste zijbalk (verborgen op mobiel) */}
       <aside
-        className="flex w-[240px] shrink-0 flex-col overflow-y-auto bg-white"
+        className="hidden md:flex w-[240px] shrink-0 flex-col overflow-y-auto bg-white"
         style={{ borderRight: "1px solid var(--border)" }}
       >
         <Link
@@ -118,7 +132,7 @@ export default async function LandgoedLayout({
         </div>
       </aside>
 
-      <main className="flex-1 overflow-y-auto">{children}</main>
+      <main className="flex-1 overflow-y-auto pt-14 md:pt-0">{children}</main>
     </div>
   );
 }
