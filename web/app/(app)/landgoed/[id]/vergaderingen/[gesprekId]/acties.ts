@@ -2,6 +2,7 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import {
   verwerkPrompt,
   extraheerActiepuntenMetMatching,
@@ -53,7 +54,7 @@ export async function slaTranscriptOp(fd: FormData) {
   await supabase.from("gesprek_transcript").insert({ gesprek_id, tekst });
   await supabase.from("gesprek").update({ status: "getranscribeerd" }).eq("id", gesprek_id);
 
-  revalidatePath(`/landgoed/${landgoed_id}/vergaderingen/${gesprek_id}`);
+  redirect(`/landgoed/${landgoed_id}/vergaderingen/${gesprek_id}`);
 }
 
 // Voert één of meer prompts uit (multi-select via checkboxen).
