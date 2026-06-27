@@ -13,21 +13,25 @@ import { createServiceClient } from "@/lib/supabase/service";
 export async function transcribeerAudio(fd: FormData) {
   const gesprek_id = String(fd.get("gesprek_id"));
   const landgoed_id = String(fd.get("landgoed_id"));
-  const storage_pad = String(fd.get("storage_pad") ?? "").trim();
-  if (!storage_pad) return { fout: "Geen storage pad ontvangen." };
+  const storage_paden = fd.getAll("storage_pad").map(String).filter(Boolean);
+  if (!storage_paden.length) return { fout: "Geen storage pad ontvangen." };
 
   const service = createServiceClient();
-  const { data: blob, error } = await service.storage.from("audio-opnames").download(storage_pad);
-  if (error || !blob) return { fout: `Download mislukt: ${error?.message}` };
+  const teksten: string[] = [];
 
-  // Verwijder bestand na download (AVG / opruimen)
-  await service.storage.from("audio-opnames").remove([storage_pad]);
+  for (const pad of storage_paden) {
+    const { data: blob, error } = await service.storage.from("audio-opnames").download(pad);
+    await service.storage.from("audio-opnames").remove([pad]);
+    if (error || !blob) return { fout: `Download mislukt: ${error?.message}` };
+    const ext = pad.split(".").pop() ?? "webm";
+    const mimeType = ext === "wav" ? "audio/wav" : ext === "m4a" || ext === "mp4" ? "audio/mp4" : ext === "mp3" ? "audio/mpeg" : "audio/webm";
+    const buffer = Buffer.from(await blob.arrayBuffer());
+    const deelTekst = await transcribeer(buffer, mimeType, `opname.${ext}`);
+    if (!deelTekst) return { fout: "Transcriptie mislukt — controleer de GROQ_API_KEY." };
+    teksten.push(deelTekst);
+  }
 
-  const ext = storage_pad.split(".").pop() ?? "webm";
-  const mimeType = ext === "m4a" || ext === "mp4" ? "audio/mp4" : ext === "mp3" ? "audio/mpeg" : "audio/webm";
-  const buffer = Buffer.from(await blob.arrayBuffer());
-  const tekst = await transcribeer(buffer, mimeType, `opname.${ext}`);
-  if (!tekst) return { fout: "Transcriptie mislukt — controleer de GROQ_API_KEY." };
+  const tekst = teksten.join("\n\n");
 
   const supabase = await createClient();
   await supabase.from("gesprek_transcript").delete().eq("gesprek_id", gesprek_id);

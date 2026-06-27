@@ -2,9 +2,10 @@
 
 import { useRef, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { splitAudioInChunks, GROQ_VEILIGE_GRENS_MB } from "@/lib/audio-chunks";
 import { maakGesprekVanAudio } from "./acties";
 
-type Status = "idle" | "opnemen" | "uploaden" | "verwerken" | "fout";
+type Status = "idle" | "opnemen" | "splitsen" | "uploaden" | "verwerken" | "fout";
 
 export function OpnameKnop({
   landgoedId,
@@ -15,6 +16,7 @@ export function OpnameKnop({
 }) {
   const [status, setStatus] = useState<Status>("idle");
   const [seconden, setSeconden] = useState(0);
+  const [voortgang, setVoortgang] = useState("");
   const [fout, setFout] = useState<string | null>(null);
   const recorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
@@ -22,21 +24,41 @@ export function OpnameKnop({
 
   async function uploadEnVerwerk(bestand: File) {
     setFout(null);
-    setStatus("uploaden");
     const supabase = createClient();
-    const pad = `nieuw/${Date.now()}-${bestand.name}`;
-    const { error } = await supabase.storage.from("audio-opnames").upload(pad, bestand);
-    if (error) {
-      setFout(`Upload mislukt: ${error.message}`);
-      setStatus("fout");
-      return;
+    const grensBytes = GROQ_VEILIGE_GRENS_MB * 1024 * 1024;
+
+    let bestanden: File[];
+    if (bestand.size > grensBytes) {
+      setStatus("splitsen");
+      setVoortgang("Audio opsplitsen in delen…");
+      try {
+        bestanden = await splitAudioInChunks(bestand);
+      } catch {
+        setFout("Splitsen mislukt — probeer een kleiner bestand.");
+        setStatus("fout");
+        return;
+      }
+    } else {
+      bestanden = [bestand];
     }
+
+    setStatus("uploaden");
+    const paden: string[] = [];
+    for (let i = 0; i < bestanden.length; i++) {
+      setVoortgang(bestanden.length > 1 ? `Uploaden deel ${i + 1} van ${bestanden.length}…` : "Uploaden…");
+      const f = bestanden[i];
+      const pad = `nieuw/${Date.now()}-${f.name}`;
+      const { error } = await supabase.storage.from("audio-opnames").upload(pad, f);
+      if (error) { setFout(`Upload mislukt: ${error.message}`); setStatus("fout"); return; }
+      paden.push(pad);
+    }
+
     setStatus("verwerken");
+    setVoortgang(bestanden.length > 1 ? `Transcriberen (${bestanden.length} delen)…` : "Transcriberen…");
     const fd = new FormData();
     fd.set("landgoed_id", landgoedId);
-    fd.set("storage_pad", pad);
+    for (const pad of paden) fd.append("storage_pad", pad);
     const resultaat = await maakGesprekVanAudio(fd);
-    // Bij succes redirect() — alleen bereikt bij fout
     if (resultaat && "fout" in resultaat) {
       setFout(resultaat.fout ?? "Onbekende fout");
       setStatus("fout");
@@ -86,9 +108,7 @@ export function OpnameKnop({
             <button type="button" onClick={stop} className="btn btn-ghost btn-sm">■ Stop en transcribeer</button>
           </>
         ) : (
-          <span className="text-[13px]" style={{ color: "var(--text-2)" }}>
-            {status === "uploaden" ? "Bestand uploaden…" : "Bezig met transcriberen…"}
-          </span>
+          <span className="text-[13px]" style={{ color: "var(--text-2)" }}>{voortgang}</span>
         )}
       </div>
 
@@ -99,10 +119,7 @@ export function OpnameKnop({
             type="file"
             accept=".m4a,.mp3,.mp4,.wav,.webm,.ogg,audio/*"
             className="sr-only"
-            onChange={(e) => {
-              const f = e.target.files?.[0];
-              if (f) uploadEnVerwerk(f);
-            }}
+            onChange={(e) => { const f = e.target.files?.[0]; if (f) uploadEnVerwerk(f); }}
           />
         </label>
       )}
