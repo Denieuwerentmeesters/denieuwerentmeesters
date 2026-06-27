@@ -25,7 +25,19 @@ function parseJson<T>(res: Anthropic.Message): T {
     .replace(/^```(?:json)?/i, "")
     .replace(/```$/, "")
     .trim();
-  return JSON.parse(schoon) as T;
+  // Eerste poging: directe parse
+  try {
+    return JSON.parse(schoon) as T;
+  } catch {
+    // Tweede poging: response afgekapt (max_tokens) — herstel array door te knippen
+    // na het laatste volledige object en de array te sluiten.
+    if (schoon.startsWith("[")) {
+      const idx = schoon.lastIndexOf("},");
+      const herstel = idx > 0 ? schoon.slice(0, idx + 1) + "]" : schoon;
+      return JSON.parse(herstel) as T;
+    }
+    throw new Error(`JSON parse mislukt: ${schoon.slice(0, 120)}`);
+  }
 }
 
 // Laatste extractie-fout (leesbaar), zodat de aanroeper 'm in extractie_run.fout
