@@ -81,16 +81,47 @@ const GEBRUIK = [
 const GEBOUW_CATS = new Set(["gebouw", "woning", "opstal"]);
 const PERCEEL_CATS = new Set(["pachtperceel", "perceel"]);
 
-const KAARTGROEPEN: { label: string; categorieen: string[] }[] = [
-  { label: "Gebouwen", categorieen: ["gebouw", "woning", "opstal"] },
-  { label: "Agrarisch", categorieen: ["pachtperceel", "perceel"] },
-  { label: "Natuur", categorieen: ["natuur", "natuurbeheertype", "onderhoudszone"] },
-  { label: "Recreatie", categorieen: ["tuin", "wandelroute", "bomenlaan", "risicoplek"] },
-  { label: "Werken", categorieen: ["bedrijf", "werken"] },
-  { label: "Infrastructuur", categorieen: ["infrastructuur", "weg_pad", "brug", "hek", "kabel_leiding"] },
-  { label: "Water & Klimaat", categorieen: ["water", "waterloop", "vijver_sloot"] },
-  { label: "Overig", categorieen: [] }, // vangnet
-];
+const KAARTGROEP_LABELS = [
+  "Gebouwen",
+  "Agrarisch",
+  "Natuur",
+  "Recreatie",
+  "Werken",
+  "Infrastructuur",
+  "Water & Klimaat",
+  "Overig",
+] as const;
+
+type KaartGroepLabel = (typeof KAARTGROEP_LABELS)[number];
+
+// Bepaalt de groep op basis van categorie + gebruik.
+// Percelen erven hun groep van het gebruik-veld; vaste objectcategorieën
+// (gebouwen, infrastructuur, enz.) worden direct ingedeeld.
+function kaartGroep(o: PlaatsObject): KaartGroepLabel {
+  const cat = o.categorie;
+  const gebruik = (o.gebruik ?? "").toLowerCase();
+
+  // Vaste objectcategorieën
+  if (["gebouw", "woning", "opstal"].includes(cat)) return "Gebouwen";
+  if (["natuur", "natuurbeheertype", "onderhoudszone"].includes(cat)) return "Natuur";
+  if (["tuin", "wandelroute", "bomenlaan", "risicoplek"].includes(cat)) return "Recreatie";
+  if (["bedrijf", "werken"].includes(cat)) return "Werken";
+  if (["infrastructuur", "weg_pad", "brug", "hek", "kabel_leiding"].includes(cat)) return "Infrastructuur";
+  if (["water", "waterloop", "vijver_sloot"].includes(cat)) return "Water & Klimaat";
+
+  // Percelen: indeling via gebruik-veld
+  if (["pachtperceel", "perceel"].includes(cat)) {
+    if (gebruik === "wonen") return "Gebouwen";
+    if (gebruik === "agrarisch") return "Agrarisch";
+    if (gebruik === "natuur") return "Natuur";
+    if (gebruik === "recreatie") return "Recreatie";
+    if (gebruik === "bedrijf") return "Werken";
+    if (gebruik === "maatschappelijk") return "Werken";
+    return "Agrarisch"; // standaard voor percelen zonder gebruik
+  }
+
+  return "Overig";
+}
 
 function haTekst(m2: unknown): string {
   const n = Number(m2);
@@ -662,25 +693,22 @@ export default function Kaart({
 
       {/* Geplaatste objecten, gegroepeerd */}
       {objecten.length > 0 && (() => {
-        const catIndex = new Map<string, number>();
-        KAARTGROEPEN.forEach((g, gi) => g.categorieen.forEach((c) => catIndex.set(c, gi)));
-        const groepen: PlaatsObject[][] = KAARTGROEPEN.map(() => []);
-        for (const o of objecten) {
-          const gi = catIndex.get(o.categorie) ?? KAARTGROEPEN.length - 1;
-          groepen[gi].push(o);
-        }
+        const groepenMap = new Map<KaartGroepLabel, PlaatsObject[]>(
+          KAARTGROEP_LABELS.map((l) => [l, []])
+        );
+        for (const o of objecten) groepenMap.get(kaartGroep(o))!.push(o);
         return (
           <div className="flex flex-col gap-3">
             <div className="text-[13px] font-semibold">
               Geplaatste objecten ({objecten.length})
             </div>
-            {KAARTGROEPEN.map((groep, gi) => {
-              const lijst = groepen[gi];
+            {KAARTGROEP_LABELS.map((label) => {
+              const lijst = groepenMap.get(label)!;
               if (lijst.length === 0) return null;
               return (
-                <div key={groep.label} className="card p-4">
+                <div key={label} className="card p-4">
                   <div className="mb-2 text-[12px] font-semibold uppercase tracking-wide" style={{ color: "var(--text-2)" }}>
-                    {groep.label} ({lijst.length})
+                    {label} ({lijst.length})
                   </div>
                   <div className="divide-y" style={{ borderColor: "var(--border)" }}>
                     {lijst.map((o) => (
