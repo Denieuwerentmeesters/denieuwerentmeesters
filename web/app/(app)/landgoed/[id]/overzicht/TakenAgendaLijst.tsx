@@ -43,6 +43,12 @@ export default function TakenAgendaLijst({
   const [filterTot, setFilterTot] = useState("");
   const [toonAfgerond, setToonAfgerond] = useState(false);
   const [toonFilters, setToonFilters] = useState(false);
+  // "agenda" | "taak" | null — welk formulier is open
+  const [openForm, setOpenForm] = useState<"agenda" | "taak" | null>(null);
+
+  function toggleForm(form: "agenda" | "taak") {
+    setOpenForm((prev) => (prev === form ? null : form));
+  }
 
   const gefilterd = useMemo(() => {
     return items
@@ -85,8 +91,16 @@ export default function TakenAgendaLijst({
 
   return (
     <div>
+      {/* Backdrop: sluit open formulier bij klik buiten */}
+      {openForm && (
+        <div
+          className="fixed inset-0 z-[9]"
+          onClick={() => setOpenForm(null)}
+        />
+      )}
+
       {/* Header: titel + drie knoppen */}
-      <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
+      <div className="relative mb-3 flex flex-wrap items-center justify-between gap-3">
         <h2 className="text-[16px] font-bold">Taken en agendapunten</h2>
         <div className="flex gap-2">
           {/* Zoekbalk toggle */}
@@ -99,104 +113,116 @@ export default function TakenAgendaLijst({
           </button>
 
           {/* Nieuw agendapunt */}
-          <details className="relative">
-            <summary className="btn btn-ghost btn-sm cursor-pointer list-none">
-              + Agendapunt
-            </summary>
-            <div
-              className="absolute right-0 top-full z-10 mt-1 w-[360px] rounded-[10px] border p-4 shadow-lg"
-              style={{ background: "white", borderColor: "var(--border)" }}
-            >
-              <form action={nieuwAgendaItem} className="flex flex-col gap-3" encType="multipart/form-data">
-                <input type="hidden" name="landgoed_id" value={landgoedId} />
-                <label className="flex flex-col gap-1 text-[12.5px]">
-                  <span style={{ color: "var(--text-2)" }}>Titel</span>
-                  <input className="input" name="titel" placeholder="Wat staat er op de agenda?" required />
-                </label>
-                <div className="grid grid-cols-2 gap-3">
-                  <label className="flex flex-col gap-1 text-[12.5px]">
-                    <span style={{ color: "var(--text-2)" }}>Datum</span>
-                    <input className="input" type="date" name="datum" required />
-                  </label>
-                  <label className="flex flex-col gap-1 text-[12.5px]">
-                    <span style={{ color: "var(--text-2)" }}>Tijd</span>
-                    <input className="input" type="time" name="tijd" />
-                  </label>
-                </div>
-                <label className="flex flex-col gap-1 text-[12.5px]">
-                  <span style={{ color: "var(--text-2)" }}>Locatie</span>
-                  <input className="input" name="locatie" placeholder="Optioneel" />
-                </label>
-                <label className="flex flex-col gap-1 text-[12.5px]">
-                  <span style={{ color: "var(--text-2)" }}>Omschrijving</span>
-                  <textarea className="input" name="omschrijving" rows={3} placeholder="Optionele toelichting…" />
-                </label>
-                <label className="flex flex-col gap-1 text-[12.5px]">
-                  <span style={{ color: "var(--text-2)" }}>Bijlage</span>
-                  <input className="input" type="file" name="bijlage" />
-                </label>
-                <label className="flex flex-col gap-1 text-[12.5px]">
-                  <span style={{ color: "var(--text-2)" }}>Toegewezen aan</span>
-                  <select className="input" name="toegewezen_aan" defaultValue="">
-                    <option value="">— niemand —</option>
-                    {personenDropdown}
-                  </select>
-                </label>
-                <button type="submit" className="btn btn-primary btn-sm">Toevoegen</button>
-              </form>
-            </div>
-          </details>
+          <button
+            type="button"
+            className="btn btn-ghost btn-sm"
+            onClick={() => toggleForm("agenda")}
+          >
+            + Agendapunt
+          </button>
 
           {/* Nieuwe taak */}
-          <details className="relative">
-            <summary className="btn btn-ghost btn-sm cursor-pointer list-none">
-              + Taak
-            </summary>
-            <div
-              className="absolute right-0 top-full z-10 mt-1 w-[360px] rounded-[10px] border p-4 shadow-lg"
-              style={{ background: "white", borderColor: "var(--border)" }}
-            >
-              <form action={nieuweTaak} className="flex flex-col gap-3" encType="multipart/form-data">
-                <input type="hidden" name="landgoed_id" value={landgoedId} />
+          <button
+            type="button"
+            className="btn btn-ghost btn-sm"
+            onClick={() => toggleForm("taak")}
+          >
+            + Taak
+          </button>
+        </div>
+
+        {/* Formulier: nieuw agendapunt */}
+        {openForm === "agenda" && (
+          <div
+            className="absolute right-0 top-full z-10 mt-1 w-full max-w-[380px] rounded-[10px] border p-4 shadow-lg"
+            style={{ background: "white", borderColor: "var(--border)" }}
+          >
+            <form action={nieuwAgendaItem} className="flex flex-col gap-3" encType="multipart/form-data">
+              <input type="hidden" name="landgoed_id" value={landgoedId} />
+              <label className="flex flex-col gap-1 text-[12.5px]">
+                <span style={{ color: "var(--text-2)" }}>Titel</span>
+                <input className="input" name="titel" placeholder="Wat staat er op de agenda?" required />
+              </label>
+              <div className="grid grid-cols-2 gap-3">
                 <label className="flex flex-col gap-1 text-[12.5px]">
-                  <span style={{ color: "var(--text-2)" }}>Taak</span>
-                  <input className="input" name="titel" placeholder="Wat moet er gebeuren?" required />
+                  <span style={{ color: "var(--text-2)" }}>Datum</span>
+                  <input className="input" type="date" name="datum" required />
                 </label>
                 <label className="flex flex-col gap-1 text-[12.5px]">
-                  <span style={{ color: "var(--text-2)" }}>Omschrijving</span>
-                  <textarea className="input" name="omschrijving" rows={3} placeholder="Optionele toelichting…" />
+                  <span style={{ color: "var(--text-2)" }}>Tijd</span>
+                  <input className="input" type="time" name="tijd" />
                 </label>
-                <div className="grid grid-cols-2 gap-3">
-                  <label className="flex flex-col gap-1 text-[12.5px]">
-                    <span style={{ color: "var(--text-2)" }}>Deadline</span>
-                    <input className="input" type="date" name="deadline" />
-                  </label>
-                  <label className="flex flex-col gap-1 text-[12.5px]">
-                    <span style={{ color: "var(--text-2)" }}>Prioriteit</span>
-                    <select className="input" name="prioriteit" defaultValue="">
-                      <option value="">—</option>
-                      <option value="hoog">Hoog</option>
-                      <option value="middel">Middel</option>
-                      <option value="laag">Laag</option>
-                    </select>
-                  </label>
-                </div>
+              </div>
+              <label className="flex flex-col gap-1 text-[12.5px]">
+                <span style={{ color: "var(--text-2)" }}>Locatie</span>
+                <input className="input" name="locatie" placeholder="Optioneel" />
+              </label>
+              <label className="flex flex-col gap-1 text-[12.5px]">
+                <span style={{ color: "var(--text-2)" }}>Omschrijving</span>
+                <textarea className="input" name="omschrijving" rows={3} placeholder="Optionele toelichting…" />
+              </label>
+              <label className="flex flex-col gap-1 text-[12.5px]">
+                <span style={{ color: "var(--text-2)" }}>Bijlage</span>
+                <input className="input" type="file" name="bijlage" />
+              </label>
+              <label className="flex flex-col gap-1 text-[12.5px]">
+                <span style={{ color: "var(--text-2)" }}>Toegewezen aan</span>
+                <select className="input" name="toegewezen_aan" defaultValue="">
+                  <option value="">— niemand —</option>
+                  {personenDropdown}
+                </select>
+              </label>
+              <button type="submit" className="btn btn-primary btn-sm">Toevoegen</button>
+            </form>
+          </div>
+        )}
+
+        {/* Formulier: nieuwe taak */}
+        {openForm === "taak" && (
+          <div
+            className="absolute right-0 top-full z-10 mt-1 w-full max-w-[380px] rounded-[10px] border p-4 shadow-lg"
+            style={{ background: "white", borderColor: "var(--border)" }}
+          >
+            <form action={nieuweTaak} className="flex flex-col gap-3" encType="multipart/form-data">
+              <input type="hidden" name="landgoed_id" value={landgoedId} />
+              <label className="flex flex-col gap-1 text-[12.5px]">
+                <span style={{ color: "var(--text-2)" }}>Taak</span>
+                <input className="input" name="titel" placeholder="Wat moet er gebeuren?" required />
+              </label>
+              <label className="flex flex-col gap-1 text-[12.5px]">
+                <span style={{ color: "var(--text-2)" }}>Omschrijving</span>
+                <textarea className="input" name="omschrijving" rows={3} placeholder="Optionele toelichting…" />
+              </label>
+              <div className="grid grid-cols-2 gap-3">
                 <label className="flex flex-col gap-1 text-[12.5px]">
-                  <span style={{ color: "var(--text-2)" }}>Bijlage</span>
-                  <input className="input" type="file" name="bijlage" />
+                  <span style={{ color: "var(--text-2)" }}>Deadline</span>
+                  <input className="input" type="date" name="deadline" />
                 </label>
                 <label className="flex flex-col gap-1 text-[12.5px]">
-                  <span style={{ color: "var(--text-2)" }}>Toegewezen aan</span>
-                  <select className="input" name="toegewezen_aan" defaultValue="">
-                    <option value="">— niemand —</option>
-                    {personenDropdown}
+                  <span style={{ color: "var(--text-2)" }}>Prioriteit</span>
+                  <select className="input" name="prioriteit" defaultValue="">
+                    <option value="">—</option>
+                    <option value="hoog">Hoog</option>
+                    <option value="middel">Middel</option>
+                    <option value="laag">Laag</option>
                   </select>
                 </label>
-                <button type="submit" className="btn btn-primary btn-sm">Toevoegen</button>
-              </form>
-            </div>
-          </details>
-        </div>
+              </div>
+              <label className="flex flex-col gap-1 text-[12.5px]">
+                <span style={{ color: "var(--text-2)" }}>Bijlage</span>
+                <input className="input" type="file" name="bijlage" />
+              </label>
+              <label className="flex flex-col gap-1 text-[12.5px]">
+                <span style={{ color: "var(--text-2)" }}>Toegewezen aan</span>
+                <select className="input" name="toegewezen_aan" defaultValue="">
+                  <option value="">— niemand —</option>
+                  {personenDropdown}
+                </select>
+              </label>
+              <button type="submit" className="btn btn-primary btn-sm">Toevoegen</button>
+            </form>
+          </div>
+        )}
       </div>
 
       {/* Zoekfilters */}
