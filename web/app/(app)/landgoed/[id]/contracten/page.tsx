@@ -54,9 +54,9 @@ export default async function ContractenPage({
         </header>
 
         <ToevoegenToggle label="contract toevoegen">
-          <form action={nieuwContract} className="grid grid-cols-2 gap-3 md:grid-cols-3">
+          <form action={nieuwContract} className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3">
             <input type="hidden" name="landgoed_id" value={id} />
-            <div className="col-span-2 md:col-span-1">
+            <div className="sm:col-span-2 md:col-span-1">
               <label className="label-up mb-1 block">Titel</label>
               <input className="input" name="titel" placeholder="Bijv. Pacht weiland zuid" required />
             </div>
@@ -105,7 +105,7 @@ export default async function ContractenPage({
               <label className="label-up mb-1 block">Achterstand (€)</label>
               <input className="input" name="achterstand" inputMode="decimal" placeholder="0" />
             </div>
-            <div className="col-span-2 md:col-span-2">
+            <div className="sm:col-span-2">
               <label className="label-up mb-1 block">Notitie achterstand</label>
               <input
                 className="input"
@@ -113,7 +113,7 @@ export default async function ContractenPage({
                 placeholder="bijv. herinnering gestuurd 1-6"
               />
             </div>
-            <div className="col-span-2 flex items-end md:col-span-3">
+            <div className="sm:col-span-2 md:col-span-3">
               <button type="submit" className="btn btn-primary">
                 Contract toevoegen
               </button>

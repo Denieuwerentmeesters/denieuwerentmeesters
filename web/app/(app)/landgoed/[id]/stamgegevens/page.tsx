@@ -282,9 +282,9 @@ export default async function StamgegevensPage({
         {/* Verrijk uit bron */}
         <div className="card mb-5 p-4">
           <div className="mb-3 text-[14px] font-semibold">Verrijk uit een bron</div>
-          <form action={verrijkUitBron} className="flex flex-wrap items-end gap-3">
+          <form action={verrijkUitBron} className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-end">
             <input type="hidden" name="landgoed_id" value={id} />
-            <div className="min-w-[260px] flex-1">
+            <div className="flex-1">
               <label className="label-up mb-1 block">Bron</label>
               <select className="input" name="bron" required>
                 <option value="">Kies een bron…</option>
@@ -355,10 +355,10 @@ export default async function StamgegevensPage({
         {/* Handmatig toevoegen */}
         <form
           action={objectHandmatig}
-          className="card mb-5 flex flex-wrap items-end gap-3 p-4"
+          className="card mb-5 flex flex-col gap-3 p-4 sm:flex-row sm:flex-wrap sm:items-end"
         >
           <input type="hidden" name="landgoed_id" value={id} />
-          <div className="min-w-[200px] flex-1">
+          <div className="flex-1">
             <label className="label-up mb-1 block">Object handmatig toevoegen</label>
             <input className="input" name="naam" placeholder="Naam, bv. Koetshuis" required />
           </div>

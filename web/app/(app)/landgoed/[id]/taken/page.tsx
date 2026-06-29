@@ -53,9 +53,9 @@ export default async function TakenPage({
 
         {/* Nieuw */}
         <ToevoegenToggle label="taak toevoegen">
-          <form action={nieuweTaak} className="flex flex-wrap items-end gap-3">
+          <form action={nieuweTaak} className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-end">
             <input type="hidden" name="landgoed_id" value={id} />
-            <div className="min-w-[220px] flex-1">
+            <div className="flex-1">
               <label className="label-up mb-1 block">Titel</label>
               <input className="input" name="titel" placeholder="Wat moet er gebeuren?" required />
             </div>

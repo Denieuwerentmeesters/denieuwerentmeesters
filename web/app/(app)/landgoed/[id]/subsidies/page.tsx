@@ -142,9 +142,9 @@ export default async function SubsidiesPage({
           </p>
 
           <ToevoegenToggle label="subsidie toevoegen">
-            <form action={nieuweSubsidie} className="grid grid-cols-2 gap-3 md:grid-cols-4">
+            <form action={nieuweSubsidie} className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-4">
               <input type="hidden" name="landgoed_id" value={id} />
-              <div className="col-span-2">
+              <div className="sm:col-span-2">
                 <label className="label-up mb-1 block">Naam</label>
                 <input className="input" name="naam" placeholder="Bijv. SNL natuurbeheer" required />
               </div>

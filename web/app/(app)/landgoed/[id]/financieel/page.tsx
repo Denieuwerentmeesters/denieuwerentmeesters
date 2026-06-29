@@ -175,15 +175,17 @@ export default async function FinancieelPage({
             </button>
           </form>
 
-          <form action={nieuweTransactie} className="card flex flex-wrap items-end gap-2 p-4">
+          <form action={nieuweTransactie} className="card flex flex-col gap-2 p-4">
             <input type="hidden" name="landgoed_id" value={id} />
-            <div className="w-full label-up">Handmatige transactie</div>
-            <input className="input" style={{ width: 130 }} type="date" name="datum" required />
-            <input className="input" style={{ width: 110 }} name="bedrag" placeholder="-1234,56" required />
-            <input className="input flex-1" name="omschrijving" placeholder="Omschrijving" />
-            <button type="submit" className="btn btn-ghost">
-              Toevoegen
-            </button>
+            <div className="label-up">Handmatige transactie</div>
+            <div className="flex flex-wrap gap-2">
+              <input className="input w-full sm:w-[130px]" type="date" name="datum" required />
+              <input className="input w-full sm:w-[120px]" name="bedrag" placeholder="-1234,56" required />
+              <input className="input w-full flex-1" name="omschrijving" placeholder="Omschrijving" />
+              <button type="submit" className="btn btn-ghost">
+                Toevoegen
+              </button>
+            </div>
           </form>
         </div>
 

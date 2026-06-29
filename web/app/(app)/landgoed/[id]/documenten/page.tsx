@@ -52,12 +52,12 @@ export default async function DocumentenPage({
 
         <form
           action={uploadDocument}
-          className="card mb-5 flex flex-wrap items-end gap-3 p-4"
+          className="card mb-5 flex flex-col gap-3 p-4 sm:flex-row sm:flex-wrap sm:items-end"
         >
           <input type="hidden" name="landgoed_id" value={id} />
-          <div className="min-w-[200px] flex-1">
+          <div className="flex-1">
             <label className="label-up mb-1 block">Titel (optioneel)</label>
-            <input className="input" name="titel" placeholder="Bestandsnaam wordt gebruikt indien leeg" />
+            <input className="input w-full" name="titel" placeholder="Bestandsnaam wordt gebruikt indien leeg" />
           </div>
           <div>
             <label className="label-up mb-1 block">Bestand</label>
@@ -77,38 +77,40 @@ export default async function DocumentenPage({
           {metUrl.map((d) => (
             <div
               key={d.id}
-              className="flex items-center gap-3 px-5 py-3.5"
+              className="flex flex-wrap items-center gap-2 px-4 py-3.5"
               style={{ borderColor: "var(--border)" }}
             >
-              <div className="flex-1">
-                <div className="text-[14px] font-semibold">{d.titel}</div>
+              <div className="min-w-0 flex-1">
+                <div className="truncate text-[14px] font-semibold">{d.titel}</div>
                 {d.samenvatting && (
-                  <div className="text-[12px]" style={{ color: "var(--text-2)" }}>
+                  <div className="truncate text-[12px]" style={{ color: "var(--text-2)" }}>
                     {d.samenvatting}
                   </div>
                 )}
               </div>
-              {d.url && (
-                <a
-                  href={d.url}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="btn btn-ghost btn-sm"
-                >
-                  Openen
-                </a>
-              )}
-              <form action={verwijderDocument}>
-                <input type="hidden" name="landgoed_id" value={id} />
-                <input type="hidden" name="id" value={d.id} />
-                <input type="hidden" name="pad" value={d.bestand_pad ?? ""} />
-                <button
-                  type="submit"
-                  className="btn btn-ghost btn-sm btn-danger"
-                >
-                  Verwijderen
-                </button>
-              </form>
+              <div className="flex shrink-0 gap-2">
+                {d.url && (
+                  <a
+                    href={d.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="btn btn-ghost btn-sm"
+                  >
+                    Openen
+                  </a>
+                )}
+                <form action={verwijderDocument}>
+                  <input type="hidden" name="landgoed_id" value={id} />
+                  <input type="hidden" name="id" value={d.id} />
+                  <input type="hidden" name="pad" value={d.bestand_pad ?? ""} />
+                  <button
+                    type="submit"
+                    className="btn btn-ghost btn-sm btn-danger"
+                  >
+                    Verwijderen
+                  </button>
+                </form>
+              </div>
             </div>
           ))}
         </div>

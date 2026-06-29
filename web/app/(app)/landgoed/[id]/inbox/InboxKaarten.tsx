@@ -86,7 +86,7 @@ function VoorstelFormulier({
       <input type="hidden" name="landgoed_id" value={landgoed_id} />
       <input type="hidden" name="voorstel_id" value={voorstel.id} />
 
-      <div className="mb-3 grid gap-3" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))" }}>
+      <div className="mb-3 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {/* Type-selector */}
         <div>
           <label className="label-up mb-1 block">Type</label>
@@ -197,7 +197,7 @@ function VoorstelKaart({
       {bewerken ? (
         <VoorstelFormulier voorstel={voorstel} landgoed_id={landgoed_id} leden={leden} onAnnuleer={() => setBewerken(false)} />
       ) : (
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           <button type="button" className="btn btn-primary btn-sm" onClick={() => setBewerken(true)}>
             Bewerken & bevestigen
           </button>
