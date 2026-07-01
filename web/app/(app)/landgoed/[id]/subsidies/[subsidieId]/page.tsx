@@ -24,6 +24,7 @@ type Regeling = {
   openstelling_tot: string | null;
   budget_indicatie: string | null;
   doelgroep_type: string | null;
+  categorie_ui: string | null;
 } | null;
 
 export default async function SubsidieDetailPage({
@@ -37,7 +38,7 @@ export default async function SubsidieDetailPage({
   const { data: s } = await supabase
     .from("subsidie")
     .select(
-      "id, naam, organisatie, categorie, bedrag_indicatie, status, deadline, soort, match_score, redenering, al_in_gebruik, werkstap, regeling_id, regeling:regeling_id (samenvatting, bron_url, organisatie, bestuurslaag, scope, provincie, status, themas, is_nieuw, is_tijdelijk, openstelling_van, openstelling_tot, budget_indicatie, doelgroep_type)",
+      "id, naam, organisatie, categorie, bedrag_indicatie, status, deadline, soort, match_score, redenering, al_in_gebruik, werkstap, regeling_id, regeling:regeling_id (samenvatting, bron_url, organisatie, bestuurslaag, scope, provincie, status, themas, is_nieuw, is_tijdelijk, openstelling_van, openstelling_tot, budget_indicatie, doelgroep_type, categorie_ui)",
     )
     .eq("id", subsidieId)
     .eq("landgoed_id", id)
@@ -52,6 +53,13 @@ export default async function SubsidieDetailPage({
     .eq("id", id)
     .maybeSingle();
   const naam = lg?.naam ?? "dit landgoed";
+
+  // Stamobjecten voor contextuele link
+  const { data: stamobjecten } = await supabase
+    .from("stamobject")
+    .select("id, naam, categorie")
+    .eq("landgoed_id", id)
+    .order("categorie");
 
   // §7-lagen (alleen als er een catalogus-regeling achter zit).
   const [{ data: criteria }, { data: maatregelen }, { data: bewijs }, { data: verbanden }] =
@@ -86,6 +94,33 @@ export default async function SubsidieDetailPage({
   const isKans = s.soort === "kans";
   const kansrijk = (s.match_score ?? 0) >= 70;
   const d = dagenTot(s.deadline);
+
+  // Stamobjecten filteren op basis van doelgroep_type en categorie_ui van de regeling
+  const doelgroepType = r?.doelgroep_type ?? null;
+  const categorieUi = r?.categorie_ui ?? null;
+
+  const STAM_PER_CATEGORIE: Record<string, string[]> = {
+    natuur: ["natuur", "bos", "water", "tuin"],
+    klimaat_water: ["water", "natuur", "infrastructuur"],
+    landbouw: ["pachtperceel"],
+    gebouwen_erfgoed: ["gebouw", "woning"],
+    energie: ["gebouw", "woning", "infrastructuur"],
+    recreatie_platteland: ["tuin", "natuur", "infrastructuur", "gebouw"],
+    financiering_fiscaal: [],
+  };
+
+  const relevanteCategorieen =
+    doelgroepType === "pachter" || doelgroepType === "beiden"
+      ? ["pachtperceel"]
+      : (STAM_PER_CATEGORIE[categorieUi ?? ""] ?? []);
+
+  const relevanteObjecten = (stamobjecten ?? []).filter(
+    (obj) => relevanteCategorieen.length === 0 || relevanteCategorieen.includes(obj.categorie),
+  );
+
+  // Pachtpercelen samenvatten (te veel om allemaal te tonen)
+  const pachtpercelen = relevanteObjecten.filter((o) => o.categorie === "pachtperceel");
+  const overigeObjecten = relevanteObjecten.filter((o) => o.categorie !== "pachtperceel");
 
   const Sectie = ({ titel, children }: { titel: string; children: ReactNode }) => (
     <section className="card mb-4 p-5">
@@ -137,6 +172,33 @@ export default async function SubsidieDetailPage({
             </div>
           )}
         </Sectie>
+
+        {/* Op uw landgoed — welke objecten/percelen zijn relevant */}
+        {relevanteObjecten.length > 0 && (
+          <Sectie titel="Op uw landgoed">
+            <p className="mb-3 text-[13px]" style={{ color: "var(--text-2)" }}>
+              {doelgroepType === "pachter"
+                ? "Deze regeling is bedoeld voor uw pachters, niet voor u als eigenaar. U kunt hen er wel op wijzen."
+                : doelgroepType === "beiden"
+                ? "Zowel u als uw pachters kunnen aanvragen."
+                : "Passend bij deze onderdelen van uw landgoed:"}
+            </p>
+            {pachtpercelen.length > 0 && (
+              <div className="mb-2 flex items-center gap-3">
+                <span className="tag tag-amber shrink-0">pachtpercelen</span>
+                <span className="text-[13px]">
+                  {pachtpercelen.length} percelen — uw pachters kunnen dit aanvragen via een ANLb-collectief of rechtstreeks
+                </span>
+              </div>
+            )}
+            {overigeObjecten.map((obj) => (
+              <div key={obj.id} className="mb-2 flex items-center gap-3">
+                <span className="tag tag-gray shrink-0">{obj.categorie}</span>
+                <span className="text-[13px]">{obj.naam}</span>
+              </div>
+            ))}
+          </Sectie>
+        )}
 
         {/* Wat dit oplevert — bedrag + aanvraagperiode */}
         {(r?.budget_indicatie || s.bedrag_indicatie || s.deadline || r?.openstelling_van || r?.openstelling_tot) && (

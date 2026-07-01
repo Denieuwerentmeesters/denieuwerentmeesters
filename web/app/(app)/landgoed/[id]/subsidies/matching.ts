@@ -28,6 +28,7 @@ type Profiel = {
   hectare: number | null;
   natuurbeheertypes: string[];
   agrarisch: boolean;
+  aantalPachtpercelen: number;
   ligt_in_natura2000: boolean | null; // null = nog niet gecontroleerd (onzeker)
   ligt_in_nnn: boolean | null; // idem; vaak een pré ("binnen NNN makkelijker subsidie")
   themas: string[];
@@ -172,7 +173,8 @@ async function laadProfiel(db: Db, landgoedId: string): Promise<Profiel> {
     .filter((s) => s.categorie === "natuurbeheertype")
     .map((s) => s.naam)
     .filter(Boolean);
-  const agrarisch = (stam ?? []).some((s) => s.categorie === "pachtperceel");
+  const pachtpercelen = (stam ?? []).filter((s) => s.categorie === "pachtperceel");
+  const agrarisch = pachtpercelen.length > 0;
 
   return {
     provincie: lg?.provincie ?? null,
@@ -182,6 +184,7 @@ async function laadProfiel(db: Db, landgoedId: string): Promise<Profiel> {
     hectare: lg?.hectare ?? null,
     natuurbeheertypes: types,
     agrarisch,
+    aantalPachtpercelen: pachtpercelen.length,
     ligt_in_natura2000: lg?.ligt_in_natura2000 ?? null,
     ligt_in_nnn: lg?.ligt_in_nnn ?? null,
     themas: omg?.themas ?? [],
@@ -203,10 +206,12 @@ type Kandidaat = {
   is_nieuw: boolean;
   is_tijdelijk: boolean;
   openstelling_tot: string | null;
+  doelgroep_type: string | null;
+  categorie_ui: string | null;
 };
 
 const REGELING_VELDEN =
-  "id, naam, organisatie, categorie, samenvatting, scope, provincie, gemeenten, is_nieuw, is_tijdelijk, openstelling_tot";
+  "id, naam, organisatie, categorie, samenvatting, scope, provincie, gemeenten, is_nieuw, is_tijdelijk, openstelling_tot, doelgroep_type, categorie_ui";
 
 // Haalt ALLE geaccordeerde regelingen op, gepagineerd. Supabase/PostgREST kapt
 // een gewone select stil af op ~1000 rijen; met een groeiende catalogus zouden
@@ -339,7 +344,22 @@ export async function zoekKansen(
       delen.push(`Uw landgoed voldoet: ${matchKenmerken.join(", ")}.`);
     }
 
-    // Derde zin: onzekere punten die handmatig gecontroleerd moeten worden.
+    // Derde zin: contextuele link met het landgoed (pachters, gebouwen, natuur).
+    const doelgroep = r.doelgroep_type;
+    const catUi = r.categorie_ui;
+    if (doelgroep === "pachter" && p.aantalPachtpercelen > 0) {
+      delen.push(`Via uw ${p.aantalPachtpercelen} pachtpercelen kunnen uw pachters dit aanvragen — u hoeft zelf niet de aanvrager te zijn.`);
+    } else if (doelgroep === "beiden" && p.aantalPachtpercelen > 0) {
+      delen.push(`Zowel u als uw ${p.aantalPachtpercelen} pachters komen mogelijk in aanmerking.`);
+    } else if (catUi === "gebouwen_erfgoed") {
+      delen.push("Relevant voor monumentale gebouwen en bijgebouwen op het landgoed.");
+    } else if (catUi === "natuur" && p.ligt_in_nnn) {
+      delen.push("Uw ligging in het Natuur Netwerk Nederland versterkt uw aanspraken op natuur- en landschapsvergoedingen.");
+    } else if (catUi === "klimaat_water") {
+      delen.push("Relevant voor waterbeheer, peilbeheer en klimaatadaptatie op het landgoed.");
+    }
+
+    // Vierde zin: onzekere punten die handmatig gecontroleerd moeten worden.
     if (oordeel.onzeker.length > 0) {
       const onzeker = oordeel.onzeker.slice(0, 2).map((o) => o.charAt(0).toLowerCase() + o.slice(1));
       delen.push(`Controleer handmatig: ${onzeker.join("; ")}.`);
