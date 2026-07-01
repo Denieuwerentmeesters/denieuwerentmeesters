@@ -55,7 +55,7 @@ export default async function SubsidieDetailPage({
   const [{ data: criteria }, { data: maatregelen }, { data: bewijs }, { data: verbanden }] =
     await Promise.all([
       s.regeling_id
-        ? supabase.from("regeling_criterium").select("omschrijving, verplicht, geaccordeerd").eq("regeling_id", s.regeling_id)
+        ? supabase.from("regeling_criterium").select("omschrijving, soort, veld, operator, waarde, gewicht, geaccordeerd").eq("regeling_id", s.regeling_id).order("soort", { ascending: true })
         : Promise.resolve({ data: [] }),
       s.regeling_id
         ? supabase.from("regeling_maatregel").select("omschrijving, eenheid, geaccordeerd").eq("regeling_id", s.regeling_id)
@@ -172,16 +172,24 @@ export default async function SubsidieDetailPage({
               Nog niet verrijkt — criteria volgen uit de AI-verrijking of handmatige aanvulling.
             </p>
           ) : (
-            <ul className="space-y-1.5 text-[14px]">
-              {(criteria ?? []).map((c, i) => (
-                <li key={i} className="flex items-start gap-2">
-                  <span style={{ color: "var(--text-3)" }}>•</span>
-                  <span>
-                    {c.omschrijving}
-                    {!c.geaccordeerd && <span className="ml-2 tag tag-gray">voorstel</span>}
-                  </span>
-                </li>
-              ))}
+            <ul className="space-y-2 text-[14px]">
+              {(criteria ?? [])
+                .sort((a, b) => {
+                  const volgorde: Record<string, number> = { eis: 0, uitsluiting: 1, pre: 2 };
+                  return (volgorde[a.soort ?? ""] ?? 3) - (volgorde[b.soort ?? ""] ?? 3);
+                })
+                .map((c, i) => (
+                  <li key={i} className="flex items-start gap-2">
+                    {c.soort === "eis" && <span className="tag tag-red mt-0.5 shrink-0">eis</span>}
+                    {c.soort === "uitsluiting" && <span className="tag tag-red mt-0.5 shrink-0">uitsluiting</span>}
+                    {c.soort === "pre" && <span className="tag tag-green mt-0.5 shrink-0">pré</span>}
+                    {!c.soort && <span style={{ color: "var(--text-3)" }} className="mt-0.5">•</span>}
+                    <span>
+                      {c.omschrijving}
+                      {!c.geaccordeerd && <span className="ml-2 tag tag-gray">voorstel</span>}
+                    </span>
+                  </li>
+                ))}
             </ul>
           )}
         </Sectie>

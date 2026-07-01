@@ -300,6 +300,13 @@ const BGT_SOORT: Record<string, string> = {
   rietland: "Water",
 };
 
+// gebruik_bgt → gebruik (dropdown-waarde), alleen gezet als gebruik nog leeg is
+const BGT_GEBRUIK: Record<string, string> = {
+  "Bos & laanstructuur": "Natuur",
+  "Park & tuinen": "Natuur",
+  "Weiland (pacht)": "Agrarisch",
+};
+
 async function bgtSoortOpCentroide(
   lat: number,
   lon: number,
@@ -363,9 +370,16 @@ export async function haalBGTBodemgebruik(fd: FormData) {
       if (!k.lat || !k.lon) return;
       const soort = await bgtSoortOpCentroide(k.lat, k.lon);
       if (!soort) return;
+      const bestaandGebruik = (p.kenmerken as Record<string, unknown>)?.gebruik;
+      const autoGebruik = !bestaandGebruik ? (BGT_GEBRUIK[soort] ?? null) : null;
+      const nieuweKenmerken: Record<string, unknown> = {
+        ...((p.kenmerken as object) ?? {}),
+        gebruik_bgt: soort,
+        ...(autoGebruik ? { gebruik: autoGebruik } : {}),
+      };
       await supabase
         .from("stamobject")
-        .update({ kenmerken: { ...((p.kenmerken as object) ?? {}), gebruik_bgt: soort } })
+        .update({ kenmerken: nieuweKenmerken })
         .eq("id", p.id);
     }),
   );
