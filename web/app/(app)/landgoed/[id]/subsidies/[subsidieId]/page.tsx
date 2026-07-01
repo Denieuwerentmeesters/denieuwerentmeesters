@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { vraagHulp } from "../acties";
+import { laadProfiel, toetsCriterium, profielWaarde } from "../matching";
 
 function dagenTot(d: string | null) {
   if (!d) return null;
@@ -54,12 +55,11 @@ export default async function SubsidieDetailPage({
     .maybeSingle();
   const naam = lg?.naam ?? "dit landgoed";
 
-  // Stamobjecten voor contextuele link
-  const { data: stamobjecten } = await supabase
-    .from("stamobject")
-    .select("id, naam, categorie")
-    .eq("landgoed_id", id)
-    .order("categorie");
+  // Stamobjecten + profiel voor contextuele link én gap-analyse
+  const [{ data: stamobjecten }, profiel] = await Promise.all([
+    supabase.from("stamobject").select("id, naam, categorie").eq("landgoed_id", id).order("categorie"),
+    laadProfiel(supabase, id),
+  ]);
 
   // §7-lagen (alleen als er een catalogus-regeling achter zit).
   const [{ data: criteria }, { data: maatregelen }, { data: bewijs }, { data: verbanden }] =
@@ -94,6 +94,32 @@ export default async function SubsidieDetailPage({
   const isKans = s.soort === "kans";
   const kansrijk = (s.match_score ?? 0) >= 70;
   const d = dagenTot(s.deadline);
+
+  // Gap-evaluatie: per criterium toetsen of het landgoed eraan voldoet
+  type CriteriumMet = {
+    omschrijving: string;
+    soort: string | null;
+    geaccordeerd: boolean;
+    uitslag: "voldoet" | "voldoet_niet" | "onzeker" | "handmatig";
+    uitlegWat: string | null; // wat er nodig is bij voldoet_niet
+  };
+
+  const geevauleerdeC: CriteriumMet[] = (criteria ?? []).map((c) => {
+    if (!c.veld) {
+      return { ...c, uitslag: "handmatig" as const, uitlegWat: null };
+    }
+    const uitslag = toetsCriterium(profiel, c);
+    let uitlegWat: string | null = null;
+    if (uitslag === "voldoet_niet") {
+      const huidigeWaarde = profielWaarde(profiel, c.veld);
+      if (huidigeWaarde != null) {
+        uitlegWat = `Uw landgoed heeft: ${huidigeWaarde} — vereist: ${c.waarde}`;
+      } else {
+        uitlegWat = `Veld '${c.veld}' is niet ingevuld in het profiel`;
+      }
+    }
+    return { ...c, uitslag, uitlegWat };
+  });
 
   // Stamobjecten filteren op basis van doelgroep_type en categorie_ui van de regeling
   const doelgroepType = r?.doelgroep_type ?? null;
@@ -266,31 +292,59 @@ export default async function SubsidieDetailPage({
           </Sectie>
         )}
 
-        {/* §7: Criteria */}
-        <Sectie titel="Waaraan moet je voldoen (criteria)">
-          {(criteria ?? []).length === 0 ? (
+        {/* §7: Criteria met gap-analyse */}
+        <Sectie titel="Voldoet dit landgoed aan de voorwaarden?">
+          {geevauleerdeC.length === 0 ? (
             <p className="text-[13px]" style={{ color: "var(--text-3)" }}>
-              Nog niet verrijkt — criteria volgen uit de AI-verrijking of handmatige aanvulling.
+              Nog geen criteria bekend voor deze regeling.
             </p>
           ) : (
-            <ul className="space-y-2 text-[14px]">
-              {(criteria ?? [])
+            <ul className="divide-y text-[14px]" style={{ borderColor: "var(--border)" }}>
+              {geevauleerdeC
                 .sort((a, b) => {
-                  const volgorde: Record<string, number> = { eis: 0, uitsluiting: 1, pre: 2 };
-                  return (volgorde[a.soort ?? ""] ?? 3) - (volgorde[b.soort ?? ""] ?? 3);
+                  const v: Record<string, number> = { eis: 0, uitsluiting: 1, pre: 2 };
+                  return (v[a.soort ?? ""] ?? 3) - (v[b.soort ?? ""] ?? 3);
                 })
-                .map((c, i) => (
-                  <li key={i} className="flex items-start gap-2">
-                    {c.soort === "eis" && <span className="tag tag-red mt-0.5 shrink-0">eis</span>}
-                    {c.soort === "uitsluiting" && <span className="tag tag-red mt-0.5 shrink-0">uitsluiting</span>}
-                    {c.soort === "pre" && <span className="tag tag-green mt-0.5 shrink-0">pré</span>}
-                    {!c.soort && <span style={{ color: "var(--text-3)" }} className="mt-0.5">•</span>}
-                    <span>
-                      {c.omschrijving}
-                      {!c.geaccordeerd && <span className="ml-2 tag tag-gray">voorstel</span>}
-                    </span>
-                  </li>
-                ))}
+                .map((c, i) => {
+                  const isEis = c.soort === "eis" || c.soort === "uitsluiting";
+                  const statusIcon =
+                    c.uitslag === "voldoet" ? "✅" :
+                    c.uitslag === "voldoet_niet" ? "❌" :
+                    c.uitslag === "onzeker" ? "❓" : "⬜";
+                  const statusLabel =
+                    c.uitslag === "voldoet" ? "Voldoet" :
+                    c.uitslag === "voldoet_niet" ? (isEis ? "Voldoet niet — actie nodig" : "Niet van toepassing") :
+                    c.uitslag === "onzeker" ? "Controleer handmatig" : "Handmatig te beoordelen";
+                  const statusKleur =
+                    c.uitslag === "voldoet" ? "var(--primary, #16a34a)" :
+                    c.uitslag === "voldoet_niet" && isEis ? "var(--red, #dc2626)" :
+                    "var(--text-3)";
+
+                  return (
+                    <li key={i} className="py-3">
+                      <div className="flex items-start gap-3">
+                        <span className="mt-0.5 shrink-0 text-[16px]">{statusIcon}</span>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex flex-wrap items-center gap-2">
+                            <span className="font-medium">{c.omschrijving}</span>
+                            {c.soort === "eis" && <span className="tag tag-red">eis</span>}
+                            {c.soort === "uitsluiting" && <span className="tag tag-red">uitsluiting</span>}
+                            {c.soort === "pre" && <span className="tag tag-green">pré</span>}
+                            {!c.geaccordeerd && <span className="tag tag-gray">voorstel</span>}
+                          </div>
+                          <div className="mt-0.5 text-[12px]" style={{ color: statusKleur }}>
+                            {statusLabel}
+                          </div>
+                          {c.uitlegWat && (
+                            <div className="mt-1 text-[12px] rounded px-2 py-1" style={{ background: "rgba(220,38,38,0.06)", color: "var(--red, #dc2626)" }}>
+                              {c.uitlegWat}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </li>
+                  );
+                })}
             </ul>
           )}
         </Sectie>

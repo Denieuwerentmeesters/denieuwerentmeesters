@@ -38,7 +38,7 @@ type Profiel = {
 
 const VERLENG_VENSTER_DAGEN = 90;
 
-function profielWaarde(p: Profiel, veld: string): string | null {
+export function profielWaarde(p: Profiel, veld: string): string | null {
   switch (veld) {
     case "provincie":
       return p.provincie;
@@ -67,8 +67,10 @@ function profielWaarde(p: Profiel, veld: string): string | null {
   }
 }
 
+export type CriteriumUitslag = "voldoet" | "voldoet_niet" | "onzeker";
+
 // Evalueer één machine-leesbaar criterium. Onbekende profielwaarde => 'onzeker'.
-function toetsCriterium(
+export function toetsCriterium(
   p: Profiel,
   c: { veld: string | null; operator: string | null; waarde: string | null },
 ): "voldoet" | "voldoet_niet" | "onzeker" {
@@ -150,7 +152,7 @@ function scoorRegeling(p: Profiel, cs: Criterium[]): RegelingOordeel {
   };
 }
 
-async function laadProfiel(db: Db, landgoedId: string): Promise<Profiel> {
+export async function laadProfiel(db: Db, landgoedId: string): Promise<Profiel> {
   const [{ data: lg }, { data: omg }, { data: stam }] = await Promise.all([
     db
       .from("landgoed")
@@ -208,10 +210,11 @@ type Kandidaat = {
   openstelling_tot: string | null;
   doelgroep_type: string | null;
   categorie_ui: string | null;
+  is_standaard: boolean;
 };
 
 const REGELING_VELDEN =
-  "id, naam, organisatie, categorie, samenvatting, scope, provincie, gemeenten, is_nieuw, is_tijdelijk, openstelling_tot, doelgroep_type, categorie_ui";
+  "id, naam, organisatie, categorie, samenvatting, scope, provincie, gemeenten, is_nieuw, is_tijdelijk, openstelling_tot, doelgroep_type, categorie_ui, is_standaard";
 
 // Haalt ALLE geaccordeerde regelingen op, gepagineerd. Supabase/PostgREST kapt
 // een gewone select stil af op ~1000 rijen; met een groeiende catalogus zouden
@@ -252,6 +255,8 @@ function passendVoor(r: Kandidaat, p: Profiel): boolean {
     );
   return true;
 }
+
+export type { Profiel };
 
 export type KansResultaat = {
   bekeken: number;
@@ -374,11 +379,11 @@ export async function zoekKansen(
         landgoed_id: landgoedId,
         regeling_id: r.id,
         scope: "landgoed",
-        soort: "kans",
+        soort: r.is_standaard ? "info" : "kans",
         naam: r.naam,
         organisatie: r.organisatie,
         categorie: r.categorie ?? "subsidie",
-        status: "verkennen",
+        status: r.is_standaard ? "standaard" : "verkennen",
         match_score: oordeel.score,
         redenering: redenering || null,
         deadline: r.openstelling_tot ?? null,
