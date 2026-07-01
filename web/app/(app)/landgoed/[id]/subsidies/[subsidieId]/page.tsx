@@ -22,6 +22,8 @@ type Regeling = {
   is_tijdelijk: boolean;
   openstelling_van: string | null;
   openstelling_tot: string | null;
+  budget_indicatie: string | null;
+  doelgroep_type: string | null;
 } | null;
 
 export default async function SubsidieDetailPage({
@@ -35,7 +37,7 @@ export default async function SubsidieDetailPage({
   const { data: s } = await supabase
     .from("subsidie")
     .select(
-      "id, naam, organisatie, categorie, bedrag_indicatie, status, deadline, soort, match_score, redenering, al_in_gebruik, werkstap, regeling_id, regeling:regeling_id (samenvatting, bron_url, organisatie, bestuurslaag, scope, provincie, status, themas, is_nieuw, is_tijdelijk, openstelling_van, openstelling_tot)",
+      "id, naam, organisatie, categorie, bedrag_indicatie, status, deadline, soort, match_score, redenering, al_in_gebruik, werkstap, regeling_id, regeling:regeling_id (samenvatting, bron_url, organisatie, bestuurslaag, scope, provincie, status, themas, is_nieuw, is_tijdelijk, openstelling_van, openstelling_tot, budget_indicatie, doelgroep_type)",
     )
     .eq("id", subsidieId)
     .eq("landgoed_id", id)
@@ -124,37 +126,74 @@ export default async function SubsidieDetailPage({
           </div>
         </header>
 
-        {/* Waarom interessant */}
+        {/* Waarom interessant voor dit landgoed */}
         <Sectie titel={isKans ? `Waarom dit interessant is voor ${naam}` : "Status"}>
-          <p className="text-[14px]">
+          <p className="text-[14px] leading-relaxed">
             {s.redenering ?? (isKans ? "Relevant op basis van het landgoedprofiel." : "Lopende subsidie.")}
           </p>
-          <div className="mt-3 flex flex-wrap gap-4 text-[13px]" style={{ color: "var(--text-2)" }}>
-            {typeof s.match_score === "number" && <span>Matchscore: <b>{s.match_score}</b>/100</span>}
-            {s.deadline && (
-              <span>
-                Deadline: <b>{s.deadline}</b>
-                {d !== null && d >= 0 && d <= 60 ? ` (nog ${d} d)` : ""}
-              </span>
-            )}
-            {r?.status && <span>Status regeling: {r.status}</span>}
-          </div>
+          {typeof s.match_score === "number" && (
+            <div className="mt-2 text-[12px]" style={{ color: "var(--text-3)" }}>
+              Matchscore: {s.match_score}/100
+            </div>
+          )}
         </Sectie>
+
+        {/* Wat dit oplevert — bedrag + aanvraagperiode */}
+        {(r?.budget_indicatie || s.bedrag_indicatie || s.deadline || r?.openstelling_van || r?.openstelling_tot) && (
+          <Sectie titel="Wat dit oplevert">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              {(r?.budget_indicatie || s.bedrag_indicatie) && (
+                <div>
+                  <div className="text-[11px] font-semibold uppercase tracking-wide mb-1" style={{ color: "var(--text-3)" }}>
+                    Vergoeding
+                  </div>
+                  <div className="text-[15px] font-semibold">
+                    {r?.budget_indicatie ?? s.bedrag_indicatie}
+                  </div>
+                </div>
+              )}
+              {(s.deadline || r?.openstelling_tot) && (
+                <div>
+                  <div className="text-[11px] font-semibold uppercase tracking-wide mb-1" style={{ color: "var(--text-3)" }}>
+                    Aanvraag vóór
+                  </div>
+                  <div className={`text-[15px] font-semibold ${d !== null && d >= 0 && d <= 60 ? "text-red-600" : ""}`}>
+                    {s.deadline ?? r?.openstelling_tot}
+                    {d !== null && d >= 0 && d <= 60 && (
+                      <span className="ml-2 tag tag-red">nog {d} d</span>
+                    )}
+                  </div>
+                </div>
+              )}
+              {r?.openstelling_van && (
+                <div>
+                  <div className="text-[11px] font-semibold uppercase tracking-wide mb-1" style={{ color: "var(--text-3)" }}>
+                    Aanvraag vanaf
+                  </div>
+                  <div className="text-[15px] font-semibold">{r.openstelling_van}</div>
+                </div>
+              )}
+              {r?.status && (
+                <div>
+                  <div className="text-[11px] font-semibold uppercase tracking-wide mb-1" style={{ color: "var(--text-3)" }}>
+                    Status
+                  </div>
+                  <div className="text-[15px] font-semibold">{r.status}</div>
+                </div>
+              )}
+            </div>
+          </Sectie>
+        )}
 
         {/* Over de regeling */}
         {(r?.samenvatting || r?.bron_url || (r?.themas?.length ?? 0) > 0) && (
           <Sectie titel="Over de regeling">
-            {r?.samenvatting && <p className="text-[14px]">{r.samenvatting}</p>}
+            {r?.samenvatting && <p className="text-[14px] leading-relaxed">{r.samenvatting}</p>}
             {(r?.themas?.length ?? 0) > 0 && (
               <div className="mt-3 flex flex-wrap gap-1.5">
                 {r!.themas!.map((t) => (
                   <span key={t} className="tag tag-gray">{t}</span>
                 ))}
-              </div>
-            )}
-            {(r?.openstelling_van || r?.openstelling_tot) && (
-              <div className="mt-3 text-[13px]" style={{ color: "var(--text-2)" }}>
-                Openstelling: {r?.openstelling_van ?? "?"} – {r?.openstelling_tot ?? "?"}
               </div>
             )}
             {r?.bron_url && (

@@ -321,20 +321,33 @@ export async function zoekKansen(
       continue;
     }
 
-    // Transparante redenering: opgebouwd uit de vervulde/onzekere criteria.
-    const eisDeel = oordeel.eisenVoldaan.length
-      ? `Komt in aanmerking (${oordeel.eisenVoldaan.map((e) => `${e} ✓`).join(", ")}).`
-      : "Komt in aanmerking.";
-    const preDeel = oordeel.meegeteld.length
-      ? ` Pré's: ${oordeel.meegeteld.map((m) => `${m.omschrijving} ✓ (+${m.gewicht})`).join(", ")}.`
-      : "";
-    const onzekerDeel = oordeel.onzeker.length
-      ? ` Let op: niet alle criteria machinaal te toetsen (${oordeel.onzeker.join("; ")}) — controleer handmatig.`
-      : "";
-    const verlengDeel = isVerleng
-      ? " Loopt binnenkort af — heraanvraag/verlenging."
-      : "";
-    const redenering = `${eisDeel}${preDeel}${onzekerDeel}${verlengDeel}`.trim();
+    // Redenering: korte samenvatting wat de regeling doet + waarom dit landgoed in aanmerking komt.
+    const delen: string[] = [];
+
+    // Eerste zin: kern van de regeling (uit samenvatting, max 1 zin).
+    if (r.samenvatting) {
+      const eersteZin = r.samenvatting.split(/(?<=[.!?])\s+/)[0].trim();
+      if (eersteZin) delen.push(eersteZin.endsWith(".") ? eersteZin : eersteZin + ".");
+    }
+
+    // Tweede zin: matchende kenmerken van het landgoed in leesbare taal.
+    const matchKenmerken = [
+      ...oordeel.eisenVoldaan.map((e) => e.charAt(0).toLowerCase() + e.slice(1)),
+      ...oordeel.meegeteld.map((m) => m.omschrijving.charAt(0).toLowerCase() + m.omschrijving.slice(1)),
+    ].slice(0, 4);
+    if (matchKenmerken.length > 0) {
+      delen.push(`Uw landgoed voldoet: ${matchKenmerken.join(", ")}.`);
+    }
+
+    // Derde zin: onzekere punten die handmatig gecontroleerd moeten worden.
+    if (oordeel.onzeker.length > 0) {
+      const onzeker = oordeel.onzeker.slice(0, 2).map((o) => o.charAt(0).toLowerCase() + o.slice(1));
+      delen.push(`Controleer handmatig: ${onzeker.join("; ")}.`);
+    }
+
+    if (isVerleng) delen.push("Loopt binnenkort af — verlenging of heraanvraag aan de orde.");
+
+    const redenering = delen.join(" ").trim();
 
     await db.from("subsidie").upsert(
       {
