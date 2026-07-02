@@ -87,7 +87,7 @@ export default async function SubsidiesPage({
 
   const [{ data: landgoed }, { data: subsidies }, { data: catTel }, { data: laatsteRun }, { data: docs }, { data: omgProfiel }] =
     await Promise.all([
-      supabase.from("landgoed").select("naam, provincie, nsw_status, rechtsvorm, hectare, ligt_in_nnn, ligt_in_natura2000").eq("id", id).maybeSingle(),
+      supabase.from("landgoed").select("naam, provincie, nsw_status, rechtsvorm, hectare, ligt_in_nnn, ligt_in_natura2000, ligt_op_veengrond, anlb_leefgebied_code, anlb_gecontroleerd_op").eq("id", id).maybeSingle(),
       supabase
         .from("subsidie")
         .select(
@@ -155,6 +155,9 @@ export default async function SubsidiesPage({
     profielGaten.push("NNN-ligging onbekend");
   if (!landgoed?.ligt_in_natura2000 && landgoed?.ligt_in_natura2000 !== false)
     profielGaten.push("Natura 2000-ligging onbekend");
+  if (!landgoed?.ligt_op_veengrond && landgoed?.ligt_op_veengrond !== false)
+    profielGaten.push("Bodemtype (veengrond) onbekend");
+  if (!landgoed?.anlb_gecontroleerd_op) profielGaten.push("ANLb-leefgebied onbekend");
   if (!landgoed?.nsw_status) profielGaten.push("NSW-status niet ingevuld");
   if (!landgoed?.hectare) profielGaten.push("Oppervlakte (ha) niet ingevuld");
   if (!landgoed?.rechtsvorm) profielGaten.push("Rechtsvorm niet ingevuld");

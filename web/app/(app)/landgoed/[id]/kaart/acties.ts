@@ -134,12 +134,22 @@ export async function setBasisLocatie(fd: FormData) {
   revalidatePath(`/landgoed/${landgoed_id}/kaart`);
 }
 
-// ── Gebiedsligging via PDOK-WMS (Natura 2000 + NNN), server-side (geen CORS) ──
-// Beide PDOK-services zijn INSPIRE-geharmoniseerd; per punt vragen we of er een
+// ── Gebiedsligging via PDOK-WMS (Natura 2000 + NNN + Bodemkaart), server-side (geen CORS) ──
+// Alle drie de PDOK-services zijn INSPIRE-geharmoniseerd; per punt vragen we of er een
 // feature ligt (GetFeatureInfo). Mirrort het perceel-lookup-patroon.
 const NATURA2000_WMS = "https://service.pdok.nl/rvo/natura2000/wms/v1_0";
 const NNN_WMS =
   "https://service.pdok.nl/provincies/natuurnetwerk-nederland/wms/v1_0";
+const BODEMKAART_WMS = "https://service.pdok.nl/bzk/bro-bodemkaart/wms/v1_0";
+
+// Staring-bodemclassificatie: de hoofdgroep-letter (na eventuele kleine-letter
+// profielmodifiers als a/i/k/p/t/v/z) bepaalt het bodemtype. "V" = veengronden.
+// Bewuste keuze: "moerige gronden" (W-prefix, veen op zand/klei) telt hier NIET
+// mee als veengrond — criteria over "veenweidegebied" doelen op echte veengrond.
+function isVeengrond(soilcode: string | null | undefined): boolean {
+  if (!soilcode) return false;
+  return /^[a-z]{0,3}V/.test(soilcode);
+}
 
 async function puntInWmsLaag(
   service: string,
@@ -202,6 +212,358 @@ async function bewaarGebiedsligging(
   } catch {
     // idem
   }
+  try {
+    const b = await puntInWmsLaag(BODEMKAART_WMS, "soilarea", lat, lon);
+    const code = b.hit
+      ? String(b.props.soilcode ?? b.props.first_soilcode ?? "") || null
+      : null;
+    await supabase
+      .from("landgoed")
+      .update({
+        ligt_op_veengrond: b.hit ? isVeengrond(code) : null,
+        bodemkaart_bodemcode: code,
+        veengrond_gecontroleerd_op: new Date().toISOString(),
+      })
+      .eq("id", landgoed_id);
+  } catch {
+    // idem
+  }
+  try {
+    const { data: lg } = await supabase
+      .from("landgoed")
+      .select("provincie")
+      .eq("id", landgoed_id)
+      .maybeSingle();
+    const a = await zoekAnlbLeefgebied(lg?.provincie ?? null, lat, lon);
+    if (a) {
+      await supabase
+        .from("landgoed")
+        .update({
+          anlb_leefgebied_code: a.code,
+          anlb_leefgebied_naam: a.naam,
+          anlb_gebied: a.gebied,
+          anlb_gecontroleerd_op: new Date().toISOString(),
+        })
+        .eq("id", landgoed_id);
+    }
+    // a === null: provincie (nog) niet ondersteund in ANLB_BRON -> niets bijwerken,
+    // blijft 'onzeker' voor de matchmotor i.p.v. een fout "nee" te suggereren.
+  } catch {
+    // idem
+  }
+}
+
+// ── ANLb-leefgebieden (Natuurbeheerplan — Zoekgebied Agrarisch), per provincie ──
+// Landelijk datamodel (IMNa: attribuut agrarischNatuurType, codes A11/A12/A13/
+// A14/A15), maar GEEN landelijke PDOK-mozaïeklaag zoals bij NNN — elke provincie
+// publiceert dit zelf, op 4 verschillende manieren:
+//   "wms"             — gewone WMS GetFeatureInfo (GeoServer of ArcGIS-WMS),
+//                        CRS:84 (lon,lat) i.p.v. EPSG:3857 (niet overal
+//                        ondersteund/getest), INFO_FORMAT json of geo+json.
+//   "wfs-intersect"    — provincie heeft WMS-featureinfo uitgeschakeld; WFS met
+//                        een punt-Intersects-filter (Groningen). Let op: het
+//                        Point-coordinatenpaar is hier lat,lon (EPSG:4326-as-
+//                        volgorde), niet lon,lat.
+//   "arcgis-identify"  — ArcGIS REST /identify over meerdere sub-laag-ids
+//                        tegelijk (Noord-Holland: geen gecombineerde laag, wel
+//                        losse lagen per leefgebiedtype).
+//   "arcgis-query"     — ArcGIS REST /query op één (hosted) laag (Noord-Brabant).
+// Peildatum onderzoek: 2026-07. Laagnamen zijn vaak jaar/seizoen-gebonden (in
+// tegenstelling tot NNN) — jaarlijks controleren of de "huidige" laag nog klopt.
+
+type AnlbTreffer = {
+  code: string | null; // ruwe IMNa-code(s), bv. "A12" of "A11;A15" bij overlap
+  naam: string | null; // leesbaar, bv. "A12 Open akkerland"
+  gebied: string | null; // regio/deelgebied-naam indien beschikbaar
+};
+
+type AnlbBron =
+  | { soort: "wms"; url: string; lagen: string[]; infoFormat: "json" | "geojson" }
+  | { soort: "wfs-intersect"; url: string; typeName: string }
+  | { soort: "arcgis-identify"; url: string; laagIds: number[] }
+  | { soort: "arcgis-query"; url: string };
+
+const IMNA_CATEGORIE: Record<string, string> = {
+  A11: "Open grasland (weidevogel)",
+  A12: "Open akkerland (akkervogel)",
+  A13: "Droge dooradering",
+  A14: "Natte dooradering",
+  A15: "Dooradering",
+  W01: "Zoekgebied water",
+};
+
+const ANLB_BRON: Record<string, AnlbBron> = {
+  Zeeland: {
+    soort: "wms",
+    url: "https://opengeodata.zeeland.nl/geoserver/natuur/wms",
+    lagen: ["ext_nat_agz"],
+    infoFormat: "json",
+  },
+  "Zuid-Holland": {
+    soort: "wms",
+    url: "https://geodata.zuid-holland.nl/geoserver/landelijk_gebied/wms",
+    lagen: ["NBP_2026_AGRARISCH_ZOEKGEBIED"],
+    infoFormat: "json",
+  },
+  Utrecht: {
+    soort: "wms",
+    url: "https://services.geodata-utrecht.nl/geoserver/n01_2_2_natuur_natuurbeheerplan/wms",
+    lagen: ["Natuurbeheerplan_2024_2025_Zoekgebied_Agrarisch"],
+    infoFormat: "json",
+  },
+  Gelderland: {
+    soort: "wms",
+    url: "https://geoserver.gelderland.nl/geoserver/ngr_d/wms",
+    lagen: ["PN26_ZoekGebiedAgrarisch"],
+    infoFormat: "json",
+  },
+  Overijssel: {
+    soort: "wms",
+    url: "https://services.geodataoverijssel.nl/geoserver/B46_natuur_en_landschap/wms",
+    lagen: ["B46_Geconsolideerde_kaart_Zoekgebied_Agrarisch_Natuurbeheer_netto_NBP_2027"],
+    infoFormat: "json",
+  },
+  Limburg: {
+    soort: "wms",
+    url: "https://portal.prvlimburg.nl/geodata/ows",
+    lagen: ["NATUUR:VOORJ2026_ZOEKGEB_AGRARISCH_V"],
+    infoFormat: "json",
+  },
+  Flevoland: {
+    soort: "wms",
+    url: "https://geo2.flevoland.nl/geoserver/Extern/wms",
+    lagen: [
+      "GN_IMNA_AGRARISCHZOEKGEBIED_grasland",
+      "GN_IMNA_AGRARISCHZOEKGEBIED_akkerland",
+      "GN_IMNA_AGRARISCHZOEKGEBIED_dooradering",
+    ],
+    infoFormat: "json",
+  },
+  Drenthe: {
+    soort: "wms",
+    url: "https://kaartportaal.drenthe.nl/server/services/GDB_actueel/GBI_NAT_NBP_AGRARISCH_V/MapServer/WMSServer",
+    lagen: ["0"],
+    infoFormat: "geojson",
+  },
+  "Fryslân": {
+    soort: "wms",
+    url: "https://geoportaal.fryslan.nl/arcgis/services/ProvinciaalGeoRegister/PGR2/MapServer/WMSServer",
+    lagen: ["Natuurbeheerplannen_2026_-_AgrarischZoekGebied54489"],
+    infoFormat: "geojson",
+  },
+  Groningen: {
+    soort: "wfs-intersect",
+    url: "https://geoservices.provinciegroningen.nl/server/services/LandelijkGebied/Natuur/MapServer/WFSServer",
+    typeName: "Natuur:Natuurbeheerplan2026ZoekgebiedAgrarisch",
+  },
+  "Noord-Holland": {
+    soort: "arcgis-identify",
+    url: "https://geoservices.noord-holland.nl/ags/rest/services/oi_op/oi_natuurbeheerplan/MapServer/identify",
+    laagIds: [167, 168, 170, 172], // A11 (2x deelgebied), A12, A15 — "Natuurbeheerplan 2026"
+  },
+  "Noord-Brabant": {
+    soort: "arcgis-query",
+    // Officiële infrastructuur van de provincie (i.p.v. een ArcGIS Online-share
+    // van een individuele medewerker) — laag 1 "Zoekgebied/Leefgebied agrarisch".
+    url: "https://geoportaal.brabant.nl/server/rest/services/Natuur/natuurbeheerplan_agrarisch_vastgesteld/MapServer/1/query",
+  },
+};
+
+// Alternatieve spelling van de (vrij ingevoerde) provincienaam op landgoed.
+const PROVINCIE_SYNONIEM: Record<string, string> = {
+  Friesland: "Fryslân",
+  Brabant: "Noord-Brabant",
+};
+
+// Haalt attribuutwaarden case-insensitief op (velden heten per bron anders:
+// agrarischNatuurType / AGRARISCHNATUURTYPE / AGRARISCHN (shapefile-afgekapt), enz.),
+// en negeert placeholder-waarden ("Null", lege string) die sommige bronnen invullen.
+function propCI(props: Record<string, unknown>, ...sleutels: string[]): string | null {
+  const lower = new Map(
+    Object.entries(props).map(([k, v]) => [k.toLowerCase(), v]),
+  );
+  for (const s of sleutels) {
+    const v = lower.get(s.toLowerCase());
+    if (typeof v === "string" && v.trim() && v.trim().toLowerCase() !== "null")
+      return v.trim();
+  }
+  return null;
+}
+
+function naarAnlbTreffer(props: Record<string, unknown>): AnlbTreffer {
+  const code = propCI(
+    props,
+    "agrarischnatuurtype",
+    "agrarischn", // Brabant (shapefile-veldnaam afgekapt tot 10 tekens)
+    "watertype",
+  );
+  const naamUitBron = propCI(
+    props,
+    "agrarischnatuurtype_tekst", // Flevoland
+    "agrarischnatuurtype_omschr",
+    "agrarisc_1", // Brabant
+  );
+  const naam = code
+    ? (naamUitBron ?? `${code} ${IMNA_CATEGORIE[code] ?? ""}`.trim())
+    : null;
+  const gebied = propCI(props, "naam", "deelgebied", "deelgebiednaam");
+  return { code, naam, gebied };
+}
+
+async function anlbViaWms(
+  bron: Extract<AnlbBron, { soort: "wms" }>,
+  lat: number,
+  lon: number,
+): Promise<AnlbTreffer[]> {
+  const d = 0.001; // ~70-110 m, zelfde schaal als de PDOK-lookups hierboven
+  const bbox = `${lon - d},${lat - d},${lon + d},${lat + d}`;
+  const infoFormat =
+    bron.infoFormat === "geojson" ? "application/geo+json" : "application/json";
+  const layers = bron.lagen.join(",");
+  const params = new URLSearchParams({
+    SERVICE: "WMS",
+    VERSION: "1.3.0",
+    REQUEST: "GetFeatureInfo",
+    LAYERS: layers,
+    QUERY_LAYERS: layers,
+    CRS: "CRS:84",
+    BBOX: bbox,
+    WIDTH: "256",
+    HEIGHT: "256",
+    I: "128",
+    J: "128",
+    INFO_FORMAT: infoFormat,
+    FEATURE_COUNT: "10",
+  });
+  try {
+    const res = await fetch(`${bron.url}?${params.toString()}`);
+    const gj = await res.json();
+    return ((gj?.features ?? []) as Array<{ properties?: Record<string, unknown> }>).map(
+      (f) => naarAnlbTreffer(f.properties ?? {}),
+    );
+  } catch {
+    return [];
+  }
+}
+
+// Groningen: WMS GetFeatureInfo staat uit op de server -> WFS met een punt-
+// Intersects-filter. As-volgorde voor EPSG:4326 in GML is lat,lon (net als bij
+// de WMS 1.3.0-eigenaardigheid), geverifieerd met een echte call.
+async function anlbViaWfsIntersect(
+  bron: Extract<AnlbBron, { soort: "wfs-intersect" }>,
+  lat: number,
+  lon: number,
+): Promise<AnlbTreffer[]> {
+  const filter =
+    `<Filter xmlns="http://www.opengis.net/ogc" xmlns:gml="http://www.opengis.net/gml">` +
+    `<Intersects><PropertyName>Shape</PropertyName>` +
+    `<gml:Point srsName="EPSG:4326"><gml:coordinates>${lat},${lon}</gml:coordinates></gml:Point>` +
+    `</Intersects></Filter>`;
+  const params = new URLSearchParams({
+    SERVICE: "WFS",
+    VERSION: "2.0.0",
+    REQUEST: "GetFeature",
+    TYPENAMES: bron.typeName,
+    OUTPUTFORMAT: "GEOJSON",
+    FILTER: filter,
+  });
+  try {
+    const res = await fetch(`${bron.url}?${params.toString()}`);
+    const gj = await res.json();
+    return ((gj?.features ?? []) as Array<{ properties?: Record<string, unknown> }>).map(
+      (f) => naarAnlbTreffer(f.properties ?? {}),
+    );
+  } catch {
+    return [];
+  }
+}
+
+// Noord-Holland: geen gecombineerde laag, wel losse sub-lagen per leefgebied-
+// type -> ArcGIS REST /identify bevraagt ze in één keer.
+async function anlbViaArcgisIdentify(
+  bron: Extract<AnlbBron, { soort: "arcgis-identify" }>,
+  lat: number,
+  lon: number,
+): Promise<AnlbTreffer[]> {
+  const d = 0.01;
+  const params = new URLSearchParams({
+    geometry: JSON.stringify({ x: lon, y: lat }),
+    geometryType: "esriGeometryPoint",
+    sr: "4326",
+    layers: `all:${bron.laagIds.join(",")}`,
+    tolerance: "2",
+    mapExtent: `${lon - d},${lat - d},${lon + d},${lat + d}`,
+    imageDisplay: "400,400,96",
+    returnGeometry: "false",
+    f: "json",
+  });
+  try {
+    const res = await fetch(`${bron.url}?${params.toString()}`);
+    const data = await res.json();
+    return ((data?.results ?? []) as Array<{ attributes?: Record<string, unknown> }>).map(
+      (r) => naarAnlbTreffer(r.attributes ?? {}),
+    );
+  } catch {
+    return [];
+  }
+}
+
+// Noord-Brabant: publieke ArcGIS Online hosted feature layer, gewone /query.
+async function anlbViaArcgisQuery(
+  bron: Extract<AnlbBron, { soort: "arcgis-query" }>,
+  lat: number,
+  lon: number,
+): Promise<AnlbTreffer[]> {
+  const params = new URLSearchParams({
+    geometry: JSON.stringify({ x: lon, y: lat }),
+    geometryType: "esriGeometryPoint",
+    inSR: "4326",
+    spatialRel: "esriSpatialRelIntersects",
+    outFields: "*",
+    returnGeometry: "false",
+    f: "json",
+  });
+  try {
+    const res = await fetch(`${bron.url}?${params.toString()}`);
+    const data = await res.json();
+    return ((data?.features ?? []) as Array<{ attributes?: Record<string, unknown> }>).map(
+      (f) => naarAnlbTreffer(f.attributes ?? {}),
+    );
+  } catch {
+    return [];
+  }
+}
+
+// Bepaalt het ANLb-leefgebied op een punt. Retourneert null als de provincie
+// (nog) niet in ANLB_BRON zit -> aanroeper laat de bestaande kolommen dan
+// ongemoeid (blijft 'onzeker' i.p.v. een fout "geen leefgebied" te suggereren).
+async function zoekAnlbLeefgebied(
+  provincie: string | null,
+  lat: number,
+  lon: number,
+): Promise<AnlbTreffer | null> {
+  if (!provincie) return null;
+  const sleutel = PROVINCIE_SYNONIEM[provincie.trim()] ?? provincie.trim();
+  const bron = ANLB_BRON[sleutel];
+  if (!bron) return null;
+
+  let treffers: AnlbTreffer[] = [];
+  if (bron.soort === "wms") treffers = await anlbViaWms(bron, lat, lon);
+  else if (bron.soort === "wfs-intersect")
+    treffers = await anlbViaWfsIntersect(bron, lat, lon);
+  else if (bron.soort === "arcgis-identify")
+    treffers = await anlbViaArcgisIdentify(bron, lat, lon);
+  else if (bron.soort === "arcgis-query")
+    treffers = await anlbViaArcgisQuery(bron, lat, lon);
+
+  const geldig = treffers.filter((t) => t.code);
+  if (!geldig.length) return { code: null, naam: null, gebied: null };
+  // Meerdere overlappende leefgebieden mogelijk (bv. grasland + dooradering) -> combineren.
+  return {
+    code: geldig.map((t) => t.code).join(";"),
+    naam: geldig.map((t) => t.naam).filter(Boolean).join("; ") || null,
+    gebied: geldig.find((t) => t.gebied)?.gebied ?? null,
+  };
 }
 
 // Handmatige (her)controle vanaf de kaart — handig voor landgoederen die al een

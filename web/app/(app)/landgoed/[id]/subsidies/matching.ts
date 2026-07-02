@@ -1,4 +1,5 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { zijnZelfdeRegeling } from "@/lib/subsidie/naam-match";
 
 // Matching: catalogus-regeling -> per-landgoed kans.
 //   gewogen criteria (eis/pré/uitsluiting) -> berekende score -> "al in gebruik"-suppressie
@@ -31,6 +32,8 @@ type Profiel = {
   aantalPachtpercelen: number;
   ligt_in_natura2000: boolean | null; // null = nog niet gecontroleerd (onzeker)
   ligt_in_nnn: boolean | null; // idem; vaak een pré ("binnen NNN makkelijker subsidie")
+  ligt_op_veengrond: boolean | null; // idem; via BRO Bodemkaart (SGM), relevant voor "veenweidegebied"-criteria
+  anlb_leefgebied: string | null; // ruwe IMNa-code(s) + naam, bv. "a12 open akkerland (akkervogel)"; null = nog niet gecontroleerd
   themas: string[];
   trefwoorden: string[];
   drempel: number;
@@ -60,6 +63,17 @@ export function profielWaarde(p: Profiel, veld: string): string | null {
           : "nee";
     case "ligt_in_nnn":
       return p.ligt_in_nnn == null ? null : p.ligt_in_nnn ? "ja" : "nee";
+    case "ligt_op_veengrond":
+      return p.ligt_op_veengrond == null
+        ? null
+        : p.ligt_op_veengrond
+          ? "ja"
+          : "nee";
+    case "anlb_leefgebied":
+      // Vrije tekst (code + naam, bv. "a12 open akkerland (akkervogel)") zodat
+      // een criterium er met operator 'bevat' op kan matchen (bv. waarde
+      // "akkervogel", "weidevogel", "dooradering" of een ruwe code "a12").
+      return p.anlb_leefgebied;
     case "natuurbeheertype":
       return p.natuurbeheertypes.join(", ") || null;
     default:
@@ -156,7 +170,7 @@ export async function laadProfiel(db: Db, landgoedId: string): Promise<Profiel> 
   const [{ data: lg }, { data: omg }, { data: stam }] = await Promise.all([
     db
       .from("landgoed")
-      .select("provincie, gemeente, nsw_status, rechtsvorm, hectare, ligt_in_natura2000, ligt_in_nnn")
+      .select("provincie, gemeente, nsw_status, rechtsvorm, hectare, ligt_in_natura2000, ligt_in_nnn, ligt_op_veengrond, anlb_leefgebied_code, anlb_leefgebied_naam")
       .eq("id", landgoedId)
       .maybeSingle(),
     db
@@ -189,6 +203,10 @@ export async function laadProfiel(db: Db, landgoedId: string): Promise<Profiel> 
     aantalPachtpercelen: pachtpercelen.length,
     ligt_in_natura2000: lg?.ligt_in_natura2000 ?? null,
     ligt_in_nnn: lg?.ligt_in_nnn ?? null,
+    ligt_op_veengrond: lg?.ligt_op_veengrond ?? null,
+    anlb_leefgebied: lg?.anlb_leefgebied_code
+      ? `${lg.anlb_leefgebied_code} ${lg.anlb_leefgebied_naam ?? ""}`.toLowerCase().trim()
+      : null,
     themas: omg?.themas ?? [],
     trefwoorden: omg?.trefwoorden ?? [],
     drempel: omg?.drempel ?? 60,
@@ -276,19 +294,22 @@ export async function zoekKansen(
   const regelingen = await alleGeaccordeerdeRegelingen(db);
   const passend = regelingen.filter((r) => passendVoor(r, p));
 
-  // "Al in gebruik": bestaande subsidies van dit landgoed met regeling_id.
+  // "Al in gebruik": bestaande subsidies van dit landgoed. Zowel op regeling_id
+  // als op naam vergelijken — dezelfde regeling komt soms via verschillende
+  // bronnen/connectors (bv. een provinciale import via Bosgroep én een
+  // landelijke/BIJ12-import) als APARTE catalogus-rijen binnen, met elk hun
+  // eigen regeling_id. Een exacte regeling_id-match mist dat geval volledig.
   const { data: bestaand } = await db
     .from("subsidie")
-    .select("regeling_id, soort, al_in_gebruik")
-    .eq("landgoed_id", landgoedId)
-    .not("regeling_id", "is", null);
+    .select("id, regeling_id, soort, al_in_gebruik, naam")
+    .eq("landgoed_id", landgoedId);
   const inGebruik = new Map<string, boolean>();
+  const inGebruikRijen: { id: string; naam: string; regeling_id: string | null }[] = [];
   (bestaand ?? []).forEach((s) => {
-    if (s.regeling_id)
-      inGebruik.set(
-        s.regeling_id,
-        s.al_in_gebruik || s.soort === "lopend",
-      );
+    const isInGebruik = s.al_in_gebruik || s.soort === "lopend";
+    if (!isInGebruik) return;
+    if (s.regeling_id) inGebruik.set(s.regeling_id, true);
+    if (s.naam) inGebruikRijen.push({ id: s.id, naam: s.naam, regeling_id: s.regeling_id });
   });
 
   const nu = Date.now();
@@ -319,7 +340,36 @@ export async function zoekKansen(
     if (!oordeel.matcht) continue;
 
     // Suppressie: al in gebruik -> alleen tonen als verleng-signaal bij naderende deadline.
-    const reedsInGebruik = inGebruik.get(r.id);
+    // Naast de exacte regeling_id-match ook op naam vergelijken tegen bestaande
+    // "in gebruik"-subsidies — ook als die al een (ANDERE) regeling_id hebben,
+    // want dezelfde regeling kan via een andere bron een eigen catalogus-rij
+    // hebben gekregen.
+    let reedsInGebruik = inGebruik.get(r.id) ?? false;
+    if (!reedsInGebruik) {
+      const naamMatch = inGebruikRijen.find((s) => zijnZelfdeRegeling(s.naam, r.naam));
+      if (naamMatch) {
+        reedsInGebruik = true;
+        inGebruik.set(r.id, true);
+        // Ruim een eventuele foutieve dubbele "kans"/"info"-rij voor déze
+        // regeling op (uit een eerdere run, vóór de naam herkend kon worden).
+        await db
+          .from("subsidie")
+          .delete()
+          .eq("landgoed_id", landgoedId)
+          .eq("regeling_id", r.id)
+          .neq("id", naamMatch.id)
+          .in("soort", ["kans", "info"]);
+        // Zelf-herstellend: heeft de bestaande "in gebruik"-rij nog geen
+        // regeling_id, koppel die dan alsnog — zodat toekomstige runs meteen
+        // via de snelle regeling_id-route suppressen.
+        if (!naamMatch.regeling_id) {
+          await db
+            .from("subsidie")
+            .update({ regeling_id: r.id })
+            .eq("id", naamMatch.id);
+        }
+      }
+    }
     const tot = r.openstelling_tot ? new Date(r.openstelling_tot).getTime() : null;
     const naderingsdagen = tot != null ? (tot - nu) / 86400000 : null;
     const isVerleng =

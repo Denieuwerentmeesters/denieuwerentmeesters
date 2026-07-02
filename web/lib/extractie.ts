@@ -7,6 +7,7 @@ import {
   type ExtractieResultaat,
   type LopendeSubsidieVoorstel,
 } from "@/lib/ai";
+import { vindBesteRegelingMatch } from "@/lib/subsidie/naam-match";
 
 // Bron-adapters: elke bron levert een ExtractieResultaat (objecten + koppelingen),
 // die via persisteerVoorstellen als voorstellen (te accorderen) wordt weggeschreven.
@@ -315,24 +316,22 @@ export async function persisteerLopendeSubsidies(
 ): Promise<{ aantal: number; gekoppeld: number }> {
   const { landgoedId, documentId, lijst } = opts;
 
-  // Catalogus voor naam-matching (eenvoudige ilike-vergelijking).
+  // Catalogus voor naam-matching (token-overlap, zie lib/subsidie/naam-match.ts —
+  // een naïeve substring-check mist varianten als "SKNL — Kwaliteitsimpuls
+  // Natuur en Landschap" vs. "SKNL Zeeland — Subsidie Kwaliteitsimpuls Natuur
+  // en Landschap", met een niet-gekoppelde (regeling_id=null) dubbele "kans"
+  // als gevolg).
   const { data: regelingen } = await supabase
     .from("regeling")
     .select("id, naam")
     .eq("geaccordeerd", true);
-  const catalogus = (regelingen ?? []).map((r) => ({
-    id: r.id,
-    naam: normNaam(r.naam),
-  }));
+  const catalogus = (regelingen ?? []).map((r) => ({ id: r.id, naam: r.naam }));
 
   let aantal = 0;
   let gekoppeld = 0;
   for (const s of lijst) {
     if (!s.naam?.trim()) continue;
-    const nrm = normNaam(s.naam);
-    const match = catalogus.find(
-      (c) => c.naam.includes(nrm) || nrm.includes(c.naam),
-    );
+    const match = vindBesteRegelingMatch(s.naam, catalogus);
     const bedrag = s.bedrag ?? null;
 
     const { data: rij } = await supabase
