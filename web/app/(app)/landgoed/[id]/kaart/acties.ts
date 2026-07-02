@@ -234,23 +234,84 @@ async function bewaarGebiedsligging(
       .select("provincie")
       .eq("id", landgoed_id)
       .maybeSingle();
-    const a = await zoekAnlbLeefgebied(lg?.provincie ?? null, lat, lon);
-    if (a) {
-      await supabase
-        .from("landgoed")
-        .update({
-          anlb_leefgebied_code: a.code,
-          anlb_leefgebied_naam: a.naam,
-          anlb_gebied: a.gebied,
-          anlb_gecontroleerd_op: new Date().toISOString(),
-        })
-        .eq("id", landgoed_id);
-    }
-    // a === null: provincie (nog) niet ondersteund in ANLB_BRON -> niets bijwerken,
-    // blijft 'onzeker' voor de matchmotor i.p.v. een fout "nee" te suggereren.
+    await bewaarAnlbPerPerceel(supabase, landgoed_id, lg?.provincie ?? null);
   } catch {
     // idem
   }
+}
+
+// ANLb-leefgebieden per pachtperceel bepalen (i.p.v. één punt op landgoedniveau).
+// Nodig omdat leefgebied-polygonen fijnmazig zijn — getest op Ter Hooge: 3 van de
+// 5 pachtpercelen vielen in een leefgebied terwijl het landgoed-hoofdpunt zelf
+// erbuiten viel. NNN/Natura2000/Bodemkaart blijven WEL op landgoedniveau (dat
+// zijn grote aaneengesloten gebieden, geen lappendeken zoals ANLb-zoekgebieden).
+// Resultaat per perceel in stamobject.kenmerken (zelfde plek als gebruik_bgt),
+// plus een samengevoegd resultaat op het landgoed zodat de matchmotor (die op
+// landgoedniveau matcht) er nu al iets aan heeft.
+async function bewaarAnlbPerPerceel(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  landgoed_id: string,
+  provincie: string | null,
+) {
+  if (!provincie) return; // geen provincie -> kan geen bron kiezen, blijft onzeker
+  const { data: percelen } = await supabase
+    .from("stamobject")
+    .select("id, kenmerken")
+    .eq("landgoed_id", landgoed_id)
+    .in("categorie", ["perceel", "pachtperceel"])
+    .eq("geaccordeerd", true);
+  if (!percelen?.length) return;
+
+  // Kleine batches i.p.v. alles tegelijk -> niet 30+ gelijktijdige requests op
+  // één provinciale GeoServer afvuren.
+  const BATCH = 5;
+  const treffersPerPerceel: { id: string; treffer: AnlbTreffer }[] = [];
+  for (let i = 0; i < percelen.length; i += BATCH) {
+    const batch = percelen.slice(i, i + BATCH);
+    const resultaten = await Promise.all(
+      batch.map(async (p) => {
+        const k = (p.kenmerken ?? {}) as { lat?: number; lon?: number };
+        if (!k.lat || !k.lon) return null;
+        const treffer = await zoekAnlbLeefgebied(provincie, k.lat, k.lon);
+        return treffer ? { id: p.id, kenmerken: p.kenmerken, treffer } : null;
+      }),
+    );
+    for (const r of resultaten) {
+      if (!r) continue;
+      treffersPerPerceel.push({ id: r.id, treffer: r.treffer });
+      const nieuweKenmerken: Record<string, unknown> = {
+        ...((r.kenmerken as object) ?? {}),
+        anlb_leefgebied_code: r.treffer.code,
+        anlb_leefgebied_naam: r.treffer.naam,
+        anlb_gecontroleerd_op: new Date().toISOString(),
+      };
+      await supabase
+        .from("stamobject")
+        .update({ kenmerken: nieuweKenmerken })
+        .eq("id", r.id);
+    }
+  }
+
+  // Provincie ondersteund maar geen enkel perceel had lat/lon -> niets te
+  // rapporteren, landgoed-veld blijft onaangeroerd (onzeker).
+  if (!treffersPerPerceel.length) return;
+
+  // Samenvoegen tot landgoedniveau: alle leefgebieden die ergens op het
+  // landgoed voorkomen, ongeacht op welk perceel.
+  const gevonden = treffersPerPerceel
+    .map((t) => t.treffer)
+    .filter((t) => t.code);
+  const uniekeCodes = [...new Set(gevonden.flatMap((t) => (t.code ?? "").split(";")))];
+  const uniekeNamen = [...new Set(gevonden.flatMap((t) => (t.naam ?? "").split("; ")).filter(Boolean))];
+  await supabase
+    .from("landgoed")
+    .update({
+      anlb_leefgebied_code: uniekeCodes.length ? uniekeCodes.join(";") : null,
+      anlb_leefgebied_naam: uniekeNamen.length ? uniekeNamen.join("; ") : null,
+      anlb_gebied: gevonden.find((t) => t.gebied)?.gebied ?? null,
+      anlb_gecontroleerd_op: new Date().toISOString(),
+    })
+    .eq("id", landgoed_id);
 }
 
 // ── ANLb-leefgebieden (Natuurbeheerplan — Zoekgebied Agrarisch), per provincie ──
