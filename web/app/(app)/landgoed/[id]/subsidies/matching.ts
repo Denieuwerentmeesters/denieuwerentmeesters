@@ -281,6 +281,7 @@ export type KansResultaat = {
   getoond: number;
   onderdrukt: number;
   verleng: number;
+  ingetrokken: number;
 };
 
 export async function zoekKansen(
@@ -316,6 +317,10 @@ export async function zoekKansen(
   let getoond = 0;
   let onderdrukt = 0;
   let verleng = 0;
+  // Regelingen die dit run daadwerkelijk (opnieuw) matchen -> alles wat hier
+  // niet in staat, is een eerder getoonde "kans"/"info" die nu ingetrokken
+  // moet worden (zie hieronder, na de loop).
+  const matchendeRegelingIds = new Set<string>();
 
   // Geaccordeerde criteria per regeling ophalen (de gewogen poort + pré's).
   const ids = passend.map((r) => r.id);
@@ -440,9 +445,41 @@ export async function zoekKansen(
       },
       { onConflict: "landgoed_id,regeling_id" },
     );
+    matchendeRegelingIds.add(r.id);
     getoond++;
     if (isVerleng) verleng++;
   }
 
-  return { bekeken: passend.length, getoond, onderdrukt, verleng };
+  // Auto-intrekken: automatisch gegenereerde "kans"/"info"-rijen die dit run
+  // niet meer matchten (regeling niet meer geaccordeerd, uit de geografische
+  // poort gevallen, of een eis faalt nu — bv. na het scherper koppelen van een
+  // criterium) alsnog verwijderen. Alleen rijen met regeling_id (dus niet
+  // handmatig toegevoegde subsidies) en niet als er al een "Hulp nodig?"-
+  // verzoek aan hangt (dan laat de gebruiker het zelf opruimen).
+  const { data: bestaandeKansen } = await db
+    .from("subsidie")
+    .select("id, regeling_id")
+    .eq("landgoed_id", landgoedId)
+    .in("soort", ["kans", "info"])
+    .not("regeling_id", "is", null);
+  const nietMeerMatchend = (bestaandeKansen ?? []).filter(
+    (s) => s.regeling_id && !matchendeRegelingIds.has(s.regeling_id),
+  );
+  let ingetrokken = 0;
+  if (nietMeerMatchend.length) {
+    const kandidaatIds = nietMeerMatchend.map((s) => s.id);
+    const { data: hulpverzoeken } = await db
+      .from("verband")
+      .select("bron_id")
+      .eq("bron_type", "subsidie")
+      .in("bron_id", kandidaatIds);
+    const beschermd = new Set((hulpverzoeken ?? []).map((v) => v.bron_id));
+    const teVerwijderen = kandidaatIds.filter((id) => !beschermd.has(id));
+    if (teVerwijderen.length) {
+      await db.from("subsidie").delete().in("id", teVerwijderen);
+      ingetrokken = teVerwijderen.length;
+    }
+  }
+
+  return { bekeken: passend.length, getoond, onderdrukt, verleng, ingetrokken };
 }
