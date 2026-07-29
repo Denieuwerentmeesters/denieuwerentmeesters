@@ -1,0 +1,35 @@
+# De automatische keuring: draait bij elke pull request en elke push naar main.
+# Groene vinkjes = veilig te mergen. Zie web/package.json voor de losse scripts.
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  keuring:
+    name: Typecheck en tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - name: Code ophalen
+        uses: actions/checkout@v4
+
+      - name: Node opzetten
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+
+      - name: Dependencies installeren
+        run: npm ci
+
+      - name: Typecheck (klopt de code technisch?)
+        run: npm run typecheck
+
+      - name: Tests (doet de kernlogica het nog?)
+        run: npm test
