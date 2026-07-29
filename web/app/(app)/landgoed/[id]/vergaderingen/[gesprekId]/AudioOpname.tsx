@@ -51,7 +51,8 @@ export function AudioOpname({
     for (let i = 0; i < bestanden.length; i++) {
       setVoortgang(bestanden.length > 1 ? `Uploaden deel ${i + 1} van ${bestanden.length}…` : "Uploaden…");
       const f = bestanden[i];
-      const pad = `${gesprekId}/${Date.now()}-${f.name}`;
+      // Pad-conventie: eerste mapsegment = landgoed_id (storage-RLS handhaaft dit).
+      const pad = `${landgoedId}/${gesprekId}/${Date.now()}-${f.name}`;
       const { error } = await supabase.storage.from("audio-opnames").upload(pad, f);
       if (error) { setFout(`Upload mislukt: ${error.message}`); setStatus("fout"); return; }
       paden.push(pad);

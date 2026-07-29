@@ -1,15 +1,22 @@
 import { NextRequest, NextResponse } from "next/server";
 import { verwerkInboundEmail, InboundPayload } from "@/lib/inbound_email";
 import { serviceBeschikbaar } from "@/lib/supabase/service";
+import { geautoriseerdMetSecret } from "@/lib/route-auth";
+
+// Auth: gedeeld geheim in header (zet INBOUND_SHARED_SECRET in Vercel env).
+// Fail-closed: ontbreekt het geheim in productie, dan weigeren.
+function geautoriseerd(req: NextRequest): boolean {
+  const verwacht = process.env.INBOUND_SHARED_SECRET;
+  return geautoriseerdMetSecret({
+    secretGezet: Boolean(verwacht),
+    headerKlopt: req.headers.get("x-inbound-secret") === verwacht,
+    isProductie: process.env.NODE_ENV === "production",
+  });
+}
 
 export async function POST(req: NextRequest) {
-  // Auth: gedeeld geheim in header (zet INBOUND_SHARED_SECRET in Vercel env)
-  const secret = process.env.INBOUND_SHARED_SECRET;
-  if (secret) {
-    const header = req.headers.get("x-inbound-secret");
-    if (header !== secret) {
-      return NextResponse.json({ error: "Ongeautoriseerd" }, { status: 401 });
-    }
+  if (!geautoriseerd(req)) {
+    return NextResponse.json({ error: "Ongeautoriseerd" }, { status: 401 });
   }
 
   if (!serviceBeschikbaar()) {

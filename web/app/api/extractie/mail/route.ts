@@ -1,16 +1,23 @@
 import { NextRequest, NextResponse } from "next/server";
 import { intakeMail } from "@/lib/extractie_mail";
+import { geautoriseerdMetSecret } from "@/lib/route-auth";
 
 // POST /api/extractie/mail
 // Body: { landgoed_id, mail_tekst, bron_ref?, vrije_instructie? }
 // Beveiligd met EXTRACTIE_SECRET (zelfde patroon als subsidie-import).
+// Fail-closed: ontbreekt het geheim in productie, dan weigeren.
+function geautoriseerd(req: NextRequest): boolean {
+  const verwacht = process.env.EXTRACTIE_SECRET;
+  return geautoriseerdMetSecret({
+    secretGezet: Boolean(verwacht),
+    headerKlopt: req.headers.get("authorization") === `Bearer ${verwacht}`,
+    isProductie: process.env.NODE_ENV === "production",
+  });
+}
+
 export async function POST(req: NextRequest) {
-  const secret = process.env.EXTRACTIE_SECRET;
-  if (secret) {
-    const auth = req.headers.get("authorization") ?? "";
-    if (auth !== `Bearer ${secret}`) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+  if (!geautoriseerd(req)) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   let body: {
