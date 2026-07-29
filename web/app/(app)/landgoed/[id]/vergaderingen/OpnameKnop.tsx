@@ -47,7 +47,9 @@ export function OpnameKnop({
     for (let i = 0; i < bestanden.length; i++) {
       setVoortgang(bestanden.length > 1 ? `Uploaden deel ${i + 1} van ${bestanden.length}…` : "Uploaden…");
       const f = bestanden[i];
-      const pad = `nieuw/${Date.now()}-${f.name}`;
+      // Pad-conventie: eerste mapsegment = landgoed_id (storage-RLS handhaaft dit).
+      // Het gesprek bestaat hier nog niet, dus submap "nieuw".
+      const pad = `${landgoedId}/nieuw/${Date.now()}-${f.name}`;
       const { error } = await supabase.storage.from("audio-opnames").upload(pad, f);
       if (error) { setFout(`Upload mislukt: ${error.message}`); setStatus("fout"); return; }
       paden.push(pad);

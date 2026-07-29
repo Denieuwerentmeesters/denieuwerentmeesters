@@ -4,12 +4,23 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { transcribeer } from "@/lib/transcriptie";
 import { createServiceClient } from "@/lib/supabase/service";
+import { isLidVan } from "@/lib/auth";
 
 // Transcribeert audio (via Storage), maakt direct een gesprek aan en stuurt door naar de detailpagina.
 export async function maakGesprekVanAudio(fd: FormData) {
   const landgoed_id = String(fd.get("landgoed_id"));
   const storage_paden = fd.getAll("storage_pad").map(String).filter(Boolean);
   if (!storage_paden.length) return { fout: "Geen storage pad ontvangen." };
+
+  // Eigenaarscheck: de service-client hieronder omzeilt RLS, dus verifieer hier
+  // dat de gebruiker lid is van dit landgoed én dat elk pad erbinnen valt.
+  if (!landgoed_id || !(await isLidVan(landgoed_id))) {
+    return { fout: "Geen toegang tot dit landgoed." };
+  }
+  const padPrefix = `${landgoed_id}/`;
+  if (storage_paden.some((p) => !p.startsWith(padPrefix))) {
+    return { fout: "Ongeldig opslagpad." };
+  }
 
   const service = createServiceClient();
   const teksten: string[] = [];
