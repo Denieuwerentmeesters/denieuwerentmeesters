@@ -131,7 +131,14 @@ export function waardeertNnnPositief(
   );
 }
 
-export type Nevenreden = "dubbel" | "collectief" | "pachter" | "te_groot" | null;
+export type Nevenreden =
+  | "dubbel"
+  | "collectief"
+  | "pachter"
+  | "te_groot"
+  | "organisatie"
+  | "onbewerkt"
+  | null;
 
 // Een kans kan kwalificeren en tóch secundair zijn. Deze functie zegt waarom, of
 // null als hij primair is. Bewust GEEN onderdrukking: de regeling blijft zichtbaar,
@@ -145,12 +152,21 @@ export type Nevenreden = "dubbel" | "collectief" | "pachter" | "te_groot" | null
 //                en horen in de ANLb-bak, niet in de pachtersbak.
 //   pachter    — kan wel, maar iemand anders is de aanvrager
 //   te_groot   — vraagt een consortium of een omvang buiten bereik
+//   organisatie— staat alleen open voor een stichting/vereniging/TBO. Ná 'te_groot',
+//                want een fonds dat én organisatie-gebonden én consortium-gebonden is
+//                struikelt in de praktijk over het tweede.
+//   onbewerkt  — laatste vangnet: de regeling is nog niet verrijkt (geen thema, geen
+//                doelgroep), dus er valt inhoudelijk niets over te zeggen. Zo'n rauwe
+//                verordeningstekst hoort niet tussen de uitgeschreven kansen, maar
+//                verdwijnen mag hij ook niet — dat zou een gat in de catalogus
+//                onzichtbaar maken.
 export function bepaalNevenreden(
   r: {
     naam: string;
     doelgroep_type: string | null;
     instap_drempel: string | null;
     vereist_collectief: boolean;
+    categorie_ui: string | null;
   },
   p: { rechtsvorm: string | null },
   lopendeNamen: string[],
@@ -161,7 +177,18 @@ export function bepaalNevenreden(
     return "collectief";
   if (r.doelgroep_type === "pachter") return "pachter";
   if (r.instap_drempel === "hoog") return "te_groot";
+  // Idem als bij 'collectief': is het landgoed zelf een stichting/vereniging, dan is
+  // dit geen belemmering en blijft de kans primair.
+  if (r.doelgroep_type === "organisatie" && !isOrganisatie(p.rechtsvorm)) return "organisatie";
+  if (!r.categorie_ui && !r.doelgroep_type) return "onbewerkt";
   return null;
+}
+
+// Rechtsvormen waarbij het landgoed zélf de "organisatie" is die fondsen en
+// TBO-regelingen bedoelen. BV/maatschap/particulier vallen er bewust buiten.
+function isOrganisatie(rechtsvorm: string | null): boolean {
+  const v = (rechtsvorm ?? "").toLowerCase().trim();
+  return v === "stichting" || v === "vereniging" || v === "collectief";
 }
 
 type RegelingOordeel = {
