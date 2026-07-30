@@ -1,5 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { zijnZelfdeRegeling } from "@/lib/subsidie/naam-match";
+import { moet } from "@/lib/db";
 
 // Matching: catalogus-regeling -> per-landgoed kans.
 //   gewogen criteria (eis/pré/uitsluiting) -> berekende score -> "al in gebruik"-suppressie
@@ -357,21 +358,27 @@ export async function zoekKansen(
         inGebruik.set(r.id, true);
         // Ruim een eventuele foutieve dubbele "kans"/"info"-rij voor déze
         // regeling op (uit een eerdere run, vóór de naam herkend kon worden).
-        await db
-          .from("subsidie")
-          .delete()
-          .eq("landgoed_id", landgoedId)
-          .eq("regeling_id", r.id)
-          .neq("id", naamMatch.id)
-          .in("soort", ["kans", "info"]);
+        await moet(
+          db
+            .from("subsidie")
+            .delete()
+            .eq("landgoed_id", landgoedId)
+            .eq("regeling_id", r.id)
+            .neq("id", naamMatch.id)
+            .in("soort", ["kans", "info"]),
+          "dubbele subsidie-rij opruimen",
+        );
         // Zelf-herstellend: heeft de bestaande "in gebruik"-rij nog geen
         // regeling_id, koppel die dan alsnog — zodat toekomstige runs meteen
         // via de snelle regeling_id-route suppressen.
         if (!naamMatch.regeling_id) {
-          await db
-            .from("subsidie")
-            .update({ regeling_id: r.id })
-            .eq("id", naamMatch.id);
+          await moet(
+            db
+              .from("subsidie")
+              .update({ regeling_id: r.id })
+              .eq("id", naamMatch.id),
+            "subsidie aan regeling koppelen",
+          );
         }
       }
     }
@@ -429,21 +436,24 @@ export async function zoekKansen(
 
     const redenering = delen.join(" ").trim();
 
-    await db.from("subsidie").upsert(
-      {
-        landgoed_id: landgoedId,
-        regeling_id: r.id,
-        scope: "landgoed",
-        soort: r.is_standaard ? "info" : "kans",
-        naam: r.naam,
-        organisatie: r.organisatie,
-        categorie: r.categorie ?? "subsidie",
-        status: r.is_standaard ? "standaard" : "verkennen",
-        match_score: oordeel.score,
-        redenering: redenering || null,
-        deadline: r.openstelling_tot ?? null,
-      },
-      { onConflict: "landgoed_id,regeling_id" },
+    await moet(
+      db.from("subsidie").upsert(
+        {
+          landgoed_id: landgoedId,
+          regeling_id: r.id,
+          scope: "landgoed",
+          soort: r.is_standaard ? "info" : "kans",
+          naam: r.naam,
+          organisatie: r.organisatie,
+          categorie: r.categorie ?? "subsidie",
+          status: r.is_standaard ? "standaard" : "verkennen",
+          match_score: oordeel.score,
+          redenering: redenering || null,
+          deadline: r.openstelling_tot ?? null,
+        },
+        { onConflict: "landgoed_id,regeling_id" },
+      ),
+      "subsidie-kans bijwerken",
     );
     matchendeRegelingIds.add(r.id);
     getoond++;
@@ -476,7 +486,10 @@ export async function zoekKansen(
     const beschermd = new Set((hulpverzoeken ?? []).map((v) => v.bron_id));
     const teVerwijderen = kandidaatIds.filter((id) => !beschermd.has(id));
     if (teVerwijderen.length) {
-      await db.from("subsidie").delete().in("id", teVerwijderen);
+      await moet(
+        db.from("subsidie").delete().in("id", teVerwijderen),
+        "subsidie-kans intrekken",
+      );
       ingetrokken = teVerwijderen.length;
     }
   }

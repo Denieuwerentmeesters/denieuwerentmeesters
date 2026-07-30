@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { moet } from "@/lib/db";
 import { revalidatePath } from "next/cache";
 
 function tekst(fd: FormData, k: string) {
@@ -14,14 +15,17 @@ export async function nieuwAgendaItem(fd: FormData) {
   const datum = tekst(fd, "datum");
   if (!titel || !datum) return;
   const supabase = await createClient();
-  await supabase.from("agenda_item").insert({
-    landgoed_id,
-    titel,
-    datum,
-    tijd: tekst(fd, "tijd"),
-    locatie: tekst(fd, "locatie"),
-    categorie: tekst(fd, "categorie"),
-  });
+  await moet(
+    supabase.from("agenda_item").insert({
+      landgoed_id,
+      titel,
+      datum,
+      tijd: tekst(fd, "tijd"),
+      locatie: tekst(fd, "locatie"),
+      categorie: tekst(fd, "categorie"),
+    }),
+    "agenda-item aanmaken",
+  );
   revalidatePath(`/landgoed/${landgoed_id}/overzicht`);
 }
 
@@ -30,6 +34,9 @@ export async function verwijderAgendaItem(fd: FormData) {
   const id = String(fd.get("id"));
   if (!id) return;
   const supabase = await createClient();
-  await supabase.from("agenda_item").delete().eq("id", id);
+  await moet(
+    supabase.from("agenda_item").delete().eq("id", id),
+    "agenda-item verwijderen",
+  );
   revalidatePath(`/landgoed/${landgoed_id}/overzicht`);
 }

@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { moet } from "@/lib/db";
 import { revalidatePath } from "next/cache";
 
 function veiligeNaam(naam: string) {
@@ -22,13 +23,16 @@ export async function uploadDocument(fd: FormData) {
   if (error) throw new Error(error.message);
 
   const { data: gebruiker } = await supabase.auth.getUser();
-  await supabase.from("document").insert({
-    landgoed_id,
-    scope: "landgoed",
-    titel: titel || file.name,
-    bestand_pad: pad,
-    geupload_door: gebruiker.user?.id,
-  });
+  await moet(
+    supabase.from("document").insert({
+      landgoed_id,
+      scope: "landgoed",
+      titel: titel || file.name,
+      bestand_pad: pad,
+      geupload_door: gebruiker.user?.id,
+    }),
+    "document opslaan",
+  );
 
   revalidatePath(`/landgoed/${landgoed_id}/documenten`);
 }
@@ -40,6 +44,9 @@ export async function verwijderDocument(fd: FormData) {
 
   const supabase = await createClient();
   await supabase.storage.from("documenten").remove([pad]);
-  await supabase.from("document").delete().eq("id", id);
+  await moet(
+    supabase.from("document").delete().eq("id", id),
+    "document verwijderen",
+  );
   revalidatePath(`/landgoed/${landgoed_id}/documenten`);
 }

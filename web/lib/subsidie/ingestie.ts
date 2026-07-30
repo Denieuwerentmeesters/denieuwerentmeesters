@@ -1,6 +1,7 @@
 import { createHash } from "node:crypto";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Connector, RegelingNormaal } from "./connectors";
+import { moet } from "@/lib/db";
 
 // Generieke ingestie-runner. Spiegelt persisteerVoorstellen uit lib/extractie.ts.
 // Draait met een SERVICE-ROLE client (omzeilt RLS): schrijft naar de catalogus.
@@ -82,12 +83,22 @@ export async function verwerkConnector(
     };
   }
 
-  // Run openen.
-  const { data: run } = await db
+  // Run openen. Mislukt dit, dan heeft doorgaan geen zin — meld het als telling.
+  const { data: run, error: runFout } = await db
     .from("subsidie_import_run")
     .insert({ bron_id: bron.id, gestart_op: runStart, status: "bezig" })
     .select("id")
     .single();
+  if (runFout || !run) {
+    return {
+      bron: connector.bronSleutel,
+      gezien: 0,
+      nieuw: 0,
+      gewijzigd: 0,
+      verlopen: 0,
+      fout: `Kon import-run niet openen: ${runFout?.message ?? "onbekende fout"}`,
+    };
+  }
 
   let gezien = 0;
   let nieuw = 0;
@@ -113,15 +124,18 @@ export async function verwerkConnector(
       const isGewijzigd = snap ? snap.payload_hash !== hash : false;
 
       // Snapshot upserten.
-      await db.from("subsidie_snapshot").upsert(
-        {
-          bron_id: bron.id,
-          extern_id: item.extern_id,
-          payload: item.ruw ?? item,
-          payload_hash: hash,
-          laatst_gezien: new Date().toISOString(),
-        },
-        { onConflict: "bron_id,extern_id" },
+      await moet(
+        db.from("subsidie_snapshot").upsert(
+          {
+            bron_id: bron.id,
+            extern_id: item.extern_id,
+            payload: item.ruw ?? item,
+            payload_hash: hash,
+            laatst_gezien: new Date().toISOString(),
+          },
+          { onConflict: "bron_id,extern_id" },
+        ),
+        "snapshot bijwerken",
       );
 
       // Regeling upserten — bestaande mens-velden behouden.
@@ -133,20 +147,26 @@ export async function verwerkConnector(
         .maybeSingle();
 
       if (!bestaand) {
-        await db.from("regeling").insert({
-          bron_id: bron.id,
-          extern_id: item.extern_id,
-          herkomst: "import",
-          geaccordeerd: false,
-          is_nieuw: true,
-          ...bronVelden(item),
-        });
+        await moet(
+          db.from("regeling").insert({
+            bron_id: bron.id,
+            extern_id: item.extern_id,
+            herkomst: "import",
+            geaccordeerd: false,
+            is_nieuw: true,
+            ...bronVelden(item),
+          }),
+          "regeling aanmaken",
+        );
         nieuw++;
       } else {
         const velden = bronVelden(item);
         // Inhoud gewijzigd -> opnieuw verrijken (verrijkt_op leeglaten).
         if (isGewijzigd) velden.verrijkt_op = null;
-        await db.from("regeling").update(velden).eq("id", bestaand.id);
+        await moet(
+          db.from("regeling").update(velden).eq("id", bestaand.id),
+          "regeling bijwerken",
+        );
         if (isGewijzigd) gewijzigd++;
       }
       void isNieuw;
@@ -160,25 +180,33 @@ export async function verwerkConnector(
       .lt("laatst_gezien", runStart);
     const verlopen = verlopenCount ?? 0;
 
-    await db
-      .from("subsidie_import_run")
-      .update({
-        status: "klaar",
-        voltooid_op: new Date().toISOString(),
-        aantal_gezien: gezien,
-        aantal_nieuw: nieuw,
-        aantal_gewijzigd: gewijzigd,
-        aantal_verlopen: verlopen,
-      })
-      .eq("id", run!.id);
-    await db
-      .from("subsidie_bron")
-      .update({ laatst_gedraaid: new Date().toISOString() })
-      .eq("id", bron.id);
+    await moet(
+      db
+        .from("subsidie_import_run")
+        .update({
+          status: "klaar",
+          voltooid_op: new Date().toISOString(),
+          aantal_gezien: gezien,
+          aantal_nieuw: nieuw,
+          aantal_gewijzigd: gewijzigd,
+          aantal_verlopen: verlopen,
+        })
+        .eq("id", run.id),
+      "import-run afsluiten",
+    );
+    await moet(
+      db
+        .from("subsidie_bron")
+        .update({ laatst_gedraaid: new Date().toISOString() })
+        .eq("id", bron.id),
+      "bron-tijdstip bijwerken",
+    );
 
     return { bron: bron.sleutel, gezien, nieuw, gewijzigd, verlopen };
   } catch (e) {
     fout = e instanceof Error ? e.message : String(e);
+    // Best-effort foutregistratie op de run zelf — bewust niet via moet, zodat
+    // een falende update de oorspronkelijke fout niet maskeert.
     await db
       .from("subsidie_import_run")
       .update({
@@ -189,7 +217,7 @@ export async function verwerkConnector(
         aantal_gewijzigd: gewijzigd,
         fout,
       })
-      .eq("id", run!.id);
+      .eq("id", run.id);
     return { bron: bron.sleutel, gezien, nieuw, gewijzigd, verlopen: 0, fout };
   }
 }

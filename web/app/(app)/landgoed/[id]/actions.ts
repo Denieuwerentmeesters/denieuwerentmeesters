@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { moet } from "@/lib/db";
 import { revalidatePath } from "next/cache";
 
 function tekst(fd: FormData, k: string) {
@@ -50,7 +51,7 @@ export async function nieuweTaak(fd: FormData) {
   const supabase = await createClient();
   const toewijzing = parseToewijzing(tekst(fd, "toegewezen_aan"));
   const bijlage = await uploadBijlage(supabase, landgoed_id, "taken", fd.get("bijlage") as File);
-  await supabase.from("taak").insert({
+  await moet(supabase.from("taak").insert({
     landgoed_id,
     titel,
     omschrijving: tekst(fd, "omschrijving"),
@@ -60,7 +61,7 @@ export async function nieuweTaak(fd: FormData) {
     bijlage_pad: bijlage?.pad ?? null,
     bijlage_naam: bijlage?.naam ?? null,
     status: "open",
-  });
+  }), "taak aanmaken");
   revalidatePath(`/landgoed/${landgoed_id}/overzicht`);
 }
 
@@ -74,7 +75,7 @@ export async function nieuwAgendaItem(fd: FormData) {
   const toewijzing = parseToewijzing(tekst(fd, "toegewezen_aan"));
   const bijlage = await uploadBijlage(supabase, landgoed_id, "agenda", fd.get("bijlage") as File);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  await (supabase as any).from("agenda_item").insert({
+  await moet((supabase as any).from("agenda_item").insert({
     landgoed_id,
     titel,
     datum,
@@ -84,7 +85,7 @@ export async function nieuwAgendaItem(fd: FormData) {
     ...toewijzing,
     bijlage_pad: bijlage?.pad ?? null,
     bijlage_naam: bijlage?.naam ?? null,
-  });
+  }), "agenda-item aanmaken");
   revalidatePath(`/landgoed/${landgoed_id}/overzicht`);
 }
 
@@ -93,7 +94,7 @@ export async function verwijderAgendaItem(fd: FormData) {
   const id = String(fd.get("id"));
   const supabase = await createClient();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  await (supabase as any).from("agenda_item").delete().eq("id", id);
+  await moet((supabase as any).from("agenda_item").delete().eq("id", id), "agenda-item verwijderen");
   revalidatePath(`/landgoed/${landgoed_id}/overzicht`);
 }
 
@@ -102,7 +103,7 @@ export async function taakAfronden(fd: FormData) {
   const id = String(fd.get("id"));
   const nieuw = String(fd.get("nieuw_status")) === "afgerond" ? "afgerond" : "open";
   const supabase = await createClient();
-  await supabase.from("taak").update({ status: nieuw }).eq("id", id);
+  await moet(supabase.from("taak").update({ status: nieuw }).eq("id", id), "taak bijwerken");
   revalidatePath(`/landgoed/${landgoed_id}/overzicht`);
 }
 
@@ -112,14 +113,14 @@ export async function nieuwContact(fd: FormData) {
   const naam = tekst(fd, "naam");
   if (!naam) return;
   const supabase = await createClient();
-  await supabase.from("relatie").insert({
+  await moet(supabase.from("relatie").insert({
     landgoed_id,
     naam,
     type: tekst(fd, "type"),
     email: tekst(fd, "email"),
     telefoon: tekst(fd, "telefoon"),
     contact: tekst(fd, "contact"),
-  });
+  }), "contact aanmaken");
   revalidatePath(`/landgoed/${landgoed_id}/contacten`);
 }
 
@@ -144,7 +145,7 @@ export async function bevestigExtractie(fd: FormData) {
   const nf = (v: string | undefined) => (!v || v === "niet gevonden" ? null : v);
   const naam = nf(c.naam);
   if (naam) {
-    const { data: relatie } = await supabase
+    const relatie = await moet(supabase
       .from("relatie")
       .insert({
         landgoed_id,
@@ -157,34 +158,34 @@ export async function bevestigExtractie(fd: FormData) {
         bron: nf(c.bron_notitie),
       })
       .select("id")
-      .single();
+      .single(), "contact opslaan");
 
     // Koppel rol als het voorstel matcht met een bestaand rol_type
-    if (relatie && nf(c.rol_voorstel)) {
+    if (nf(c.rol_voorstel)) {
       const { data: rolType } = await supabase
         .from("rol_type")
         .select("id")
         .ilike("naam", nf(c.rol_voorstel)!)
         .maybeSingle();
       if (rolType) {
-        await supabase.from("contact_rol").insert({
+        await moet(supabase.from("contact_rol").insert({
           contact_id: relatie.id,
           rol_type_id: rolType.id,
-        });
+        }), "rol koppelen");
       }
     }
 
     // Markeer run als bevestigd
     const { data: { user } } = await supabase.auth.getUser();
-    await supabase
+    await moet(supabase
       .from("intake_run")
       .update({
         status: "bevestigd",
         bevestigd_door: user?.id ?? null,
         bevestigd_op: new Date().toISOString(),
-        resultaat_ref: relatie?.id ?? null,
+        resultaat_ref: relatie.id ?? null,
       })
-      .eq("id", run_id);
+      .eq("id", run_id), "intake-run bijwerken");
   }
 
   revalidatePath(`/landgoed/${landgoed_id}/contacten`);
@@ -195,7 +196,7 @@ export async function afwijsExtractie(fd: FormData) {
   const run_id = String(fd.get("run_id"));
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
-  await supabase
+  await moet(supabase
     .from("intake_run")
     .update({
       status: "afgewezen",
@@ -203,7 +204,7 @@ export async function afwijsExtractie(fd: FormData) {
       bevestigd_op: new Date().toISOString(),
     })
     .eq("id", run_id)
-    .eq("landgoed_id", landgoed_id);
+    .eq("landgoed_id", landgoed_id), "extractie afwijzen");
   revalidatePath(`/landgoed/${landgoed_id}/contacten`);
 }
 
@@ -229,7 +230,7 @@ export async function bevestigInboundVoorstel(fd: FormData) {
   if (type === "contact") {
     const naam = tekst(fd, "contact_naam");
     if (naam) {
-      const { data: relatie } = await supabase
+      const relatie = await moet(supabase
         .from("relatie")
         .insert({
           landgoed_id,
@@ -241,11 +242,11 @@ export async function bevestigInboundVoorstel(fd: FormData) {
           status: "actief",
         })
         .select("id")
-        .single();
-      gekoppeld_object_id = relatie?.id ?? null;
+        .single(), "contact aanmaken");
+      gekoppeld_object_id = relatie.id ?? null;
     }
   } else if (type === "taak") {
-    const { data: taak } = await supabase
+    const taak = await moet(supabase
       .from("taak")
       .insert({
         landgoed_id,
@@ -257,11 +258,11 @@ export async function bevestigInboundVoorstel(fd: FormData) {
         status: "open",
       })
       .select("id")
-      .single();
-    gekoppeld_object_id = taak?.id ?? null;
+      .single(), "taak aanmaken");
+    gekoppeld_object_id = taak.id ?? null;
   } else if (type === "agendapunt") {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { data: item } = await (supabase as any)
+    const item = await moet<{ id: string }>((supabase as any)
       .from("agenda_item")
       .insert({
         landgoed_id,
@@ -272,13 +273,13 @@ export async function bevestigInboundVoorstel(fd: FormData) {
         toegewezen_aan: toegewezen_aan ?? null,
       })
       .select("id")
-      .single();
-    gekoppeld_object_id = item?.id ?? null;
+      .single(), "agenda-item aanmaken");
+    gekoppeld_object_id = item.id ?? null;
   }
 
   const { data: { user } } = await supabase.auth.getUser();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  await (supabase as any)
+  await moet((supabase as any)
     .from("inbound_extractie")
     .update({
       status: "bevestigd",
@@ -286,7 +287,7 @@ export async function bevestigInboundVoorstel(fd: FormData) {
       beoordeeld_door: user?.id ?? null,
       beoordeeld_op: new Date().toISOString(),
     })
-    .eq("id", voorstel_id);
+    .eq("id", voorstel_id), "inbound-voorstel bijwerken");
 
   revalidatePath(`/landgoed/${landgoed_id}/inbox`);
   revalidatePath(`/landgoed/${landgoed_id}/taken`);
@@ -299,7 +300,7 @@ export async function verWerpInboundVoorstel(fd: FormData) {
   const voorstel_id = String(fd.get("voorstel_id"));
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
-  await supabase
+  await moet(supabase
     .from("inbound_extractie")
     .update({
       status: "verworpen",
@@ -307,7 +308,7 @@ export async function verWerpInboundVoorstel(fd: FormData) {
       beoordeeld_op: new Date().toISOString(),
     })
     .eq("id", voorstel_id)
-    .eq("landgoed_id", landgoed_id);
+    .eq("landgoed_id", landgoed_id), "inbound-voorstel verwerpen");
   revalidatePath(`/landgoed/${landgoed_id}/inbox`);
 }
 
@@ -320,13 +321,13 @@ export async function voegNotitieToe(fd: FormData) {
   if (!tekst) return;
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
-  await (supabase as any).from("notitie").insert({
+  await moet((supabase as any).from("notitie").insert({
     landgoed_id,
     object_type,
     object_id,
     tekst,
     geschreven_door: user?.id ?? null,
-  });
+  }), "notitie toevoegen");
   revalidatePath(`/landgoed/${landgoed_id}/taak/${object_id}`);
   revalidatePath(`/landgoed/${landgoed_id}/agenda/${object_id}`);
 }
@@ -337,7 +338,7 @@ export async function nieuwContract(fd: FormData) {
   const titel = tekst(fd, "titel");
   if (!titel) return;
   const supabase = await createClient();
-  await supabase.from("contract").insert({
+  await moet(supabase.from("contract").insert({
     landgoed_id,
     titel,
     type: tekst(fd, "type"),
@@ -351,6 +352,6 @@ export async function nieuwContract(fd: FormData) {
     achterstand: getal(fd, "achterstand"),
     achterstand_notitie: tekst(fd, "achterstand_notitie"),
     status: "actief",
-  });
+  }), "contract opslaan");
   revalidatePath(`/landgoed/${landgoed_id}/contracten`);
 }

@@ -3,6 +3,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 import { categoriseerTransacties } from "@/lib/ai";
+import { moet } from "@/lib/db";
 
 function parseBedrag(s: string): number | null {
   let t = s.trim().replace(/\s|€/g, "");
@@ -45,12 +46,15 @@ export async function importBankCsv(fd: FormData) {
     .maybeSingle();
   let bronId = bestaand?.id as string | undefined;
   if (!bronId) {
-    const { data: nieuw } = await supabase
-      .from("financiele_bron")
-      .insert({ landgoed_id, type: "bank_import", naam: "Bankimport" })
-      .select("id")
-      .single();
-    bronId = nieuw?.id;
+    const nieuw = await moet(
+      supabase
+        .from("financiele_bron")
+        .insert({ landgoed_id, type: "bank_import", naam: "Bankimport" })
+        .select("id")
+        .single(),
+      "bron opslaan",
+    );
+    bronId = nieuw.id;
   }
 
   const rijen: {
@@ -83,10 +87,13 @@ export async function importBankCsv(fd: FormData) {
 
   if (rijen.length > 0) {
     // Dedupe via unique(bron_id, extern_id).
-    await supabase.from("transactie").upsert(rijen, {
-      onConflict: "bron_id,extern_id",
-      ignoreDuplicates: true,
-    });
+    await moet(
+      supabase.from("transactie").upsert(rijen, {
+        onConflict: "bron_id,extern_id",
+        ignoreDuplicates: true,
+      }),
+      "transacties importeren",
+    );
   }
 
   revalidatePath(`/landgoed/${landgoed_id}/financieel`);
@@ -98,13 +105,16 @@ export async function nieuweTransactie(fd: FormData) {
   const bedrag = parseBedrag(String(fd.get("bedrag") ?? ""));
   if (!datum || bedrag === null) return;
   const supabase = await createClient();
-  await supabase.from("transactie").insert({
-    landgoed_id,
-    datum,
-    bedrag,
-    omschrijving: String(fd.get("omschrijving") ?? "").trim() || null,
-    categorie: String(fd.get("categorie") ?? "").trim() || null,
-  });
+  await moet(
+    supabase.from("transactie").insert({
+      landgoed_id,
+      datum,
+      bedrag,
+      omschrijving: String(fd.get("omschrijving") ?? "").trim() || null,
+      categorie: String(fd.get("categorie") ?? "").trim() || null,
+    }),
+    "transactie opslaan",
+  );
   revalidatePath(`/landgoed/${landgoed_id}/financieel`);
 }
 
@@ -128,7 +138,10 @@ export async function categoriseerNu(fd: FormData) {
   for (const v of voorstel) {
     const t = ongecat[v.index];
     if (t && v.categorie) {
-      await supabase.from("transactie").update({ categorie: v.categorie }).eq("id", t.id);
+      await moet(
+        supabase.from("transactie").update({ categorie: v.categorie }).eq("id", t.id),
+        "categorie opslaan",
+      );
     }
   }
   revalidatePath(`/landgoed/${landgoed_id}/financieel`);
