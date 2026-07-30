@@ -77,7 +77,7 @@ type SubsidieRij = {
   regeling: RegelingMini;
 };
 
-// De vier secundaire bakken, in de volgorde waarin ze op de pagina staan. Dit zijn
+// De secundaire bakken, in de volgorde waarin ze op de pagina staan. Dit zijn
 // kansen die inhoudelijk niet dood zijn maar wél op afstand horen: je wil ze kunnen
 // inzien, niet erover struikelen. De reden komt uit `subsidie.nevenreden`
 // (berekend door de matchmotor, zie bepaalNevenreden in matching.ts).
@@ -110,6 +110,20 @@ const NEVENREDEN_BAKKEN: { key: string; titel: string; kort: string; uitleg: str
     kort: "Vraagt een consortium of een grote projectomvang.",
     uitleg:
       "Vraagt een consortium, een gebiedsproces of een minimale projectomvang die een landgoed niet zelfstandig haalt.",
+  },
+  {
+    key: "organisatie",
+    titel: "Alleen voor een stichting",
+    kort: "Aanvrager moet een stichting, vereniging of TBO zijn.",
+    uitleg:
+      "De aanvrager moet een stichting, vereniging of terreinbeherende organisatie zijn. Relevant zodra er een landgoedstichting is — nu niet.",
+  },
+  {
+    key: "onbewerkt",
+    titel: "Nog uit te zoeken",
+    kort: "Rauwe regelingstekst, nog niet op onderwerp gezet.",
+    uitleg:
+      "Deze regelingen komen rechtstreeks uit de officiële bekendmakingen en zijn nog niet verrijkt: geen onderwerp, geen doelgroep. Er valt dus nog niets zinnigs over te zeggen. Ze staan hier zodat het gat zichtbaar blijft, niet omdat ze kansloos zijn.",
   },
 ];
 
@@ -709,6 +723,18 @@ export default async function SubsidiesPage({
                   gevuld en geaccordeerd is.
                 </div>
               )}
+              {mogelijkPrimair.length > 0 && (
+                <>
+                  <h2 className="text-[15px] font-semibold">
+                    De moeite van het uitzoeken waard{" "}
+                    <span style={{ color: "var(--text-3)" }}>· {mogelijkPrimair.length}</span>
+                  </h2>
+                  <p className="mb-4 text-[12.5px]" style={{ color: "var(--text-2)" }}>
+                    {naam} kan hier zelf de aanvrager zijn. Wat het oplevert hangt af van wat u van
+                    plan bent — daarom staat er per regeling uitgeschreven waarop de match berust.
+                  </p>
+                </>
+              )}
               {gesorteerdeCategorieen.map((cat) => {
                 const rijen = (kansenPerCategorie.get(cat) ?? []).filter((s) => !staatOpen(s));
                 if (rijen.length === 0) return null;
@@ -741,7 +767,7 @@ export default async function SubsidiesPage({
                   Passen bij het profiel, maar nu niet voor {naam} zelf. Niet weggegooid — open een
                   groep om te zien wat erin zit.
                 </p>
-                <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
                   {NEVENREDEN_BAKKEN.map((b) => {
                     const rijen = secundair.filter((s) => s.nevenreden === b.key);
                     if (rijen.length === 0) return null;

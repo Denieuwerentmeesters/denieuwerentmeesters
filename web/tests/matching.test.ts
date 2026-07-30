@@ -184,8 +184,10 @@ describe("bepaalNevenreden", () => {
     doelgroep_type: "eigenaar",
     instap_drempel: null as string | null,
     vereist_collectief: false,
+    categorie_ui: "natuur" as string | null,
   };
   const stichting = { rechtsvorm: "stichting" };
+  const bv = { rechtsvorm: "bv" };
 
   it("geeft null voor een gewone primaire kans", () => {
     expect(bepaalNevenreden(regeling, stichting, [])).toBeNull();
@@ -206,6 +208,7 @@ describe("bepaalNevenreden", () => {
       doelgroep_type: "pachter",
       instap_drempel: null,
       vereist_collectief: true,
+      categorie_ui: "landbouw",
     };
     expect(bepaalNevenreden(anlb, stichting, [])).toBe("collectief");
   });
@@ -222,5 +225,28 @@ describe("bepaalNevenreden", () => {
     expect(bepaalNevenreden({ ...regeling, instap_drempel: "hoog" }, stichting, [])).toBe("te_groot");
     // 'laag' en 'middel' degraderen niet.
     expect(bepaalNevenreden({ ...regeling, instap_drempel: "laag" }, stichting, [])).toBeNull();
+  });
+
+  it("'organisatie' geldt alleen als het landgoed zelf geen stichting/vereniging is", () => {
+    const fonds = { ...regeling, doelgroep_type: "organisatie" };
+    expect(bepaalNevenreden(fonds, bv, [])).toBe("organisatie");
+    expect(bepaalNevenreden(fonds, stichting, [])).toBeNull();
+    // 'te_groot' gaat vóór 'organisatie': een consortium-eis blokkeert harder.
+    expect(bepaalNevenreden({ ...fonds, instap_drempel: "hoog" }, bv, [])).toBe("te_groot");
+  });
+
+  it("'onbewerkt' is het vangnet voor een nog niet verrijkte regeling", () => {
+    const ruw = {
+      naam: "Openstellingsbesluit van Gedeputeerde Staten van Zeeland houdende GLB | NSP",
+      doelgroep_type: null,
+      instap_drempel: null,
+      vereist_collectief: false,
+      categorie_ui: null,
+    };
+    expect(bepaalNevenreden(ruw, bv, [])).toBe("onbewerkt");
+    // Half verrijkt is verrijkt genoeg: één van de twee volstaat om primair te blijven.
+    expect(bepaalNevenreden({ ...ruw, categorie_ui: "landbouw" }, bv, [])).toBeNull();
+    // ...en wat we wél weten wint: consortium-gebonden hoort in 'te_groot'.
+    expect(bepaalNevenreden({ ...ruw, instap_drempel: "hoog" }, bv, [])).toBe("te_groot");
   });
 });
