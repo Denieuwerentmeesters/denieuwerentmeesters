@@ -351,12 +351,22 @@ export async function zoekKansen(
   const ids = passend.map((r) => r.id);
   const criteriaPer = new Map<string, Criterium[]>();
   if (ids.length) {
-    const { data: criteria } = await db
+    const { data: criteria, error: criteriaFout } = await db
       .from("regeling_criterium")
       .select("regeling_id, omschrijving, veld, operator, waarde, verplicht, soort, gewicht, fase")
       .in("regeling_id", ids)
       .eq("geaccordeerd", true)
       .eq("fase", "vooraf");
+    // Faalt deze query, dan MOET de run stoppen. Zonder criteria komt er geen
+    // enkele eis of uitsluiting door en matcht ELKE regeling op de basisscore 50 --
+    // een stille fout die precies het omgekeerde doet van wat de motor moet doen.
+    // Concreet risico: deze code draaien vóór migratie 0030 op live staat; de kolom
+    // `fase` bestaat dan nog niet en Postgres geeft 42703.
+    if (criteriaFout)
+      throw new Error(
+        `Criteria konden niet worden geladen, matchen afgebroken: ${criteriaFout.message}. ` +
+          `Staat migratie 0030 (regeling_criterium.fase) al op deze database?`,
+      );
     ((criteria ?? []) as unknown as Criterium[]).forEach((c) => {
       const arr = criteriaPer.get(c.regeling_id) ?? [];
       arr.push(c);
