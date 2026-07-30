@@ -135,6 +135,17 @@ export default async function ObjectDetailPage({
     (andereObjectenData ?? []).map((o) => [o.id, o as { id: string; naam: string; categorie: string }]),
   );
 
+  // Kadastrale percelen waar dit beheerperceel uit bestaat (stap 1).
+  const { data: kadKoppelingenData } = await supabase
+    .from("beheerperceel_kadastraal")
+    .select("id, dekking, kadastraal_perceel(kadastrale_aanduiding, oppervlakte_m2)")
+    .eq("stamobject_id", objectId);
+  const kadastralePercelen = (kadKoppelingenData ?? []) as unknown as {
+    id: string;
+    dekking: string;
+    kadastraal_perceel: { kadastrale_aanduiding: string; oppervlakte_m2: number | null } | null;
+  }[];
+
   const relIds = verbanden.filter((v) => v.bron_type === "relatie").map((v) => v.bron_id);
   const conIds = verbanden.filter((v) => v.bron_type === "contract").map((v) => v.bron_id);
   const docIds = verbanden.filter((v) => v.bron_type === "document").map((v) => v.bron_id);
@@ -241,6 +252,37 @@ export default async function ObjectDetailPage({
               .join(" · ") || "Geen aanvullende gegevens."}
           </p>
         </header>
+
+        {/* ── Kadastrale percelen (bezit) waar dit beheerperceel uit bestaat ── */}
+        {kadastralePercelen.length > 0 && (
+          <section className="mb-7">
+            <h2 className="mb-2 text-[16px] font-bold">Kadastrale percelen</h2>
+            <div className="card divide-y" style={{ borderColor: "var(--border)" }}>
+              {kadastralePercelen.map((k) => (
+                <div key={k.id} className="flex flex-wrap items-center gap-3 px-4 py-3">
+                  <div className="flex-1 text-[14px] font-semibold">
+                    {k.kadastraal_perceel?.kadastrale_aanduiding ?? "onbekend"}
+                  </div>
+                  {k.kadastraal_perceel?.oppervlakte_m2 != null && (
+                    <div className="text-[13px]" style={{ color: "var(--text-2)" }}>
+                      {(Number(k.kadastraal_perceel.oppervlakte_m2) / 10000).toLocaleString("nl-NL", {
+                        maximumFractionDigits: 2,
+                      })}{" "}
+                      ha
+                    </div>
+                  )}
+                  {k.dekking === "gedeeltelijk" && (
+                    <span className="tag tag-gray">gedeeltelijk</span>
+                  )}
+                </div>
+              ))}
+            </div>
+            <p className="mt-1 text-[11.5px]" style={{ color: "var(--text-3)" }}>
+              Bron: Kadaster/PDOK · de juridische registratie ("wat je bezit") los van dit
+              beheerperceel ("wat je beheert").
+            </p>
+          </section>
+        )}
 
         {/* ── Monumentstatus ── */}
         {isMonument && (
