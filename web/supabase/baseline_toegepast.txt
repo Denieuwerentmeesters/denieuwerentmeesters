@@ -1,0 +1,35 @@
+# Deze migraties stonden al op de live database vóór de automatische runner
+# (handmatige tijdperk t/m 0032). De runner markeert ze eenmalig als toegepast
+# en draait ze NOOIT — de vroege migraties zijn niet idempotent.
+0001_fundament.sql
+0002_provisioning.sql
+0003_functie_rechten.sql
+0004_fase1bc.sql
+0005_storage.sql
+0006_stamgegevens_ruggengraat.sql
+0007_stamobject_voorstellen.sql
+0008_landgoed_locatie.sql
+0009_landgoed_update_policy.sql
+0010_categorie_uitbreiden.sql
+0011_object_administratie.sql
+0012_subsidie_fundament.sql
+0013_koop_bron.sql
+0014_criterium_soort_gewicht.sql
+0015_landgoed_natura2000.sql
+0016_landgoed_nnn.sql
+0017_landgoed_rechtsvorm.sql
+0018_landgoed_profiel.sql
+0019_stamobject_lijkt_op.sql
+0020_extractielaag.sql
+0021_contactenmodule.sql
+0022_inbound_email.sql
+0023_agenda_toewijzing.sql
+0024_inbound_contact_type.sql
+0025_notities.sql
+0026_kennisbank_import.sql
+0027_audio_opnames_storage.sql
+0028_taak_agenda_bijlage.sql
+0029_schema_verzoening.sql
+0030_criteria_opschoning.sql
+0031_nevenreden.sql
+0032_verband_uniek_en_restdrift.sql

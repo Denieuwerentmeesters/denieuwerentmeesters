@@ -1,0 +1,27 @@
+# Migraties naar live (issue #20): past bij elke merge naar main automatisch de
+# nieuwe migraties toe op de live database — de handmatige SQL-Editor-stap vervalt.
+# Vereist het repo-secret SUPABASE_DB_URL (Session-pooler-URI; GitHub Actions is
+# IPv4-only, dus niet de directe db.<ref>-host gebruiken).
+name: Migraties naar live
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "web/supabase/migrations/**"
+  workflow_dispatch: # handmatig te starten (o.a. voor de eerste baseline-run)
+
+concurrency:
+  group: migraties-live
+  cancel-in-progress: false # nooit een lopende migratie afbreken
+
+jobs:
+  migreren:
+    name: Migraties toepassen
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Migraties toepassen op live
+        env:
+          DATABASE_URL: ${{ secrets.SUPABASE_DB_URL }}
+        run: bash scripts/migreer.sh

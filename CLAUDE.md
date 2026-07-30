@@ -75,13 +75,19 @@ elkaar doordat de stap "toepassen op live" niet was vastgelegd. Daarom, zonder u
   geen kolommen/policies met de hand) — ook niet "even snel". Elke wijziging is een migratie.
 - **Migraties zijn idempotent**: `create table if not exists`, `add column if not exists`,
   `drop policy if exists` vóór `create policy`. Zo is (opnieuw) draaien altijd veilig.
-- **Mergen ≠ toegepast.** Een gemergede migratie-PR staat alleen in de code, nog niet in de
-  database.
-- **Wie de migratie-PR merget, past 'm meteen toe op live** via één vaste methode:
-  Supabase → **SQL Editor** → de SQL van het nieuwe migratiebestand plakken → **Run**.
-  (De migratie is idempotent, dus dit kan geen kwaad, ook niet als een deel al bestond.)
-- **Meng geen tools.** Gebruik altijd deze SQL-Editor-route; geen `supabase db push` ertussen
-  — juist dat door elkaar gebruiken veroorzaakte de scheefgroei tussen repo en live.
+- **Toepassen op live gaat automatisch**: de GitHub Action **"Migraties naar live"** draait
+  bij elke merge naar `main` die migraties raakt, en past nieuwe migraties op volgorde toe
+  (runner: `scripts/migreer.sh`; administratie in `public.migratie_log`). **Check na de
+  merge van een migratie-PR dat die Action groen is** — dát is de bevestiging dat de live
+  database is bijgewerkt.
+- **Is de Action rood**, dan is de migratie niet (volledig) toegepast — elke migratie draait
+  in één transactie, dus half werk bestaat niet. Herstel de fout via een nieuwe PR; de
+  SQL Editor is alleen nog een noodfallback als de Action zelf stuk is (meld dat dan in
+  een issue).
+- **Meng geen tools**: geen handmatige SQL-Editor-runs of `supabase db push` naast de Action
+  — juist dat door elkaar gebruiken veroorzaakte eerder de scheefgroei tussen repo en live.
+  De migraties uit het handmatige tijdperk (t/m 0032) staan in
+  `web/supabase/baseline_toegepast.txt`; de runner slaat die altijd over.
 
 ## Kwaliteitsregels
 
