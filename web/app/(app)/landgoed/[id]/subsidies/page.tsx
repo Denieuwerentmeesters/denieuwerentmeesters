@@ -181,7 +181,7 @@ export default async function SubsidiesPage({
   const filterdoelgroep = doelgroep ?? "";
   const supabase = await createClient();
 
-  const [{ data: landgoed }, { data: subsidies }, { data: catTel }, { data: laatsteRun }, { data: docs }, { data: omgProfiel }] =
+  const [{ data: landgoed }, { data: subsidies, error: subsidiesFout }, { data: catTel }, { data: laatsteRun }, { data: docs }, { data: omgProfiel }] =
     await Promise.all([
       supabase.from("landgoed").select("naam, provincie, nsw_status, rechtsvorm, hectare, ligt_in_nnn, ligt_in_natura2000, ligt_op_veengrond, anlb_leefgebied_code, anlb_gecontroleerd_op").eq("id", id).maybeSingle(),
       supabase
@@ -209,6 +209,16 @@ export default async function SubsidiesPage({
         .eq("landgoed_id", id)
         .maybeSingle(),
     ]);
+
+  // Faalt deze query, dan is de pagina niet "leeg" maar stuk -- en dat moet je zien.
+  // Zonder deze check zou een ontbrekende kolom (bv. deze code op een database
+  // waar migratie 0031 nog niet is toegepast) een volkomen normale, lege
+  // subsidiepagina opleveren: geen lopende subsidies, geen kansen, geen fout.
+  if (subsidiesFout)
+    throw new Error(
+      `Subsidies konden niet worden geladen: ${subsidiesFout.message}. ` +
+        `Staan migraties 0030 en 0031 al op deze database?`,
+    );
 
   const rijen = (subsidies ?? []) as unknown as SubsidieRij[];
   const lopend = rijen.filter((s) => s.soort === "lopend");
