@@ -45,9 +45,11 @@ create index if not exists gesprek_agendapunt_voorstel_gesprek_idx
   on gesprek_agendapunt_voorstel (gesprek_id);
 
 -- Eén contact hoort maar één keer bij hetzelfde gesprek te staan.
+-- Bewust géén partiële index: `on conflict (gesprek_id, relatie_id)` kan een partiële index
+-- niet afleiden. Handmatig ingetypte namen (relatie_id null) botsen hier niet op, omdat
+-- Postgres NULL-waarden in een unieke index als onderling verschillend behandelt.
 create unique index if not exists gesprek_deelnemer_uniek_relatie
-  on gesprek_deelnemer (gesprek_id, relatie_id)
-  where relatie_id is not null;
+  on gesprek_deelnemer (gesprek_id, relatie_id);
 
 -- ------------------------------------------------------------
 -- 2. RLS — rechten volgen het bovenliggende gesprek (zoals gesprek_transcript etc.)
