@@ -14,6 +14,7 @@ import {
   uploadDocumentBijObject,
   ontkoppelDocument,
 } from "./acties";
+import { accordeerVerband, wijsAfVerband } from "../../stamgegevens/acties";
 
 const GEBOUW_CATS = new Set(["gebouw", "woning", "opstal"]);
 
@@ -102,6 +103,37 @@ export default async function ObjectDetailPage({
     .eq("doel_id", objectId)
     .neq("status", "afgewezen");
   const verbanden = (verbandenData ?? []) as Verband[];
+
+  // Koppelingen met andere stamobjecten — in BEIDE richtingen (dit object als
+  // bron óf als doel). Voorheen toonde de pagina alleen de doel-kant, waardoor
+  // bv. AI-verbanden tussen twee objecten onzichtbaar bleven.
+  const { data: objectVerbandenData } = await supabase
+    .from("verband")
+    .select("id, bron_type, bron_id, doel_type, doel_id, rol, status, voorstel_reden")
+    .eq("landgoed_id", id)
+    .or(`bron_id.eq.${objectId},doel_id.eq.${objectId}`)
+    .neq("status", "afgewezen");
+  const objectVerbanden = (objectVerbandenData ?? [])
+    .filter(
+      (v) =>
+        v.rol !== "onderdeel_van" &&
+        ((v.bron_id === objectId && v.doel_type === "stamobject" && v.doel_id !== objectId) ||
+          (v.doel_id === objectId && v.bron_type === "stamobject" && v.bron_id !== objectId)),
+    )
+    .map((v) => ({
+      id: v.id,
+      rol: v.rol as string | null,
+      status: v.status as string,
+      voorstel_reden: v.voorstel_reden as string | null,
+      anderId: v.bron_id === objectId ? v.doel_id : v.bron_id,
+    }));
+  const anderIds = [...new Set(objectVerbanden.map((v) => v.anderId))];
+  const { data: andereObjectenData } = anderIds.length
+    ? await supabase.from("stamobject").select("id, naam, categorie").in("id", anderIds)
+    : { data: [] };
+  const anderVan = new Map(
+    (andereObjectenData ?? []).map((o) => [o.id, o as { id: string; naam: string; categorie: string }]),
+  );
 
   const relIds = verbanden.filter((v) => v.bron_type === "relatie").map((v) => v.bron_id);
   const conIds = verbanden.filter((v) => v.bron_type === "contract").map((v) => v.bron_id);
@@ -574,6 +606,68 @@ export default async function ObjectDetailPage({
             </SubmitKnop>
           </form>
         </section>
+
+        {/* ── Koppelingen met andere objecten (beide richtingen) ── */}
+        {objectVerbanden.length > 0 && (
+          <section className="mt-8">
+            <h2 className="mb-2 text-[16px] font-bold">Gekoppelde objecten</h2>
+            <div className="card divide-y" style={{ borderColor: "var(--border)" }}>
+              {objectVerbanden.map((v) => {
+                const ander = anderVan.get(v.anderId);
+                return (
+                  <div key={v.id} className="flex flex-wrap items-center gap-3 px-4 py-3">
+                    <div className="min-w-[200px] flex-1">
+                      <div className="text-[14px]">
+                        <span style={{ color: "var(--text-2)" }}>
+                          {v.rol ?? "gekoppeld aan"}:{" "}
+                        </span>
+                        {ander ? (
+                          <Link
+                            href={`/landgoed/${id}/object/${ander.id}`}
+                            className="font-semibold underline"
+                          >
+                            {ander.naam}
+                          </Link>
+                        ) : (
+                          <span className="font-semibold">onbekend object</span>
+                        )}
+                      </div>
+                      {v.status === "voorgesteld" && v.voorstel_reden && (
+                        <div className="text-[12px]" style={{ color: "var(--text-3)" }}>
+                          {v.voorstel_reden}
+                        </div>
+                      )}
+                    </div>
+                    {v.status === "voorgesteld" ? (
+                      <div className="flex items-center gap-2">
+                        <span
+                          className="rounded px-1.5 py-0.5 text-[11px] font-semibold"
+                          style={{ background: "#fef3c7", color: "#92400e" }}
+                        >
+                          Voorstel
+                        </span>
+                        <form action={accordeerVerband}>
+                          <input type="hidden" name="landgoed_id" value={id} />
+                          <input type="hidden" name="id" value={v.id} />
+                          <SubmitKnop className="btn btn-primary btn-sm" pendingTekst="…">
+                            Akkoord
+                          </SubmitKnop>
+                        </form>
+                        <form action={wijsAfVerband}>
+                          <input type="hidden" name="landgoed_id" value={id} />
+                          <input type="hidden" name="id" value={v.id} />
+                          <SubmitKnop className="btn btn-ghost btn-sm" pendingTekst="…">
+                            Wijs af
+                          </SubmitKnop>
+                        </form>
+                      </div>
+                    ) : null}
+                  </div>
+                );
+              })}
+            </div>
+          </section>
+        )}
       </div>
     </div>
   );

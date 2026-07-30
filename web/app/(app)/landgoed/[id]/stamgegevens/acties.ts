@@ -10,8 +10,11 @@ import {
   persisteerVoorstellen,
 } from "@/lib/extractie";
 
-function pad(landgoedId: string) {
-  return `/landgoed/${landgoedId}/stamgegevens`;
+// Het stamgegevens-beheer staat op /stamgegevens én /profiel (gedeelde
+// component), en de verband-acties draaien ook op objectpagina's — ververs
+// daarom de hele landgoed-boom in plaats van één route.
+function pad(landgoedId: string): [string, "layout"] {
+  return [`/landgoed/${landgoedId}`, "layout"];
 }
 
 async function verrijk(
@@ -53,7 +56,7 @@ async function verrijk(
       "extractie-run vastleggen",
     );
   }
-  revalidatePath(pad(landgoedId));
+  revalidatePath(...pad(landgoedId));
 }
 
 export async function verrijkUitDocument(fd: FormData) {
@@ -115,7 +118,7 @@ export async function accordeerObject(fd: FormData) {
       .or(`bron_id.eq.${id},doel_id.eq.${id}`),
     "koppelingen accorderen",
   );
-  revalidatePath(pad(landgoed_id));
+  revalidatePath(...pad(landgoed_id));
 }
 
 // Twee voorstellen/objecten samenvoegen: het AI-voorstel (id) wordt opgeslokt door
@@ -160,7 +163,7 @@ export async function voegSamen(fd: FormData) {
       .eq("geaccordeerd", false),
     "voorstel verwijderen",
   );
-  revalidatePath(pad(landgoed_id));
+  revalidatePath(...pad(landgoed_id));
 }
 
 export async function wijsAfObject(fd: FormData) {
@@ -184,7 +187,7 @@ export async function wijsAfObject(fd: FormData) {
       .eq("geaccordeerd", false),
     "voorstel afwijzen",
   );
-  revalidatePath(pad(landgoed_id));
+  revalidatePath(...pad(landgoed_id));
 }
 
 export async function accordeerVerband(fd: FormData) {
@@ -195,7 +198,7 @@ export async function accordeerVerband(fd: FormData) {
     supabase.from("verband").update({ status: "geaccordeerd" }).eq("id", id),
     "verband accorderen",
   );
-  revalidatePath(pad(landgoed_id));
+  revalidatePath(...pad(landgoed_id));
 }
 
 export async function wijsAfVerband(fd: FormData) {
@@ -206,7 +209,7 @@ export async function wijsAfVerband(fd: FormData) {
     supabase.from("verband").update({ status: "afgewezen" }).eq("id", id),
     "verband afwijzen",
   );
-  revalidatePath(pad(landgoed_id));
+  revalidatePath(...pad(landgoed_id));
 }
 
 export async function objectHandmatig(fd: FormData) {
@@ -225,7 +228,7 @@ export async function objectHandmatig(fd: FormData) {
     }),
     "stamobject aanmaken",
   );
-  revalidatePath(pad(landgoed_id));
+  revalidatePath(...pad(landgoed_id));
 }
 
 // Een stamgegeven bewerken (naam, categorie, gebruik, beschrijving).
@@ -265,7 +268,7 @@ export async function bewerkObject(fd: FormData) {
       .eq("id", id),
     "stamobject bijwerken",
   );
-  revalidatePath(pad(landgoed_id));
+  revalidatePath(...pad(landgoed_id));
 }
 
 // Een stamgegeven verwijderen (incl. koppelingen ernaartoe).
@@ -285,5 +288,5 @@ export async function verwijderObject(fd: FormData) {
     supabase.from("stamobject").delete().eq("id", id),
     "stamobject verwijderen",
   );
-  revalidatePath(pad(landgoed_id));
+  revalidatePath(...pad(landgoed_id));
 }

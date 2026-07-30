@@ -258,7 +258,7 @@ async function bewaarAnlbPerPerceel(
     .from("stamobject")
     .select("id, kenmerken")
     .eq("landgoed_id", landgoed_id)
-    .in("categorie", ["perceel", "pachtperceel"])
+    .eq("categorie", "pachtperceel")
     .eq("geaccordeerd", true);
   if (!percelen?.length) return;
 

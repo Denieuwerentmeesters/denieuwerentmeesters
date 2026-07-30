@@ -182,30 +182,9 @@ export async function controleerRijksmonumenten(fd: FormData) {
   await haalRijksmonumenten(landgoed_id);
 }
 
-// Een voorgesteld monument accorderen of verwijderen (eigenaar cureert).
-export async function accordeerMonument(fd: FormData) {
-  const landgoed_id = String(fd.get("landgoed_id"));
-  const id = String(fd.get("id"));
-  if (!id) return;
-  const supabase = await createClient();
-  await moet(
-    supabase.from("stamobject").update({ geaccordeerd: true }).eq("id", id),
-    "monument accorderen",
-  );
-  revalidatePath(`/landgoed/${landgoed_id}/profiel`);
-}
-
-export async function verwijderMonument(fd: FormData) {
-  const landgoed_id = String(fd.get("landgoed_id"));
-  const id = String(fd.get("id"));
-  if (!id) return;
-  const supabase = await createClient();
-  await moet(
-    supabase.from("stamobject").delete().eq("id", id),
-    "monument verwijderen",
-  );
-  revalidatePath(`/landgoed/${landgoed_id}/profiel`);
-}
+// NB: aparte accordeer-/verwijderacties voor monumenten zijn vervallen —
+// RCE-vondsten zijn gewone stamobject-voorstellen (geaccordeerd=false) en lopen
+// via de standaard review-wachtrij (VoorstelReview).
 
 // ── Retroactieve monument-check voor bestaande gebouwen ──
 // Loopt alle geaccordeerde gebouwen langs en controleert via RCE WFS of ze

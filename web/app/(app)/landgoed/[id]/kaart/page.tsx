@@ -78,7 +78,7 @@ export default async function KaartPage({
   }));
 
   // Totalen: som van de gronden (percelen) + aantallen.
-  const PERCEEL_CATS = new Set(["pachtperceel", "perceel"]);
+  const PERCEEL_CATS = new Set(["pachtperceel"]);
   const GEBOUW_CATS = new Set(["gebouw", "woning", "opstal"]);
   let perceelM2 = 0;
   let aantalPercelen = 0;
