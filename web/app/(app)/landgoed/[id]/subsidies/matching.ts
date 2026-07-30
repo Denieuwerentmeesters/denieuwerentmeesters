@@ -20,6 +20,7 @@ type Criterium = {
   verplicht: boolean;
   soort: string | null; // 'eis' | 'pre' | 'uitsluiting' (canoniek voor matching)
   gewicht: number | null; // punten die een vervulde pré bijdraagt
+  fase: string | null; // 'vooraf' | 'bij_aanvraag' | 'na_toekenning'; alleen 'vooraf' telt mee
 };
 
 type Profiel = {
@@ -114,6 +115,22 @@ export function toetsCriterium(
   }
 }
 
+// Mag je tegen deze regeling zeggen dat NNN-ligging de aanspraken VERSTERKT?
+// Alleen als de regeling NNN ook echt positief waardeert. Er zijn regelingen die
+// juist BUITEN het NNN gelden (bv. "Bos en Houtige Landschapselementen buiten NNN
+// Zeeland", met criterium `ligt_in_nnn is nee`); daar was de zin pertinent onwaar
+// en wekte hij valse hoop. Geen NNN-criterium => geen uitspraak.
+export function waardeertNnnPositief(
+  cs: { veld: string | null; waarde: string | null; soort: string | null }[],
+): boolean {
+  return cs.some(
+    (c) =>
+      c.veld === "ligt_in_nnn" &&
+      (c.waarde ?? "").toLowerCase().trim() === "ja" &&
+      (c.soort ?? "eis") !== "uitsluiting",
+  );
+}
+
 type RegelingOordeel = {
   matcht: boolean; // false => valt af (eis gefaald of uitsluiting geraakt)
   score: number; // 50..100 bij een match, 0 bij afvallen
@@ -129,13 +146,20 @@ type RegelingOordeel = {
 //   anders: basis 50 + gewicht per vervulde pré, gecapt op 100.
 // Een onbekende profielwaarde ('onzeker') laat een eis/uitsluiting NIET afvallen
 // maar wordt gevlagd ("controleer handmatig").
-function scoorRegeling(p: Profiel, cs: Criterium[]): RegelingOordeel {
+//
+// Alleen criteria met fase='vooraf' doen mee: dat zijn de toelatingsvragen. Een
+// procedurestap ("aanmelden bij RVO binnen 3 maanden na investering") of een
+// verplichting ná toekenning zegt niets over of je in aanmerking komt, en maakte
+// de regeling voorheen onterecht onzeker. De query filtert al op 'vooraf'; deze
+// guard houdt scoorRegeling zelfstandig correct.
+export function scoorRegeling(p: Profiel, cs: Criterium[]): RegelingOordeel {
   let score = 50;
   const eisenVoldaan: string[] = [];
   const meegeteld: { omschrijving: string; gewicht: number }[] = [];
   const onzeker: string[] = [];
 
   for (const c of cs) {
+    if ((c.fase ?? "vooraf") !== "vooraf") continue;
     const soort = c.soort ?? (c.verplicht ? "eis" : "pre");
     const uitslag = toetsCriterium(p, c);
     if (soort === "uitsluiting") {
@@ -329,9 +353,10 @@ export async function zoekKansen(
   if (ids.length) {
     const { data: criteria } = await db
       .from("regeling_criterium")
-      .select("regeling_id, omschrijving, veld, operator, waarde, verplicht, soort, gewicht")
+      .select("regeling_id, omschrijving, veld, operator, waarde, verplicht, soort, gewicht, fase")
       .in("regeling_id", ids)
-      .eq("geaccordeerd", true);
+      .eq("geaccordeerd", true)
+      .eq("fase", "vooraf");
     ((criteria ?? []) as unknown as Criterium[]).forEach((c) => {
       const arr = criteriaPer.get(c.regeling_id) ?? [];
       arr.push(c);
@@ -420,7 +445,7 @@ export async function zoekKansen(
       delen.push(`Zowel u als uw ${p.aantalPachtpercelen} pachters komen mogelijk in aanmerking.`);
     } else if (catUi === "gebouwen_erfgoed") {
       delen.push("Relevant voor monumentale gebouwen en bijgebouwen op het landgoed.");
-    } else if (catUi === "natuur" && p.ligt_in_nnn) {
+    } else if (catUi === "natuur" && p.ligt_in_nnn && waardeertNnnPositief(cs)) {
       delen.push("Uw ligging in het Natuur Netwerk Nederland versterkt uw aanspraken op natuur- en landschapsvergoedingen.");
     } else if (catUi === "klimaat_water") {
       delen.push("Relevant voor waterbeheer, peilbeheer en klimaatadaptatie op het landgoed.");

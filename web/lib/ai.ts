@@ -469,6 +469,10 @@ export type RegelingVerrijking = {
     operator?: string | null; // 'is','bevat','>=','in'
     waarde?: string | null;
     verplicht?: boolean;
+    // 'vooraf' | 'bij_aanvraag' | 'na_toekenning'. Alleen 'vooraf' telt mee in de
+    // matchscore; zie migratie 0030. Zonder deze scheiding belanden procedurestappen
+    // ("aanmelden bij RVO binnen 3 maanden") als harde eis in de motor.
+    fase?: string | null;
   }[];
   maatregelen: {
     omschrijving: string;
@@ -488,11 +492,25 @@ const VERRIJKING_SYSTEEM =
   "(velden: nsw_status, provincie, gemeente, hectare_min, natuurbeheertype, rijksmonument, " +
   "agrarisch; operators: is, bevat, >=, in). Lukt dat niet, laat veld/operator/waarde leeg en " +
   "geef alleen 'omschrijving'. " +
+  "Geef per criterium een FASE, want alleen toelatingsvragen mogen meewegen: " +
+  "'vooraf' = een eigenschap van de aanvrager of het landgoed die NU al vaststaat en bepaalt " +
+  "of hij in aanmerking komt (ligging, eigendom, rechtsvorm, oppervlakte, lidmaatschap, " +
+  "certificaat); 'bij_aanvraag' = iets wat je tijdens de aanvraagprocedure moet regelen of " +
+  "aanleveren (plan indienen, aanmelden in een openstellingsronde, deelnemen aan een " +
+  "gebiedsproces, goedkeuring of aanbeveling verkrijgen); 'na_toekenning' = een verplichting " +
+  "die pas na toekenning geldt (onderhoudsverplichting, aanmelden binnen X maanden na " +
+  "investering, beheerovereenkomst aangaan). Twijfel je tussen vooraf en de rest, kies NIET " +
+  "'vooraf'. " +
+  "Neem GEEN criterium op dat alleen de naam of het doel van de regeling herhaalt " +
+  "(\"project draagt bij aan biodiversiteitsherstel\") of dat verwijst naar een externe lijst " +
+  "die je niet hebt (\"maatregel staat in het maatregelenprogramma\") -- dat is geen toetsbaar " +
+  "criterium. Eigenschappen van het PLAN in plaats van van het landgoed (\"streekeigen " +
+  "soorten\", \"minimaal 25 meter\", \"cofinanciering 50%\") horen ook niet bij criteria. " +
   "Datums als yyyy-mm-dd; onbekend = null. " +
   "VERZIN NIETS: noemt de tekst iets niet, laat het leeg/weg (liever een gat dan een aanname). " +
   "Antwoord UITSLUITEND met JSON: {organisatie?, samenvatting?, themas?, trefwoorden?, doelgroepen?, " +
   "is_tijdelijk?, openstelling_van?, openstelling_tot?, budget_indicatie?, " +
-  "criteria:[{omschrijving, veld?, operator?, waarde?, verplicht?}], " +
+  "criteria:[{omschrijving, veld?, operator?, waarde?, verplicht?, fase?}], " +
   "maatregelen:[{omschrijving, natuurbeheertype?, eenheid?}], " +
   "bewijs:[{omschrijving, document_type?}]}.";
 
