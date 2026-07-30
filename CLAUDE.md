@@ -29,10 +29,27 @@ Draai typecheck en tests altijd vóór het pushen.
 - Mergen kan alleen als de check "Typecheck en tests" groen is; merge als **squash and merge**.
 - Databasewijzigingen alléén via een nieuw migratiebestand in `web/supabase/migrations/`
   (nooit rechtstreeks in de live database) — en benoem het expliciet in de PR zodat de
-  ander meekijkt vóór de merge.
+  ander meekijkt vóór de merge. Zie het aparte blok hieronder voor het toepassen op live.
 - Secrets nooit in code, commits, logs of chat; environment-variabelen via Vercel.
 - GitHub Issues in deze repo zijn de gezamenlijke takenlijst: werk per issue en verwijs
   ernaar in de PR ("Closes #…").
+
+### Databasemigraties: van repo naar live (verplicht, één vaste weg)
+
+De repo is de **enige waarheid** voor het schema. Eerder liepen repo en live-database uit
+elkaar doordat de stap "toepassen op live" niet was vastgelegd. Daarom, zonder uitzondering:
+
+- **Nooit** rechtstreeks in het Supabase-dashboard het schema aanpassen (geen ad-hoc SQL,
+  geen kolommen/policies met de hand) — ook niet "even snel". Elke wijziging is een migratie.
+- **Migraties zijn idempotent**: `create table if not exists`, `add column if not exists`,
+  `drop policy if exists` vóór `create policy`. Zo is (opnieuw) draaien altijd veilig.
+- **Mergen ≠ toegepast.** Een gemergede migratie-PR staat alleen in de code, nog niet in de
+  database.
+- **Wie de migratie-PR merget, past 'm meteen toe op live** via één vaste methode:
+  Supabase → **SQL Editor** → de SQL van het nieuwe migratiebestand plakken → **Run**.
+  (De migratie is idempotent, dus dit kan geen kwaad, ook niet als een deel al bestond.)
+- **Meng geen tools.** Gebruik altijd deze SQL-Editor-route; geen `supabase db push` ertussen
+  — juist dat door elkaar gebruiken veroorzaakte de scheefgroei tussen repo en live.
 
 ## Kwaliteitsregels
 
