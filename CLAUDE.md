@@ -26,6 +26,7 @@ Draai typecheck en tests altijd vóór het pushen.
 ## Werkwijze (verplicht)
 
 - Nooit rechtstreeks op `main` werken of committen. Eén klus = één `feat/...`-branch = één PR.
+- **Begin elke klus met een verse branch vanaf de actuele `main`** — zie het blok hieronder.
 - Mergen kan alleen als de check "Typecheck en tests" groen is; merge als **squash and merge**.
 - Databasewijzigingen alléén via een nieuw migratiebestand in `web/supabase/migrations/`
   (nooit rechtstreeks in de live database) — en benoem het expliciet in de PR zodat de
@@ -33,6 +34,28 @@ Draai typecheck en tests altijd vóór het pushen.
 - Secrets nooit in code, commits, logs of chat; environment-variabelen via Vercel.
 - GitHub Issues in deze repo zijn de gezamenlijke takenlijst: werk per issue en verwijs
   ernaar in de PR ("Closes #…").
+
+### Branches: altijd vers vanaf `main` (verplicht)
+
+Begin **elke** klus zo, vóór de eerste wijziging:
+
+```
+git fetch origin
+git checkout -b feat/<korte-omschrijving> origin/main
+```
+
+- **Eerst `fetch`, dan pas aftakken.** Een verouderde lokale `main` geeft een conflicterende PR.
+  En let op het stille gevolg: bij `mergeStateStatus: DIRTY` draait GitHub Actions niet meer,
+  want het `pull_request`-event kan de merge-commit niet bouwen. De check "Typecheck en tests"
+  verdwijnt dan uit beeld in plaats van rood te worden.
+- **Nooit doorwerken op een branch waarvan de PR al gemerged is.** Wij mergen met **squash**;
+  daarbij worden de losse commits van de branch géén ancestors van `main`. Zo'n branch loopt
+  dus "vooruit" en nieuw werk hangt eraan zonder PR. Dat is stil: Vercel bouwt een preview per
+  branch — ook zonder PR — dus het lijkt alsof er iets is doorgevoerd terwijl er in GitHub
+  niets te mergen staat. Is de PR gemerged en komt er nieuw werk? Nieuwe branch vanaf `main`.
+- **Alleen doorwerken op een bestaande branch** als het over hetzelfde onderwerp gaat én de PR
+  nog openstaat.
+- **Ruim gemergede branches op** (lokaal en op de remote), zodat er geen restanten blijven staan.
 
 ### Databasemigraties: van repo naar live (verplicht, één vaste weg)
 
