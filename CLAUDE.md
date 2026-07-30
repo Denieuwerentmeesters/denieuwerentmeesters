@@ -34,6 +34,12 @@ Draai typecheck en tests altijd vóór het pushen.
 - Secrets nooit in code, commits, logs of chat; environment-variabelen via Vercel.
 - GitHub Issues in deze repo zijn de gezamenlijke takenlijst: werk per issue en verwijs
   ernaar in de PR ("Closes #…").
+- **Vóór elke klus: check of de ander er al mee bezig is.** Kijk de open PR's en issues na
+  (`gh pr list`, `gh issue list`); raakt iets jouw onderwerp, stem dan eerst af. Grotere
+  klussen: eerst een issue aanmaken of een bestaand issue aan jezelf toewijzen — dat is het
+  "bezet"-bordje. Claude doet deze check zelf aan het begin van elke klus. (Aanleiding:
+  op 31 juli maakten beide huishoudens tegelijk, zonder het van elkaar te weten, een PR
+  voor dezelfde werkwijze-regel.)
 
 ### Branches: altijd vers vanaf `main` (verplicht)
 
@@ -55,7 +61,10 @@ git checkout -b feat/<korte-omschrijving> origin/main
   niets te mergen staat. Is de PR gemerged en komt er nieuw werk? Nieuwe branch vanaf `main`.
 - **Alleen doorwerken op een bestaande branch** als het over hetzelfde onderwerp gaat én de PR
   nog openstaat.
-- **Ruim gemergede branches op** (lokaal en op de remote), zodat er geen restanten blijven staan.
+- **Opruimen na de merge gaat vanzelf** — de remote branch verwijdert GitHub automatisch
+  (repo-instelling "Automatically delete head branches" staat aan sinds 31 juli). De lokale
+  kopie ruimt Claude zelf op (`git checkout main && git pull && git branch -D <branch>`),
+  zonder dat erom gevraagd hoeft te worden.
 
 ### Databasemigraties: van repo naar live (verplicht, één vaste weg)
 
