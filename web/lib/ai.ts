@@ -244,6 +244,48 @@ Regels:
   return resultaten;
 }
 
+// ── Deelnemers uit een transcript herkennen ──
+// Strikt: alleen eigennamen die het transcript letterlijk noemt. Geen personen afleiden uit
+// vage termen ("de familie", "de bewoners"), zoals de huisregel voor stamgegevens voorschrijft.
+
+export type DeelnemerVoorstel = {
+  naam: string;
+  contact_id: string | null;
+  bron_citaat: string;
+};
+
+export async function herkenDeelnemers(
+  transcript: string,
+  contacten: Contact[],
+): Promise<DeelnemerVoorstel[] | null> {
+  const contactenLijst = contacten.map((c) => `${c.naam} (id: ${c.id})`).join("\n");
+
+  const resultaten = await vraagJson<DeelnemerVoorstel[]>(
+    `Je haalt de deelnemers uit een Nederlands vergadertranscript en koppelt ze waar mogelijk aan bestaande contacten. Antwoord uitsluitend met JSON. Bestaande contacten:
+${contactenLijst || "(geen contacten bekend)"}`,
+    `Transcript:
+${transcript}
+
+Geef een JSON-array met de mensen die aan dit gesprek deelnamen:
+[{
+  "naam": "de naam zoals genoemd in het transcript",
+  "contact_id": "uuid van het bestaande contact, of null",
+  "bron_citaat": "letterlijk citaat waaruit blijkt dat deze persoon meepraat"
+}]
+
+Regels:
+- Alleen mensen die aan het gesprek deelnemen (die spreken of worden aangesproken).
+  Iemand die alleen wordt besproken maar er niet bij is, hoort er NIET bij.
+- Alleen eigennamen die het transcript letterlijk noemt. Leid geen persoon af uit vage
+  termen als "de familie", "de bewoners", "de eigenaar" of "de rentmeester".
+- Vul contact_id alleen in bij een duidelijke, eenduidige match op naam; twijfel je, dan null.
+- Verzin geen namen. Weet je het niet, geef dan een lege array [].
+- Antwoord UITSLUITEND met de JSON-array.`,
+  );
+  if (!resultaten || !Array.isArray(resultaten)) return null;
+  return resultaten.filter((v) => v && typeof v.naam === "string" && v.naam.trim());
+}
+
 // ── Agendapunten / volgende vergadering uit een transcript ──
 // Alleen wat het transcript expliciet afspreekt; niets verzinnen (liever een gat dan een aanname).
 
@@ -266,9 +308,9 @@ export async function extraheerAgendapunten(
     `Transcript:
 ${transcript}
 
-Geef een JSON-array met agendapunten die in dit gesprek expliciet zijn afgesproken:
+Geef een JSON-array met ALLE agendapunten die in dit gesprek zijn afgesproken:
 [{
-  "titel": "korte omschrijving, bv. 'Volgende bestuursvergadering' of 'Bespreken pachtcontract Hoeve X'",
+  "titel": "korte omschrijving, bv. 'Volgende bestuursvergadering' of 'Bezichtiging Hoeve X'",
   "datum": "YYYY-MM-DD of null",
   "tijd": "HH:MM of null",
   "locatie": "plaats of null",
@@ -276,9 +318,24 @@ Geef een JSON-array met agendapunten die in dit gesprek expliciet zijn afgesprok
   "bron_citaat": "letterlijk citaat uit het transcript waar dit uit blijkt"
 }]
 
-Regels:
-- Neem een volgende vergadering op als die is afgesproken, ook als alleen een datum of alleen een maand genoemd wordt.
-- Zet een relatieve datum ("over twee weken", "eind september") om naar een concrete datum ten opzichte van vandaag.
+Wat WEL een agendapunt is — een afspraak of een moment dat in de agenda moet staan:
+- een vervolgvergadering of volgend overleg
+- een bezichtiging, schouw, bezoek of rondgang op een afgesproken moment
+- een gesprek of belafspraak met iemand
+- een datum die iedereen moet weten (een termijn die verloopt, een geplande oplevering,
+  een evenement, een inloopavond)
+- een onderwerp dat expliciet is doorgeschoven naar een volgende vergadering
+
+Wat GEEN agendapunt is — dat zijn taken en die worden elders afgehandeld:
+- werk dat één persoon moet uitvoeren ("Jan stuurt de offerte", "Marieke belt de gemeente",
+  "we vragen een vergunning aan", "de facturen worden gecontroleerd")
+- een actie met een deadline maar zonder gezamenlijk moment in de agenda
+- Kortom: moet er IETS GEDAAN worden door iemand, dan is het een taak — laat die weg.
+  Alleen als er een MOMENT is waarop mensen samenkomen of dat in de agenda hoort, neem je het op.
+
+Verdere regels:
+- Zet een relatieve datum ("over twee weken", "eind september") om naar een concrete datum
+  ten opzichte van vandaag.
 - Is er geen datum genoemd, laat datum dan null — verzin er geen.
 - Neem alleen punten op die het transcript letterlijk noemt; bron_citaat is verplicht.
 - Is er niets afgesproken, geef dan een lege array [].

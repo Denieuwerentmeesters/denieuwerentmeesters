@@ -4,6 +4,7 @@ import {
   voegAgendapuntToe,
   steAgendapuntenVoor,
   bevestigAgendapunt,
+  bevestigAlleAgendapunten,
   wijsAgendapuntAf,
 } from "./acties";
 
@@ -39,29 +40,34 @@ export function Agendapunten({
 }) {
   const open = voorstellen.filter((v) => v.status === "voorgesteld");
   const bevestigd = voorstellen.filter((v) => v.status === "bevestigd");
+  const metDatum = open.filter((v) => v.datum);
   const vandaag = new Date().toISOString().slice(0, 10);
 
   return (
     <section className="card p-5">
       <h2 className="mb-1 text-[14px] font-semibold">Agendapunten</h2>
       <p className="mb-4 text-[12.5px]" style={{ color: "var(--text-2)" }}>
-        Afgesproken vervolgafspraken. Bevestig je er één, dan komt die op de agenda van het landgoed.
+        Alleen afspraken en momenten die in de agenda horen — een volgend overleg, een
+        bezichtiging, een datum die iedereen moet weten. Werk dat iemand moet uitvoeren komt
+        hier niet terecht; dat wordt een taak bij de actiepunten.
       </p>
-
-      {/* AI laten zoeken naar afgesproken agendapunten / een volgende vergadering */}
-      {heeftTranscript && aiAan && (
-        <form action={steAgendapuntenVoor} className="mb-4">
-          <input type="hidden" name="gesprek_id" value={gesprekId} />
-          <input type="hidden" name="landgoed_id" value={landgoedId} />
-          <SubmitKnop className="btn btn-ghost btn-sm" pendingTekst="Transcript doorzoeken…">
-            ✨ Zoek afspraken voor een volgende vergadering
-          </SubmitKnop>
-        </form>
-      )}
 
       {/* Voorstellen — bevestigen of afwijzen */}
       {open.length > 0 && (
         <div className="mb-4 flex flex-col gap-4">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-[13px] font-semibold">Door de AI herkend</span>
+            <span className="tag tag-amber">voorstel</span>
+            {metDatum.length > 0 && (
+              <form action={bevestigAlleAgendapunten}>
+                <input type="hidden" name="gesprek_id" value={gesprekId} />
+                <input type="hidden" name="landgoed_id" value={landgoedId} />
+                <button type="submit" className="btn btn-primary btn-sm">
+                  ✓ Alle {metDatum.length} met datum op de agenda zetten
+                </button>
+              </form>
+            )}
+          </div>
           {open.map((v) => (
             <div key={v.id} className="rounded border p-4" style={{ borderColor: "var(--border)" }}>
               {v.bron_citaat && (
@@ -143,6 +149,18 @@ export function Agendapunten({
         <p className="mb-4 text-[13px]" style={{ color: "var(--text-2)" }}>
           Nog geen agendapunten uit dit gesprek.
         </p>
+      )}
+
+      {/* De AI kijkt automatisch mee bij het verwerken van een transcript; deze knop is
+          er voor als je het transcript daarna hebt aangepast. */}
+      {heeftTranscript && aiAan && (
+        <form action={steAgendapuntenVoor} className="mb-4">
+          <input type="hidden" name="gesprek_id" value={gesprekId} />
+          <input type="hidden" name="landgoed_id" value={landgoedId} />
+          <SubmitKnop className="btn btn-ghost btn-sm" pendingTekst="Transcript doorzoeken…">
+            ✨ Opnieuw zoeken in het transcript
+          </SubmitKnop>
+        </form>
       )}
 
       <ToevoegenToggle label="agendapunt toevoegen">

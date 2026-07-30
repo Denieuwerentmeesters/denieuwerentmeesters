@@ -51,7 +51,7 @@ export default async function GesprekDetailPage({
     supabase.from("relatie").select("id, naam").eq("landgoed_id", id).order("naam"),
     supabase
       .from("gesprek_deelnemer")
-      .select("id, naam, relatie_id")
+      .select("id, naam, relatie_id, herkomst, bevestigd, bron_citaat")
       .eq("gesprek_id", gesprekId)
       .order("naam"),
     supabase
@@ -183,6 +183,8 @@ export default async function GesprekDetailPage({
           landgoedId={id}
           deelnemers={deelnemers}
           contacten={(contacten ?? []) as { id: string; naam: string }[]}
+          heeftTranscript={heeftTranscript}
+          aiAan={aiAan}
         />
 
         {/* ── Laag 2: Promptkiezer (multi-select) ───────────────────────── */}
