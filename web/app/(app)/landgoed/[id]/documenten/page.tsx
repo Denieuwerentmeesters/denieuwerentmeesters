@@ -1,15 +1,66 @@
 import { createClient } from "@/lib/supabase/server";
 import BestandVeld from "@/components/BestandVeld";
 import SubmitKnop from "@/components/SubmitKnop";
+import { haalNotulen } from "@/lib/notulen";
+import { NotulenOverzicht } from "@/components/NotulenOverzicht";
 import { uploadDocument, verwijderDocument } from "./acties";
 
 export default async function DocumentenPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ id: string }>;
+  searchParams: Promise<{ tab?: string; q?: string; van?: string; tot?: string }>;
 }) {
   const { id } = await params;
+  const { tab, q, van, tot } = await searchParams;
   const supabase = await createClient();
+
+  const basisPad = `/landgoed/${id}/documenten`;
+  const notulenTab = tab === "notulen";
+
+  // ── Tab "Notulen": de AI-notulen uit de vergadermodule, hier terug te vinden ──
+  if (notulenTab) {
+    const { gesprekken, fout } = await haalNotulen(supabase, id, { titel: q, van, tot });
+
+    return (
+      <div className="flex flex-col">
+        <div className="bg-white px-7 py-4" style={{ borderBottom: "1px solid var(--border)" }}>
+          <div className="text-[12.5px]" style={{ color: "var(--text-2)" }}>Documenten / Notulen</div>
+        </div>
+
+        <div className="p-7">
+          <header className="mb-5">
+            <h1 className="text-[22px] font-bold">Notulen</h1>
+            <p className="mt-1 text-[13px]" style={{ color: "var(--text-2)" }}>
+              Notulen van vergaderingen en opnames — automatisch bewaard bij het gesprek.
+            </p>
+          </header>
+
+          <div className="mb-5 flex gap-2">
+            <a href={basisPad} className="btn btn-ghost">Bestanden</a>
+            <a href={`${basisPad}?tab=notulen`} className="btn btn-blauw">Notulen</a>
+          </div>
+
+          {fout ? (
+            <div className="card p-5 text-[13px]" style={{ color: "var(--red)" }}>
+              Notulen ophalen mislukt: {fout}
+            </div>
+          ) : (
+            <NotulenOverzicht
+              gesprekken={gesprekken}
+              landgoedId={id}
+              actie={basisPad}
+              verborgenVelden={{ tab: "notulen" }}
+              q={q ?? ""}
+              van={van ?? ""}
+              tot={tot ?? ""}
+            />
+          )}
+        </div>
+      </div>
+    );
+  }
 
   const { data: documenten } = await supabase
     .from("document")
@@ -49,6 +100,11 @@ export default async function DocumentenPage({
             Eén centraal archief: contracten, vergunningen, plannen.
           </p>
         </header>
+
+        <div className="mb-5 flex gap-2">
+          <a href={basisPad} className="btn btn-primary">Bestanden</a>
+          <a href={`${basisPad}?tab=notulen`} className="btn btn-blauw">📄 Notulen</a>
+        </div>
 
         <form
           action={uploadDocument}

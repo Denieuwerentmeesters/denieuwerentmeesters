@@ -6,6 +6,7 @@ import { redirect } from "next/navigation";
 import {
   verwerkPrompt,
   extraheerActiepuntenMetMatching,
+  extraheerAgendapunten,
   type Contact,
 } from "@/lib/ai";
 import { transcribeer } from "@/lib/transcriptie";
@@ -257,6 +258,218 @@ export async function afwijsActie(fd: FormData) {
   );
 
   revalidatePath(`/landgoed/${landgoed_id}/vergaderingen/${gesprek_id}`);
+}
+
+// ── Titel en datum hernoemen ────────────────────────────────────────────────
+// De titel is klikbaar op de detailpagina: "Opname 8 juli" wordt zo "Vergadering 8 juli".
+export async function hernoemGesprek(fd: FormData) {
+  const gesprek_id = String(fd.get("gesprek_id"));
+  const landgoed_id = String(fd.get("landgoed_id"));
+  const titel = String(fd.get("titel") ?? "").trim();
+  const datum = String(fd.get("datum") ?? "").trim() || null;
+  if (!titel) return;
+
+  const supabase = await createClient();
+  await moet(
+    supabase.from("gesprek").update({ titel, datum }).eq("id", gesprek_id),
+    "titel bijwerken",
+  );
+
+  revalidatePath(`/landgoed/${landgoed_id}/vergaderingen/${gesprek_id}`);
+  revalidatePath(`/landgoed/${landgoed_id}/vergaderingen`);
+}
+
+// ── Deelnemers ──────────────────────────────────────────────────────────────
+// Deelnemer is óf een bestaand contact (waarde "c:<uuid>") óf een vrij ingetypte naam.
+export async function voegDeelnemersToe(fd: FormData) {
+  const gesprek_id = String(fd.get("gesprek_id"));
+  const landgoed_id = String(fd.get("landgoed_id"));
+  const gekozen = fd.getAll("deelnemer").map(String).filter(Boolean);
+  const vrijeNaam = String(fd.get("naam") ?? "").trim();
+
+  const supabase = await createClient();
+
+  const rijen: { gesprek_id: string; relatie_id: string | null; naam: string }[] = [];
+
+  if (gekozen.length) {
+    const ids = gekozen.map((w) => w.replace(/^c:/, ""));
+    const { data: relaties, error } = await supabase
+      .from("relatie")
+      .select("id, naam")
+      .eq("landgoed_id", landgoed_id)
+      .in("id", ids);
+    if (error) throw new Error(`Contacten ophalen mislukt: ${error.message}`);
+    for (const r of relaties ?? []) rijen.push({ gesprek_id, relatie_id: r.id, naam: r.naam });
+  }
+
+  if (vrijeNaam) rijen.push({ gesprek_id, relatie_id: null, naam: vrijeNaam });
+  if (!rijen.length) return;
+
+  // Bestaande contacten overslaan (unieke index gesprek_id+relatie_id).
+  await moet(
+    supabase.from("gesprek_deelnemer").upsert(rijen, {
+      onConflict: "gesprek_id,relatie_id",
+      ignoreDuplicates: true,
+    }),
+    "deelnemers opslaan",
+  );
+
+  revalidatePath(`/landgoed/${landgoed_id}/vergaderingen/${gesprek_id}`);
+}
+
+export async function verwijderDeelnemer(fd: FormData) {
+  const id = String(fd.get("id"));
+  const gesprek_id = String(fd.get("gesprek_id"));
+  const landgoed_id = String(fd.get("landgoed_id"));
+
+  const supabase = await createClient();
+  await moet(
+    supabase.from("gesprek_deelnemer").delete().eq("id", id),
+    "deelnemer verwijderen",
+  );
+
+  revalidatePath(`/landgoed/${landgoed_id}/vergaderingen/${gesprek_id}`);
+}
+
+// ── Agendapunten ────────────────────────────────────────────────────────────
+
+/** Laat de AI voorstellen doen voor afgesproken agendapunten / een volgende vergadering. */
+export async function steAgendapuntenVoor(fd: FormData) {
+  const gesprek_id = String(fd.get("gesprek_id"));
+  const landgoed_id = String(fd.get("landgoed_id"));
+
+  const supabase = await createClient();
+  const { data: transcript, error } = await supabase
+    .from("gesprek_transcript")
+    .select("tekst")
+    .eq("gesprek_id", gesprek_id)
+    .maybeSingle();
+  if (error) throw new Error(`Transcript ophalen mislukt: ${error.message}`);
+  if (!transcript?.tekst) return;
+
+  const voorstellen = await extraheerAgendapunten(transcript.tekst);
+  if (!voorstellen) return;
+
+  // Oude, nog niet behandelde AI-voorstellen vervangen; bevestigde/afgewezen blijven staan.
+  await moet(
+    supabase
+      .from("gesprek_agendapunt_voorstel")
+      .delete()
+      .eq("gesprek_id", gesprek_id)
+      .eq("herkomst", "ai")
+      .eq("status", "voorgesteld"),
+    "oude agendapunt-voorstellen verwijderen",
+  );
+
+  if (voorstellen.length) {
+    await moet(
+      supabase.from("gesprek_agendapunt_voorstel").insert(
+        voorstellen.map((v) => ({
+          gesprek_id,
+          titel: v.titel,
+          datum: v.datum,
+          tijd: v.tijd,
+          locatie: v.locatie,
+          omschrijving: v.omschrijving,
+          bron_citaat: v.bron_citaat,
+          herkomst: "ai",
+          status: "voorgesteld",
+        })),
+      ),
+      "agendapunt-voorstellen opslaan",
+    );
+  }
+
+  revalidatePath(`/landgoed/${landgoed_id}/vergaderingen/${gesprek_id}`);
+}
+
+/** Bevestigt een voorstel: dit maakt het echte agenda_item aan. */
+export async function bevestigAgendapunt(fd: FormData) {
+  const voorstel_id = String(fd.get("voorstel_id"));
+  const gesprek_id = String(fd.get("gesprek_id"));
+  const landgoed_id = String(fd.get("landgoed_id"));
+  const titel = String(fd.get("titel") ?? "").trim();
+  const datum = String(fd.get("datum") ?? "").trim();
+  const tijd = String(fd.get("tijd") ?? "").trim() || null;
+  const locatie = String(fd.get("locatie") ?? "").trim() || null;
+  if (!titel || !datum) return;
+
+  const supabase = await createClient();
+
+  const item = await moet(
+    supabase
+      .from("agenda_item")
+      .insert({ landgoed_id, titel, datum, tijd, locatie, gesprek_id })
+      .select("id")
+      .single(),
+    "agendapunt aanmaken",
+  );
+
+  await moet(
+    supabase
+      .from("gesprek_agendapunt_voorstel")
+      .update({ status: "bevestigd", titel, datum, tijd, locatie, agenda_item_id: item.id })
+      .eq("id", voorstel_id),
+    "agendapunt-voorstel bevestigen",
+  );
+
+  revalidatePath(`/landgoed/${landgoed_id}/vergaderingen/${gesprek_id}`);
+  revalidatePath(`/landgoed/${landgoed_id}/agenda`);
+}
+
+export async function wijsAgendapuntAf(fd: FormData) {
+  const voorstel_id = String(fd.get("voorstel_id"));
+  const gesprek_id = String(fd.get("gesprek_id"));
+  const landgoed_id = String(fd.get("landgoed_id"));
+
+  const supabase = await createClient();
+  await moet(
+    supabase.from("gesprek_agendapunt_voorstel").update({ status: "afgewezen" }).eq("id", voorstel_id),
+    "agendapunt-voorstel afwijzen",
+  );
+
+  revalidatePath(`/landgoed/${landgoed_id}/vergaderingen/${gesprek_id}`);
+}
+
+/** Handmatig agendapunt: gaat direct als bevestigd de agenda in. */
+export async function voegAgendapuntToe(fd: FormData) {
+  const gesprek_id = String(fd.get("gesprek_id"));
+  const landgoed_id = String(fd.get("landgoed_id"));
+  const titel = String(fd.get("titel") ?? "").trim();
+  const datum = String(fd.get("datum") ?? "").trim();
+  const tijd = String(fd.get("tijd") ?? "").trim() || null;
+  const locatie = String(fd.get("locatie") ?? "").trim() || null;
+  const omschrijving = String(fd.get("omschrijving") ?? "").trim() || null;
+  if (!titel || !datum) return;
+
+  const supabase = await createClient();
+
+  const item = await moet(
+    supabase
+      .from("agenda_item")
+      .insert({ landgoed_id, titel, datum, tijd, locatie, omschrijving, gesprek_id })
+      .select("id")
+      .single(),
+    "agendapunt aanmaken",
+  );
+
+  await moet(
+    supabase.from("gesprek_agendapunt_voorstel").insert({
+      gesprek_id,
+      titel,
+      datum,
+      tijd,
+      locatie,
+      omschrijving,
+      herkomst: "handmatig",
+      status: "bevestigd",
+      agenda_item_id: item.id,
+    }),
+    "agendapunt vastleggen bij gesprek",
+  );
+
+  revalidatePath(`/landgoed/${landgoed_id}/vergaderingen/${gesprek_id}`);
+  revalidatePath(`/landgoed/${landgoed_id}/agenda`);
 }
 
 export async function ruimTranscriptOp(fd: FormData) {

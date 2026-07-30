@@ -244,6 +244,50 @@ Regels:
   return resultaten;
 }
 
+// ── Agendapunten / volgende vergadering uit een transcript ──
+// Alleen wat het transcript expliciet afspreekt; niets verzinnen (liever een gat dan een aanname).
+
+export type AgendapuntVoorstel = {
+  titel: string;
+  datum: string | null; // yyyy-mm-dd
+  tijd: string | null; // HH:MM
+  locatie: string | null;
+  omschrijving: string | null;
+  bron_citaat: string;
+};
+
+export async function extraheerAgendapunten(
+  transcript: string,
+): Promise<AgendapuntVoorstel[] | null> {
+  const vandaag = new Date().toISOString().slice(0, 10);
+
+  const resultaten = await vraagJson<AgendapuntVoorstel[]>(
+    `Je haalt afgesproken agendapunten en vervolgafspraken uit een Nederlands vergadertranscript. Vandaag is ${vandaag}. Antwoord uitsluitend met JSON.`,
+    `Transcript:
+${transcript}
+
+Geef een JSON-array met agendapunten die in dit gesprek expliciet zijn afgesproken:
+[{
+  "titel": "korte omschrijving, bv. 'Volgende bestuursvergadering' of 'Bespreken pachtcontract Hoeve X'",
+  "datum": "YYYY-MM-DD of null",
+  "tijd": "HH:MM of null",
+  "locatie": "plaats of null",
+  "omschrijving": "een of twee zinnen context, of null",
+  "bron_citaat": "letterlijk citaat uit het transcript waar dit uit blijkt"
+}]
+
+Regels:
+- Neem een volgende vergadering op als die is afgesproken, ook als alleen een datum of alleen een maand genoemd wordt.
+- Zet een relatieve datum ("over twee weken", "eind september") om naar een concrete datum ten opzichte van vandaag.
+- Is er geen datum genoemd, laat datum dan null — verzin er geen.
+- Neem alleen punten op die het transcript letterlijk noemt; bron_citaat is verplicht.
+- Is er niets afgesproken, geef dan een lege array [].
+- Antwoord UITSLUITEND met de JSON-array.`,
+  );
+  if (!resultaten || !Array.isArray(resultaten)) return null;
+  return resultaten.filter((v) => v && typeof v.titel === "string" && v.titel.trim());
+}
+
 // ── Stamgegevens-extractie (onboarding) ──
 // AI leest een bron (document/tekst) en stelt stamobjecten + koppelingen voor.
 // Niets verzinnen: laat een veld leeg als de bron het niet noemt ("liever een gat dan een aanname").
