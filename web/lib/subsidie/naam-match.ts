@@ -57,6 +57,34 @@ export function zijnZelfdeRegeling(a: string, b: string): boolean {
   return gedeeld >= MIN_GEDEELDE_TOKENS && gedeeld / kleinste >= ZELFDE_DREMPEL;
 }
 
+// Zwakker signaal dan `zijnZelfdeRegeling`: "dit lijkt erop, kijk er zelf naar".
+// Bedoeld voor de nevenreden 'dubbel' — degraderen, nooit onderdrukken.
+const LIJKT_DREMPEL = 0.4;
+
+// Waarschijnlijk dezelfde regeling, maar niet zeker genoeg om te onderdrukken.
+// Eén gedeeld betekenisvol woord is genoeg MITS de kortste naam er weinig heeft:
+// "SNL — Natuur- en Landschapsbeheer" houdt na stopwoordfiltering {snl,
+// landschapsbeheer} over, en overlapt met "Subsidieverordening Natuur- en
+// Landschapsbeheer Zeeland" op precies één woord (0.5) — te weinig voor
+// `zijnZelfdeRegeling`, ruim genoeg om de gebruiker te laten kijken.
+//
+// LET OP de grens hiervan: acroniemen worden niet herkend. "Subsidieverordening
+// inrichting landelijk gebied Zeeland" en "SKNL — Kwaliteitsimpuls Natuur en
+// Landschap" delen geen enkel woord en blijven dus onopgemerkt, ook al is het
+// vermoedelijk dezelfde regeling. Daarom kan de gebruiker 'dubbel' ook zelf zetten.
+export function lijktOpRegeling(a: string, b: string): boolean {
+  if (zijnZelfdeRegeling(a, b)) return false; // die wordt al onderdrukt
+  const ta = new Set(tokeniseer(a));
+  const tb = new Set(tokeniseer(b));
+  if (!ta.size || !tb.size) return false;
+  let gedeeld = 0;
+  ta.forEach((t) => {
+    if (tb.has(t)) gedeeld++;
+  });
+  if (gedeeld === 0) return false;
+  return gedeeld / Math.min(ta.size, tb.size) >= LIJKT_DREMPEL;
+}
+
 // Zoekt in een catalogus de beste naammatch boven de drempel (of null).
 export function vindBesteRegelingMatch<T extends { naam: string }>(
   naam: string,

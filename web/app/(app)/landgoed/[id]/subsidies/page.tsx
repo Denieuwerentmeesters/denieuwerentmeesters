@@ -5,9 +5,12 @@ import {
   nieuweSubsidie,
   zoekKansenActie,
   leesLopendeUitDocument,
+  verbergKans,
+  herstelKans,
 } from "./acties";
 import { ToevoegenToggle } from "@/components/ToevoegenToggle";
 import { SubsidieFilter } from "@/components/SubsidieFilter";
+import { moet } from "@/lib/db";
 
 function dagenTot(d: string | null) {
   if (!d) return null;
@@ -69,8 +72,102 @@ type SubsidieRij = {
   match_score: number | null;
   redenering: string | null;
   al_in_gebruik: boolean;
+  nevenreden: string | null;
+  verborgen_op: string | null;
   regeling: RegelingMini;
 };
+
+// De vier secundaire bakken, in de volgorde waarin ze op de pagina staan. Dit zijn
+// kansen die inhoudelijk niet dood zijn maar wél op afstand horen: je wil ze kunnen
+// inzien, niet erover struikelen. De reden komt uit `subsidie.nevenreden`
+// (berekend door de matchmotor, zie bepaalNevenreden in matching.ts).
+const NEVENREDEN_BAKKEN: { key: string; titel: string; uitleg: string }[] = [
+  {
+    key: "dubbel",
+    titel: "Waarschijnlijk dubbel",
+    uitleg:
+      "Lijkt op een subsidie die al loopt. Controleer voor je iets doet — de naamvergelijking herkent geen afkortingen, dus dit is een vermoeden, geen vaststelling.",
+  },
+  {
+    key: "pachter",
+    titel: "Voor pachters / boeren",
+    uitleg:
+      "Hier is uw pachter de aanvrager, niet het landgoed. Wel bruikbaar in gesprek met uw pachters.",
+  },
+  {
+    key: "collectief",
+    titel: "Vereist een agrarisch collectief (ANLb)",
+    uitleg:
+      "De aanvraag loopt verplicht via een erkend collectief. Nu niet aan de orde, maar toetreden kan.",
+  },
+  {
+    key: "te_groot",
+    titel: "Te groot of vraagt een samenwerking",
+    uitleg:
+      "Vraagt een consortium, een gebiedsproces of een minimale projectomvang die een landgoed niet zelfstandig haalt.",
+  },
+];
+
+// Eén kansregel. De verberg-knop staat NAAST de link en niet erin: een button
+// binnen een <a> is ongeldige HTML en maakt de hele regel onvoorspelbaar klikbaar.
+function KansRij({
+  s,
+  landgoedId,
+  gedempt = false,
+}: {
+  s: SubsidieRij;
+  landgoedId: string;
+  gedempt?: boolean;
+}) {
+  const d = dagenTot(s.deadline);
+  const urgent = d !== null && d >= 0 && d <= 30;
+  const kansrijk = (s.match_score ?? 0) >= 70;
+  const dg = s.regeling?.doelgroep_type ? DOELGROEP_TAG[s.regeling.doelgroep_type] : null;
+  return (
+    <div className="flex items-center gap-3 px-5 py-3.5 transition-colors hover:bg-black/[0.02]">
+      <Link href={`/landgoed/${landgoedId}/subsidies/${s.id}`} className="flex flex-1 items-center gap-3">
+        <div className="flex-1">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-[14px] font-semibold" style={gedempt ? { color: "var(--text-2)" } : undefined}>
+              {s.naam}
+            </span>
+            {dg && <span className={`tag ${dg.cls}`}>{dg.label}</span>}
+            {!gedempt && typeof s.match_score === "number" && (
+              <span className={`tag ${kansrijk ? "tag-green" : "tag-gray"}`}>
+                {kansrijk ? "Kansrijk" : "Mogelijk"}
+              </span>
+            )}
+            {s.regeling?.is_nieuw && <span className="tag tag-blue">Nieuw</span>}
+            {s.regeling?.is_tijdelijk && <span className="tag tag-red">Tijdelijk</span>}
+            {s.regeling?.scope === "provinciaal" && <span className="tag tag-gray">provinciaal</span>}
+          </div>
+          {s.redenering && (
+            <div className="mt-0.5 text-[12px]" style={{ color: "var(--text-2)" }}>
+              {s.redenering}
+            </div>
+          )}
+        </div>
+        {s.deadline && (
+          <span className={`tag shrink-0 ${urgent ? "tag-red" : "tag-gray"}`}>
+            {urgent ? `nog ${d} d` : s.deadline}
+          </span>
+        )}
+        <span style={{ color: "var(--text-3)" }}>→</span>
+      </Link>
+      <form action={verbergKans}>
+        <input type="hidden" name="landgoed_id" value={landgoedId} />
+        <input type="hidden" name="subsidie_id" value={s.id} />
+        <button
+          type="submit"
+          className="btn btn-ghost btn-sm btn-danger"
+          title="Wegklikken. De regeling blijft bewaard en je kunt hem terugzetten."
+        >
+          Verwijderen
+        </button>
+      </form>
+    </div>
+  );
+}
 
 export default async function SubsidiesPage({
   params,
@@ -85,16 +182,23 @@ export default async function SubsidiesPage({
   const filterdoelgroep = doelgroep ?? "";
   const supabase = await createClient();
 
-  const [{ data: landgoed }, { data: subsidies }, { data: catTel }, { data: laatsteRun }, { data: docs }, { data: omgProfiel }] =
+  const [{ data: landgoed }, subsidies, { data: catTel }, { data: laatsteRun }, { data: docs }, { data: omgProfiel }] =
     await Promise.all([
       supabase.from("landgoed").select("naam, provincie, nsw_status, rechtsvorm, hectare, ligt_in_nnn, ligt_in_natura2000, ligt_op_veengrond, anlb_leefgebied_code, anlb_gecontroleerd_op").eq("id", id).maybeSingle(),
-      supabase
-        .from("subsidie")
-        .select(
-          "id, naam, organisatie, categorie, bedrag_indicatie, status, deadline, soort, match_score, redenering, al_in_gebruik, regeling:regeling_id (is_nieuw, is_tijdelijk, openstelling_tot, scope, themas, categorie_ui, doelgroep_type)",
-        )
-        .eq("landgoed_id", id)
-        .order("match_score", { ascending: false, nullsFirst: false }),
+      // Via `moet`: faalt deze query, dan is de pagina niet "leeg" maar stuk, en dat
+      // moet je zien. Zonder deze wikkel zou een ontbrekende kolom (bv. deze code op
+      // een database waar 0031 nog niet is toegepast) een volkomen normale, lege
+      // subsidiepagina opleveren: geen lopende subsidies, geen kansen, geen fout.
+      moet(
+        supabase
+          .from("subsidie")
+          .select(
+            "id, naam, organisatie, categorie, bedrag_indicatie, status, deadline, soort, match_score, redenering, al_in_gebruik, nevenreden, verborgen_op, regeling:regeling_id (is_nieuw, is_tijdelijk, openstelling_tot, scope, themas, categorie_ui, doelgroep_type)",
+          )
+          .eq("landgoed_id", id)
+          .order("match_score", { ascending: false, nullsFirst: false }),
+        "subsidies laden (staan migraties 0030/0031 op deze database?)",
+      ),
       supabase.from("regeling").select("geaccordeerd"),
       supabase
         .from("subsidie_import_run")
@@ -116,8 +220,9 @@ export default async function SubsidiesPage({
 
   const rijen = (subsidies ?? []) as unknown as SubsidieRij[];
   const lopend = rijen.filter((s) => s.soort === "lopend");
+  const verborgen = rijen.filter((s) => s.soort === "kans" && s.verborgen_op);
   const alleKansen = rijen
-    .filter((s) => s.soort === "kans")
+    .filter((s) => s.soort === "kans" && !s.verborgen_op)
     .sort((a, b) => {
       const w = (x: SubsidieRij) =>
         (x.regeling?.is_nieuw ? 2 : 0) + (x.regeling?.is_tijdelijk ? 1 : 0);
@@ -132,9 +237,14 @@ export default async function SubsidiesPage({
     return true;
   });
 
-  // Kansen groeperen per categorie_ui
+  // Primair vs. secundair. Alleen primaire kansen worden per thema gegroepeerd; de
+  // secundaire krijgen hun eigen bakken (zie NEVENREDEN_BAKKEN), zodat ze inzichtelijk
+  // blijven zonder de lijst te vullen.
+  const primair = kansen.filter((s) => !s.nevenreden);
+  const secundair = kansen.filter((s) => s.nevenreden);
+
   const kansenPerCategorie = new Map<string, SubsidieRij[]>();
-  for (const k of kansen) {
+  for (const k of primair) {
     const cat = k.regeling?.categorie_ui ?? "overig";
     if (!kansenPerCategorie.has(cat)) kansenPerCategorie.set(cat, []);
     kansenPerCategorie.get(cat)!.push(k);
@@ -337,7 +447,8 @@ export default async function SubsidiesPage({
           <h2 className="mb-2 text-[15px] font-semibold">
             Mogelijke kansen{" "}
             <span style={{ color: "var(--text-3)" }}>
-              · {kansen.length}{kansen.length !== alleKansen.length ? ` van ${alleKansen.length}` : ""}
+              · {primair.length}
+              {kansen.length !== alleKansen.length ? ` (gefilterd uit ${alleKansen.length})` : ""}
             </span>
           </h2>
           <p className="mb-3 text-[12.5px]" style={{ color: "var(--text-2)" }}>
@@ -364,58 +475,83 @@ export default async function SubsidiesPage({
                   <span className="font-normal normal-case tracking-normal">· {rijen.length}</span>
                 </h3>
                 <div className="card divide-y" style={{ borderColor: "var(--border)" }}>
-                  {rijen.map((s) => {
-                    const d = dagenTot(s.deadline);
-                    const urgent = d !== null && d >= 0 && d <= 30;
-                    const kansrijk = (s.match_score ?? 0) >= 70;
-                    const dg = s.regeling?.doelgroep_type
-                      ? DOELGROEP_TAG[s.regeling.doelgroep_type]
-                      : null;
-                    return (
-                      <Link
-                        key={s.id}
-                        href={`/landgoed/${id}/subsidies/${s.id}`}
-                        className="flex items-center gap-3 px-5 py-3.5 transition-colors hover:bg-black/[0.02]"
-                      >
-                        <div className="flex-1">
-                          <div className="flex flex-wrap items-center gap-2">
-                            <span className="text-[14px] font-semibold">{s.naam}</span>
-                            {dg && (
-                              <span className={`tag ${dg.cls}`}>{dg.label}</span>
-                            )}
-                            {typeof s.match_score === "number" && (
-                              <span className={`tag ${kansrijk ? "tag-green" : "tag-gray"}`}>
-                                {kansrijk ? "Kansrijk" : "Mogelijk"}
-                              </span>
-                            )}
-                            {s.regeling?.is_nieuw && <span className="tag tag-blue">Nieuw</span>}
-                            {s.regeling?.is_tijdelijk && (
-                              <span className="tag tag-red">Tijdelijk</span>
-                            )}
-                            {s.regeling?.scope === "provinciaal" && (
-                              <span className="tag tag-gray">provinciaal</span>
-                            )}
-                          </div>
-                          {s.redenering && (
-                            <div className="text-[12px] mt-0.5" style={{ color: "var(--text-2)" }}>
-                              {s.redenering}
-                            </div>
-                          )}
-                        </div>
-                        {s.deadline && (
-                          <span className={`tag shrink-0 ${urgent ? "tag-red" : "tag-gray"}`}>
-                            {urgent ? `nog ${d} d` : s.deadline}
-                          </span>
-                        )}
-                        <span style={{ color: "var(--text-3)" }}>→</span>
-                      </Link>
-                    );
-                  })}
+                  {rijen.map((s) => (
+                    <KansRij key={s.id} s={s} landgoedId={id} />
+                  ))}
                 </div>
               </section>
             );
           })}
         </section>
+
+        {/* ── Spoor 2b: secundair — inzichtelijk, maar op afstand ── */}
+        {secundair.length > 0 && (
+          <section>
+            <h2 className="mb-2 text-[15px] font-semibold">
+              Secundair{" "}
+              <span style={{ color: "var(--text-3)" }}>· {secundair.length}</span>
+            </h2>
+            <p className="mb-3 text-[12.5px]" style={{ color: "var(--text-2)" }}>
+              Regelingen die passen bij het profiel maar nu niet voor {naam} zelf aan de
+              orde zijn. Ze blijven staan zodat je ze kunt inzien; wat je niet meer wilt
+              zien kun je verwijderen.
+            </p>
+
+            {NEVENREDEN_BAKKEN.map((bak) => {
+              const rijen = secundair.filter((s) => s.nevenreden === bak.key);
+              if (rijen.length === 0) return null;
+              return (
+                <section key={bak.key} className="mb-5">
+                  <h3
+                    className="text-[13px] font-semibold uppercase tracking-wide"
+                    style={{ color: "var(--text-3)" }}
+                  >
+                    {bak.titel}{" "}
+                    <span className="font-normal normal-case tracking-normal">
+                      · {rijen.length}
+                    </span>
+                  </h3>
+                  <p className="mb-2 text-[12px]" style={{ color: "var(--text-2)" }}>
+                    {bak.uitleg}
+                  </p>
+                  <div className="card divide-y" style={{ borderColor: "var(--border)" }}>
+                    {rijen.map((s) => (
+                      <KansRij key={s.id} s={s} landgoedId={id} gedempt />
+                    ))}
+                  </div>
+                </section>
+              );
+            })}
+          </section>
+        )}
+
+        {/* ── Verwijderd: niets gaat echt weg, terugzetten kan altijd ── */}
+        {verborgen.length > 0 && (
+          <section>
+            <details>
+              <summary className="cursor-pointer text-[13px]" style={{ color: "var(--text-2)" }}>
+                Verwijderd · {verborgen.length} — de regelingen blijven bewaard, klik om
+                terug te zetten
+              </summary>
+              <div className="card mt-2 divide-y" style={{ borderColor: "var(--border)" }}>
+                {verborgen.map((s) => (
+                  <div key={s.id} className="flex items-center gap-3 px-5 py-3">
+                    <span className="flex-1 text-[13px]" style={{ color: "var(--text-2)" }}>
+                      {s.naam}
+                    </span>
+                    <form action={herstelKans}>
+                      <input type="hidden" name="landgoed_id" value={id} />
+                      <input type="hidden" name="subsidie_id" value={s.id} />
+                      <button type="submit" className="btn btn-ghost btn-sm">
+                        Terugzetten
+                      </button>
+                    </form>
+                  </div>
+                ))}
+              </div>
+            </details>
+          </section>
+        )}
       </div>
     </div>
   );

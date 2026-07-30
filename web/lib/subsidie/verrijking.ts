@@ -10,6 +10,9 @@ import { verrijkRegeling } from "@/lib/ai";
 
 type Db = SupabaseClient;
 
+// Toegestane waarden van regeling_criterium.fase (migratie 0030).
+const FASEN = ["vooraf", "bij_aanvraag", "na_toekenning"];
+
 // Grof HTML -> platte tekst. Genoeg voor server-gerenderde overheidspagina's.
 function striptHtml(html: string): string {
   return html
@@ -121,6 +124,9 @@ export async function verrijkRegelingRij(
         operator: c.operator ?? null,
         waarde: c.waarde ?? null,
         verplicht: c.verplicht ?? true,
+        // Onbekende of afwijkende fase => 'bij_aanvraag', niet 'vooraf'. Een fout de
+        // andere kant op laat een procedurestap als harde eis in de matchmotor landen.
+        fase: FASEN.includes(c.fase ?? "") ? c.fase : "bij_aanvraag",
         herkomst: "ai",
         geaccordeerd: false,
       })),
