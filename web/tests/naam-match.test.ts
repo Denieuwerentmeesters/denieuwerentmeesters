@@ -2,6 +2,7 @@
 // Een stille regressie hier betekent dubbele of gemiste regelingen in de radar.
 import { describe, expect, it } from "vitest";
 import {
+  lijktOpRegeling,
   naamOverlap,
   vindBesteRegelingMatch,
   zijnZelfdeRegeling,
@@ -66,5 +67,33 @@ describe("vindBesteRegelingMatch", () => {
 
   it("geeft null als niets in de buurt komt", () => {
     expect(vindBesteRegelingMatch("Pachtcheck 2028", catalogus)).toBeNull();
+  });
+});
+
+describe("lijktOpRegeling", () => {
+  it("vlagt de CVDR-variant naast de lopende SNL", () => {
+    // Overlap 0.5 op één woord: te weinig om te onderdrukken, genoeg om te melden.
+    expect(
+      lijktOpRegeling("Subsidieverordening Natuur- en Landschapsbeheer Zeeland", "SNL — Natuur- en Landschapsbeheer"),
+    ).toBe(true);
+  });
+
+  it("vlagt niet wat al als dezelfde regeling wordt onderdrukt", () => {
+    expect(
+      lijktOpRegeling("SKNL — Kwaliteitsimpuls Natuur en Landschap", "SKNL Zeeland — Subsidie Kwaliteitsimpuls Natuur en Landschap"),
+    ).toBe(false);
+  });
+
+  it("vlagt niets bij losstaande regelingen", () => {
+    expect(lijktOpRegeling("Subsidie Erfbeplanting Landelijk Gebied", "SDE++ — Stimulering Duurzame Energieproductie")).toBe(false);
+    expect(lijktOpRegeling("", "SNL — Natuur- en Landschapsbeheer")).toBe(false);
+  });
+
+  it("KENT ZIJN GRENS: acroniemen worden niet herkend", () => {
+    // Vermoedelijk dezelfde regeling, maar geen enkel gedeeld woord. Daarom moet de
+    // gebruiker een kans ook zelf kunnen wegklikken.
+    expect(
+      lijktOpRegeling("Subsidieverordening inrichting landelijk gebied Zeeland", "SKNL — Kwaliteitsimpuls Natuur en Landschap"),
+    ).toBe(false);
   });
 });

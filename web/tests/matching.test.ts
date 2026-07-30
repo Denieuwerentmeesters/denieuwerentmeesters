@@ -2,6 +2,7 @@
 // Dit is de logica die bepaalt welke subsidieregelingen als kans verschijnen.
 import { describe, expect, it } from "vitest";
 import {
+  bepaalNevenreden,
   profielWaarde,
   scoorRegeling,
   toetsCriterium,
@@ -174,5 +175,52 @@ describe("waardeertNnnPositief", () => {
   it("onwaar als de regeling niets over NNN zegt", () => {
     expect(waardeertNnnPositief([{ veld: "provincie", waarde: "Zeeland", soort: "eis" }])).toBe(false);
     expect(waardeertNnnPositief([])).toBe(false);
+  });
+});
+
+describe("bepaalNevenreden", () => {
+  const regeling = {
+    naam: "Subsidie Kleine Landschapselementen (KLE)",
+    doelgroep_type: "eigenaar",
+    instap_drempel: null as string | null,
+    vereist_collectief: false,
+  };
+  const stichting = { rechtsvorm: "stichting" };
+
+  it("geeft null voor een gewone primaire kans", () => {
+    expect(bepaalNevenreden(regeling, stichting, [])).toBeNull();
+  });
+
+  it("'dubbel' gaat voor alles — het is de ruis die je als eerste weg wil", () => {
+    const r = { ...regeling, doelgroep_type: "pachter", vereist_collectief: true };
+    expect(
+      bepaalNevenreden({ ...r, naam: "Subsidieverordening Natuur- en Landschapsbeheer Zeeland" }, stichting, [
+        "SNL — Natuur- en Landschapsbeheer",
+      ]),
+    ).toBe("dubbel");
+  });
+
+  it("'collectief' gaat vóór 'pachter', want ANLb hoort in de ANLb-bak", () => {
+    const anlb = {
+      naam: "ANLb Droge Dooradering — Houtwallen, Heggen en Bomenrijen",
+      doelgroep_type: "pachter",
+      instap_drempel: null,
+      vereist_collectief: true,
+    };
+    expect(bepaalNevenreden(anlb, stichting, [])).toBe("collectief");
+  });
+
+  it("een landgoed dat zélf een collectief is wordt niet gedegradeerd", () => {
+    const anlb = { ...regeling, vereist_collectief: true };
+    expect(bepaalNevenreden(anlb, { rechtsvorm: "collectief" }, [])).toBeNull();
+    // ...en hoofdletters/spaties mogen dat niet breken.
+    expect(bepaalNevenreden(anlb, { rechtsvorm: " Collectief " }, [])).toBeNull();
+  });
+
+  it("herkent pachter-regelingen en te grote regelingen", () => {
+    expect(bepaalNevenreden({ ...regeling, doelgroep_type: "pachter" }, stichting, [])).toBe("pachter");
+    expect(bepaalNevenreden({ ...regeling, instap_drempel: "hoog" }, stichting, [])).toBe("te_groot");
+    // 'laag' en 'middel' degraderen niet.
+    expect(bepaalNevenreden({ ...regeling, instap_drempel: "laag" }, stichting, [])).toBeNull();
   });
 });

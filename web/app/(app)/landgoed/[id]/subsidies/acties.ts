@@ -36,6 +36,45 @@ export async function zoekKansenActie(fd: FormData) {
   revalidatePath(`/landgoed/${landgoed_id}/subsidies`);
 }
 
+// Een kans wegklikken. Bewust géén delete: de regeling blijft in de catalogus en de
+// rij blijft staan, zodat terugzetten kan en een herberekening hem niet ongevraagd
+// weer opvoert. `nevenreden` wordt hier niet aangeraakt -- die is van de matchmotor.
+export async function verbergKans(fd: FormData) {
+  const landgoed_id = String(fd.get("landgoed_id"));
+  const subsidie_id = String(fd.get("subsidie_id") ?? "").trim();
+  if (!subsidie_id) return;
+  const supabase = await createClient();
+  const { data: gebruiker } = await supabase.auth.getUser();
+  await moet(
+    supabase
+      .from("subsidie")
+      .update({
+        verborgen_op: new Date().toISOString(),
+        verborgen_door: gebruiker?.user?.id ?? null,
+      })
+      .eq("id", subsidie_id)
+      .eq("landgoed_id", landgoed_id), // multi-tenant: nooit buiten dit landgoed schrijven
+    "kans verbergen",
+  );
+  revalidatePath(`/landgoed/${landgoed_id}/subsidies`);
+}
+
+export async function herstelKans(fd: FormData) {
+  const landgoed_id = String(fd.get("landgoed_id"));
+  const subsidie_id = String(fd.get("subsidie_id") ?? "").trim();
+  if (!subsidie_id) return;
+  const supabase = await createClient();
+  await moet(
+    supabase
+      .from("subsidie")
+      .update({ verborgen_op: null, verborgen_door: null })
+      .eq("id", subsidie_id)
+      .eq("landgoed_id", landgoed_id),
+    "kans terugzetten",
+  );
+  revalidatePath(`/landgoed/${landgoed_id}/subsidies`);
+}
+
 // "Hulp nodig?" — zet een subsidie door als taak richting De Nieuwe Rentmeesters (signaleren).
 export async function vraagHulp(fd: FormData) {
   const landgoed_id = String(fd.get("landgoed_id"));

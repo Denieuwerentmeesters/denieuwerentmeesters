@@ -1,5 +1,5 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { zijnZelfdeRegeling } from "@/lib/subsidie/naam-match";
+import { lijktOpRegeling, zijnZelfdeRegeling } from "@/lib/subsidie/naam-match";
 import { moet } from "@/lib/db";
 
 // Matching: catalogus-regeling -> per-landgoed kans.
@@ -131,6 +131,39 @@ export function waardeertNnnPositief(
   );
 }
 
+export type Nevenreden = "dubbel" | "collectief" | "pachter" | "te_groot" | null;
+
+// Een kans kan kwalificeren en tóch secundair zijn. Deze functie zegt waarom, of
+// null als hij primair is. Bewust GEEN onderdrukking: de regeling blijft zichtbaar,
+// want een pachter kan er morgen wel iets mee en een collectief kun je oprichten.
+//
+// De volgorde is de rangorde als meer dan één reden geldt, van meest naar minst
+// bruikbaar voor de lezer:
+//   dubbel     — ruis over iets wat je al hebt; wil je als eerste weg
+//   collectief — harde toegangseis, maar oplosbaar (ANLb loopt via een collectief).
+//                Gaat vóór 'pachter', want ANLb-regelingen zijn óók doelgroep=pachter
+//                en horen in de ANLb-bak, niet in de pachtersbak.
+//   pachter    — kan wel, maar iemand anders is de aanvrager
+//   te_groot   — vraagt een consortium of een omvang buiten bereik
+export function bepaalNevenreden(
+  r: {
+    naam: string;
+    doelgroep_type: string | null;
+    instap_drempel: string | null;
+    vereist_collectief: boolean;
+  },
+  p: { rechtsvorm: string | null },
+  lopendeNamen: string[],
+): Nevenreden {
+  if (lopendeNamen.some((n) => lijktOpRegeling(r.naam, n))) return "dubbel";
+  // Is het landgoed zelf een collectief, dan is dit geen belemmering.
+  if (r.vereist_collectief && (p.rechtsvorm ?? "").toLowerCase().trim() !== "collectief")
+    return "collectief";
+  if (r.doelgroep_type === "pachter") return "pachter";
+  if (r.instap_drempel === "hoog") return "te_groot";
+  return null;
+}
+
 type RegelingOordeel = {
   matcht: boolean; // false => valt af (eis gefaald of uitsluiting geraakt)
   score: number; // 50..100 bij een match, 0 bij afvallen
@@ -254,10 +287,12 @@ type Kandidaat = {
   doelgroep_type: string | null;
   categorie_ui: string | null;
   is_standaard: boolean;
+  instap_drempel: string | null; // 'laag' | 'middel' | 'hoog'
+  vereist_collectief: boolean;
 };
 
 const REGELING_VELDEN =
-  "id, naam, organisatie, categorie, samenvatting, scope, provincie, gemeenten, is_nieuw, is_tijdelijk, openstelling_tot, doelgroep_type, categorie_ui, is_standaard";
+  "id, naam, organisatie, categorie, samenvatting, scope, provincie, gemeenten, is_nieuw, is_tijdelijk, openstelling_tot, doelgroep_type, categorie_ui, is_standaard, instap_drempel, vereist_collectief";
 
 // Haalt ALLE geaccordeerde regelingen op, gepagineerd. Supabase/PostgREST kapt
 // een gewone select stil af op ~1000 rijen; met een groeiende catalogus zouden
@@ -351,22 +386,20 @@ export async function zoekKansen(
   const ids = passend.map((r) => r.id);
   const criteriaPer = new Map<string, Criterium[]>();
   if (ids.length) {
-    const { data: criteria, error: criteriaFout } = await db
-      .from("regeling_criterium")
-      .select("regeling_id, omschrijving, veld, operator, waarde, verplicht, soort, gewicht, fase")
-      .in("regeling_id", ids)
-      .eq("geaccordeerd", true)
-      .eq("fase", "vooraf");
-    // Faalt deze query, dan MOET de run stoppen. Zonder criteria komt er geen
-    // enkele eis of uitsluiting door en matcht ELKE regeling op de basisscore 50 --
-    // een stille fout die precies het omgekeerde doet van wat de motor moet doen.
-    // Concreet risico: deze code draaien vóór migratie 0030 op live staat; de kolom
-    // `fase` bestaat dan nog niet en Postgres geeft 42703.
-    if (criteriaFout)
-      throw new Error(
-        `Criteria konden niet worden geladen, matchen afgebroken: ${criteriaFout.message}. ` +
-          `Staat migratie 0030 (regeling_criterium.fase) al op deze database?`,
-      );
+    // Via `moet`: faalt deze query, dan MOET de run stoppen. Zonder criteria komt
+    // er geen enkele eis of uitsluiting door en matcht ELKE regeling op de basisscore
+    // 50 -- een stille fout die precies het omgekeerde doet van wat de motor moet
+    // doen. Concreet risico: deze code draaien vóór migratie 0030 op live staat, want
+    // dan bestaat de kolom `fase` nog niet en geeft Postgres 42703.
+    const criteria = await moet(
+      db
+        .from("regeling_criterium")
+        .select("regeling_id, omschrijving, veld, operator, waarde, verplicht, soort, gewicht, fase")
+        .in("regeling_id", ids)
+        .eq("geaccordeerd", true)
+        .eq("fase", "vooraf"),
+      "criteria laden (staan migraties 0030/0031 op deze database?)",
+    );
     ((criteria ?? []) as unknown as Criterium[]).forEach((c) => {
       const arr = criteriaPer.get(c.regeling_id) ?? [];
       arr.push(c);
@@ -483,6 +516,11 @@ export async function zoekKansen(
           categorie: r.categorie ?? "subsidie",
           status: r.is_standaard ? "standaard" : "verkennen",
           match_score: oordeel.score,
+          // De motor bezit `nevenreden`, de gebruiker bezit `verborgen_op`. Die
+          // scheiding houdt een herberekening onschuldig: hij herclassificeert wel,
+          // maar zet nooit iets terug dat de gebruiker had weggeklikt (`verborgen_op`
+          // staat niet in deze upsert en blijft dus staan).
+          nevenreden: bepaalNevenreden(r, p, inGebruikRijen.map((x) => x.naam)),
           redenering: redenering || null,
           deadline: r.openstelling_tot ?? null,
         },
