@@ -79,7 +79,7 @@ const GEBRUIK = [
 ];
 
 const GEBOUW_CATS = new Set(["gebouw", "woning", "opstal"]);
-const PERCEEL_CATS = new Set(["pachtperceel", "perceel"]);
+const PERCEEL_CATS = new Set(["pachtperceel"]);
 
 const KAARTGROEP_LABELS = [
   "Gebouwen",
@@ -110,7 +110,7 @@ function kaartGroep(o: PlaatsObject): KaartGroepLabel {
   if (["water", "waterloop", "vijver_sloot"].includes(cat)) return "Water & Klimaat";
 
   // Percelen: indeling via gebruik-veld
-  if (["pachtperceel", "perceel"].includes(cat)) {
+  if (cat === "pachtperceel") {
     if (gebruik === "wonen") return "Gebouwen";
     if (gebruik === "agrarisch") return "Agrarisch";
     if (gebruik === "natuur") return "Natuur";
