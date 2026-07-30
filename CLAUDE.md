@@ -28,6 +28,12 @@ Draai typecheck en tests altijd vóór het pushen.
 - Nooit rechtstreeks op `main` werken of committen. Eén klus = één `feat/...`-branch = één PR.
 - **Begin elke klus met een verse branch vanaf de actuele `main`** — zie het blok hieronder.
 - Mergen kan alleen als de check "Typecheck en tests" groen is; merge als **squash and merge**.
+- **Mergen blijft een menselijke beslissing — automatiseer die niet weg.** Het is de laatste
+  rem vóór productie; alles erna (deploy, migraties, branch-opruiming) gaat automatisch.
+  Tegen het vergeten bestaan twee hulpmiddelen: (1) zegt de gebruiker "merge zodra groen",
+  dan zet Claude GitHub-auto-merge op de PR (`gh pr merge --auto --squash`) — het besluit is
+  dan al genomen, alleen het wachten is geautomatiseerd; (2) Claude meldt bij de start van
+  elke werksessie welke open PR's groen staan en op een merge-besluit wachten.
 - Databasewijzigingen alléén via een nieuw migratiebestand in `web/supabase/migrations/`
   (nooit rechtstreeks in de live database) — en benoem het expliciet in de PR zodat de
   ander meekijkt vóór de merge. Zie het aparte blok hieronder voor het toepassen op live.
