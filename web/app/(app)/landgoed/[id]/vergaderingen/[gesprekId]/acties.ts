@@ -11,6 +11,7 @@ import {
 import { transcribeer } from "@/lib/transcriptie";
 import { createServiceClient } from "@/lib/supabase/service";
 import { isLidVan } from "@/lib/auth";
+import { moet } from "@/lib/db";
 
 export async function transcribeerAudio(fd: FormData) {
   const gesprek_id = String(fd.get("gesprek_id"));
@@ -46,9 +47,23 @@ export async function transcribeerAudio(fd: FormData) {
   const tekst = teksten.join("\n\n");
 
   const supabase = await createClient();
-  await supabase.from("gesprek_transcript").delete().eq("gesprek_id", gesprek_id);
-  await supabase.from("gesprek_transcript").insert({ gesprek_id, tekst });
-  await supabase.from("gesprek").update({ status: "getranscribeerd" }).eq("id", gesprek_id);
+  // Client-consumed actie: DB-fouten als { fout } teruggeven zodat de UI ze toont.
+  try {
+    await moet(
+      supabase.from("gesprek_transcript").delete().eq("gesprek_id", gesprek_id),
+      "oude transcript wissen",
+    );
+    await moet(
+      supabase.from("gesprek_transcript").insert({ gesprek_id, tekst }),
+      "transcript opslaan",
+    );
+    await moet(
+      supabase.from("gesprek").update({ status: "getranscribeerd" }).eq("id", gesprek_id),
+      "status bijwerken",
+    );
+  } catch (e) {
+    return { fout: e instanceof Error ? e.message : "Transcript opslaan mislukt." };
+  }
 
   revalidatePath(`/landgoed/${landgoed_id}/vergaderingen/${gesprek_id}`);
   return { tekst };
@@ -61,9 +76,18 @@ export async function slaTranscriptOp(fd: FormData) {
   if (!tekst) return;
 
   const supabase = await createClient();
-  await supabase.from("gesprek_transcript").delete().eq("gesprek_id", gesprek_id);
-  await supabase.from("gesprek_transcript").insert({ gesprek_id, tekst });
-  await supabase.from("gesprek").update({ status: "getranscribeerd" }).eq("id", gesprek_id);
+  await moet(
+    supabase.from("gesprek_transcript").delete().eq("gesprek_id", gesprek_id),
+    "oude transcript wissen",
+  );
+  await moet(
+    supabase.from("gesprek_transcript").insert({ gesprek_id, tekst }),
+    "transcript opslaan",
+  );
+  await moet(
+    supabase.from("gesprek").update({ status: "getranscribeerd" }).eq("id", gesprek_id),
+    "status bijwerken",
+  );
 
   redirect(`/landgoed/${landgoed_id}/vergaderingen/${gesprek_id}`);
 }
@@ -93,11 +117,14 @@ export async function voerPromptsUit(fd: FormData) {
     if (!sjabloon) continue;
 
     // Verwijder bestaande bewerking voor dit sjabloon zodat herdraaien werkt
-    await supabase
-      .from("gesprek_bewerking")
-      .delete()
-      .eq("gesprek_id", gesprek_id)
-      .eq("prompt_sjabloon_id", sjabloon_id);
+    await moet(
+      supabase
+        .from("gesprek_bewerking")
+        .delete()
+        .eq("gesprek_id", gesprek_id)
+        .eq("prompt_sjabloon_id", sjabloon_id),
+      "oude bewerking verwijderen",
+    );
 
     if (sjabloon.output_type === "taken") {
       const voorstellen = await extraheerActiepuntenMetMatching(
@@ -106,42 +133,54 @@ export async function voerPromptsUit(fd: FormData) {
         contactLijst,
       );
 
-      await supabase.from("gesprek_bewerking").insert({
-        gesprek_id,
-        prompt_sjabloon_id: sjabloon_id,
-        output_tekst: voorstellen ? `${voorstellen.length} actiepunt(en) gevonden` : "Geen actiepunten gevonden",
-        status: "concept",
-      });
+      await moet(
+        supabase.from("gesprek_bewerking").insert({
+          gesprek_id,
+          prompt_sjabloon_id: sjabloon_id,
+          output_tekst: voorstellen ? `${voorstellen.length} actiepunt(en) gevonden` : "Geen actiepunten gevonden",
+          status: "concept",
+        }),
+        "bewerking opslaan",
+      );
 
       if (voorstellen?.length) {
-        await supabase
-          .from("gesprek_actie_voorstel")
-          .delete()
-          .eq("gesprek_id", gesprek_id)
-          .eq("status", "voorgesteld");
+        await moet(
+          supabase
+            .from("gesprek_actie_voorstel")
+            .delete()
+            .eq("gesprek_id", gesprek_id)
+            .eq("status", "voorgesteld"),
+          "oude actievoorstellen verwijderen",
+        );
 
-        await supabase.from("gesprek_actie_voorstel").insert(
-          voorstellen.map((v) => ({
-            gesprek_id,
-            omschrijving: v.omschrijving,
-            bron_citaat: v.bron_citaat,
-            contact_id: v.contact_id,
-            match_status: v.match_status,
-            match_kandidaten: v.match_kandidaten,
-            deadline: v.deadline,
-            deadline_is_interpretatie: v.deadline_is_interpretatie,
-            status: "voorgesteld",
-          })),
+        await moet(
+          supabase.from("gesprek_actie_voorstel").insert(
+            voorstellen.map((v) => ({
+              gesprek_id,
+              omschrijving: v.omschrijving,
+              bron_citaat: v.bron_citaat,
+              contact_id: v.contact_id,
+              match_status: v.match_status,
+              match_kandidaten: v.match_kandidaten,
+              deadline: v.deadline,
+              deadline_is_interpretatie: v.deadline_is_interpretatie,
+              status: "voorgesteld",
+            })),
+          ),
+          "actievoorstellen opslaan",
         );
       }
     } else {
       const output = await verwerkPrompt(transcript.tekst, sjabloon.prompttekst);
-      await supabase.from("gesprek_bewerking").insert({
-        gesprek_id,
-        prompt_sjabloon_id: sjabloon_id,
-        output_tekst: output ?? "(AI niet beschikbaar)",
-        status: "concept",
-      });
+      await moet(
+        supabase.from("gesprek_bewerking").insert({
+          gesprek_id,
+          prompt_sjabloon_id: sjabloon_id,
+          output_tekst: output ?? "(AI niet beschikbaar)",
+          status: "concept",
+        }),
+        "bewerking opslaan",
+      );
     }
   }
 
@@ -149,15 +188,21 @@ export async function voerPromptsUit(fd: FormData) {
   const custom_prompt = String(fd.get("custom_prompt") ?? "").trim();
   if (custom_prompt) {
     const output = await verwerkPrompt(transcript.tekst, custom_prompt);
-    await supabase.from("gesprek_bewerking").insert({
-      gesprek_id,
-      prompt_sjabloon_id: null,
-      output_tekst: output ?? "(AI niet beschikbaar)",
-      status: "concept",
-    });
+    await moet(
+      supabase.from("gesprek_bewerking").insert({
+        gesprek_id,
+        prompt_sjabloon_id: null,
+        output_tekst: output ?? "(AI niet beschikbaar)",
+        status: "concept",
+      }),
+      "bewerking opslaan",
+    );
   }
 
-  await supabase.from("gesprek").update({ status: "verwerkt" }).eq("id", gesprek_id);
+  await moet(
+    supabase.from("gesprek").update({ status: "verwerkt" }).eq("id", gesprek_id),
+    "gesprek-status bijwerken",
+  );
   revalidatePath(`/landgoed/${landgoed_id}/vergaderingen/${gesprek_id}`);
 }
 
@@ -171,22 +216,28 @@ export async function bevestigActie(fd: FormData) {
 
   const supabase = await createClient();
 
-  await supabase
-    .from("gesprek_actie_voorstel")
-    .update({ status: "bevestigd", omschrijving, contact_id, deadline })
-    .eq("id", voorstel_id);
+  await moet(
+    supabase
+      .from("gesprek_actie_voorstel")
+      .update({ status: "bevestigd", omschrijving, contact_id, deadline })
+      .eq("id", voorstel_id),
+    "actievoorstel bevestigen",
+  );
 
   const contactNaam = contact_id
     ? (await supabase.from("relatie").select("naam").eq("id", contact_id).single()).data?.naam ?? null
     : null;
 
-  await supabase.from("taak").insert({
-    landgoed_id,
-    titel: omschrijving,
-    status: "open",
-    deadline: deadline || null,
-    toegewezen_aan_naam: contactNaam,
-  });
+  await moet(
+    supabase.from("taak").insert({
+      landgoed_id,
+      titel: omschrijving,
+      status: "open",
+      deadline: deadline || null,
+      toegewezen_aan_naam: contactNaam,
+    }),
+    "taak aanmaken",
+  );
 
   revalidatePath(`/landgoed/${landgoed_id}/vergaderingen/${gesprek_id}`);
 }
@@ -197,10 +248,13 @@ export async function afwijsActie(fd: FormData) {
   const landgoed_id = String(fd.get("landgoed_id"));
 
   const supabase = await createClient();
-  await supabase
-    .from("gesprek_actie_voorstel")
-    .update({ status: "afgewezen" })
-    .eq("id", voorstel_id);
+  await moet(
+    supabase
+      .from("gesprek_actie_voorstel")
+      .update({ status: "afgewezen" })
+      .eq("id", voorstel_id),
+    "actievoorstel afwijzen",
+  );
 
   revalidatePath(`/landgoed/${landgoed_id}/vergaderingen/${gesprek_id}`);
 }
@@ -210,11 +264,17 @@ export async function ruimTranscriptOp(fd: FormData) {
   const landgoed_id = String(fd.get("landgoed_id"));
 
   const supabase = await createClient();
-  await supabase
-    .from("gesprek_transcript")
-    .update({ tekst: "", bewaren: false })
-    .eq("gesprek_id", gesprek_id);
-  await supabase.from("gesprek").update({ status: "opgeruimd" }).eq("id", gesprek_id);
+  await moet(
+    supabase
+      .from("gesprek_transcript")
+      .update({ tekst: "", bewaren: false })
+      .eq("gesprek_id", gesprek_id),
+    "transcript opruimen",
+  );
+  await moet(
+    supabase.from("gesprek").update({ status: "opgeruimd" }).eq("id", gesprek_id),
+    "gesprek-status bijwerken",
+  );
 
   revalidatePath(`/landgoed/${landgoed_id}/vergaderingen/${gesprek_id}`);
 }

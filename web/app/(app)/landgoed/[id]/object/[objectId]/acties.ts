@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { moet } from "@/lib/db";
 import { revalidatePath } from "next/cache";
 
 function tekst(fd: FormData, k: string) {
@@ -29,21 +30,24 @@ async function koppel(
   rol: string | null,
 ) {
   const { data: gebruiker } = await supabase.auth.getUser();
-  await supabase.from("verband").upsert(
-    {
-      landgoed_id,
-      bron_type,
-      bron_id,
-      doel_type: "stamobject",
-      doel_id: object_id,
-      rol,
-      status: "geaccordeerd",
-      aangemaakt_door: gebruiker.user?.id ?? null,
-    },
-    {
-      onConflict: "bron_type,bron_id,doel_type,doel_id,rol",
-      ignoreDuplicates: true,
-    },
+  await moet(
+    supabase.from("verband").upsert(
+      {
+        landgoed_id,
+        bron_type,
+        bron_id,
+        doel_type: "stamobject",
+        doel_id: object_id,
+        rol,
+        status: "geaccordeerd",
+        aangemaakt_door: gebruiker.user?.id ?? null,
+      },
+      {
+        onConflict: "bron_type,bron_id,doel_type,doel_id,rol",
+        ignoreDuplicates: true,
+      },
+    ),
+    "koppeling opslaan",
   );
 }
 
@@ -54,7 +58,10 @@ async function ontkoppel(fd: FormData) {
   const verband_id = String(fd.get("verband_id"));
   if (!verband_id) return;
   const supabase = await createClient();
-  await supabase.from("verband").delete().eq("id", verband_id);
+  await moet(
+    supabase.from("verband").delete().eq("id", verband_id),
+    "koppeling verwijderen",
+  );
   revalidatePath(pad(landgoed_id, object_id));
 }
 
@@ -82,19 +89,22 @@ export async function nieuwContactEnKoppel(fd: FormData) {
   const naam = tekst(fd, "naam");
   if (!naam) return;
   const supabase = await createClient();
-  const { data: relatie } = await supabase
-    .from("relatie")
-    .insert({
-      landgoed_id,
-      naam,
-      type: tekst(fd, "type"),
-      email: tekst(fd, "email"),
-      telefoon: tekst(fd, "telefoon"),
-      contact: tekst(fd, "contact"),
-    })
-    .select("id")
-    .single();
-  if (relatie?.id) {
+  const relatie = await moet(
+    supabase
+      .from("relatie")
+      .insert({
+        landgoed_id,
+        naam,
+        type: tekst(fd, "type"),
+        email: tekst(fd, "email"),
+        telefoon: tekst(fd, "telefoon"),
+        contact: tekst(fd, "contact"),
+      })
+      .select("id")
+      .single(),
+    "contact opslaan",
+  );
+  if (relatie.id) {
     await koppel(
       supabase,
       landgoed_id,
@@ -134,12 +144,15 @@ export async function nieuwAfspraakEnKoppel(fd: FormData) {
   const velden = contractVelden(fd);
   if (!velden.titel) return;
   const supabase = await createClient();
-  const { data: contract } = await supabase
-    .from("contract")
-    .insert({ landgoed_id, status: "actief", ...velden })
-    .select("id")
-    .single();
-  if (contract?.id) {
+  const contract = await moet(
+    supabase
+      .from("contract")
+      .insert({ landgoed_id, status: "actief", ...velden })
+      .select("id")
+      .single(),
+    "contract opslaan",
+  );
+  if (contract.id) {
     await koppel(
       supabase,
       landgoed_id,
@@ -177,7 +190,10 @@ export async function bewerkAfspraak(fd: FormData) {
   const velden = contractVelden(fd);
   if (!velden.titel) return;
   const supabase = await createClient();
-  await supabase.from("contract").update(velden).eq("id", contract_id);
+  await moet(
+    supabase.from("contract").update(velden).eq("id", contract_id),
+    "contract bijwerken",
+  );
   revalidatePath(pad(landgoed_id, object_id));
 }
 
@@ -201,18 +217,21 @@ export async function uploadDocumentBijObject(fd: FormData) {
   if (error) throw new Error(error.message);
 
   const { data: gebruiker } = await supabase.auth.getUser();
-  const { data: document } = await supabase
-    .from("document")
-    .insert({
-      landgoed_id,
-      scope: "landgoed",
-      titel: titel || file.name,
-      bestand_pad: bestandPad,
-      geupload_door: gebruiker.user?.id,
-    })
-    .select("id")
-    .single();
-  if (document?.id) {
+  const document = await moet(
+    supabase
+      .from("document")
+      .insert({
+        landgoed_id,
+        scope: "landgoed",
+        titel: titel || file.name,
+        bestand_pad: bestandPad,
+        geupload_door: gebruiker.user?.id,
+      })
+      .select("id")
+      .single(),
+    "document opslaan",
+  );
+  if (document.id) {
     await koppel(
       supabase,
       landgoed_id,

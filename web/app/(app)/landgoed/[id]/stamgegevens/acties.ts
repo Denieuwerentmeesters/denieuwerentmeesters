@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { moet } from "@/lib/db";
 import { revalidatePath } from "next/cache";
 import { aiBeschikbaar, aiModel, laatsteAiFout } from "@/lib/ai";
 import {
@@ -35,19 +36,22 @@ async function verrijk(
       model: aiModel(),
     });
   } else {
-    await supabase.from("extractie_run").insert({
-      landgoed_id: landgoedId,
-      bron_soort: bronSoort,
-      bron_id: bronId ?? null,
-      model: aiModel(),
-      aangemaakt_door: g.user?.id,
-      fout:
-        fout ??
-        laatsteAiFout() ??
-        (aiBeschikbaar()
-          ? "Geen voorstellen gevonden."
-          : "AI niet beschikbaar (geen ANTHROPIC_API_KEY)."),
-    });
+    await moet(
+      supabase.from("extractie_run").insert({
+        landgoed_id: landgoedId,
+        bron_soort: bronSoort,
+        bron_id: bronId ?? null,
+        model: aiModel(),
+        aangemaakt_door: g.user?.id,
+        fout:
+          fout ??
+          laatsteAiFout() ??
+          (aiBeschikbaar()
+            ? "Geen voorstellen gevonden."
+            : "AI niet beschikbaar (geen ANTHROPIC_API_KEY)."),
+      }),
+      "extractie-run vastleggen",
+    );
   }
   revalidatePath(pad(landgoedId));
 }
@@ -97,14 +101,20 @@ export async function accordeerObject(fd: FormData) {
   const landgoed_id = String(fd.get("landgoed_id"));
   const id = String(fd.get("id"));
   const supabase = await createClient();
-  await supabase.from("stamobject").update({ geaccordeerd: true }).eq("id", id);
+  await moet(
+    supabase.from("stamobject").update({ geaccordeerd: true }).eq("id", id),
+    "stamobject accorderen",
+  );
   // Koppelingen worden als label onder het object getoond: bij accorderen van het
   // object lopen ook de voorgestelde koppelingen ernaartoe mee.
-  await supabase
-    .from("verband")
-    .update({ status: "geaccordeerd" })
-    .eq("status", "voorgesteld")
-    .or(`bron_id.eq.${id},doel_id.eq.${id}`);
+  await moet(
+    supabase
+      .from("verband")
+      .update({ status: "geaccordeerd" })
+      .eq("status", "voorgesteld")
+      .or(`bron_id.eq.${id},doel_id.eq.${id}`),
+    "koppelingen accorderen",
+  );
   revalidatePath(pad(landgoed_id));
 }
 
@@ -117,27 +127,39 @@ export async function voegSamen(fd: FormData) {
   if (!id || !doel_id || id === doel_id) return;
   const supabase = await createClient();
   // Eventuele onderdelen herhangen naar het bestaande object.
-  await supabase
-    .from("stamobject")
-    .update({ bovenliggend_id: doel_id })
-    .eq("bovenliggend_id", id);
+  await moet(
+    supabase
+      .from("stamobject")
+      .update({ bovenliggend_id: doel_id })
+      .eq("bovenliggend_id", id),
+    "onderdelen herhangen",
+  );
   // Voorgestelde koppelingen herhangen (bron- en doelzijde).
-  await supabase
-    .from("verband")
-    .update({ bron_id: doel_id })
-    .eq("status", "voorgesteld")
-    .eq("bron_id", id);
-  await supabase
-    .from("verband")
-    .update({ doel_id: doel_id })
-    .eq("status", "voorgesteld")
-    .eq("doel_id", id);
+  await moet(
+    supabase
+      .from("verband")
+      .update({ bron_id: doel_id })
+      .eq("status", "voorgesteld")
+      .eq("bron_id", id),
+    "koppeling-bron herhangen",
+  );
+  await moet(
+    supabase
+      .from("verband")
+      .update({ doel_id: doel_id })
+      .eq("status", "voorgesteld")
+      .eq("doel_id", id),
+    "koppeling-doel herhangen",
+  );
   // Het voorstel zelf verwijderen (alleen als het nog een voorstel is).
-  await supabase
-    .from("stamobject")
-    .delete()
-    .eq("id", id)
-    .eq("geaccordeerd", false);
+  await moet(
+    supabase
+      .from("stamobject")
+      .delete()
+      .eq("id", id)
+      .eq("geaccordeerd", false),
+    "voorstel verwijderen",
+  );
   revalidatePath(pad(landgoed_id));
 }
 
@@ -146,16 +168,22 @@ export async function wijsAfObject(fd: FormData) {
   const id = String(fd.get("id"));
   const supabase = await createClient();
   // Voorstel verwijderen incl. de voorgestelde koppelingen ernaartoe.
-  await supabase
-    .from("verband")
-    .delete()
-    .eq("status", "voorgesteld")
-    .or(`bron_id.eq.${id},doel_id.eq.${id}`);
-  await supabase
-    .from("stamobject")
-    .delete()
-    .eq("id", id)
-    .eq("geaccordeerd", false);
+  await moet(
+    supabase
+      .from("verband")
+      .delete()
+      .eq("status", "voorgesteld")
+      .or(`bron_id.eq.${id},doel_id.eq.${id}`),
+    "voorgestelde koppelingen verwijderen",
+  );
+  await moet(
+    supabase
+      .from("stamobject")
+      .delete()
+      .eq("id", id)
+      .eq("geaccordeerd", false),
+    "voorstel afwijzen",
+  );
   revalidatePath(pad(landgoed_id));
 }
 
@@ -163,10 +191,10 @@ export async function accordeerVerband(fd: FormData) {
   const landgoed_id = String(fd.get("landgoed_id"));
   const id = String(fd.get("id"));
   const supabase = await createClient();
-  await supabase
-    .from("verband")
-    .update({ status: "geaccordeerd" })
-    .eq("id", id);
+  await moet(
+    supabase.from("verband").update({ status: "geaccordeerd" }).eq("id", id),
+    "verband accorderen",
+  );
   revalidatePath(pad(landgoed_id));
 }
 
@@ -174,7 +202,10 @@ export async function wijsAfVerband(fd: FormData) {
   const landgoed_id = String(fd.get("landgoed_id"));
   const id = String(fd.get("id"));
   const supabase = await createClient();
-  await supabase.from("verband").update({ status: "afgewezen" }).eq("id", id);
+  await moet(
+    supabase.from("verband").update({ status: "afgewezen" }).eq("id", id),
+    "verband afwijzen",
+  );
   revalidatePath(pad(landgoed_id));
 }
 
@@ -184,13 +215,16 @@ export async function objectHandmatig(fd: FormData) {
   const categorie = String(fd.get("categorie") ?? "overig").trim();
   if (!naam) return;
   const supabase = await createClient();
-  await supabase.from("stamobject").insert({
-    landgoed_id,
-    naam,
-    categorie,
-    herkomst: "handmatig",
-    geaccordeerd: true,
-  });
+  await moet(
+    supabase.from("stamobject").insert({
+      landgoed_id,
+      naam,
+      categorie,
+      herkomst: "handmatig",
+      geaccordeerd: true,
+    }),
+    "stamobject aanmaken",
+  );
   revalidatePath(pad(landgoed_id));
 }
 
@@ -218,16 +252,19 @@ export async function bewerkObject(fd: FormData) {
     ...((best?.kenmerken as object) ?? {}),
     gebruik: gebruik || null,
   };
-  await supabase
-    .from("stamobject")
-    .update({
-      naam,
-      categorie: categorie || "overig",
-      beschrijving: beschrijving || null,
-      kenmerken,
-      bovenliggend_id,
-    })
-    .eq("id", id);
+  await moet(
+    supabase
+      .from("stamobject")
+      .update({
+        naam,
+        categorie: categorie || "overig",
+        beschrijving: beschrijving || null,
+        kenmerken,
+        bovenliggend_id,
+      })
+      .eq("id", id),
+    "stamobject bijwerken",
+  );
   revalidatePath(pad(landgoed_id));
 }
 
@@ -237,10 +274,16 @@ export async function verwijderObject(fd: FormData) {
   const id = String(fd.get("id"));
   if (!id) return;
   const supabase = await createClient();
-  await supabase
-    .from("verband")
-    .delete()
-    .or(`bron_id.eq.${id},doel_id.eq.${id}`);
-  await supabase.from("stamobject").delete().eq("id", id);
+  await moet(
+    supabase
+      .from("verband")
+      .delete()
+      .or(`bron_id.eq.${id},doel_id.eq.${id}`),
+    "koppelingen verwijderen",
+  );
+  await moet(
+    supabase.from("stamobject").delete().eq("id", id),
+    "stamobject verwijderen",
+  );
   revalidatePath(pad(landgoed_id));
 }

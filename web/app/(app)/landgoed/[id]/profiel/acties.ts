@@ -3,6 +3,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { moet } from "@/lib/db";
 
 function tekst(fd: FormData, k: string) {
   const v = String(fd.get(k) ?? "").trim();
@@ -160,12 +161,15 @@ export async function haalRijksmonumenten(landgoed_id: string) {
   }
 
   if (rijen.length > 0) {
-    await supabase.from("stamobject").insert(rijen);
+    await moet(supabase.from("stamobject").insert(rijen), "monumenten opslaan");
   }
-  await supabase
-    .from("landgoed")
-    .update({ monumenten_gecontroleerd_op: new Date().toISOString() })
-    .eq("id", landgoed_id);
+  await moet(
+    supabase
+      .from("landgoed")
+      .update({ monumenten_gecontroleerd_op: new Date().toISOString() })
+      .eq("id", landgoed_id),
+    "controle-tijdstip bijwerken",
+  );
 
   revalidatePath(`/landgoed/${landgoed_id}/profiel`);
   return { ok: true as const, aantal: rijen.length };
@@ -184,10 +188,10 @@ export async function accordeerMonument(fd: FormData) {
   const id = String(fd.get("id"));
   if (!id) return;
   const supabase = await createClient();
-  await supabase
-    .from("stamobject")
-    .update({ geaccordeerd: true })
-    .eq("id", id);
+  await moet(
+    supabase.from("stamobject").update({ geaccordeerd: true }).eq("id", id),
+    "monument accorderen",
+  );
   revalidatePath(`/landgoed/${landgoed_id}/profiel`);
 }
 
@@ -196,7 +200,10 @@ export async function verwijderMonument(fd: FormData) {
   const id = String(fd.get("id"));
   if (!id) return;
   const supabase = await createClient();
-  await supabase.from("stamobject").delete().eq("id", id);
+  await moet(
+    supabase.from("stamobject").delete().eq("id", id),
+    "monument verwijderen",
+  );
   revalidatePath(`/landgoed/${landgoed_id}/profiel`);
 }
 
@@ -264,10 +271,13 @@ export async function hercontroleMonumentenGebouwen(fd: FormData) {
       continue; // stil falen: dit gebouw overslaan
     }
 
-    await supabase
-      .from("stamobject")
-      .update({ kenmerken: { ...k, ...mon } })
-      .eq("id", g.id);
+    await moet(
+      supabase
+        .from("stamobject")
+        .update({ kenmerken: { ...k, ...mon } })
+        .eq("id", g.id),
+      "monumentstatus bijwerken",
+    );
   }
 
   revalidatePath(`/landgoed/${landgoed_id}/profiel`);
@@ -356,10 +366,13 @@ export async function haalBGTBodemgebruik(fd: FormData) {
     .eq("geaccordeerd", true);
 
   if (!percelen?.length) {
-    await supabase
-      .from("landgoed")
-      .update({ bodemgebruik_gecontroleerd_op: new Date().toISOString() })
-      .eq("id", landgoed_id);
+    await moet(
+      supabase
+        .from("landgoed")
+        .update({ bodemgebruik_gecontroleerd_op: new Date().toISOString() })
+        .eq("id", landgoed_id),
+      "controle-tijdstip bijwerken",
+    );
     revalidatePath(`/landgoed/${landgoed_id}/profiel`);
     return;
   }
@@ -377,17 +390,23 @@ export async function haalBGTBodemgebruik(fd: FormData) {
         gebruik_bgt: soort,
         ...(autoGebruik ? { gebruik: autoGebruik } : {}),
       };
-      await supabase
-        .from("stamobject")
-        .update({ kenmerken: nieuweKenmerken })
-        .eq("id", p.id);
+      await moet(
+        supabase
+          .from("stamobject")
+          .update({ kenmerken: nieuweKenmerken })
+          .eq("id", p.id),
+        "bodemgebruik opslaan",
+      );
     }),
   );
 
-  await supabase
-    .from("landgoed")
-    .update({ bodemgebruik_gecontroleerd_op: new Date().toISOString() })
-    .eq("id", landgoed_id);
+  await moet(
+    supabase
+      .from("landgoed")
+      .update({ bodemgebruik_gecontroleerd_op: new Date().toISOString() })
+      .eq("id", landgoed_id),
+    "controle-tijdstip bijwerken",
+  );
 
   revalidatePath(`/landgoed/${landgoed_id}/profiel`);
 }
@@ -399,18 +418,21 @@ export async function bewaarProfiel(fd: FormData) {
   const landgoed_id = String(fd.get("landgoed_id"));
   if (!landgoed_id) return;
   const supabase = await createClient();
-  await supabase
-    .from("landgoed")
-    .update({
-      nsw_status: tekst(fd, "nsw_status"),
-      nsw_sinds: getal(fd, "nsw_sinds"),
-      nsw_openstelling_dagen: getal(fd, "nsw_openstelling_dagen"),
-      nsw_nummer: tekst(fd, "nsw_nummer"),
-      eigendomsvorm: tekst(fd, "eigendomsvorm"),
-      rechtsvorm: tekst(fd, "rechtsvorm"),
-      hectare: getal(fd, "hectare"),
-    })
-    .eq("id", landgoed_id);
+  await moet(
+    supabase
+      .from("landgoed")
+      .update({
+        nsw_status: tekst(fd, "nsw_status"),
+        nsw_sinds: getal(fd, "nsw_sinds"),
+        nsw_openstelling_dagen: getal(fd, "nsw_openstelling_dagen"),
+        nsw_nummer: tekst(fd, "nsw_nummer"),
+        eigendomsvorm: tekst(fd, "eigendomsvorm"),
+        rechtsvorm: tekst(fd, "rechtsvorm"),
+        hectare: getal(fd, "hectare"),
+      })
+      .eq("id", landgoed_id),
+    "profiel opslaan",
+  );
   revalidatePath(`/landgoed/${landgoed_id}/profiel`);
   redirect(`/landgoed/${landgoed_id}/profiel`);
 }

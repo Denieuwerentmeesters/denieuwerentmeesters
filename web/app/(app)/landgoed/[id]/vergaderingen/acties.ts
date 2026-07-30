@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { transcribeer } from "@/lib/transcriptie";
 import { createServiceClient } from "@/lib/supabase/service";
 import { isLidVan } from "@/lib/auth";
+import { moet } from "@/lib/db";
 
 // Transcribeert audio (via Storage), maakt direct een gesprek aan en stuurt door naar de detailpagina.
 export async function maakGesprekVanAudio(fd: FormData) {
@@ -44,15 +45,22 @@ export async function maakGesprekVanAudio(fd: FormData) {
   const titel = `Opname ${vandaag}`;
   const datum = new Date().toISOString().slice(0, 10);
 
-  const { data: gesprek } = await supabase
+  // Client-consumed actie: fouten teruggeven als { fout } zodat de UI ze toont.
+  const { data: gesprek, error: gesprekFout } = await supabase
     .from("gesprek")
     .insert({ landgoed_id, titel, datum, status: "getranscribeerd" })
     .select("id")
     .single();
+  if (gesprekFout || !gesprek) {
+    return { fout: `Gesprek aanmaken mislukt: ${gesprekFout?.message ?? "onbekende fout"}` };
+  }
 
-  if (!gesprek) return { fout: "Gesprek aanmaken mislukt." };
-
-  await supabase.from("gesprek_transcript").insert({ gesprek_id: gesprek.id, tekst });
+  const { error: transcriptFout } = await supabase
+    .from("gesprek_transcript")
+    .insert({ gesprek_id: gesprek.id, tekst });
+  if (transcriptFout) {
+    return { fout: `Transcript opslaan mislukt: ${transcriptFout.message}` };
+  }
 
   redirect(`/landgoed/${landgoed_id}/vergaderingen/${gesprek.id}`);
 }
@@ -66,18 +74,22 @@ export async function maakGesprek(fd: FormData) {
 
   const supabase = await createClient();
 
-  const { data: gesprek } = await supabase
-    .from("gesprek")
-    .insert({ landgoed_id, titel, datum, status: transcript ? "getranscribeerd" : "nieuw" })
-    .select("id")
-    .single();
-
-  if (!gesprek) return;
+  const gesprek = await moet(
+    supabase
+      .from("gesprek")
+      .insert({ landgoed_id, titel, datum, status: transcript ? "getranscribeerd" : "nieuw" })
+      .select("id")
+      .single(),
+    "gesprek aanmaken",
+  );
 
   if (transcript) {
-    await supabase
-      .from("gesprek_transcript")
-      .insert({ gesprek_id: gesprek.id, tekst: transcript });
+    await moet(
+      supabase
+        .from("gesprek_transcript")
+        .insert({ gesprek_id: gesprek.id, tekst: transcript }),
+      "transcript opslaan",
+    );
   }
 
   redirect(`/landgoed/${landgoed_id}/vergaderingen/${gesprek.id}`);

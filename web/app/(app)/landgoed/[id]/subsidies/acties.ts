@@ -4,23 +4,27 @@ import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 import { zoekKansen } from "./matching";
 import { subsidieBron, persisteerLopendeSubsidies } from "@/lib/extractie";
+import { moet } from "@/lib/db";
 
 export async function nieuweSubsidie(fd: FormData) {
   const landgoed_id = String(fd.get("landgoed_id"));
   const naam = String(fd.get("naam") ?? "").trim();
   if (!naam) return;
   const supabase = await createClient();
-  await supabase.from("subsidie").insert({
-    landgoed_id,
-    scope: "landgoed",
-    soort: "lopend",
-    naam,
-    organisatie: String(fd.get("organisatie") ?? "").trim() || null,
-    categorie: String(fd.get("categorie") ?? "subsidie"),
-    bedrag_indicatie: String(fd.get("bedrag_indicatie") ?? "").trim() || null,
-    deadline: String(fd.get("deadline") ?? "").trim() || null,
-    status: "lopend",
-  });
+  await moet(
+    supabase.from("subsidie").insert({
+      landgoed_id,
+      scope: "landgoed",
+      soort: "lopend",
+      naam,
+      organisatie: String(fd.get("organisatie") ?? "").trim() || null,
+      categorie: String(fd.get("categorie") ?? "subsidie"),
+      bedrag_indicatie: String(fd.get("bedrag_indicatie") ?? "").trim() || null,
+      deadline: String(fd.get("deadline") ?? "").trim() || null,
+      status: "lopend",
+    }),
+    "subsidie opslaan",
+  );
   revalidatePath(`/landgoed/${landgoed_id}/subsidies`);
 }
 
@@ -39,19 +43,22 @@ export async function vraagHulp(fd: FormData) {
   const naam = String(fd.get("naam") ?? "subsidie").trim();
   if (!subsidie_id) return;
   const supabase = await createClient();
-  const { data: taak } = await supabase
-    .from("taak")
-    .insert({
-      landgoed_id,
-      titel: `Subsidie laten uitzoeken: ${naam}`,
-      omschrijving: "Aangevraagd via 'Hulp nodig?' op de subsidiekans.",
-      status: "open",
-      prioriteit: "midden",
-    })
-    .select("id")
-    .single();
-  if (taak) {
-    await supabase.from("verband").upsert(
+  const taak = await moet(
+    supabase
+      .from("taak")
+      .insert({
+        landgoed_id,
+        titel: `Subsidie laten uitzoeken: ${naam}`,
+        omschrijving: "Aangevraagd via 'Hulp nodig?' op de subsidiekans.",
+        status: "open",
+        prioriteit: "midden",
+      })
+      .select("id")
+      .single(),
+    "taak opslaan",
+  );
+  await moet(
+    supabase.from("verband").upsert(
       {
         landgoed_id,
         bron_type: "subsidie",
@@ -62,8 +69,9 @@ export async function vraagHulp(fd: FormData) {
         status: "geaccordeerd",
       },
       { onConflict: "bron_type,bron_id,doel_type,doel_id,rol", ignoreDuplicates: true },
-    );
-  }
+    ),
+    "verband opslaan",
+  );
   revalidatePath(`/landgoed/${landgoed_id}/subsidies/${subsidie_id}`);
 }
 
