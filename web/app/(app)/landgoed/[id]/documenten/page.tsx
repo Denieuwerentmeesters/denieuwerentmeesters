@@ -1,7 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { haalNotulen } from "@/lib/notulen";
 import { NotulenOverzicht } from "@/components/NotulenOverzicht";
-import { DocumentBlok, CATEGORIE_ICOON } from "./DocumentBlok";
+import { DocumentBlok, CATEGORIE_ICOON, IcoonMicrofoon } from "./DocumentBlok";
 import { UploadFormulier } from "./UploadFormulier";
 import CategorieReview from "./CategorieReview";
 import { accordeerCategorie, herclassificeerOnbekende } from "./acties";
@@ -171,6 +171,20 @@ export default async function DocumentenPage({
 
   const werkvoorraad = perCategorie.get(NOG_IN_TE_DELEN) ?? [];
 
+  // Notulen horen bij het archief, dus ze krijgen een eigen blok in het raster in
+  // plaats van een losse knop rechtsboven. Ze zijn geen document-rij maar leven in
+  // gesprek_bewerking; het blok linkt door naar de notulen-tab. Een verslag dat
+  // definitief is gemaakt verschijnt daarnáást als archiefstuk onder "Vergaderingen
+  // en verslagen" — dat blok gaat over vastgelegde stukken, dit over de AI-output.
+  const { gesprekken: notulenGesprekken } = await haalNotulen(supabase, id);
+  const metNotulen = notulenGesprekken.filter((g) => g.notulen.length > 0);
+  const notulenAantal = metNotulen.reduce((n, g) => n + g.notulen.length, 0);
+  const laatsteNotule = metNotulen
+    .map((g) => g.datum)
+    .filter((d): d is string => Boolean(d))
+    .sort()
+    .pop();
+
   // "Nog in te delen" staat vóór de rest — het is een werkvoorraad, geen onderwerp —
   // en verschijnt alleen als er iets in staat.
   const onderwerpen = CATEGORIEEN.filter((c) => c.sleutel !== NOG_IN_TE_DELEN);
@@ -187,6 +201,29 @@ export default async function DocumentenPage({
         Number(zichtbaarheid[a.sleutel] === "gevuld"),
     );
   const verborgen = onderwerpen.filter((c) => zichtbaarheid[c.sleutel] === "verborgen");
+
+  const notulenBlok = (
+    <DocumentBlok
+      key="notulen"
+      href={`${basisPad}?tab=notulen`}
+      icoon={IcoonMicrofoon}
+      titel="Notulen"
+      aantal={notulenAantal}
+      uitleg="Verslagen die de AI maakte van vergaderingen en opnames. Maak er een definitief en hij komt ook als archiefstuk onder Vergaderingen en verslagen."
+      signaal="grijs"
+      eenheid={["verslag", "verslagen"]}
+      signaalTekst={
+        laatsteNotule
+          ? `Laatste vergadering ${new Date(laatsteNotule).toLocaleDateString("nl-NL", {
+              day: "numeric",
+              month: "long",
+              year: "numeric",
+            })}`
+          : "Nog geen notulen"
+      }
+      gedempt={notulenAantal === 0}
+    />
+  );
 
   function blokVoor(sleutel: CategorieSleutel, label: string, uitleg: string) {
     const lijst = perCategorie.get(sleutel) ?? [];
@@ -210,15 +247,13 @@ export default async function DocumentenPage({
 
   return (
     <div className="flex flex-col">
-      {/* Notulen staat rechtsboven in de balk, net als op de vergaderingenpagina. */}
       <div
-        className="flex items-center justify-between gap-4 bg-white px-7 py-4"
+        className="bg-white px-7 py-4"
         style={{ borderBottom: "1px solid var(--border)" }}
       >
         <div className="text-[12.5px]" style={{ color: "var(--text-2)" }}>
           Documenten
         </div>
-        <a href={`${basisPad}?tab=notulen`} className="btn btn-primary btn-sm">📄 Notulen</a>
       </div>
 
       <div className="p-7">
@@ -294,7 +329,9 @@ export default async function DocumentenPage({
             )}
 
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+              {notulenAantal > 0 && notulenBlok}
               {getoond.map((c) => blokVoor(c.sleutel, c.label, c.omschrijving))}
+              {notulenAantal === 0 && notulenBlok}
             </div>
 
             {verborgen.length > 0 && (

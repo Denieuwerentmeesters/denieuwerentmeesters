@@ -11,6 +11,7 @@ import {
 import { ToevoegenToggle } from "@/components/ToevoegenToggle";
 import { SubsidieFilter } from "@/components/SubsidieFilter";
 import { moet } from "@/lib/db";
+import { VerwijderKnop } from "@/components/VerwijderKnop";
 
 function dagenTot(d: string | null) {
   if (!d) return null;
@@ -267,13 +268,10 @@ function KansRij({
       <form action={verbergKans}>
         <input type="hidden" name="landgoed_id" value={landgoedId} />
         <input type="hidden" name="subsidie_id" value={s.id} />
-        <button
-          type="submit"
-          className="btn btn-ghost btn-sm btn-danger"
+        <VerwijderKnop
+          vraag={`"${s.naam}" uit dit overzicht`}
           title="Wegklikken. De regeling blijft bewaard en je kunt hem terugzetten."
-        >
-          Verwijderen
-        </button>
+        />
       </form>
     </div>
   );

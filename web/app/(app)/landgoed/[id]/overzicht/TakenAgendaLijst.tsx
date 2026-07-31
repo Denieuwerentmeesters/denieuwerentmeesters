@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import { VerwijderKnop } from "@/components/VerwijderKnop";
 
 export type CombinedItem = {
   id: string;
@@ -363,12 +364,10 @@ export default function TakenAgendaLijst({
                 <form action={verwijderAgendaItem}>
                   <input type="hidden" name="landgoed_id" value={landgoedId} />
                   <input type="hidden" name="id" value={item.id} />
-                  <button
-                    type="submit"
+                  <VerwijderKnop
+                    vraag={`"${item.titel}"`}
                     className="btn btn-ghost btn-sm btn-danger text-[12px]"
-                  >
-                    Verwijderen
-                  </button>
+                  />
                 </form>
               )}
             </div>

@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { UploadFormulier } from "../UploadFormulier";
 import { verwijderDocument, wijzigCategorie } from "../acties";
+import { VerwijderKnop } from "@/components/VerwijderKnop";
 import {
   CATEGORIEEN,
   NOG_IN_TE_DELEN,
@@ -215,9 +216,7 @@ export default async function CategoriePagina({
                     <input type="hidden" name="landgoed_id" value={id} />
                     <input type="hidden" name="id" value={d.id} />
                     <input type="hidden" name="pad" value={d.bestand_pad ?? ""} />
-                    <button type="submit" className="btn btn-ghost btn-sm btn-danger">
-                      Verwijderen
-                    </button>
+                    <VerwijderKnop vraag={`"${d.titel}"`} />
                   </form>
                 </div>
               </div>

@@ -8,6 +8,7 @@ import {
   bevestigAlleDeelnemers,
   maakContactVanDeelnemer,
 } from "./acties";
+import { VerwijderKnop } from "@/components/VerwijderKnop";
 
 export type Deelnemer = {
   id: string;
@@ -85,14 +86,13 @@ export function Deelnemers({
                 <input type="hidden" name="id" value={d.id} />
                 <input type="hidden" name="gesprek_id" value={gesprekId} />
                 <input type="hidden" name="landgoed_id" value={landgoedId} />
-                <button
-                  type="submit"
-                  className="btn btn-ghost btn-sm btn-danger"
+                <VerwijderKnop
+                  vraag={`${d.naam} als deelnemer`}
                   title={`${d.naam} verwijderen`}
-                  style={{ padding: "2px 7px" }}
+                  className="btn btn-ghost btn-sm btn-danger px-[7px] py-[2px]"
                 >
                   ✕
-                </button>
+                </VerwijderKnop>
               </form>
             </div>
           ))}

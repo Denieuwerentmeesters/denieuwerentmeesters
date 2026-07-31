@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import SubmitKnop from "@/components/SubmitKnop";
+import { VerwijderKnop } from "@/components/VerwijderKnop";
 
 type Obj = {
   id: string;
@@ -160,10 +161,9 @@ export default function ObjectBewerken({
               </div>
 
               <div className="mt-1 flex items-center justify-between">
-                <button
-                  type="button"
-                  className="btn btn-ghost btn-sm btn-danger"
-                  onClick={async () => {
+                <VerwijderKnop
+                  vraag={`"${object.naam}"`}
+                  onBevestig={async () => {
                     const fd = new FormData();
                     fd.set("landgoed_id", landgoedId);
                     fd.set("id", object.id);
@@ -172,7 +172,7 @@ export default function ObjectBewerken({
                   }}
                 >
                   Verwijder
-                </button>
+                </VerwijderKnop>
                 <div className="flex gap-2">
                   <button
                     type="button"
