@@ -56,7 +56,16 @@ type LookupResult = {
   geom: unknown;
 };
 type Resultaat = LookupResult & { soort: "perceel" | "gebouw" };
-type Mode = "basis" | "perceel" | "gebouw";
+type Mode = "basis" | "perceel" | "indelen" | "gebouw";
+
+// Eén kadastraal perceel uit het bezit-register (fase 1), met indeel-status.
+type BezitPerceel = {
+  id: string;
+  aanduiding: string;
+  oppervlakteHa: string | null;
+  geom: unknown;
+  ingedeeld: boolean;
+};
 
 const PDOK_TILES =
   "https://service.pdok.nl/brt/achtergrondkaart/wmts/v2_0/standaard/EPSG:3857/{z}/{x}/{y}.png";
@@ -209,6 +218,10 @@ export default function Kaart({
   lookupGebouw,
   verwijderObject,
   controleerGebiedsligging,
+  bezit,
+  registreerBezit,
+  verwijderBezit,
+  deelPercelenIn,
 }: {
   landgoedId: string;
   objecten: PlaatsObject[];
@@ -222,6 +235,13 @@ export default function Kaart({
   lookupGebouw: (lat: number, lon: number) => Promise<LookupResult | null>;
   verwijderObject: (fd: FormData) => Promise<void>;
   controleerGebiedsligging: (fd: FormData) => Promise<void>;
+  bezit: BezitPerceel[];
+  registreerBezit: (
+    landgoedId: string,
+    kenmerken: Record<string, unknown>,
+  ) => Promise<{ status: "toegevoegd" | "bestond" | "onbruikbaar"; aanduiding: string }>;
+  verwijderBezit: (fd: FormData) => Promise<void>;
+  deelPercelenIn: (fd: FormData) => Promise<void>;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<LMap | null>(null);
@@ -247,6 +267,13 @@ export default function Kaart({
   const [punt, setPunt] = useState<{ lat: number; lon: number } | null>(null);
   const [basis, setBasis] = useState<Basis>(LEEG);
   const [resultaat, setResultaat] = useState<Resultaat | null>(null);
+  // Fase 1/2: laatste bezit-melding + de indeel-selectie (perceel-ids).
+  const [melding, setMelding] = useState<string | null>(null);
+  const [selectie, setSelectie] = useState<string[]>([]);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const bezitLaagRef = useRef<any>(null);
+  const bezitRef = useRef<BezitPerceel[]>(bezit);
+  bezitRef.current = bezit;
   const [bezig, setBezig] = useState(false);
   const [geselecteerd, setGeselecteerd] = useState<string | null>(null);
   const [koppelId, setKoppelId] = useState("");
@@ -333,6 +360,8 @@ export default function Kaart({
     setResultaat(null);
     setGeselecteerd(null);
     setKoppelId("");
+    setSelectie([]);
+    setMelding(null);
     wisHighlights();
     // In basis-modus: toon het hele landgoed i.p.v. handmatig inzoomen.
     if (mode === "basis") zoomNaarLandgoed();
@@ -344,6 +373,66 @@ export default function Kaart({
     tekenOverzicht();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [objecten]);
+
+  // Tekent het bezit-register: nog in te delen percelen grijs gestippeld,
+  // ingedeelde percelen als vrijwel onzichtbare klik-laag (hun kleur komt van
+  // het beheerperceel eronder), selectie in amber. Klikgedrag volgt de modus.
+  function tekenBezit() {
+    const L = LRef.current;
+    const map = mapRef.current;
+    if (!L || !map) return;
+    if (bezitLaagRef.current) {
+      bezitLaagRef.current.remove();
+      bezitLaagRef.current = null;
+    }
+    const groep = L.layerGroup();
+    for (const p of bezit) {
+      const latlngs = geomNaarLatlngs(L, p.geom);
+      if (!latlngs) continue;
+      const geselecteerd = selectie.includes(p.id);
+      const poly = L.polygon(
+        latlngs,
+        geselecteerd
+          ? { color: "#d97706", weight: 3, fillColor: "#d97706", fillOpacity: 0.3 }
+          : p.ingedeeld
+            ? { weight: 0, opacity: 0, fillColor: "#6b7280", fillOpacity: 0.02 }
+            : { color: "#6b7280", weight: 2, dashArray: "6 4", fillColor: "#9ca3af", fillOpacity: 0.15 },
+      );
+      poly.bindTooltip(
+        `${p.aanduiding}${p.ingedeeld ? "" : " · nog in te delen"}`,
+        { sticky: true },
+      );
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      poly.on("click", async (e: any) => {
+        // Voorkom dat de kaart-klik (lookup/registratie) er ook op afgaat.
+        if (e.originalEvent) L.DomEvent.stopPropagation(e.originalEvent);
+        const m = modeRef.current;
+        if (m === "indelen") {
+          setSelectie((prev) =>
+            prev.includes(p.id) ? prev.filter((x) => x !== p.id) : [...prev, p.id],
+          );
+        } else if (m === "perceel") {
+          if (p.ingedeeld) {
+            setMelding(`${p.aanduiding} is al ingedeeld bij een beheerperceel.`);
+            return;
+          }
+          const fd = new FormData();
+          fd.set("landgoed_id", landgoedId);
+          fd.set("perceel_id", p.id);
+          await verwijderBezit(fd);
+          setMelding(`${p.aanduiding} verwijderd uit het bezit.`);
+        }
+      });
+      poly.addTo(groep);
+    }
+    groep.addTo(map);
+    bezitLaagRef.current = groep;
+  }
+
+  useEffect(() => {
+    tekenBezit();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [bezit, selectie]);
 
   // Natura 2000-overlay aan/uit op basis van de toggle.
   useEffect(() => {
@@ -421,6 +510,7 @@ export default function Kaart({
 
       // Toon bij laden alle aangevinkte percelen en zoom in op het landgoed.
       tekenOverzicht();
+      tekenBezit();
       zoomNaarLandgoed();
 
       map.on("click", async (e: LeafletMouseEvent) => {
@@ -443,14 +533,41 @@ export default function Kaart({
         if (m === "basis") {
           setBasis(await reverseGeocode(lat, lon));
           setResultaat(null);
+        } else if (m === "perceel") {
+          // Fase 1 — bezit inladen: klik = direct registreren, geen formulier.
+          const r = await lookupPerceel(lat, lon);
+          setResultaat(null);
+          setPunt(null);
+          if (r) {
+            const res = await registreerBezit(landgoedId, {
+              ...r.kenmerken,
+              geom_3857: r.geom,
+            });
+            setMelding(
+              res.status === "toegevoegd"
+                ? `${res.aanduiding} toegevoegd aan het bezit.`
+                : res.status === "bestond"
+                  ? `${res.aanduiding} stond al in het bezit.`
+                  : "Geen bruikbaar perceel gevonden op dit punt.",
+            );
+          } else {
+            setMelding("Geen perceel gevonden op dit punt.");
+          }
+          if (tempRef.current) {
+            tempRef.current.remove();
+            tempRef.current = null;
+          }
+        } else if (m === "indelen") {
+          // Selecteren gaat via klikken op de getekende percelen zelf.
+          setPunt(null);
+          setMelding("Klik op een perceel (grijs gestippeld = nog in te delen).");
+          if (tempRef.current) {
+            tempRef.current.remove();
+            tempRef.current = null;
+          }
         } else {
-          const r =
-            m === "perceel"
-              ? await lookupPerceel(lat, lon)
-              : await lookupGebouw(lat, lon);
-          setResultaat(
-            r ? { ...r, soort: m === "gebouw" ? "gebouw" : "perceel" } : null,
-          );
+          const r = await lookupGebouw(lat, lon);
+          setResultaat(r ? { ...r, soort: "gebouw" } : null);
           tekenRand(L, map, randRef, r?.geom);
         }
         setBezig(false);
@@ -506,7 +623,8 @@ export default function Kaart({
         {(
           [
             ["basis", "Basis: landgoed-locatie"],
-            ["perceel", "Percelen aanklikken"],
+            ["perceel", "1 · Bezit inladen"],
+            ["indelen", "2 · Percelen indelen"],
             ["gebouw", "Gebouwen aanklikken"],
           ] as [Mode, string][]
         ).map(([m, lbl]) => (
@@ -556,9 +674,16 @@ export default function Kaart({
             ? "Klik op de kaart om de landgoed-locatie te wijzigen."
             : "Klik op de hoofdlocatie van het landgoed; adres/gemeente/provincie wordt opgezocht."
           : mode === "perceel"
-            ? "Klik op een perceel; randen en oppervlakte worden opgehaald (PDOK Kadaster)."
-            : "Klik op een gebouw; adres, oppervlakte, pandstatus en monumentstatus (RCE) worden opgehaald."}
+            ? "Klik-klik-klik: elk aangeklikt perceel gaat direct het bezit in (PDOK Kadaster). Nogmaals klikken op een grijs perceel verwijdert het weer. Indelen komt daarna."
+            : mode === "indelen"
+              ? "Selecteer een of meer grijze percelen en maak er samen een beheerperceel van — of voeg ze toe aan een bestaand beheerperceel."
+              : "Klik op een gebouw; adres, oppervlakte, pandstatus en monumentstatus (RCE) worden opgehaald."}
       </p>
+      {melding && (mode === "perceel" || mode === "indelen") && (
+        <p className="text-[12.5px] font-medium" style={{ color: "var(--text-2)" }}>
+          {melding}
+        </p>
+      )}
 
       <div
         ref={containerRef}
@@ -568,9 +693,71 @@ export default function Kaart({
 
       <p className="text-[11.5px]" style={{ color: "var(--text-3)" }}>
         Elke kleur is één beheerperceel (alle kadastrale vlakken die erbij horen) ·{" "}
-        <span style={{ color: "#dc2626" }}>rood</span> = aangeklikt, nog niet
-        geplaatst of gekoppeld.
+        <span style={{ color: "#6b7280" }}>grijs gestippeld</span> = bezit, nog in te
+        delen · <span style={{ color: "#d97706" }}>amber</span> = geselecteerd om in te
+        delen · <span style={{ color: "#dc2626" }}>rood</span> = aangeklikt gebouw.
       </p>
+
+      {/* Indeel-paneel (fase 2) */}
+      {mode === "indelen" && selectie.length > 0 && (
+        <form
+          action={async (fd) => {
+            await deelPercelenIn(fd);
+            setSelectie([]);
+            setKoppelId("");
+            setMelding("Percelen ingedeeld.");
+          }}
+          className="card flex flex-wrap items-end gap-3 p-4"
+        >
+          <input type="hidden" name="landgoed_id" value={landgoedId} />
+          {selectie.map((pid) => (
+            <input key={pid} type="hidden" name="perceel_id" value={pid} />
+          ))}
+          <div className="min-w-[220px] flex-1">
+            <label className="label-up mb-1 block">
+              {selectie.length} perceel{selectie.length > 1 ? "en" : ""} geselecteerd — indelen bij
+            </label>
+            <select
+              className="input"
+              name="bestaand_id"
+              value={koppelId}
+              onChange={(e) => setKoppelId(e.target.value)}
+            >
+              <option value="">— Nieuw beheerperceel —</option>
+              {koppelOpties.map((o) => (
+                <option key={o.id} value={o.id}>
+                  {o.naam}
+                </option>
+              ))}
+            </select>
+          </div>
+          {koppelId === "" && (
+            <div className="min-w-[180px] flex-1">
+              <label className="label-up mb-1 block">Naam</label>
+              <input className="input" name="naam" placeholder="bv. Weiland zuid" required />
+            </div>
+          )}
+          {koppelId === "" && (
+            <div>
+              <label className="label-up mb-1 block">Gebruik</label>
+              <select className="input" name="gebruik" defaultValue="">
+                <option value="">— kies —</option>
+                {GEBRUIK.map((g) => (
+                  <option key={g} value={g}>
+                    {g}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+          <SubmitKnop className="btn btn-primary" pendingTekst="Indelen…">
+            {koppelId ? "Toevoegen aan bestaand" : "Beheerperceel maken"}
+          </SubmitKnop>
+          <button type="button" className="btn btn-ghost btn-sm" onClick={() => setSelectie([])}>
+            Wis selectie
+          </button>
+        </form>
+      )}
 
       {/* Basis-paneel */}
       {mode === "basis" && punt && (
@@ -607,8 +794,8 @@ export default function Kaart({
         </form>
       )}
 
-      {/* Plaats-paneel (perceel of gebouw) */}
-      {mode !== "basis" && punt && (
+      {/* Plaats-paneel (alleen gebouwen; percelen gaan via bezit inladen + indelen) */}
+      {mode === "gebouw" && punt && (
         <form
           action={async (fd) => {
             await plaatsOpKaart(fd);
@@ -744,6 +931,38 @@ export default function Kaart({
             </div>
           )}
         </form>
+      )}
+
+      {/* Bezit dat nog niet is ingedeeld (werkvoorraad — mag blijven staan) */}
+      {bezit.some((p) => !p.ingedeeld) && (
+        <div>
+          <div className="mb-2 text-[13px] font-semibold">
+            Nog in te delen ({bezit.filter((p) => !p.ingedeeld).length})
+          </div>
+          <div className="card divide-y" style={{ borderColor: "var(--border)" }}>
+            {bezit
+              .filter((p) => !p.ingedeeld)
+              .map((p) => (
+                <div key={p.id} className="flex items-center gap-3 px-4 py-2.5">
+                  <div className="flex-1 text-[13.5px] font-medium">
+                    {p.aanduiding}
+                    {p.oppervlakteHa && (
+                      <span className="font-normal" style={{ color: "var(--text-2)" }}>
+                        {" "}· {p.oppervlakteHa}
+                      </span>
+                    )}
+                  </div>
+                  <form action={verwijderBezit}>
+                    <input type="hidden" name="landgoed_id" value={landgoedId} />
+                    <input type="hidden" name="perceel_id" value={p.id} />
+                    <button className="btn btn-ghost btn-sm" style={{ color: "var(--red)" }}>
+                      Verwijder
+                    </button>
+                  </form>
+                </div>
+              ))}
+          </div>
+        </div>
       )}
 
       {/* Geplaatste objecten, gegroepeerd */}
