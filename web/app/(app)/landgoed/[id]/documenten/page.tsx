@@ -174,7 +174,18 @@ export default async function DocumentenPage({
   // "Nog in te delen" staat vóór de rest — het is een werkvoorraad, geen onderwerp —
   // en verschijnt alleen als er iets in staat.
   const onderwerpen = CATEGORIEEN.filter((c) => c.sleutel !== NOG_IN_TE_DELEN);
-  const getoond = onderwerpen.filter((c) => zichtbaarheid[c.sleutel] !== "verborgen");
+
+  // Gevulde blokken eerst, dus linksboven. Waar het archief écht staat is het nieuws;
+  // de lege blokken zijn een geheugensteun en horen daaronder. Binnen elke groep blijft
+  // de volgorde van categorieen.ts staan, zodat een blok niet van plek springt zodra er
+  // één document bijkomt. sort() is stabiel, dus dat volgt vanzelf.
+  const getoond = onderwerpen
+    .filter((c) => zichtbaarheid[c.sleutel] !== "verborgen")
+    .sort(
+      (a, b) =>
+        Number(zichtbaarheid[b.sleutel] === "gevuld") -
+        Number(zichtbaarheid[a.sleutel] === "gevuld"),
+    );
   const verborgen = onderwerpen.filter((c) => zichtbaarheid[c.sleutel] === "verborgen");
 
   function blokVoor(sleutel: CategorieSleutel, label: string, uitleg: string) {
@@ -190,7 +201,9 @@ export default async function DocumentenPage({
         uitleg={uitleg}
         signaal={signaal}
         signaalTekst={tekst}
-        gedempt={zichtbaarheid[sleutel] === "relevant"}
+        // Alles wat leeg is wordt gedempt, of het nu in het raster staat of achter de
+        // uitklap: het onderscheid dat telt is "hier zit iets in" versus "hier nog niet".
+        gedempt={zichtbaarheid[sleutel] !== "gevuld"}
       />
     );
   }

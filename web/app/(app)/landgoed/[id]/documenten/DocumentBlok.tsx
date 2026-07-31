@@ -28,7 +28,7 @@ export function DocumentBlok({
   uitleg: string;
   signaal: Signaal;
   signaalTekst: string;
-  /** Leeg maar wel relevant: zichtbaar als openstaand gat, niet als volwaardig blok. */
+  /** Leeg: zichtbaar als openstaand gat, niet als volwaardig blok. */
   gedempt?: boolean;
 }) {
   const signaalKleur =
@@ -41,8 +41,14 @@ export function DocumentBlok({
   return (
     <Link
       href={href}
-      className="card flex flex-col p-5 transition-colors hover:bg-black/[0.02]"
-      style={{ borderColor: "var(--border)", opacity: gedempt ? 0.62 : 1 }}
+      // Stevig gedempt, niet subtiel: het verschil tussen "hier zit archief in" en "hier
+      // nog niets" moet je in één oogopslag zien, zonder te lezen. Hover haalt de demping
+      // weg, zodat een leeg blok wél gewoon aanklikbaar aanvoelt. De demping staat als
+      // class en niet in style, want een inline opacity wint van de hover-regel.
+      className={`card flex flex-col p-5 transition-all hover:bg-black/[0.02] ${
+        gedempt ? "opacity-40 hover:opacity-100" : ""
+      }`}
+      style={{ borderColor: "var(--border)" }}
     >
       <div className="mb-4 flex items-start justify-between">
         <span
