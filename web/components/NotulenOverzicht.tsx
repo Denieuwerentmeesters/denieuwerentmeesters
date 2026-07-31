@@ -4,7 +4,8 @@ import type { NotulenGesprek } from "@/lib/notulen";
  * Notulenoverzicht met filterbalk (titel + datumbereik). Server-component: het filter is
  * een gewoon GET-formulier, dus deelbaar via de URL en zonder client-side state.
  *
- * Wordt gebruikt op /vergaderingen (?notulen=1) én op /documenten (?tab=notulen).
+ * Wordt gebruikt op /vergaderingen (?notulen=1) én op de documentencategorie
+ * /documenten/vergaderingen, waar de notulen onder de archiefstukken staan.
  */
 export function NotulenOverzicht({
   gesprekken,
@@ -19,7 +20,7 @@ export function NotulenOverzicht({
   landgoedId: string;
   /** Pad waar het filterformulier naartoe post (dezelfde pagina). */
   actie: string;
-  /** Extra querystring-velden die behouden moeten blijven (bijv. tab=notulen). */
+  /** Extra querystring-velden die behouden moeten blijven. */
   verborgenVelden?: Record<string, string>;
   q?: string;
   van?: string;

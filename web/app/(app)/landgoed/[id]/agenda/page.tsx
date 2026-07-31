@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { nieuwAgendaItem, verwijderAgendaItem } from "../actions";
 import { ToevoegenToggle } from "@/components/ToevoegenToggle";
+import { VerwijderKnop } from "@/components/VerwijderKnop";
 
 export default async function AgendaPage({
   params,
@@ -192,9 +193,10 @@ function AgendaRij({
       <form action={verwijderAgendaItem}>
         <input type="hidden" name="landgoed_id" value={landgoed_id} />
         <input type="hidden" name="id" value={item.id} />
-        <button type="submit" className="btn btn-ghost btn-sm btn-danger text-[12px]">
-          Verwijderen
-        </button>
+        <VerwijderKnop
+          vraag={`"${item.titel}"`}
+          className="btn btn-ghost btn-sm btn-danger text-[12px]"
+        />
       </form>
     </div>
   );

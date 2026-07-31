@@ -1,6 +1,6 @@
+import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { haalNotulen } from "@/lib/notulen";
-import { NotulenOverzicht } from "@/components/NotulenOverzicht";
 import { DocumentBlok, CATEGORIE_ICOON } from "./DocumentBlok";
 import { UploadFormulier } from "./UploadFormulier";
 import CategorieReview from "./CategorieReview";
@@ -30,51 +30,15 @@ export default async function DocumentenPage({
   const basisPad = `/landgoed/${id}/documenten`;
   const notulenTab = tab === "notulen";
 
-  // ── Tab "Notulen": de AI-notulen uit de vergadermodule, hier terug te vinden ──
+  // De losse notulen-tab is opgegaan in de categorie "Vergaderingen, notulen,
+  // verslagen": notulen stonden eerder buiten het archief terwijl ze er inhoudelijk
+  // in horen, waardoor dat blok "leeg" toonde terwijl er wel notulen waren. Oude
+  // links blijven werken via deze doorverwijzing; het filter loopt gewoon mee.
   if (notulenTab) {
-    const { gesprekken, fout } = await haalNotulen(supabase, id, { titel: q, van, tot });
-
-    return (
-      <div className="flex flex-col">
-        <div
-          className="flex items-center justify-between gap-4 bg-white px-7 py-4"
-          style={{ borderBottom: "1px solid var(--border)" }}
-        >
-          <div className="text-[12.5px]" style={{ color: "var(--text-2)" }}>Documenten / Notulen</div>
-          <div className="flex gap-2">
-            <a href={basisPad} className="btn btn-ghost btn-sm">Bestanden</a>
-            <a href={`${basisPad}?tab=notulen`} className="btn btn-primary btn-sm">📄 Notulen</a>
-          </div>
-        </div>
-
-        <div className="p-7">
-          <header className="mb-5">
-            <h1 className="text-[22px] font-bold">Notulen</h1>
-            <p className="mt-1 text-[13px]" style={{ color: "var(--text-2)" }}>
-              Notulen van vergaderingen en opnames — automatisch bewaard bij het gesprek.
-              Zodra een verslag definitief wordt gemaakt, komt het ook als archiefstuk
-              onder <strong>Vergaderingen en verslagen</strong> te staan.
-            </p>
-          </header>
-
-          {fout ? (
-            <div className="card p-5 text-[13px]" style={{ color: "var(--red)" }}>
-              Notulen ophalen mislukt: {fout}
-            </div>
-          ) : (
-            <NotulenOverzicht
-              gesprekken={gesprekken}
-              landgoedId={id}
-              actie={basisPad}
-              verborgenVelden={{ tab: "notulen" }}
-              q={q ?? ""}
-              van={van ?? ""}
-              tot={tot ?? ""}
-            />
-          )}
-        </div>
-      </div>
-    );
+    const query = new URLSearchParams(
+      Object.entries({ q, van, tot }).filter(([, v]) => v) as [string, string][],
+    ).toString();
+    redirect(`${basisPad}/vergaderingen${query ? `?${query}` : ""}`);
   }
 
   // Eén query voor alle documenten van dit landgoed; tellen, indelen en signaleren
@@ -134,6 +98,14 @@ export default async function DocumentenPage({
   const tellingen: Record<string, number> = {};
   for (const [c, lijst] of perCategorie) tellingen[c] = lijst.length;
 
+  // Notulen leven in gesprek_bewerking, niet in document. Ze horen wél bij de
+  // categorie "Vergaderingen, notulen, verslagen" — anders staat dat blok op "leeg"
+  // terwijl er notulen zijn, en dat is precies waar het eerder op misging. Ze tellen
+  // dus mee voor het aantal, voor de sortering en voor de relevantie.
+  const { gesprekken: notulenGesprekken } = await haalNotulen(supabase, id);
+  const notulenAantal = notulenGesprekken.reduce((n, g) => n + g.notulen.length, 0);
+  tellingen.vergaderingen = (tellingen.vergaderingen ?? 0) + notulenAantal;
+
   const zichtbaarheid = bepaalRelevantie(
     {
       heeftContracten: (aantalContracten ?? 0) > 0,
@@ -190,6 +162,9 @@ export default async function DocumentenPage({
 
   function blokVoor(sleutel: CategorieSleutel, label: string, uitleg: string) {
     const lijst = perCategorie.get(sleutel) ?? [];
+    // Notulen zijn geen document-rij, dus ze zitten niet in `lijst`; voor het aantal
+    // tellen ze wel mee. Zie de toelichting hierboven bij `tellingen`.
+    const extra = sleutel === "vergaderingen" ? notulenAantal : 0;
     const { signaal, tekst } = bepaalSignaal(sleutel, lijst);
     return (
       <DocumentBlok
@@ -197,10 +172,16 @@ export default async function DocumentenPage({
         href={`${basisPad}/${sleutel}`}
         icoon={CATEGORIE_ICOON[sleutel]}
         titel={label}
-        aantal={lijst.length}
+        aantal={lijst.length + extra}
         uitleg={uitleg}
         signaal={signaal}
-        signaalTekst={tekst}
+        signaalTekst={
+          sleutel === "vergaderingen" && notulenAantal > 0
+            ? `${notulenAantal} ${notulenAantal === 1 ? "notule" : "notulen"} uit de vergadermodule${
+                lijst.length > 0 ? `, ${lijst.length} vastgelegd` : ", nog niet vastgelegd"
+              }`
+            : tekst
+        }
         // Alles wat leeg is wordt gedempt, of het nu in het raster staat of achter de
         // uitklap: het onderscheid dat telt is "hier zit iets in" versus "hier nog niet".
         gedempt={zichtbaarheid[sleutel] !== "gevuld"}
@@ -210,15 +191,13 @@ export default async function DocumentenPage({
 
   return (
     <div className="flex flex-col">
-      {/* Notulen staat rechtsboven in de balk, net als op de vergaderingenpagina. */}
       <div
-        className="flex items-center justify-between gap-4 bg-white px-7 py-4"
+        className="bg-white px-7 py-4"
         style={{ borderBottom: "1px solid var(--border)" }}
       >
         <div className="text-[12.5px]" style={{ color: "var(--text-2)" }}>
           Documenten
         </div>
-        <a href={`${basisPad}?tab=notulen`} className="btn btn-primary btn-sm">📄 Notulen</a>
       </div>
 
       <div className="p-7">

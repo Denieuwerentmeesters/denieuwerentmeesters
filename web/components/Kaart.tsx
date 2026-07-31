@@ -10,6 +10,7 @@ import type {
   LeafletMouseEvent,
 } from "leaflet";
 import SubmitKnop from "@/components/SubmitKnop";
+import { VerwijderKnop } from "@/components/VerwijderKnop";
 
 type PlaatsObject = {
   id: string;
@@ -739,9 +740,7 @@ export default function Kaart({
                         <form action={verwijderObject}>
                           <input type="hidden" name="landgoed_id" value={landgoedId} />
                           <input type="hidden" name="id" value={o.id} />
-                          <button className="btn btn-ghost btn-sm btn-danger">
-                            Verwijder
-                          </button>
+                          <VerwijderKnop vraag={`"${o.naam}"`}>Verwijder</VerwijderKnop>
                         </form>
                       </div>
                     ))}

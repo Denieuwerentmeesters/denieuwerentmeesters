@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { VerwijderKnop } from "@/components/VerwijderKnop";
 
 export type KalenderEvent = {
   datum: string; // YYYY-MM-DD
@@ -216,11 +217,7 @@ export default function Kalender({
               <form action={verwijderAgendaItem}>
                 <input type="hidden" name="landgoed_id" value={landgoedId} />
                 <input type="hidden" name="id" value={e.agendaId ?? ""} />
-                <button
-                  className="btn btn-ghost btn-sm btn-danger"
-                >
-                  Verwijder
-                </button>
+                <VerwijderKnop vraag={`"${e.titel}"`}>Verwijder</VerwijderKnop>
               </form>
             </div>
           ))}

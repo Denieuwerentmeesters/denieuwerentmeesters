@@ -15,6 +15,7 @@ import { KopieerKnop } from "./KopieerKnop";
 import { TitelBewerken } from "./TitelBewerken";
 import { Deelnemers, type Deelnemer } from "./Deelnemers";
 import { Agendapunten, type AgendapuntVoorstelRij } from "./Agendapunten";
+import { VerwijderKnop } from "@/components/VerwijderKnop";
 
 type Params = { id: string; gesprekId: string };
 
@@ -115,11 +116,9 @@ export default async function GesprekDetailPage({
             <form action={ruimTranscriptOp}>
               <input type="hidden" name="gesprek_id" value={gesprekId} />
               <input type="hidden" name="landgoed_id" value={id} />
-              <button type="submit" className="btn btn-ghost btn-sm btn-danger"
-                formAction={ruimTranscriptOp}
-              >
+              <VerwijderKnop vraag="het transcript van dit gesprek">
                 Transcript opruimen (AVG)
-              </button>
+              </VerwijderKnop>
             </form>
           )}
         </div>

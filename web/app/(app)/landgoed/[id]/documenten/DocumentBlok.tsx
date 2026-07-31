@@ -19,6 +19,7 @@ export function DocumentBlok({
   uitleg,
   signaal,
   signaalTekst,
+  eenheid = ["stuk", "stukken"],
   gedempt = false,
 }: {
   href: string;
@@ -28,6 +29,8 @@ export function DocumentBlok({
   uitleg: string;
   signaal: Signaal;
   signaalTekst: string;
+  /** Enkelvoud en meervoud naast de titel. Notulen zijn geen "stukken". */
+  eenheid?: [string, string];
   /** Leeg: zichtbaar als openstaand gat, niet als volwaardig blok. */
   gedempt?: boolean;
 }) {
@@ -67,7 +70,7 @@ export function DocumentBlok({
       <div className="flex items-baseline gap-2">
         <span className="text-[15px] font-semibold">{titel}</span>
         <span className="text-[12.5px]" style={{ color: "var(--text-2)" }}>
-          {aantal === 0 ? "leeg" : `${aantal} ${aantal === 1 ? "stuk" : "stukken"}`}
+          {aantal === 0 ? "leeg" : `${aantal} ${aantal === 1 ? eenheid[0] : eenheid[1]}`}
         </span>
       </div>
       <p className="mt-1 text-[12.5px] leading-snug" style={{ color: "var(--text-2)" }}>
