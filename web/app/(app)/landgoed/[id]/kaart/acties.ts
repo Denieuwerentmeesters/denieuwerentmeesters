@@ -837,7 +837,9 @@ export async function plaatsOpKaart(fd: FormData) {
   const koppel_id = String(fd.get("koppel_id") ?? "").trim();
   const categorie = String(fd.get("categorie") ?? "overig");
   const naam = String(fd.get("naam") ?? "").trim();
-  const gebruik = String(fd.get("gebruik") ?? "").trim();
+  // Gebruik is een eigenschap van het beheerperceel als geheel; bij koppelen
+  // aan een bestaand object dus negeren (de UI verbergt het veld dan ook al).
+  const gebruik = koppel_id ? "" : String(fd.get("gebruik") ?? "").trim();
   const lat = Number(fd.get("lat"));
   const lon = Number(fd.get("lon"));
   if (!Number.isFinite(lat) || !Number.isFinite(lon)) return;

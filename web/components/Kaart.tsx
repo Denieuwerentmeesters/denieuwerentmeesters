@@ -86,6 +86,15 @@ const GEBRUIK = [
 const GEBOUW_CATS = new Set(["gebouw", "woning", "opstal"]);
 const PERCEEL_CATS = new Set(["pachtperceel"]);
 
+// Elk beheerperceel krijgt z'n eigen kleur op de kaart, zodat je in één
+// oogopslag ziet welke (kadastrale) vlakken samen één eenheid vormen.
+// Rood (#dc2626) is gereserveerd voor de selectie ("aangeklikt, nog niet
+// gekoppeld") en zit daarom niet in dit palet.
+const BEHEER_KLEUREN = [
+  "#1B6B4A", "#8A5A2B", "#3B6FA0", "#7B4FA0",
+  "#B0762A", "#4A8A8A", "#A04F5E", "#5B7F2B",
+];
+
 const KAARTGROEP_LABELS = [
   "Gebouwen",
   "Agrarisch",
@@ -267,26 +276,33 @@ export default function Kaart({
     boundsRef.current = null;
     const groep = L.layerGroup();
     const bounds = L.latLngBounds([]);
+    let perceelIndex = 0;
     for (const o of objecten) {
       if (PERCEEL_CATS.has(o.categorie)) {
         // Alle gekoppelde kadastrale vormen tekenen (één beheerperceel kan er
-        // meerdere hebben); terugval op de losse kenmerken-vorm.
+        // meerdere hebben) — in één eigen kleur per beheerperceel, zodat de
+        // eenheid zichtbaar is. Terugval op de losse kenmerken-vorm.
+        const kleur = BEHEER_KLEUREN[perceelIndex % BEHEER_KLEUREN.length];
         const vormen = o.geoms?.length ? o.geoms : [o.geom];
         let getekend = false;
         for (const vorm of vormen) {
           const latlngs = geomNaarLatlngs(L, vorm);
           if (!latlngs) continue;
           const poly = L.polygon(latlngs, {
-            color: "#1B3A28",
-            weight: 2.5,
-            fillColor: "#2A5C3F",
-            fillOpacity: 0.4,
+            color: kleur,
+            weight: 3,
+            fillColor: kleur,
+            fillOpacity: 0.28,
           });
+          poly.bindTooltip(o.naam, { sticky: true });
           poly.addTo(groep);
           bounds.extend(poly.getBounds());
           getekend = true;
         }
-        if (getekend) continue;
+        if (getekend) {
+          perceelIndex++;
+          continue;
+        }
       }
       if (Number.isFinite(o.lat) && Number.isFinite(o.lon)) {
         L.circleMarker([o.lat, o.lon], {
@@ -550,6 +566,12 @@ export default function Kaart({
         style={{ height: 480, padding: 0 }}
       />
 
+      <p className="text-[11.5px]" style={{ color: "var(--text-3)" }}>
+        Elke kleur is één beheerperceel (alle kadastrale vlakken die erbij horen) ·{" "}
+        <span style={{ color: "#dc2626" }}>rood</span> = aangeklikt, nog niet
+        geplaatst of gekoppeld.
+      </p>
+
       {/* Basis-paneel */}
       {mode === "basis" && punt && (
         <form action={setBasisLocatie} className="card p-4">
@@ -587,7 +609,25 @@ export default function Kaart({
 
       {/* Plaats-paneel (perceel of gebouw) */}
       {mode !== "basis" && punt && (
-        <form action={plaatsOpKaart} className="card p-4">
+        <form
+          action={async (fd) => {
+            await plaatsOpKaart(fd);
+            // Selectie wissen: het rood ("aangeklikt, nog niet gekoppeld") hoort
+            // te verdwijnen zodra het plaatsen/koppelen klaar is.
+            setResultaat(null);
+            setPunt(null);
+            setKoppelId("");
+            if (randRef.current) {
+              randRef.current.remove();
+              randRef.current = null;
+            }
+            if (tempRef.current) {
+              tempRef.current.remove();
+              tempRef.current = null;
+            }
+          }}
+          className="card p-4"
+        >
           <input type="hidden" name="landgoed_id" value={landgoedId} />
           <input type="hidden" name="lat" value={punt.lat} />
           <input type="hidden" name="lon" value={punt.lon} />
@@ -682,17 +722,21 @@ export default function Kaart({
                 </div>
               )}
 
-              <div>
-                <label className="label-up mb-1 block">Gebruik</label>
-                <select className="input" name="gebruik" defaultValue="">
-                  <option value="">— kies —</option>
-                  {GEBRUIK.map((g) => (
-                    <option key={g} value={g}>
-                      {g}
-                    </option>
-                  ))}
-                </select>
-              </div>
+              {/* Gebruik is een eigenschap van het beheerperceel als geheel —
+                  bij koppelen aan een bestaand object dus niet opnieuw kiezen. */}
+              {koppelId === "" && (
+                <div>
+                  <label className="label-up mb-1 block">Gebruik</label>
+                  <select className="input" name="gebruik" defaultValue="">
+                    <option value="">— kies —</option>
+                    {GEBRUIK.map((g) => (
+                      <option key={g} value={g}>
+                        {g}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
 
               <SubmitKnop className="btn btn-primary" pendingTekst="Opslaan…">
                 {koppelId ? "Koppel & verrijk" : "Plaats"}
