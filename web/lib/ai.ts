@@ -1,4 +1,10 @@
 import Anthropic from "@anthropic-ai/sdk";
+import {
+  CATEGORIEEN,
+  NOG_IN_TE_DELEN,
+  isCategorie,
+  type CategorieSleutel,
+} from "@/app/(app)/landgoed/[id]/documenten/categorieen";
 
 // AI-laag. Alles env-gated: zonder ANTHROPIC_API_KEY blijven de handmatige
 // flows in de app gewoon werken; AI-functies geven dan null terug.
@@ -673,4 +679,101 @@ export async function extraheerLopendeSubsidies(bron: {
     LOPENDE_SUBSIDIES_SYSTEEM,
     `Brontekst:\n${bron.tekst ?? ""}\n\nGeef de lopende subsidies.`,
   );
+}
+
+// ── Documentclassificatie ──
+// Deelt een geüpload document of e-mailbijlage in bij een categorie. Dit is de
+// route "inhoud bepaalt de categorie": het resultaat is altijd een VOORSTEL dat de
+// gebruiker bevestigt (categorie_herkomst='inhoud', categorie_geaccordeerd=false).
+// Komt de categorie uit de herkomst (notulen uit een gesprek, upload vanaf een
+// contractpagina), dan hoort deze functie er niet aan te pas te komen.
+
+export type DocumentClassificatie = {
+  categorie: CategorieSleutel;
+  reden: string; // één zin Nederlands
+  zekerheid: "hoog" | "midden" | "laag";
+  geldig_tot?: string | null; // yyyy-mm-dd of null
+  is_leidend?: boolean;
+};
+
+// De categorielijst komt uit categorieen.ts — één bron voor constraint, UI én
+// prompt. Zo kan de prompt niet stilletjes achterlopen op het schema.
+const CATEGORIE_UITLEG = CATEGORIEEN.filter((c) => c.sleutel !== NOG_IN_TE_DELEN)
+  .map(
+    (c) =>
+      `- ${c.sleutel}: ${c.omschrijving} Let op woorden als: ${c.trefwoorden.join(", ")}.`,
+  )
+  .join("\n");
+
+const CLASSIFICATIE_SYSTEEM =
+  "Je deelt documenten van een Nederlands landgoed in bij één archiefcategorie. " +
+  "Je oordeelt UITSLUITEND op wat er letterlijk in het document staat.\n\n" +
+  "De categorieën:\n" +
+  CATEGORIE_UITLEG +
+  "\n- nog_in_te_delen: gebruik deze als je het niet met redelijke zekerheid weet.\n\n" +
+  "HARDE REGELS:\n" +
+  "1. Bij twijfel kies je nog_in_te_delen. Liever een gat dan een aanname.\n" +
+  "2. Let scherp op het verschil tussen contracten_verhuur en leveranciers. " +
+  "contracten_verhuur = het landgoed ONTVANGT geld: pacht, huur, jachthuur, " +
+  "gebruiksvergoeding; de wederpartij is huurder of pachter. leveranciers = het " +
+  "landgoed BETAALT: aannemer, hovenier, installateur, offerte, onderhoudscontract, " +
+  "opdrachtbevestiging. Dit is de meest gemaakte fout — bepaal eerst wie er betaalt " +
+  "en wie er ontvangt, en kies dan pas.\n" +
+  "3. Geef altijd een REDEN van één zin in het Nederlands, gebaseerd op wat er in " +
+  "het document staat (\"Het stuk is een pachtovereenkomst waarin het landgoed " +
+  "verpachter is\"). Geen algemeenheden.\n" +
+  "4. Geef een ZEKERHEID: hoog / midden / laag. Kies 'laag' zodra je moet gissen; " +
+  "bij 'laag' is de categorie altijd nog_in_te_delen.\n" +
+  "5. Noemt het document een einddatum van de geldigheid (keuring geldig tot, " +
+  "vergunning verloopt op, beschikking loopt tot), geef die dan als geldig_tot in " +
+  "yyyy-mm-dd. Staat er geen einddatum, of moet je hem uitrekenen uit een looptijd " +
+  "waar je niet zeker van bent, geef dan null. Nooit zelf een termijn optellen.\n" +
+  "6. is_leidend = true als dit het juridisch of procesmatig leidende stuk is " +
+  "(beschikking, notariële akte, ondertekend contract, definitief keuringsrapport). " +
+  "false bij begeleidende correspondentie, concepten, ontvangstbevestigingen en bijlagen.\n" +
+  "7. VERZIN NIETS. Geen persoonsgegevens afleiden, geen koppelingen raden, geen " +
+  "categorie kiezen op grond van de bestandsnaam alleen.\n\n" +
+  "Antwoord UITSLUITEND met JSON: " +
+  "{categorie, reden, zekerheid, geldig_tot, is_leidend}.";
+
+// Vangnet op de modeluitvoer: een onbekende categorie of een lage zekerheid mag
+// nooit als indeling in de database landen. Regel 4 staat ook in de prompt, maar
+// een prompt is geen garantie — dit is de plek waar het wél afgedwongen wordt.
+function normaliseerClassificatie(
+  ruw: DocumentClassificatie | null,
+): DocumentClassificatie | null {
+  if (!ruw || typeof ruw.reden !== "string") return null;
+  const zekerheid =
+    ruw.zekerheid === "hoog" || ruw.zekerheid === "midden" ? ruw.zekerheid : "laag";
+  const geldig = typeof ruw.geldig_tot === "string" && /^\d{4}-\d{2}-\d{2}$/.test(ruw.geldig_tot)
+    ? ruw.geldig_tot
+    : null;
+  const bruikbaar =
+    zekerheid !== "laag" && typeof ruw.categorie === "string" && isCategorie(ruw.categorie);
+  return {
+    categorie: bruikbaar ? (ruw.categorie as CategorieSleutel) : NOG_IN_TE_DELEN,
+    reden: ruw.reden.trim(),
+    zekerheid,
+    geldig_tot: geldig,
+    is_leidend: bruikbaar ? ruw.is_leidend === true : false,
+  };
+}
+
+export async function classificeerDocument(bron: {
+  titel: string;
+  tekst?: string;
+  pdf?: { base64: string; mediaType: string };
+}): Promise<DocumentClassificatie | null> {
+  const kop = `Bestandsnaam/titel: ${bron.titel}\n\n`;
+  const ruw = bron.pdf
+    ? await vraagJsonMetDocument<DocumentClassificatie>(
+        CLASSIFICATIE_SYSTEEM,
+        `${kop}Lees het bijgevoegde document en geef de classificatie.`,
+        bron.pdf,
+      )
+    : await vraagJson<DocumentClassificatie>(
+        CLASSIFICATIE_SYSTEEM,
+        `${kop}Documenttekst:\n${bron.tekst ?? ""}\n\nGeef de classificatie.`,
+      );
+  return normaliseerClassificatie(ruw);
 }
