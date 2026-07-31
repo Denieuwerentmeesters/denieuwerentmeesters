@@ -71,7 +71,7 @@ export default async function ProfielPage({
   const { id } = await params;
   const supabase = await createClient();
 
-  const [{ data: landgoed }, { data: objecten }] = await Promise.all([
+  const [{ data: landgoed }, { data: objecten }, { data: kadPercelen }] = await Promise.all([
     supabase
       .from("landgoed")
       .select(
@@ -83,6 +83,15 @@ export default async function ProfielPage({
       .from("stamobject")
       .select("id, naam, categorie, kenmerken, geaccordeerd")
       .eq("landgoed_id", id),
+    // De echte kadastrale registratie (stap 1); leeg zolang de migratie nog
+    // niet is toegepast — dan valt de weergave terug op de kenmerken-json.
+    supabase
+      .from("kadastraal_perceel")
+      .select("kadastrale_gemeente, sectie, perceelnummer, oppervlakte_m2")
+      .eq("landgoed_id", id)
+      .order("kadastrale_gemeente")
+      .order("sectie")
+      .order("perceelnummer"),
   ]);
 
   const objs = objecten ?? [];
@@ -123,6 +132,20 @@ export default async function ProfielPage({
       if (k.perceelnummer != null) arr.push(String(k.perceelnummer));
       secties.set(sleutel, arr);
     }
+  }
+
+  // Kadastrale registratie is leidend zodra die gevuld is (ontdubbeld en met
+  // officiële aanduiding); de json-afleiding blijft de terugval.
+  const kadastraal = kadPercelen ?? [];
+  if (kadastraal.length > 0) {
+    secties.clear();
+    for (const p of kadastraal) {
+      const sleutel = [p.kadastrale_gemeente, `sectie ${p.sectie}`].join(" · ");
+      const arr = secties.get(sleutel) ?? [];
+      arr.push(String(p.perceelnummer));
+      secties.set(sleutel, arr);
+    }
+    aantalPercelen = kadastraal.length;
   }
 
   const heeftPercelen = perceelM2 > 0 || aantalPercelen > 0;

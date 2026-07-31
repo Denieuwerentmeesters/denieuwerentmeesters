@@ -2,6 +2,59 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
+import { moet } from "@/lib/db";
+
+// ── Kadastrale verankering (stap 1) ──
+// Bij het plaatsen van een perceel wordt naast de kenmerken-json (transitie)
+// ook de echte registratie gevuld: kadastraal_perceel (uniek per officiële
+// aanduiding) + de N:M-koppeling met het beheerperceel. Twee beheerpercelen op
+// hetzelfde kadastrale nummer is legitiem (deelgebruik) — geen fout, gewoon
+// koppelen aan de bestaande registratie.
+async function registreerKadastraalPerceel(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  landgoed_id: string,
+  stamobject_id: string,
+  kenmerken: Record<string, unknown>,
+) {
+  const gem = String(kenmerken.kadastrale_gemeente ?? "").trim();
+  const sectie = String(kenmerken.sectie ?? "").trim();
+  const nr = String(kenmerken.perceelnummer ?? "").trim();
+  if (!gem || !sectie || !nr) return; // geen complete kadastrale aanduiding
+
+  const aanduiding =
+    String(kenmerken.kadastrale_aanduiding ?? "").trim() ||
+    `${gem} ${sectie} ${nr}`;
+  const opp = Number(kenmerken.oppervlakte_m2);
+
+  const perceel = await moet(
+    supabase
+      .from("kadastraal_perceel")
+      .upsert(
+        {
+          landgoed_id,
+          kadastrale_gemeente: gem,
+          sectie,
+          perceelnummer: nr,
+          kadastrale_aanduiding: aanduiding,
+          oppervlakte_m2: Number.isFinite(opp) ? opp : null,
+          bron_identificatie: String(kenmerken.identificatie ?? "").trim() || null,
+          opgehaald_op: new Date().toISOString(),
+        },
+        { onConflict: "landgoed_id,kadastrale_gemeente,sectie,perceelnummer" },
+      )
+      .select("id")
+      .single(),
+    "kadastraal perceel registreren",
+  );
+
+  await moet(
+    supabase.from("beheerperceel_kadastraal").upsert(
+      { landgoed_id, stamobject_id, kadastraal_perceel_id: perceel.id },
+      { onConflict: "stamobject_id,kadastraal_perceel_id", ignoreDuplicates: true },
+    ),
+    "perceelkoppeling registreren",
+  );
+}
 
 function str(fd: FormData, k: string) {
   const v = String(fd.get(k) ?? "").trim();
@@ -805,21 +858,33 @@ export async function plaatsOpKaart(fd: FormData) {
       .eq("id", koppel_id)
       .maybeSingle();
     const merged = { ...((best?.kenmerken as object) ?? {}), ...geo };
-    await supabase
-      .from("stamobject")
-      .update({ kenmerken: merged, geometrie_type: "vlak", geaccordeerd: true })
-      .eq("id", koppel_id);
+    await moet(
+      supabase
+        .from("stamobject")
+        .update({ kenmerken: merged, geometrie_type: "vlak", geaccordeerd: true })
+        .eq("id", koppel_id),
+      "stamgegeven verrijken",
+    );
+    await registreerKadastraalPerceel(supabase, landgoed_id, koppel_id, geo);
   } else {
     if (!naam) return;
-    await supabase.from("stamobject").insert({
-      landgoed_id,
-      naam,
-      categorie,
-      geometrie_type: "vlak",
-      herkomst: "handmatig",
-      geaccordeerd: true,
-      kenmerken: geo,
-    });
+    const nieuw = await moet(
+      supabase
+        .from("stamobject")
+        .insert({
+          landgoed_id,
+          naam,
+          categorie,
+          geometrie_type: "vlak",
+          herkomst: "handmatig",
+          geaccordeerd: true,
+          kenmerken: geo,
+        })
+        .select("id")
+        .single(),
+      "object plaatsen",
+    );
+    await registreerKadastraalPerceel(supabase, landgoed_id, nieuw.id, geo);
   }
   revalidatePath(`/landgoed/${landgoed_id}/kaart`);
 }
