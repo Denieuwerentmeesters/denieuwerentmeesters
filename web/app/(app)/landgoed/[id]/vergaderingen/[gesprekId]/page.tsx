@@ -8,6 +8,7 @@ import {
   afwijsActie,
   ruimTranscriptOp,
 } from "./acties";
+import { maakBewerkingDefinitief } from "../acties";
 import { PromptKiezer } from "./PromptKiezer";
 import { AudioOpname } from "./AudioOpname";
 import { KopieerKnop } from "./KopieerKnop";
@@ -214,12 +215,27 @@ export default async function GesprekDetailPage({
           return s?.output_type !== "taken";
         }).map((b) => {
           const s = b.prompt_sjabloon as unknown as { titel: string } | null;
+          const definitief = b.status === "definitief";
           return (
             <section key={b.id} className="card p-5">
-              <div className="flex items-center gap-2 mb-3">
+              <div className="flex flex-wrap items-center gap-2 mb-3">
                 <h2 className="text-[14px] font-semibold">{s?.titel ?? "Eigen opdracht"}</h2>
-                <span className="tag tag-green">AI-output</span>
-                <div className="ml-auto">
+                <span className={`tag ${definitief ? "tag-gray" : "tag-green"}`}>
+                  {definitief ? "definitief" : "AI-output"}
+                </span>
+                <div className="ml-auto flex items-center gap-2">
+                  {/* Definitief maken laat het verslag doorstromen naar het archief,
+                      onder "Vergaderingen en verslagen". De tekst blijft hier leven;
+                      het document verwijst ernaar. Opnieuw indrukken na een herziening
+                      werkt dezelfde rij bij en maakt geen tweede. */}
+                  <form action={maakBewerkingDefinitief}>
+                    <input type="hidden" name="landgoed_id" value={id} />
+                    <input type="hidden" name="gesprek_id" value={gesprekId} />
+                    <input type="hidden" name="bewerking_id" value={b.id} />
+                    <button type="submit" className="btn btn-ghost btn-sm">
+                      {definitief ? "Archiefstuk bijwerken" : "Definitief maken"}
+                    </button>
+                  </form>
                   <KopieerKnop tekst={b.output_tekst ?? ""} />
                 </div>
               </div>
