@@ -38,6 +38,7 @@ async function registreerKadastraalPerceel(
           kadastrale_aanduiding: aanduiding,
           oppervlakte_m2: Number.isFinite(opp) ? opp : null,
           bron_identificatie: String(kenmerken.identificatie ?? "").trim() || null,
+          geom_3857: kenmerken.geom_3857 ?? null,
           opgehaald_op: new Date().toISOString(),
         },
         { onConflict: "landgoed_id,kadastrale_gemeente,sectie,perceelnummer" },
@@ -857,7 +858,20 @@ export async function plaatsOpKaart(fd: FormData) {
       .select("kenmerken")
       .eq("id", koppel_id)
       .maybeSingle();
-    const merged = { ...((best?.kenmerken as object) ?? {}), ...geo };
+    // Heeft het object al kadastrale aantekeningen, dan die NIET overschrijven:
+    // een tweede gekoppeld perceel walste voorheen de eerste plat (één json kan
+    // maar één vorm/oppervlakte dragen). De volledige waarheid staat in de
+    // kadastrale registratie; de json houdt de eerste aantekening als terugval.
+    const bestaand = (best?.kenmerken ?? {}) as Record<string, unknown>;
+    const heeftAlKadastraal = bestaand.perceelnummer != null || bestaand.geom_3857 != null;
+    const KADASTRALE_SLEUTELS = new Set([
+      "kadastrale_aanduiding", "kadastrale_gemeente", "sectie", "perceelnummer",
+      "oppervlakte_m2", "identificatie", "geom_3857", "lat", "lon",
+    ]);
+    const inbreng = heeftAlKadastraal
+      ? Object.fromEntries(Object.entries(geo).filter(([sleutel]) => !KADASTRALE_SLEUTELS.has(sleutel)))
+      : geo;
+    const merged = { ...bestaand, ...inbreng };
     await moet(
       supabase
         .from("stamobject")

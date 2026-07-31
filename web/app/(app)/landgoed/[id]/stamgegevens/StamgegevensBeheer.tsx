@@ -81,6 +81,27 @@ export default async function StamgegevensBeheer({ landgoedId }: { landgoedId: s
       supabase.from("relatie").select("id, naam").eq("landgoed_id", id),
     ]);
 
+  // Kadastrale registratie: per beheerperceel de gekoppelde percelen (stap 1).
+  const { data: kadData } = await supabase
+    .from("beheerperceel_kadastraal")
+    .select("stamobject_id, dekking, kadastraal_perceel(kadastrale_aanduiding, oppervlakte_m2)")
+    .eq("landgoed_id", id);
+  const kadVan = new Map<string, { aanduiding: string; oppervlakteM2: number | null; dekking: string }[]>();
+  for (const rij of (kadData ?? []) as unknown as {
+    stamobject_id: string;
+    dekking: string;
+    kadastraal_perceel: { kadastrale_aanduiding: string; oppervlakte_m2: number | null } | null;
+  }[]) {
+    if (!rij.kadastraal_perceel) continue;
+    const lijst = kadVan.get(rij.stamobject_id) ?? [];
+    lijst.push({
+      aanduiding: rij.kadastraal_perceel.kadastrale_aanduiding,
+      oppervlakteM2: rij.kadastraal_perceel.oppervlakte_m2 != null ? Number(rij.kadastraal_perceel.oppervlakte_m2) : null,
+      dekking: rij.dekking,
+    });
+    kadVan.set(rij.stamobject_id, lijst);
+  }
+
   const alleObjecten = (objectenRes.data ?? []) as Obj[];
   const voorgesteldeObjecten = alleObjecten.filter((o) => !o.geaccordeerd);
   const geaccordeerdeObjecten = alleObjecten.filter((o) => o.geaccordeerd);
@@ -158,17 +179,27 @@ export default async function StamgegevensBeheer({ landgoedId }: { landgoedId: s
   function renderTak(o: Obj, diepte: number) {
     const kn = o.kenmerken ?? {};
     const isGebouw = ["gebouw", "woning", "opstal"].includes(o.categorie);
-    const m2 = Number(kn.oppervlakte_m2);
+    // Kadastrale registratie is leidend voor oppervlakte en aanduidingen;
+    // de kenmerken-json is de terugval.
+    const kad = kadVan.get(o.id) ?? [];
+    const kadM2 = kad.reduce((som, p) => som + (p.oppervlakteM2 ?? 0), 0);
+    const m2 = kadM2 > 0 ? kadM2 : Number(kn.oppervlakte_m2);
     const opp = Number.isFinite(m2)
       ? isGebouw
         ? `${m2} m²`
         : `${(m2 / 10000).toLocaleString("nl-NL", { maximumFractionDigits: 2 })} ha`
+      : null;
+    const kadastraal = kad.length
+      ? `kadastraal: ${kad
+          .map((p) => p.aanduiding + (p.dekking === "gedeeltelijk" ? " (deels)" : ""))
+          .join(", ")}`
       : null;
     const isMonumentGebouw = isGebouw && kn.is_rijksmonument === true;
     const detail = [
       o.beschrijving,
       kn.adres ? String(kn.adres) : null,
       opp,
+      kadastraal,
       kn.bouwjaar ? `bouwjaar ${String(kn.bouwjaar)}` : null,
       kn.pandstatus ? String(kn.pandstatus) : null,
       kn.gebruik ? String(kn.gebruik) : null,

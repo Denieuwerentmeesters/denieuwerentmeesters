@@ -148,15 +148,24 @@ export default async function ProfielPage({
     aantalPercelen = kadastraal.length;
   }
 
-  const heeftPercelen = perceelM2 > 0 || aantalPercelen > 0;
-  const totaalHa = heeftPercelen
-    ? ha(perceelM2)
-    : landgoed?.hectare != null
-      ? Number(landgoed.hectare).toLocaleString("nl-NL", { maximumFractionDigits: 1 })
-      : null;
-  const oppervlakteBron = heeftPercelen
-    ? "Som van de percelen · Kadaster/PDOK"
-    : "Handmatig ingevoerd (geen percelen op de kaart)";
+  // Oppervlakte: de kadastrale registratie is leidend (ontdubbeld, officiële
+  // oppervlaktes); daarna de json-som; daarna het handmatige veld.
+  const kadM2 = kadastraal.reduce((som, p) => som + (Number(p.oppervlakte_m2) || 0), 0);
+  const heeftPercelen = kadM2 > 0 || perceelM2 > 0 || aantalPercelen > 0;
+  const totaalHa =
+    kadM2 > 0
+      ? ha(kadM2)
+      : heeftPercelen
+        ? ha(perceelM2)
+        : landgoed?.hectare != null
+          ? Number(landgoed.hectare).toLocaleString("nl-NL", { maximumFractionDigits: 1 })
+          : null;
+  const oppervlakteBron =
+    kadM2 > 0
+      ? "Som van de kadastrale registratie · Kadaster/PDOK"
+      : heeftPercelen
+        ? "Som van de percelen · Kadaster/PDOK"
+        : "Handmatig ingevoerd (geen percelen op de kaart)";
 
   const verdelingRijen = [...verdeling.entries()].sort((a, b) => b[1] - a[1]);
 

@@ -25,6 +25,10 @@ type PlaatsObject = {
   lat: number;
   lon: number;
   geom: unknown;
+  // Uit de kadastrale registratie (stap 1): álle gekoppelde perceel-vormen
+  // en een leesbaar label ("kadastraal: Baarn C 1562, C 1129").
+  geoms?: unknown[];
+  kadastraal?: string | null;
 };
 
 function objectDetails(o: PlaatsObject): string {
@@ -36,7 +40,7 @@ function objectDetails(o: PlaatsObject): string {
         o.pandstatus,
         o.bouwjaar ? `bouwjaar ${o.bouwjaar}` : null,
       ]
-    : [o.gebruik, o.oppervlakteHa];
+    : [o.gebruik, o.oppervlakteHa, o.kadastraal];
   return [o.categorie, ...delen].filter(Boolean).join(" · ");
 }
 type Basis = {
@@ -265,8 +269,13 @@ export default function Kaart({
     const bounds = L.latLngBounds([]);
     for (const o of objecten) {
       if (PERCEEL_CATS.has(o.categorie)) {
-        const latlngs = geomNaarLatlngs(L, o.geom);
-        if (latlngs) {
+        // Alle gekoppelde kadastrale vormen tekenen (één beheerperceel kan er
+        // meerdere hebben); terugval op de losse kenmerken-vorm.
+        const vormen = o.geoms?.length ? o.geoms : [o.geom];
+        let getekend = false;
+        for (const vorm of vormen) {
+          const latlngs = geomNaarLatlngs(L, vorm);
+          if (!latlngs) continue;
           const poly = L.polygon(latlngs, {
             color: "#1B3A28",
             weight: 2.5,
@@ -275,8 +284,9 @@ export default function Kaart({
           });
           poly.addTo(groep);
           bounds.extend(poly.getBounds());
-          continue;
+          getekend = true;
         }
+        if (getekend) continue;
       }
       if (Number.isFinite(o.lat) && Number.isFinite(o.lon)) {
         L.circleMarker([o.lat, o.lon], {

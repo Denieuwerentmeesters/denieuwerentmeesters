@@ -39,6 +39,29 @@ export default async function KaartPage({
     .eq("geaccordeerd", true)
     .order("aangemaakt_op", { ascending: false });
 
+  // Kadastrale registratie (stap 1): per beheerperceel de gekoppelde percelen,
+  // met geometrie. De weergave leest hieruit; de kenmerken-json is terugval.
+  const { data: kadData } = await supabase
+    .from("beheerperceel_kadastraal")
+    .select("stamobject_id, dekking, kadastraal_perceel(kadastrale_aanduiding, oppervlakte_m2, geom_3857)")
+    .eq("landgoed_id", id);
+  const kadVan = new Map<string, { aanduiding: string; oppervlakteM2: number | null; geom: unknown; dekking: string }[]>();
+  for (const rij of (kadData ?? []) as unknown as {
+    stamobject_id: string;
+    dekking: string;
+    kadastraal_perceel: { kadastrale_aanduiding: string; oppervlakte_m2: number | null; geom_3857: unknown } | null;
+  }[]) {
+    if (!rij.kadastraal_perceel) continue;
+    const lijst = kadVan.get(rij.stamobject_id) ?? [];
+    lijst.push({
+      aanduiding: rij.kadastraal_perceel.kadastrale_aanduiding,
+      oppervlakteM2: rij.kadastraal_perceel.oppervlakte_m2 != null ? Number(rij.kadastraal_perceel.oppervlakte_m2) : null,
+      geom: rij.kadastraal_perceel.geom_3857 ?? null,
+      dekking: rij.dekking,
+    });
+    kadVan.set(rij.stamobject_id, lijst);
+  }
+
   const objecten = (data ?? []).map((o) => {
     const k = (o.kenmerken ?? {}) as {
       lat?: number;
@@ -50,6 +73,15 @@ export default async function KaartPage({
       adres?: unknown;
       geom_3857?: unknown;
     };
+    // Registratie is leidend: som-oppervlakte, aanduidingen en álle vormen.
+    const kad = kadVan.get(o.id) ?? [];
+    const kadM2 = kad.reduce((som, p) => som + (p.oppervlakteM2 ?? 0), 0);
+    const kadGeoms = kad.map((p) => p.geom).filter((g) => g != null);
+    const kadastraal = kad.length
+      ? `kadastraal: ${kad
+          .map((p) => p.aanduiding + (p.dekking === "gedeeltelijk" ? " (deels)" : ""))
+          .join(", ")}`
+      : null;
     return {
       id: o.id,
       naam: o.naam,
@@ -57,12 +89,14 @@ export default async function KaartPage({
       lat: Number(k.lat),
       lon: Number(k.lon),
       gebruik: k.gebruik ?? null,
-      oppervlakteHa: haTekst(k.oppervlakte_m2),
+      oppervlakteHa: kadM2 > 0 ? haTekst(kadM2) : haTekst(k.oppervlakte_m2),
       oppervlakteM2: k.oppervlakte_m2 != null ? String(k.oppervlakte_m2) : null,
       pandstatus: k.pandstatus != null ? String(k.pandstatus) : null,
       bouwjaar: k.bouwjaar != null ? String(k.bouwjaar) : null,
       adres: k.adres != null ? String(k.adres) : null,
       geom: k.geom_3857 ?? null,
+      geoms: kadGeoms.length ? kadGeoms : k.geom_3857 != null ? [k.geom_3857] : [],
+      kadastraal,
     };
   });
 
