@@ -235,8 +235,9 @@ export const CATEGORIEEN: Categorie[] = [
   },
   {
     sleutel: "vergaderingen",
-    label: "Vergaderingen en verslagen",
-    omschrijving: "Notulen, gespreksverslagen en besluitenlijsten.",
+    label: "Vergaderingen, notulen, verslagen",
+    omschrijving:
+      "Notulen uit de vergadermodule, gespreksverslagen en besluitenlijsten. Ook de notulen die de AI maakte tellen hier mee, ook als er nog geen archiefstuk van is gemaakt.",
     trefwoorden: [
       "notulen",
       "verslag",

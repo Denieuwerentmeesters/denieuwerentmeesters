@@ -4,6 +4,8 @@ import { createClient } from "@/lib/supabase/server";
 import { UploadFormulier } from "../UploadFormulier";
 import { verwijderDocument, wijzigCategorie } from "../acties";
 import { VerwijderKnop } from "@/components/VerwijderKnop";
+import { haalNotulen } from "@/lib/notulen";
+import { NotulenOverzicht } from "@/components/NotulenOverzicht";
 import {
   CATEGORIEEN,
   NOG_IN_TE_DELEN,
@@ -30,10 +32,10 @@ export default async function CategoriePagina({
   searchParams,
 }: {
   params: Promise<{ id: string; categorie: string }>;
-  searchParams: Promise<{ bijlagen?: string }>;
+  searchParams: Promise<{ bijlagen?: string; q?: string; van?: string; tot?: string }>;
 }) {
   const { id, categorie } = await params;
-  const { bijlagen } = await searchParams;
+  const { bijlagen, q, van, tot } = await searchParams;
   if (!isCategorie(categorie)) notFound();
 
   const toonBijlagen = bijlagen === "1";
@@ -88,6 +90,14 @@ export default async function CategoriePagina({
   );
 
   const nu = Date.now();
+
+  // Notulen staan niet in de documententabel maar in gesprek_bewerking. Ze horen wél
+  // in deze categorie thuis, dus ze komen hier onder de archiefstukken te staan —
+  // anders leidt het blok naar een lege pagina terwijl er notulen zijn.
+  const { gesprekken: notulen, fout: notulenFout } =
+    categorie === "vergaderingen"
+      ? await haalNotulen(supabase, id, { titel: q, van, tot })
+      : { gesprekken: [], fout: null };
 
   return (
     <div className="flex flex-col">
@@ -223,6 +233,31 @@ export default async function CategoriePagina({
             );
           })}
         </div>
+
+        {categorie === "vergaderingen" && (
+          <section className="mt-8">
+            <h2 className="text-[15px] font-semibold">Notulen uit de vergadermodule</h2>
+            <p className="mt-1 mb-4 max-w-[70ch] text-[13px]" style={{ color: "var(--text-2)" }}>
+              Deze verslagen maakte de AI bij een gesprek. Ze blijven bij de vergadering
+              horen; maak er een definitief en hij komt hierboven ook als archiefstuk te
+              staan.
+            </p>
+            {notulenFout ? (
+              <div className="card p-5 text-[13px]" style={{ color: "var(--red)" }}>
+                Notulen ophalen mislukt: {notulenFout}
+              </div>
+            ) : (
+              <NotulenOverzicht
+                gesprekken={notulen}
+                landgoedId={id}
+                actie={`${basisPad}/vergaderingen`}
+                q={q ?? ""}
+                van={van ?? ""}
+                tot={tot ?? ""}
+              />
+            )}
+          </section>
+        )}
       </div>
     </div>
   );

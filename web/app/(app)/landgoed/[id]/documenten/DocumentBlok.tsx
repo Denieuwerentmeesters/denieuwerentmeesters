@@ -124,7 +124,6 @@ const IcoonPersoon = svg(<><circle cx="12" cy="8" r="4" /><path d="M4 21c0-4 3.5
 const IcoonNotulen = svg(<><rect x="4" y="4" width="16" height="16" rx="2" /><path d="M8 9h8M8 13h8M8 17h5" /></>);
 const IcoonKaart = svg(<><path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2z" /><path d="M9 4v14M15 6v14" /></>);
 const IcoonBak = svg(<><path d="M3 7h18M5 7l1 13h12l1-13" /><path d="M9 4h6v3H9z" /><path d="M12 11v6" /></>);
-export const IcoonMicrofoon = svg(<><rect x="9" y="3" width="6" height="11" rx="3" /><path d="M5 11a7 7 0 0 0 14 0M12 18v3M9 21h6" /></>);
 
 export const CATEGORIE_ICOON: Record<string, React.ReactNode> = {
   eigendom_rechten: IcoonAkte,
