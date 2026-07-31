@@ -49,7 +49,7 @@ export function NotulenOverzicht({
           <input className="input" type="date" name="tot" defaultValue={tot} />
         </div>
         <div className="flex gap-2">
-          <button type="submit" className="btn btn-blauw">Zoeken</button>
+          <button type="submit" className="btn btn-primary">Zoeken</button>
           {gefilterd && (
             <a
               href={`${actie}?${new URLSearchParams(verborgenVelden).toString()}`}
@@ -90,7 +90,7 @@ export function NotulenOverzicht({
           <div className="flex flex-col gap-3">
             {g.notulen.map((n) => (
               <details key={n.id}>
-                <summary className="cursor-pointer text-[13px] font-medium" style={{ color: "var(--blue)" }}>
+                <summary className="cursor-pointer text-[13px] font-medium" style={{ color: "var(--primary)" }}>
                   {n.soort}
                 </summary>
                 <div
