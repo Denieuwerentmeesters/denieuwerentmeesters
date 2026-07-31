@@ -25,8 +25,15 @@ export default async function DocumentenPage({
 
     return (
       <div className="flex flex-col">
-        <div className="bg-white px-7 py-4" style={{ borderBottom: "1px solid var(--border)" }}>
+        <div
+          className="flex items-center justify-between gap-4 bg-white px-7 py-4"
+          style={{ borderBottom: "1px solid var(--border)" }}
+        >
           <div className="text-[12.5px]" style={{ color: "var(--text-2)" }}>Documenten / Notulen</div>
+          <div className="flex gap-2">
+            <a href={basisPad} className="btn btn-ghost btn-sm">Bestanden</a>
+            <a href={`${basisPad}?tab=notulen`} className="btn btn-primary btn-sm">📄 Notulen</a>
+          </div>
         </div>
 
         <div className="p-7">
@@ -36,11 +43,6 @@ export default async function DocumentenPage({
               Notulen van vergaderingen en opnames — automatisch bewaard bij het gesprek.
             </p>
           </header>
-
-          <div className="mb-5 flex gap-2">
-            <a href={basisPad} className="btn btn-ghost">Bestanden</a>
-            <a href={`${basisPad}?tab=notulen`} className="btn btn-blauw">Notulen</a>
-          </div>
 
           {fout ? (
             <div className="card p-5 text-[13px]" style={{ color: "var(--red)" }}>
@@ -84,13 +86,15 @@ export default async function DocumentenPage({
 
   return (
     <div className="flex flex-col">
+      {/* Notulen staat rechtsboven in de balk, net als op de vergaderingenpagina. */}
       <div
-        className="bg-white px-7 py-4"
+        className="flex items-center justify-between gap-4 bg-white px-7 py-4"
         style={{ borderBottom: "1px solid var(--border)" }}
       >
         <div className="text-[12.5px]" style={{ color: "var(--text-2)" }}>
           Documenten
         </div>
+        <a href={`${basisPad}?tab=notulen`} className="btn btn-primary btn-sm">📄 Notulen</a>
       </div>
 
       <div className="p-7">
@@ -100,11 +104,6 @@ export default async function DocumentenPage({
             Eén centraal archief: contracten, vergunningen, plannen.
           </p>
         </header>
-
-        <div className="mb-5 flex gap-2">
-          <a href={basisPad} className="btn btn-primary">Bestanden</a>
-          <a href={`${basisPad}?tab=notulen`} className="btn btn-blauw">📄 Notulen</a>
-        </div>
 
         <form
           action={uploadDocument}

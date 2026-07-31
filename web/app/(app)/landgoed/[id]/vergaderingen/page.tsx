@@ -26,11 +26,15 @@ export default async function VergaderingenPage({
 
     return (
       <div className="flex flex-col">
-        <div className="bg-white px-7 py-4" style={{ borderBottom: "1px solid var(--border)" }}>
+        <div
+          className="flex items-center justify-between gap-4 bg-white px-7 py-4"
+          style={{ borderBottom: "1px solid var(--border)" }}
+        >
           <div className="text-[12.5px]" style={{ color: "var(--text-2)" }}>
             <a href={basisPad} style={{ color: "var(--text-2)" }}>Vergaderingen/opnames</a>
             {" / Notulen"}
           </div>
+          <a href={basisPad} className="btn btn-ghost btn-sm">← Terug naar vergaderingen/opnames</a>
         </div>
 
         <div className="p-7">
@@ -40,10 +44,6 @@ export default async function VergaderingenPage({
               Alle notulen, besluitenlijsten en samenvattingen die de AI heeft gemaakt.
             </p>
           </header>
-
-          <div className="mb-5">
-            <a href={basisPad} className="btn btn-ghost">← Terug naar vergaderingen/opnames</a>
-          </div>
 
           {fout ? (
             <div className="card p-5 text-[13px]" style={{ color: "var(--red)" }}>
@@ -81,22 +81,22 @@ export default async function VergaderingenPage({
 
   return (
     <div className="flex flex-col">
-      <div className="bg-white px-7 py-4" style={{ borderBottom: "1px solid var(--border)" }}>
+      {/* Notulen zoeken staat rechtsboven in de balk, naast de broodkruimel. */}
+      <div
+        className="flex items-center justify-between gap-4 bg-white px-7 py-4"
+        style={{ borderBottom: "1px solid var(--border)" }}
+      >
         <div className="text-[12.5px]" style={{ color: "var(--text-2)" }}>Vergaderingen/opnames</div>
+        <a href={`${basisPad}?notulen=1`} className="btn btn-primary btn-sm">📄 Notulen zoeken</a>
       </div>
 
       <div className="p-7">
-        <header className="mb-4">
+        <header className="mb-6">
           <h1 className="text-[22px] font-bold">Vergaderingen/opnames</h1>
           <p className="mt-1 text-[13px]" style={{ color: "var(--text-2)" }}>
             Neem op of plak een transcript — de AI maakt notulen, besluiten en taken.
           </p>
         </header>
-
-        {/* Notulen: prominent, direct onder de kop en in een eigen kleur. */}
-        <div className="mb-6">
-          <a href={`${basisPad}?notulen=1`} className="btn btn-blauw">📄 Notulen zoeken</a>
-        </div>
 
         {/* ── Opnemen ─────────────────────────────────────────── */}
         <div className="card mb-4 p-5">
