@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { uitloggen } from "../../actions";
 import LandgoedNav, { type NavItem } from "@/components/LandgoedNav";
 import MobileNav from "@/components/MobileNav";
+import { OpnameProvider } from "@/components/OpnameProvider";
 
 export default async function LandgoedLayout({
   children,
@@ -55,7 +56,7 @@ export default async function LandgoedLayout({
       badge: inboxConcept ?? undefined, badgeKleur: (inboxConcept ?? 0) > 0 ? "rood" : "grijs" },
     { href: `/landgoed/${id}/documenten`, label: "Documenten", icon: "documenten", group: "Communicatie" },
     { href: `/landgoed/${id}/contacten`, label: "Contacten",  icon: "contacten",   group: "Communicatie" },
-    { href: `/landgoed/${id}/vergaderingen`, label: "Vergaderingen", icon: "vergaderingen", group: "Communicatie" },
+    { href: `/landgoed/${id}/vergaderingen`, label: "Vergaderingen/opnames", icon: "vergaderingen", group: "Communicatie" },
     // ── Beheer ──
     { href: `/landgoed/${id}/financieel`, label: "Financieel", icon: "financieel", group: "Beheer" },
     { href: `/landgoed/${id}/contracten`, label: "Contracten", icon: "contracten", group: "Beheer" },
@@ -65,6 +66,9 @@ export default async function LandgoedLayout({
   ];
 
   return (
+    // OpnameProvider staat in de layout (niet in een pagina), zodat een lopende opname
+    // doorloopt als je binnen dit landgoed naar een andere pagina navigeert.
+    <OpnameProvider landgoedId={id}>
     <div className="flex h-screen overflow-hidden">
       {/* Mobiel: sticky burger-menu (verborgen op desktop) */}
       <div className="md:hidden">
@@ -134,5 +138,6 @@ export default async function LandgoedLayout({
 
       <main className="flex-1 overflow-y-auto pt-14 md:pt-0">{children}</main>
     </div>
+    </OpnameProvider>
   );
 }

@@ -88,6 +88,15 @@ body {
   opacity: 0.55;
   cursor: not-allowed;
 }
+/* Blauwe accentknop — voor acties die zich van de groene hoofdactie moeten onderscheiden
+   (bijv. "Notulen zoeken" naast "Start opname"). */
+.btn-blauw {
+  background: var(--blue);
+  color: #fff;
+}
+.btn-blauw:hover {
+  background: #1c3699;
+}
 .btn-danger {
   color: var(--red);
 }

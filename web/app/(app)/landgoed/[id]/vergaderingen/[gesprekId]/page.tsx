@@ -11,6 +11,9 @@ import {
 import { PromptKiezer } from "./PromptKiezer";
 import { AudioOpname } from "./AudioOpname";
 import { KopieerKnop } from "./KopieerKnop";
+import { TitelBewerken } from "./TitelBewerken";
+import { Deelnemers, type Deelnemer } from "./Deelnemers";
+import { Agendapunten, type AgendapuntVoorstelRij } from "./Agendapunten";
 
 type Params = { id: string; gesprekId: string };
 
@@ -29,6 +32,8 @@ export default async function GesprekDetailPage({
     { data: bewerkingen },
     { data: voorstellen },
     { data: contacten },
+    { data: deelnemersRaw },
+    { data: agendapuntenRaw },
   ] = await Promise.all([
     supabase.from("gesprek").select("id, titel, datum, status").eq("id", gesprekId).single(),
     supabase.from("gesprek_transcript").select("id, tekst, bewaren").eq("gesprek_id", gesprekId).maybeSingle(),
@@ -44,9 +49,22 @@ export default async function GesprekDetailPage({
       .eq("gesprek_id", gesprekId)
       .order("aangemaakt_op"),
     supabase.from("relatie").select("id, naam").eq("landgoed_id", id).order("naam"),
+    supabase
+      .from("gesprek_deelnemer")
+      .select("id, naam, relatie_id, herkomst, bevestigd, bron_citaat")
+      .eq("gesprek_id", gesprekId)
+      .order("naam"),
+    supabase
+      .from("gesprek_agendapunt_voorstel")
+      .select("id, titel, datum, tijd, locatie, omschrijving, bron_citaat, herkomst, status")
+      .eq("gesprek_id", gesprekId)
+      .order("aangemaakt_op"),
   ]);
 
   if (!gesprek) notFound();
+
+  const deelnemers = (deelnemersRaw ?? []) as unknown as Deelnemer[];
+  const agendapunten = (agendapuntenRaw ?? []) as unknown as AgendapuntVoorstelRij[];
 
   const heeftTranscript = Boolean(transcriptRow?.tekst);
   const aiAan = aiBeschikbaar();
@@ -71,17 +89,22 @@ export default async function GesprekDetailPage({
       {/* Breadcrumb */}
       <div className="bg-white px-7 py-4" style={{ borderBottom: "1px solid var(--border)" }}>
         <div className="text-[12.5px]" style={{ color: "var(--text-2)" }}>
-          <a href={`/landgoed/${id}/vergaderingen`} style={{ color: "var(--text-2)" }}>Vergaderingen</a>
+          <a href={`/landgoed/${id}/vergaderingen`} style={{ color: "var(--text-2)" }}>Vergaderingen/opnames</a>
           {" / "}
           {gesprek.titel}
         </div>
       </div>
 
       <div className="p-7 flex flex-col gap-6">
-        {/* Header */}
+        {/* Header — titel is klikbaar om te hernoemen */}
         <div className="flex items-start justify-between gap-4 flex-wrap">
           <div>
-            <h1 className="text-[22px] font-bold">{gesprek.titel}</h1>
+            <TitelBewerken
+              gesprekId={gesprekId}
+              landgoedId={id}
+              titel={gesprek.titel}
+              datum={gesprek.datum ?? null}
+            />
             <div className="mt-1 flex gap-2 items-center">
               {gesprek.datum && <span className="tag tag-gray">{gesprek.datum}</span>}
               <span className={`tag ${STATUS_TAG[gesprek.status] ?? "tag-gray"}`}>{gesprek.status}</span>
@@ -107,11 +130,7 @@ export default async function GesprekDetailPage({
           {/* Opnemen / uploaden */}
           {gesprek.status !== "opgeruimd" && (
             <div className="mb-5 pb-5" style={{ borderBottom: "1px solid var(--border)" }}>
-              <AudioOpname
-                gesprekId={gesprekId}
-                landgoedId={id}
-                transcriptiesBeschikbaar={groqAan}
-              />
+              <AudioOpname gesprekId={gesprekId} transcriptiesBeschikbaar={groqAan} />
             </div>
           )}
 
@@ -157,6 +176,16 @@ export default async function GesprekDetailPage({
             </details>
           )}
         </section>
+
+        {/* ── Deelnemers ─────────────────────────────────────────────────── */}
+        <Deelnemers
+          gesprekId={gesprekId}
+          landgoedId={id}
+          deelnemers={deelnemers}
+          contacten={(contacten ?? []) as { id: string; naam: string }[]}
+          heeftTranscript={heeftTranscript}
+          aiAan={aiAan}
+        />
 
         {/* ── Laag 2: Promptkiezer (multi-select) ───────────────────────── */}
         {heeftTranscript && (
@@ -233,19 +262,21 @@ export default async function GesprekDetailPage({
                         <input className="input w-full" name="omschrijving" defaultValue={v.omschrijving} required />
                       </div>
 
-                      <div className="flex flex-wrap gap-3">
+                      {/* items-start + gelijke labelhoogte: de Deadline-box lijnt zo netjes
+                          uit met Persoon, ook als het Persoon-label een tag draagt. */}
+                      <div className="flex flex-wrap items-start gap-3">
                         {/* Persoon */}
                         <div className="flex-1" style={{ minWidth: 180 }}>
-                          <label className="label-up mb-1 block">
+                          <label className="label-up mb-1 flex items-center gap-1" style={{ minHeight: 18 }}>
                             Persoon
                             {v.match_status === "geen" && (
-                              <span className="ml-1 tag tag-amber">gat — niet gevonden</span>
+                              <span className="tag tag-amber">gat — niet gevonden</span>
                             )}
                             {v.match_status === "kandidaten" && (
-                              <span className="ml-1 tag tag-amber">meerdere matches</span>
+                              <span className="tag tag-amber">meerdere matches</span>
                             )}
                             {v.match_status === "zeker" && (
-                              <span className="ml-1 tag tag-green">match</span>
+                              <span className="tag tag-green">match</span>
                             )}
                           </label>
                           <select className="input w-full" name="contact_id" defaultValue={v.contact_id ?? ""}>
@@ -272,10 +303,10 @@ export default async function GesprekDetailPage({
 
                         {/* Deadline */}
                         <div>
-                          <label className="label-up mb-1 block">
+                          <label className="label-up mb-1 flex items-center gap-1" style={{ minHeight: 18 }}>
                             Deadline
                             {v.deadline_is_interpretatie && v.deadline && (
-                              <span className="ml-1 tag tag-gray">afgeleid door AI</span>
+                              <span className="tag tag-gray">afgeleid door AI</span>
                             )}
                           </label>
                           <input
@@ -307,6 +338,15 @@ export default async function GesprekDetailPage({
             </div>
           </section>
         )}
+
+        {/* ── Agendapunten / volgende vergadering ────────────────────────── */}
+        <Agendapunten
+          gesprekId={gesprekId}
+          landgoedId={id}
+          voorstellen={agendapunten}
+          heeftTranscript={heeftTranscript}
+          aiAan={aiAan}
+        />
 
         {/* Bevestigde + afgewezen acties (compacte lijst) */}
         {(bevestigdeVoorstellen.length > 0 || afgewezenVoorstellen.length > 0) && (
