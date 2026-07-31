@@ -4,6 +4,135 @@ import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 import { moet } from "@/lib/db";
 
+// ── Twee-fasen-invoer: bezit inladen, daarna indelen ──
+// Fase 1: een aangeklikt kadastraal perceel gaat direct het register in,
+// zónder beheerperceel ("dom en snel"). Fase 2 (deelPercelenIn) bundelt
+// geregistreerde percelen tot een beheerperceel — het denkwerk, apart.
+
+// Fase 1: registreren. Bestaat het perceel al, dan geen dubbel (melding terug).
+export async function registreerBezit(
+  landgoed_id: string,
+  kenmerken: Record<string, unknown>,
+): Promise<{ status: "toegevoegd" | "bestond" | "onbruikbaar"; aanduiding: string }> {
+  const gem = String(kenmerken.kadastrale_gemeente ?? "").trim();
+  const sectie = String(kenmerken.sectie ?? "").trim();
+  const nr = String(kenmerken.perceelnummer ?? "").trim();
+  if (!gem || !sectie || !nr) return { status: "onbruikbaar", aanduiding: "" };
+  const aanduiding =
+    String(kenmerken.kadastrale_aanduiding ?? "").trim() || `${gem} ${sectie} ${nr}`;
+
+  const supabase = await createClient();
+  const { data: bestaand } = await supabase
+    .from("kadastraal_perceel")
+    .select("id")
+    .eq("landgoed_id", landgoed_id)
+    .eq("kadastrale_gemeente", gem)
+    .eq("sectie", sectie)
+    .eq("perceelnummer", nr)
+    .maybeSingle();
+  if (bestaand) return { status: "bestond", aanduiding };
+
+  const opp = Number(kenmerken.oppervlakte_m2);
+  await moet(
+    supabase.from("kadastraal_perceel").insert({
+      landgoed_id,
+      kadastrale_gemeente: gem,
+      sectie,
+      perceelnummer: nr,
+      kadastrale_aanduiding: aanduiding,
+      oppervlakte_m2: Number.isFinite(opp) ? opp : null,
+      bron_identificatie: String(kenmerken.identificatie ?? "").trim() || null,
+      geom_3857: kenmerken.geom_3857 ?? null,
+      opgehaald_op: new Date().toISOString(),
+    }),
+    "bezit registreren",
+  );
+  revalidatePath(`/landgoed/${landgoed_id}/kaart`);
+  return { status: "toegevoegd", aanduiding };
+}
+
+// Fase 1: verwijderen (vergissing herstellen) — alleen zolang niet ingedeeld.
+export async function verwijderBezit(fd: FormData) {
+  const landgoed_id = String(fd.get("landgoed_id"));
+  const perceel_id = String(fd.get("perceel_id"));
+  if (!landgoed_id || !perceel_id) return;
+  const supabase = await createClient();
+  const { count } = await supabase
+    .from("beheerperceel_kadastraal")
+    .select("id", { count: "exact", head: true })
+    .eq("kadastraal_perceel_id", perceel_id);
+  if ((count ?? 0) > 0) return; // ingedeeld: eerst de indeling opheffen
+  await moet(
+    supabase
+      .from("kadastraal_perceel")
+      .delete()
+      .eq("id", perceel_id)
+      .eq("landgoed_id", landgoed_id),
+    "bezit verwijderen",
+  );
+  revalidatePath(`/landgoed/${landgoed_id}/kaart`);
+}
+
+// Fase 2: geselecteerde bezit-percelen indelen — nieuw beheerperceel of bij bestaand.
+export async function deelPercelenIn(fd: FormData) {
+  const landgoed_id = String(fd.get("landgoed_id"));
+  const bestaand_id = String(fd.get("bestaand_id") ?? "").trim();
+  const naam = String(fd.get("naam") ?? "").trim();
+  const gebruik = String(fd.get("gebruik") ?? "").trim();
+  const ids = fd.getAll("perceel_id").map(String).filter(Boolean);
+  if (!landgoed_id || !ids.length) return;
+
+  const supabase = await createClient();
+  const percelen = await moet(
+    supabase
+      .from("kadastraal_perceel")
+      .select("id, geom_3857")
+      .eq("landgoed_id", landgoed_id)
+      .in("id", ids),
+    "percelen ophalen",
+  );
+  if (!percelen.length) return;
+
+  let stamobject_id = bestaand_id;
+  if (!stamobject_id) {
+    if (!naam) return;
+    // Marker-punt voor lijst/zoom: zwaartepunt van de eerste vorm.
+    let lat: number | null = null;
+    let lon: number | null = null;
+    const c = centroid3857(percelen[0].geom_3857);
+    if (c) [lon, lat] = invMerc3857(c[0], c[1]);
+    const nieuw = await moet(
+      supabase
+        .from("stamobject")
+        .insert({
+          landgoed_id,
+          naam,
+          categorie: "pachtperceel",
+          geometrie_type: "vlak",
+          herkomst: "handmatig",
+          geaccordeerd: true,
+          kenmerken: {
+            ...(gebruik ? { gebruik } : {}),
+            ...(lat != null && lon != null ? { lat, lon } : {}),
+          },
+        })
+        .select("id")
+        .single(),
+      "beheerperceel aanmaken",
+    );
+    stamobject_id = nieuw.id;
+  }
+
+  await moet(
+    supabase.from("beheerperceel_kadastraal").upsert(
+      percelen.map((p) => ({ landgoed_id, stamobject_id, kadastraal_perceel_id: p.id })),
+      { onConflict: "stamobject_id,kadastraal_perceel_id", ignoreDuplicates: true },
+    ),
+    "percelen indelen",
+  );
+  revalidatePath(`/landgoed/${landgoed_id}/kaart`);
+}
+
 // ── Kadastrale verankering (stap 1) ──
 // Bij het plaatsen van een perceel wordt naast de kenmerken-json (transitie)
 // ook de echte registratie gevuld: kadastraal_perceel (uniek per officiële

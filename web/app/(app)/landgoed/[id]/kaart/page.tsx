@@ -8,6 +8,9 @@ import {
   verwijderObject,
   wisBasis,
   controleerGebiedsligging,
+  registreerBezit,
+  verwijderBezit,
+  deelPercelenIn,
 } from "./acties";
 
 function haTekst(m2: unknown): string | null {
@@ -45,6 +48,27 @@ export default async function KaartPage({
     .from("beheerperceel_kadastraal")
     .select("stamobject_id, dekking, kadastraal_perceel(kadastrale_aanduiding, oppervlakte_m2, geom_3857)")
     .eq("landgoed_id", id);
+  // Al het bezit (ook nog niet ingedeeld) + welke percelen al ingedeeld zijn.
+  const [{ data: bezitData }, { data: koppelingData }] = await Promise.all([
+    supabase
+      .from("kadastraal_perceel")
+      .select("id, kadastrale_aanduiding, oppervlakte_m2, geom_3857")
+      .eq("landgoed_id", id)
+      .order("kadastrale_aanduiding"),
+    supabase
+      .from("beheerperceel_kadastraal")
+      .select("kadastraal_perceel_id")
+      .eq("landgoed_id", id),
+  ]);
+  const ingedeeldIds = new Set((koppelingData ?? []).map((k) => k.kadastraal_perceel_id));
+  const bezit = (bezitData ?? []).map((p) => ({
+    id: p.id as string,
+    aanduiding: p.kadastrale_aanduiding as string,
+    oppervlakteHa: haTekst(p.oppervlakte_m2),
+    geom: p.geom_3857 as unknown,
+    ingedeeld: ingedeeldIds.has(p.id),
+  }));
+
   const kadVan = new Map<string, { aanduiding: string; oppervlakteM2: number | null; geom: unknown; dekking: string }[]>();
   for (const rij of (kadData ?? []) as unknown as {
     stamobject_id: string;
@@ -101,7 +125,8 @@ export default async function KaartPage({
   });
 
   const geplaatst = objecten.filter(
-    (m) => Number.isFinite(m.lat) && Number.isFinite(m.lon),
+    (m) =>
+      (Number.isFinite(m.lat) && Number.isFinite(m.lon)) || m.geoms.length > 0,
   );
 
   // Alle stamgegevens (ook zonder geo, bv. AI-objecten) voor de koppel-dropdown.
@@ -227,6 +252,10 @@ export default async function KaartPage({
           lookupGebouw={lookupGebouw}
           verwijderObject={verwijderObject}
           controleerGebiedsligging={controleerGebiedsligging}
+          bezit={bezit}
+          registreerBezit={registreerBezit}
+          verwijderBezit={verwijderBezit}
+          deelPercelenIn={deelPercelenIn}
         />
       </div>
     </div>
