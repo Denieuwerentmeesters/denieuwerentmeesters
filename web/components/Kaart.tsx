@@ -158,6 +158,7 @@ function kaartGroep(o: PlaatsObject): KaartGroepLabel {
     if (gebruik === "recreatie") return "Recreatie";
     if (gebruik === "bedrijf") return "Werken";
     if (gebruik === "maatschappelijk") return "Werken";
+    if (gebruik === "water") return "Water & Klimaat";
     return "Agrarisch"; // standaard voor percelen zonder gebruik
   }
 
