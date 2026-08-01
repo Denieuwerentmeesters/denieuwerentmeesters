@@ -156,3 +156,10 @@ body {
   letter-spacing: 1px;
   text-transform: uppercase;
 }
+
+/* Leaflet maakt kaartvlakken focusbaar; de browser tekent daar dan een blauw
+   focus-kader omheen (het "gekke blauwe vierkantje"). Op een kaart is dat
+   alleen maar verwarrend. */
+.leaflet-container path.leaflet-interactive:focus {
+  outline: none;
+}
