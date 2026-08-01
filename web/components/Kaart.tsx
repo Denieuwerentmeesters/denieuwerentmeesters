@@ -95,14 +95,23 @@ const GEBRUIK = [
 const GEBOUW_CATS = new Set(["gebouw", "woning", "opstal"]);
 const PERCEEL_CATS = new Set(["pachtperceel"]);
 
-// Elk beheerperceel krijgt z'n eigen kleur op de kaart, zodat je in één
-// oogopslag ziet welke (kadastrale) vlakken samen één eenheid vormen.
-// Rood (#dc2626) is gereserveerd voor de selectie ("aangeklikt, nog niet
-// gekoppeld") en zit daarom niet in dit palet.
-const BEHEER_KLEUREN = [
-  "#1B6B4A", "#8A5A2B", "#3B6FA0", "#7B4FA0",
-  "#B0762A", "#4A8A8A", "#A04F5E", "#5B7F2B",
-];
+// Kleur = gebruik: de kaart vertelt in één oogopslag wat er met de grond
+// gebeurt (zelfde taal als de oppervlakteverdeling op het profiel). De eenheid
+// van een beheerperceel zie je door eroverheen te bewegen: alle vlakken van
+// dat beheerperceel lichten samen op. Rood en amber zijn gereserveerd
+// (aangeklikt gebouw / indeel-selectie) en zitten niet in dit palet.
+const GEBRUIK_KLEUR: Record<string, string> = {
+  Natuur: "#2F7D4F",
+  Agrarisch: "#C9A227",
+  Wonen: "#B0574F",
+  Bedrijf: "#8A5A2B",
+  Recreatie: "#7B4FA0",
+  Maatschappelijk: "#4A8A8A",
+};
+const KLEUR_GEEN_GEBRUIK = "#64748b";
+function kleurVoorGebruik(gebruik: string | null): string {
+  return GEBRUIK_KLEUR[gebruik ?? ""] ?? KLEUR_GEEN_GEBRUIK;
+}
 
 const KAARTGROEP_LABELS = [
   "Gebouwen",
@@ -303,33 +312,41 @@ export default function Kaart({
     boundsRef.current = null;
     const groep = L.layerGroup();
     const bounds = L.latLngBounds([]);
-    let perceelIndex = 0;
     for (const o of objecten) {
       if (PERCEEL_CATS.has(o.categorie)) {
         // Alle gekoppelde kadastrale vormen tekenen (één beheerperceel kan er
-        // meerdere hebben) — in één eigen kleur per beheerperceel, zodat de
-        // eenheid zichtbaar is. Terugval op de losse kenmerken-vorm.
-        const kleur = BEHEER_KLEUREN[perceelIndex % BEHEER_KLEUREN.length];
+        // meerdere hebben). Kleur = gebruik; beweeg je over één vlak, dan
+        // lichten álle vlakken van dat beheerperceel samen op (de eenheid).
+        const kleur = kleurVoorGebruik(o.gebruik);
         const vormen = o.geoms?.length ? o.geoms : [o.geom];
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const eenheid: any[] = [];
         let getekend = false;
         for (const vorm of vormen) {
           const latlngs = geomNaarLatlngs(L, vorm);
           if (!latlngs) continue;
           const poly = L.polygon(latlngs, {
             color: kleur,
-            weight: 3,
+            weight: 2.5,
             fillColor: kleur,
-            fillOpacity: 0.28,
+            fillOpacity: 0.25,
           });
-          poly.bindTooltip(o.naam, { sticky: true });
+          poly.bindTooltip(
+            `${o.naam}${o.gebruik ? ` · ${o.gebruik}` : ""}${o.kadastraal ? ` · ${o.kadastraal}` : ""}`,
+            { sticky: true },
+          );
+          poly.on("mouseover", () => {
+            for (const p of eenheid) p.setStyle({ weight: 4.5, fillOpacity: 0.45 });
+          });
+          poly.on("mouseout", () => {
+            for (const p of eenheid) p.setStyle({ weight: 2.5, fillOpacity: 0.25 });
+          });
+          eenheid.push(poly);
           poly.addTo(groep);
           bounds.extend(poly.getBounds());
           getekend = true;
         }
-        if (getekend) {
-          perceelIndex++;
-          continue;
-        }
+        if (getekend) continue;
       }
       if (Number.isFinite(o.lat) && Number.isFinite(o.lon)) {
         L.circleMarker([o.lat, o.lon], {
@@ -692,10 +709,27 @@ export default function Kaart({
       />
 
       <p className="text-[11.5px]" style={{ color: "var(--text-3)" }}>
-        Elke kleur is één beheerperceel (alle kadastrale vlakken die erbij horen) ·{" "}
-        <span style={{ color: "#6b7280" }}>grijs gestippeld</span> = bezit, nog in te
-        delen · <span style={{ color: "#d97706" }}>amber</span> = geselecteerd om in te
-        delen · <span style={{ color: "#dc2626" }}>rood</span> = aangeklikt gebouw.
+        Kleur = gebruik:{" "}
+        {Object.entries(GEBRUIK_KLEUR).map(([naam, kleur]) => (
+          <span key={naam} className="mr-2 inline-flex items-center gap-1">
+            <span
+              className="inline-block h-2.5 w-2.5 rounded-sm"
+              style={{ background: kleur }}
+            />
+            {naam}
+          </span>
+        ))}
+        <span className="mr-2 inline-flex items-center gap-1">
+          <span
+            className="inline-block h-2.5 w-2.5 rounded-sm"
+            style={{ background: KLEUR_GEEN_GEBRUIK }}
+          />
+          nog geen gebruik
+        </span>
+        · beweeg over een vlak om het hele beheerperceel op te laten lichten ·{" "}
+        <span style={{ color: "#6b7280" }}>grijs gestippeld</span> = nog in te delen ·{" "}
+        <span style={{ color: "#d97706" }}>amber</span> = indeel-selectie ·{" "}
+        <span style={{ color: "#dc2626" }}>rood</span> = aangeklikt gebouw.
       </p>
 
       {/* Indeel-paneel (fase 2) */}
@@ -1013,7 +1047,17 @@ export default function Kaart({
                         <form action={verwijderObject}>
                           <input type="hidden" name="landgoed_id" value={landgoedId} />
                           <input type="hidden" name="id" value={o.id} />
-                          <VerwijderKnop vraag={`"${o.naam}"`}>Verwijder</VerwijderKnop>
+                          {PERCEEL_CATS.has(o.categorie) ? (
+                            // Bij een beheerperceel blijft het bezit bestaan: de
+                            // kadastrale percelen vallen terug naar "nog in te delen".
+                            <VerwijderKnop
+                              vraag={`de indeling "${o.naam}" (de kadastrale percelen blijven in het bezit en worden weer "nog in te delen")`}
+                            >
+                              Hef indeling op
+                            </VerwijderKnop>
+                          ) : (
+                            <VerwijderKnop vraag={`"${o.naam}"`}>Verwijder</VerwijderKnop>
+                          )}
                         </form>
                       </div>
                     ))}
