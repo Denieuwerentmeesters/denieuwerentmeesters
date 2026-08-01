@@ -133,6 +133,32 @@ export async function deelPercelenIn(fd: FormData) {
   revalidatePath(`/landgoed/${landgoed_id}/kaart`);
 }
 
+// Naam en/of gebruik van een beheerperceel wijzigen zonder de indeling te
+// raken — de gekoppelde kadastrale percelen blijven gewoon staan.
+export async function wijzigBeheerperceel(fd: FormData) {
+  const landgoed_id = String(fd.get("landgoed_id"));
+  const id = String(fd.get("id"));
+  const naam = String(fd.get("naam") ?? "").trim();
+  const gebruik = String(fd.get("gebruik") ?? "").trim();
+  if (!landgoed_id || !id || !naam) return;
+
+  const supabase = await createClient();
+  const { data: best } = await supabase
+    .from("stamobject")
+    .select("kenmerken")
+    .eq("id", id)
+    .maybeSingle();
+  const kenmerken = { ...((best?.kenmerken as object) ?? {}) } as Record<string, unknown>;
+  if (gebruik) kenmerken.gebruik = gebruik;
+  else delete kenmerken.gebruik;
+
+  await moet(
+    supabase.from("stamobject").update({ naam, kenmerken }).eq("id", id),
+    "beheerperceel wijzigen",
+  );
+  revalidatePath(`/landgoed/${landgoed_id}`, "layout");
+}
+
 // ── Kadastrale verankering (stap 1) ──
 // Bij het plaatsen van een perceel wordt naast de kenmerken-json (transitie)
 // ook de echte registratie gevuld: kadastraal_perceel (uniek per officiële

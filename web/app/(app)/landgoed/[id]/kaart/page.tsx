@@ -11,6 +11,7 @@ import {
   registreerBezit,
   verwijderBezit,
   deelPercelenIn,
+  wijzigBeheerperceel,
 } from "./acties";
 
 function haTekst(m2: unknown): string | null {
@@ -269,6 +270,7 @@ export default async function KaartPage({
           registreerBezit={registreerBezit}
           verwijderBezit={verwijderBezit}
           deelPercelenIn={deelPercelenIn}
+          wijzigBeheerperceel={wijzigBeheerperceel}
         />
       </div>
     </div>

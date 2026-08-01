@@ -252,6 +252,7 @@ export default function Kaart({
   registreerBezit,
   verwijderBezit,
   deelPercelenIn,
+  wijzigBeheerperceel,
 }: {
   landgoedId: string;
   objecten: PlaatsObject[];
@@ -272,6 +273,7 @@ export default function Kaart({
   ) => Promise<{ status: "toegevoegd" | "bestond" | "onbruikbaar"; aanduiding: string }>;
   verwijderBezit: (fd: FormData) => Promise<void>;
   deelPercelenIn: (fd: FormData) => Promise<void>;
+  wijzigBeheerperceel: (fd: FormData) => Promise<void>;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<LMap | null>(null);
@@ -300,6 +302,8 @@ export default function Kaart({
   // Fase 1/2: laatste bezit-melding + de indeel-selectie (perceel-ids).
   const [melding, setMelding] = useState<string | null>(null);
   const [selectie, setSelectie] = useState<string[]>([]);
+  // Beheerperceel waarvan het wijzig-formulier (naam/gebruik) openstaat.
+  const [wijzigId, setWijzigId] = useState<string | null>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const bezitLaagRef = useRef<any>(null);
   const bezitRef = useRef<BezitPerceel[]>(bezit);
@@ -1137,7 +1141,10 @@ export default function Kaart({
                     <form action={verwijderBezit}>
                       <input type="hidden" name="landgoed_id" value={landgoedId} />
                       <input type="hidden" name="perceel_id" value={p.id} />
-                      <button className="btn btn-ghost btn-sm" style={{ color: "var(--red)" }}>
+                      <button
+                        className="text-[11.5px] hover:underline"
+                        style={{ color: "var(--red)" }}
+                      >
                         Verwijder
                       </button>
                     </form>
@@ -1171,43 +1178,110 @@ export default function Kaart({
                     {lijst.map((o) => (
                       <div
                         key={o.id}
-                        className="flex items-center gap-3 py-2.5"
                         style={{
                           background:
                             geselecteerd === o.id ? "var(--primary-light)" : undefined,
                         }}
                       >
-                        <button
-                          type="button"
-                          onClick={() => selecteer(o)}
-                          className="flex-1 text-left"
-                        >
-                          <div className="text-[14px] font-semibold">{o.naam}</div>
-                          <div className="text-[12px]" style={{ color: "var(--text-2)" }}>
-                            {objectDetails(o)}
-                          </div>
-                        </button>
-                        <Link
-                          href={`/landgoed/${landgoedId}/object/${o.id}`}
-                          className="btn btn-ghost btn-sm"
-                        >
-                          Details
-                        </Link>
-                        <form action={verwijderObject}>
-                          <input type="hidden" name="landgoed_id" value={landgoedId} />
-                          <input type="hidden" name="id" value={o.id} />
-                          {PERCEEL_CATS.has(o.categorie) ? (
-                            // Bij een beheerperceel blijft het bezit bestaan: de
-                            // kadastrale percelen vallen terug naar "nog in te delen".
-                            <VerwijderKnop
-                              vraag={`de indeling "${o.naam}" (de kadastrale percelen blijven in het bezit en worden weer "nog in te delen")`}
+                        <div className="flex items-center gap-3 py-2.5">
+                          <button
+                            type="button"
+                            onClick={() => selecteer(o)}
+                            className="flex-1 text-left"
+                          >
+                            <div className="text-[14px] font-semibold">{o.naam}</div>
+                            <div className="text-[12px]" style={{ color: "var(--text-2)" }}>
+                              {objectDetails(o)}
+                            </div>
+                          </button>
+                          <Link
+                            href={`/landgoed/${landgoedId}/object/${o.id}`}
+                            className="btn btn-ghost btn-sm"
+                          >
+                            Details
+                          </Link>
+                          {/* Zelden gebruikte acties: klein en tekstueel, niet in
+                              your face (wens Steven). */}
+                          {PERCEEL_CATS.has(o.categorie) && (
+                            <button
+                              type="button"
+                              className="text-[11.5px] hover:underline"
+                              style={{ color: "var(--text-2)" }}
+                              onClick={() =>
+                                setWijzigId(wijzigId === o.id ? null : o.id)
+                              }
                             >
-                              Hef indeling op
-                            </VerwijderKnop>
-                          ) : (
-                            <VerwijderKnop vraag={`"${o.naam}"`}>Verwijder</VerwijderKnop>
+                              Wijzig
+                            </button>
                           )}
-                        </form>
+                          <form action={verwijderObject} style={{ color: "var(--red)" }}>
+                            <input type="hidden" name="landgoed_id" value={landgoedId} />
+                            <input type="hidden" name="id" value={o.id} />
+                            {PERCEEL_CATS.has(o.categorie) ? (
+                              // Bij een beheerperceel blijft het bezit bestaan: de
+                              // kadastrale percelen vallen terug naar "nog in te delen".
+                              <VerwijderKnop
+                                className="text-[11.5px] hover:underline"
+                                vraag={`de indeling "${o.naam}" (de kadastrale percelen blijven in het bezit en worden weer "nog in te delen")`}
+                              >
+                                Hef indeling op
+                              </VerwijderKnop>
+                            ) : (
+                              <VerwijderKnop
+                                className="text-[11.5px] hover:underline"
+                                vraag={`"${o.naam}"`}
+                              >
+                                Verwijder
+                              </VerwijderKnop>
+                            )}
+                          </form>
+                        </div>
+                        {wijzigId === o.id && (
+                          <form
+                            action={async (fd) => {
+                              await wijzigBeheerperceel(fd);
+                              setWijzigId(null);
+                            }}
+                            className="flex flex-wrap items-end gap-3 pb-3"
+                          >
+                            <input type="hidden" name="landgoed_id" value={landgoedId} />
+                            <input type="hidden" name="id" value={o.id} />
+                            <div className="min-w-[180px] flex-1">
+                              <label className="label-up mb-1 block">Naam</label>
+                              <input
+                                className="input"
+                                name="naam"
+                                defaultValue={o.naam}
+                                required
+                              />
+                            </div>
+                            <div>
+                              <label className="label-up mb-1 block">Gebruik</label>
+                              <select
+                                className="input"
+                                name="gebruik"
+                                defaultValue={o.gebruik ?? ""}
+                              >
+                                <option value="">— geen —</option>
+                                {GEBRUIK.map((g) => (
+                                  <option key={g} value={g}>
+                                    {g}
+                                  </option>
+                                ))}
+                              </select>
+                            </div>
+                            <SubmitKnop className="btn btn-primary btn-sm" pendingTekst="Opslaan…">
+                              Opslaan
+                            </SubmitKnop>
+                            <button
+                              type="button"
+                              className="btn btn-ghost btn-sm"
+                              onClick={() => setWijzigId(null)}
+                            >
+                              Annuleer
+                            </button>
+                          </form>
+                        )}
                       </div>
                     ))}
                   </div>
