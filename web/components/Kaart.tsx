@@ -56,7 +56,10 @@ type LookupResult = {
   geom: unknown;
 };
 type Resultaat = LookupResult & { soort: "perceel" | "gebouw" };
-type Mode = "basis" | "perceel" | "indelen" | "gebouw";
+// "bekijk" is de veilige standaard: klikken op de kaart doet dan niets.
+// "basis" (landgoed-locatie aanwijzen) is een eenmalige actie en zit bewust
+// niet meer tussen de hoofdmodi — bereikbaar via een aparte knop/link.
+type Mode = "bekijk" | "basis" | "perceel" | "indelen" | "gebouw";
 
 // Eén kadastraal perceel uit het bezit-register (fase 1), met indeel-status.
 type BezitPerceel = {
@@ -268,9 +271,9 @@ export default function Kaart({
   const boundsRef = useRef<any>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const LRef = useRef<any>(null);
-  const modeRef = useRef<Mode>("basis");
+  const modeRef = useRef<Mode>("bekijk");
 
-  const [mode, setMode] = useState<Mode>("basis");
+  const [mode, setMode] = useState<Mode>("bekijk");
   const [toonNatura, setToonNatura] = useState(false);
   const [toonNnn, setToonNnn] = useState(false);
   const [punt, setPunt] = useState<{ lat: number; lon: number } | null>(null);
@@ -387,8 +390,8 @@ export default function Kaart({
     if (mode !== "indelen") setSelectie([]);
     setMelding(null);
     wisHighlights();
-    // In basis-modus: toon het hele landgoed i.p.v. handmatig inzoomen.
-    if (mode === "basis") zoomNaarLandgoed();
+    // In bekijk-modus: toon het hele landgoed i.p.v. handmatig inzoomen.
+    if (mode === "bekijk") zoomNaarLandgoed();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mode]);
 
@@ -431,10 +434,14 @@ export default function Kaart({
       );
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       poly.on("click", async (e: any) => {
-        // Voorkom dat de kaart-klik (lookup/registratie) er ook op afgaat.
-        laagKlikRef.current = true;
-        if (e.originalEvent) L.DomEvent.stopPropagation(e.originalEvent);
         const m = modeRef.current;
+        // Alleen in de modi waar het vlak de klik zelf afhandelt de kaart-klik
+        // onderdrukken; in de basis-modus moet een klik óp een perceel gewoon
+        // de landgoed-locatie kunnen zetten.
+        if (m === "perceel" || m === "indelen") {
+          laagKlikRef.current = true;
+          if (e.originalEvent) L.DomEvent.stopPropagation(e.originalEvent);
+        }
         if (m === "indelen") {
           if (p.ingedeeld) return;
           setSelectie((prev) =>
@@ -575,6 +582,8 @@ export default function Kaart({
         const lat = e.latlng.lat;
         const lon = e.latlng.lng;
         const m = modeRef.current;
+        // Bekijk-modus: kaartklikken doen bewust niets.
+        if (m === "bekijk") return;
         setGeselecteerd(null);
         setKoppelId("");
         setPunt({ lat, lon });
@@ -680,7 +689,7 @@ export default function Kaart({
       <div className="flex flex-wrap gap-2">
         {(
           [
-            ["basis", "Basis: landgoed-locatie"],
+            ["bekijk", "Bekijken"],
             ["perceel", "1 · Bezit inladen"],
             ["indelen", "2 · Percelen indelen"],
             ["gebouw", "Gebouwen aanklikken"],
@@ -724,10 +733,35 @@ export default function Kaart({
             </SubmitKnop>
           </form>
         )}
+        {basisIngesteld && mode !== "basis" && (
+          <button
+            type="button"
+            className="text-[12.5px] underline"
+            style={{ color: "var(--text-2)" }}
+            onClick={() => setMode("basis")}
+          >
+            landgoed-locatie wijzigen
+          </button>
+        )}
       </div>
 
+      {/* Eenmalige instap: zonder basislocatie eerst de locatie aanwijzen */}
+      {!basisIngesteld && mode !== "basis" && (
+        <div className="card flex flex-wrap items-center gap-3 p-4">
+          <p className="flex-1 text-[13px]" style={{ color: "var(--text-2)" }}>
+            Er is nog geen landgoed-locatie ingesteld — dat is de eenmalige eerste stap
+            (nodig voor o.a. de monumenten- en gebiedschecks).
+          </p>
+          <button type="button" className="btn btn-primary btn-sm" onClick={() => setMode("basis")}>
+            Stel de landgoed-locatie in
+          </button>
+        </div>
+      )}
+
       <p className="text-[12px]" style={{ color: "var(--text-3)" }}>
-        {mode === "basis"
+        {mode === "bekijk"
+          ? "Bekijk-modus: klikken op de kaart doet niets. Kies een invoer-modus om percelen of gebouwen toe te voegen."
+          : mode === "basis"
           ? basisIngesteld
             ? "Klik op de kaart om de landgoed-locatie te wijzigen."
             : "Klik op de hoofdlocatie van het landgoed; adres/gemeente/provincie wordt opgezocht."
@@ -844,7 +878,14 @@ export default function Kaart({
 
       {/* Basis-paneel */}
       {mode === "basis" && punt && (
-        <form action={setBasisLocatie} className="card p-4">
+        <form
+          action={async (fd) => {
+            await setBasisLocatie(fd);
+            // Eenmalige actie: na het opslaan terug naar de veilige bekijk-modus.
+            setMode("bekijk");
+          }}
+          className="card p-4"
+        >
           <input type="hidden" name="landgoed_id" value={landgoedId} />
           <input type="hidden" name="lat" value={punt.lat} />
           <input type="hidden" name="lon" value={punt.lon} />
