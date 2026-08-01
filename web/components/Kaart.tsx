@@ -743,11 +743,15 @@ export default function Kaart({
         </p>
       )}
 
-      <div
-        ref={containerRef}
-        className="card overflow-hidden"
-        style={{ height: 480, padding: 0 }}
-      />
+      {/* Op groot scherm: lijsten links (scrollen door), kaart rechts (blijft
+          in beeld — sticky). Op smal scherm: gestapeld zoals voorheen. */}
+      <div className="flex flex-col gap-3 lg:grid lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] lg:items-start lg:gap-4">
+        <div className="flex flex-col gap-2 lg:order-2 lg:sticky lg:top-4">
+          <div
+            ref={containerRef}
+            className="card h-[480px] overflow-hidden lg:h-[calc(100vh-200px)]"
+            style={{ padding: 0 }}
+          />
 
       <p className="text-[11.5px]" style={{ color: "var(--text-3)" }}>
         Kleur = gebruik:{" "}
@@ -772,6 +776,10 @@ export default function Kaart({
         <span style={{ color: "#d97706" }}>amber</span> = indeel-selectie ·{" "}
         <span style={{ color: "#dc2626" }}>rood</span> = aangeklikt gebouw.
       </p>
+        </div>
+
+        {/* Linkerkolom: panelen en lijsten */}
+        <div className="flex flex-col gap-3 lg:order-1">
 
       {/* Indeel-paneel (fase 2) */}
       {mode === "indelen" && selectie.length > 0 && (
@@ -1128,6 +1136,8 @@ export default function Kaart({
           </div>
         );
       })()}
+        </div>
+      </div>
     </div>
   );
 }
