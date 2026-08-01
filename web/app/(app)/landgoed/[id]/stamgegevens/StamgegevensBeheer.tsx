@@ -37,6 +37,8 @@ type Obj = {
   bovenliggend_id: string | null;
   lijkt_op_id: string | null;
   geaccordeerd: boolean;
+  herkomst: string | null;
+  aangemaakt_op: string | null;
 };
 type Verband = {
   id: string;
@@ -58,7 +60,7 @@ export default async function StamgegevensBeheer({ landgoedId }: { landgoedId: s
       supabase
         .from("stamobject")
         .select(
-          "id, naam, categorie, beschrijving, geaccordeerd, voorstel_reden, kenmerken, bovenliggend_id, lijkt_op_id",
+          "id, naam, categorie, beschrijving, geaccordeerd, voorstel_reden, kenmerken, bovenliggend_id, lijkt_op_id, herkomst, aangemaakt_op",
         )
         .eq("landgoed_id", id)
         .order("categorie"),
@@ -195,6 +197,13 @@ export default async function StamgegevensBeheer({ landgoedId }: { landgoedId: s
           .join(", ")}`
       : null;
     const isMonumentGebouw = isGebouw && kn.is_rijksmonument === true;
+    // Herkomst altijd zichtbaar: waar komt dit object vandaan, en wanneer?
+    const d = o.aangemaakt_op ? new Date(o.aangemaakt_op) : null;
+    const herkomstLabel = `${o.herkomst === "ai" ? "AI" : "handmatig"}${
+      d && Number.isFinite(d.getTime())
+        ? ` · ${d.toLocaleDateString("nl-NL", { day: "numeric", month: "short" })}`
+        : ""
+    }`;
     const detail = [
       o.beschrijving,
       kn.adres ? String(kn.adres) : null,
@@ -203,6 +212,7 @@ export default async function StamgegevensBeheer({ landgoedId }: { landgoedId: s
       kn.bouwjaar ? `bouwjaar ${String(kn.bouwjaar)}` : null,
       kn.pandstatus ? String(kn.pandstatus) : null,
       kn.gebruik ? String(kn.gebruik) : null,
+      herkomstLabel,
     ]
       .filter(Boolean)
       .join(" · ");
