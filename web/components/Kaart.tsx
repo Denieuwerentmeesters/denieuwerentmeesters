@@ -252,6 +252,7 @@ export default function Kaart({
   registreerBezit,
   verwijderBezit,
   deelPercelenIn,
+  wijzigBeheerperceel,
 }: {
   landgoedId: string;
   objecten: PlaatsObject[];
