@@ -72,8 +72,10 @@ type BezitPerceel = {
   ingedeeld: boolean;
 };
 
-const PDOK_TILES =
-  "https://service.pdok.nl/brt/achtergrondkaart/wmts/v2_0/standaard/EPSG:3857/{z}/{x}/{y}.png";
+// BRT-Achtergrondkaart: zelfde bron, twee smaken. Op "grijs" springen de
+// gebruikskleuren van de beheerpercelen er veel duidelijker uit.
+const PDOK_TILES = (variant: "standaard" | "grijs") =>
+  `https://service.pdok.nl/brt/achtergrondkaart/wmts/v2_0/${variant}/EPSG:3857/{z}/{x}/{y}.png`;
 const KADASTER_WMS = "https://service.pdok.nl/kadaster/kadastralekaart/wms/v5_0";
 const BAG_WMS = "https://service.pdok.nl/lv/bag/wms/v2_0";
 const NATURA2000_WMS = "https://service.pdok.nl/rvo/natura2000/wms/v1_0";
@@ -280,6 +282,7 @@ export default function Kaart({
   const tempRef = useRef<CircleMarker | null>(null);
   const kadRef = useRef<TileLayer | null>(null);
   const bagRef = useRef<TileLayer | null>(null);
+  const achtergrondRef = useRef<TileLayer | null>(null);
   const natRef = useRef<TileLayer | null>(null);
   const nnnRef = useRef<TileLayer | null>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -296,6 +299,7 @@ export default function Kaart({
   const [mode, setMode] = useState<Mode>("bekijk");
   const [toonNatura, setToonNatura] = useState(false);
   const [toonNnn, setToonNnn] = useState(false);
+  const [grijzeKaart, setGrijzeKaart] = useState(false);
   const [punt, setPunt] = useState<{ lat: number; lon: number } | null>(null);
   const [basis, setBasis] = useState<Basis>(LEEG);
   const [resultaat, setResultaat] = useState<Resultaat | null>(null);
@@ -514,6 +518,11 @@ export default function Kaart({
     }
   }
 
+  // Ondergrond wisselen tussen kleur en grijs (zelfde PDOK-bron, andere smaak).
+  useEffect(() => {
+    achtergrondRef.current?.setUrl(PDOK_TILES(grijzeKaart ? "grijs" : "standaard"));
+  }, [grijzeKaart]);
+
   // Natura 2000-overlay aan/uit op basis van de toggle.
   useEffect(() => {
     const map = mapRef.current;
@@ -538,7 +547,7 @@ export default function Kaart({
       const L = (await import("leaflet")).default;
       if (cancelled || !containerRef.current || mapRef.current) return;
       const map = L.map(containerRef.current).setView([52.15, 5.4], 8);
-      L.tileLayer(PDOK_TILES, {
+      achtergrondRef.current = L.tileLayer(PDOK_TILES("standaard"), {
         maxZoom: 19,
         attribution: "© PDOK BRT-Achtergrondkaart",
       }).addTo(map);
@@ -581,7 +590,7 @@ export default function Kaart({
         format: "image/png",
         transparent: true,
         version: "1.3.0",
-        opacity: 0.45,
+        opacity: 0.8,
         maxZoom: 19,
         attribution: "© Natuurnetwerk Nederland / Provincies (PDOK)",
       });
@@ -740,6 +749,14 @@ export default function Kaart({
 
       {/* Kaartlagen + gebiedsligging */}
       <div className="flex flex-wrap items-center gap-3">
+        <label className="flex items-center gap-1.5 text-[12.5px]" style={{ color: "var(--text-2)" }}>
+          <input
+            type="checkbox"
+            checked={grijzeKaart}
+            onChange={(e) => setGrijzeKaart(e.target.checked)}
+          />
+          Grijze ondergrond
+        </label>
         <label className="flex items-center gap-1.5 text-[12.5px]" style={{ color: "var(--text-2)" }}>
           <input
             type="checkbox"
