@@ -392,6 +392,27 @@ export default function Kaart({
         }
         if (getekend) continue;
       }
+      // Gebouwen (en andere objecten met een vorm): teken de echte contour,
+      // gekleurd naar gebruik — dan zie je in één oogopslag welke panden
+      // geregistreerd zijn. Panden zijn klein, dus wat meer vulling.
+      const contour = geomNaarLatlngs(L, o.geom);
+      if (contour) {
+        const kleur = kleurVoorGebruik(o.gebruik);
+        const poly = L.polygon(contour, {
+          color: kleur,
+          weight: 2,
+          fillColor: kleur,
+          fillOpacity: 0.45,
+        });
+        poly.bindTooltip(
+          `${o.naam}${o.gebruik ? ` · ${o.gebruik}` : ""}`,
+          { sticky: true },
+        );
+        poly.addTo(groep);
+        bounds.extend(poly.getBounds());
+        continue;
+      }
+      // Terugval: geen contour bekend, dan een stip op het opgeslagen punt.
       if (Number.isFinite(o.lat) && Number.isFinite(o.lon)) {
         L.circleMarker([o.lat, o.lon], {
           radius: 6,
