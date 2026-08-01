@@ -345,6 +345,16 @@ export default function Kaart({
   // Tekent alle aangevinkte percelen (groen vlak) + gebouwen (groene stip).
   // Zo zie je in één oogopslag welke percelen al wél en nog niet zijn aangeklikt.
   // Onthoudt de gezamenlijke bounds zodat de kaart op het landgoed kan inzoomen.
+  // Kaart → lijst: klik in bekijk-modus op een vlak en de lijst springt naar
+  // de bijbehorende rij (de omgekeerde richting van selecteer()).
+  function toonInLijst(id: string) {
+    if (modeRef.current !== "bekijk") return;
+    setGeselecteerd(id);
+    document
+      .getElementById(`obj-rij-${id}`)
+      ?.scrollIntoView({ behavior: "smooth", block: "center" });
+  }
+
   function tekenOverzicht() {
     const L = LRef.current;
     const map = mapRef.current;
@@ -385,6 +395,7 @@ export default function Kaart({
           poly.on("mouseout", () => {
             for (const p of eenheid) p.setStyle({ weight: 2.5, fillOpacity: 0.25 });
           });
+          poly.on("click", () => toonInLijst(o.id));
           eenheid.push(poly);
           poly.addTo(groep);
           bounds.extend(poly.getBounds());
@@ -408,6 +419,7 @@ export default function Kaart({
           `${o.naam}${o.gebruik ? ` · ${o.gebruik}` : ""}`,
           { sticky: true },
         );
+        poly.on("click", () => toonInLijst(o.id));
         poly.addTo(groep);
         bounds.extend(poly.getBounds());
         continue;
@@ -1226,6 +1238,7 @@ export default function Kaart({
                     {lijst.map((o) => (
                       <div
                         key={o.id}
+                        id={`obj-rij-${o.id}`}
                         style={{
                           background:
                             geselecteerd === o.id ? "var(--primary-light)" : undefined,
