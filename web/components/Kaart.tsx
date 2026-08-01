@@ -200,21 +200,35 @@ function geomNaarLatlngs(L: any, geom: unknown): unknown {
     : g.coordinates.map(ring);
 }
 
-// Tekent de rand van een vlak (geom in EPSG:3857) op de kaart.
+// Tekent de rode selectierand om één of meer vlakken (geoms in EPSG:3857) —
+// een beheerperceel kan uit meerdere kadastrale vormen bestaan en die horen
+// dan állemaal op te lichten. Geeft de gezamenlijke bounds terug (of null).
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function tekenRand(L: any, map: LMap, ref: { current: any }, geom: unknown) {
+function tekenRand(L: any, map: LMap, ref: { current: any }, geoms: unknown[]) {
   if (ref.current) {
     ref.current.remove();
     ref.current = null;
   }
-  const latlngs = geomNaarLatlngs(L, geom);
-  if (!latlngs) return;
-  ref.current = L.polygon(latlngs, {
-    color: "#dc2626",
-    weight: 2,
-    fillColor: "#dc2626",
-    fillOpacity: 0.12,
-  }).addTo(map);
+  const groep = L.layerGroup();
+  const bounds = L.latLngBounds([]);
+  let getekend = false;
+  for (const geom of geoms) {
+    const latlngs = geomNaarLatlngs(L, geom);
+    if (!latlngs) continue;
+    const poly = L.polygon(latlngs, {
+      color: "#dc2626",
+      weight: 2,
+      fillColor: "#dc2626",
+      fillOpacity: 0.12,
+    });
+    poly.addTo(groep);
+    bounds.extend(poly.getBounds());
+    getekend = true;
+  }
+  if (!getekend) return null;
+  groep.addTo(map);
+  ref.current = groep;
+  return bounds;
 }
 
 export default function Kaart({
@@ -635,7 +649,7 @@ export default function Kaart({
         } else {
           const r = await lookupGebouw(lat, lon);
           setResultaat(r ? { ...r, soort: "gebouw" } : null);
-          tekenRand(L, map, randRef, r?.geom);
+          tekenRand(L, map, randRef, r?.geom ? [r.geom] : []);
         }
         setBezig(false);
       });
@@ -653,18 +667,29 @@ export default function Kaart({
   async function selecteer(o: PlaatsObject) {
     const L = LRef.current;
     const map = mapRef.current;
-    if (!L || !map || !Number.isFinite(o.lat) || !Number.isFinite(o.lon)) return;
+    if (!L || !map) return;
     setGeselecteerd(o.id);
     setPunt(null);
     setResultaat(null);
     wisHighlights();
+
+    // Beheerperceel met vormen in het register: álle vormen rood omranden en
+    // op het geheel inzoomen — geen externe lookup nodig (sneller, en de oude
+    // lookup-op-middelpunt vond altijd maar één van de kadastrale percelen).
+    if (PERCEEL_CATS.has(o.categorie) && o.geoms?.length) {
+      const bounds = tekenRand(L, map, randRef, o.geoms);
+      if (bounds?.isValid()) map.fitBounds(bounds, { padding: [60, 60], maxZoom: 17 });
+      return;
+    }
+
+    if (!Number.isFinite(o.lat) || !Number.isFinite(o.lon)) return;
     map.setView([o.lat, o.lon], 16);
     if (o.categorie === "pachtperceel" || o.categorie === "gebouw") {
       const r =
         o.categorie === "gebouw"
           ? await lookupGebouw(o.lat, o.lon)
           : await lookupPerceel(o.lat, o.lon);
-      tekenRand(L, map, randRef, r?.geom);
+      tekenRand(L, map, randRef, r?.geom ? [r.geom] : []);
     } else {
       tempRef.current = L.circleMarker([o.lat, o.lon], {
         radius: 8,
@@ -808,7 +833,8 @@ export default function Kaart({
         · beweeg over een vlak om het hele beheerperceel op te laten lichten ·{" "}
         <span style={{ color: "#6b7280" }}>grijs gestippeld</span> = nog in te delen ·{" "}
         <span style={{ color: "#d97706" }}>amber</span> = indeel-selectie ·{" "}
-        <span style={{ color: "#dc2626" }}>rood</span> = aangeklikt gebouw.
+        <span style={{ color: "#dc2626" }}>rood</span> = selectie (lijst-klik of
+        aangeklikt gebouw).
       </p>
         </div>
 
