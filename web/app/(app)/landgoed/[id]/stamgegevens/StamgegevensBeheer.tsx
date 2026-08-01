@@ -19,8 +19,8 @@ import {
 import {
   CATEGORIE_LABEL,
   HANDMATIG_CATEGORIEEN,
-  GEBRUIK_OPTIES,
   categorieOptiesVoor,
+  gebruikOptiesVoor,
 } from "./constanten";
 
 // Het volledige stamgegevens-beheer (verrijken, review, handmatig, catalogus).
@@ -244,7 +244,7 @@ export default async function StamgegevensBeheer({ landgoedId }: { landgoedId: s
             detail={detail}
             koppelingen={koppelingLabels(o.id, "geaccordeerd")}
             categorieOpties={categorieOptiesVoor(o.categorie)}
-            gebruikOpties={GEBRUIK_OPTIES}
+            gebruikOpties={gebruikOptiesVoor(o.categorie, kn.gebruik != null ? String(kn.gebruik) : null)}
             bovenliggendId={o.bovenliggend_id}
             bovenliggendOpties={bovenliggendOptiesAlle.filter(([v]) => v !== o.id)}
             landgoedId={id}

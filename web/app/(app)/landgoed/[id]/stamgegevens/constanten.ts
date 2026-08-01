@@ -50,6 +50,34 @@ export const GEBRUIK_OPTIES = [
   "Maatschappelijk",
 ];
 
+// Gebouwen hebben hun eigen gebruiksvormen: een pand kan geen "Water" of
+// "Natuur" zijn, maar wél opslag (schuur) of leegstand.
+export const GEBRUIK_GEBOUW_OPTIES = [
+  "Wonen",
+  "Bedrijf",
+  "Agrarisch",
+  "Recreatie",
+  "Maatschappelijk",
+  "Opslag",
+  "Leegstand",
+];
+
+export const GEBOUW_CATEGORIEEN = ["gebouw", "woning", "opstal"];
+
+// De juiste gebruik-lijst per categorie, met — net als bij categorieOptiesVoor —
+// de huidige waarde als vangnet zodat een <select> nooit stilzwijgend terugvalt
+// op de eerste optie.
+export function gebruikOptiesVoor(
+  categorie: string,
+  huidige?: string | null,
+): string[] {
+  const lijst = GEBOUW_CATEGORIEEN.includes(categorie)
+    ? GEBRUIK_GEBOUW_OPTIES
+    : GEBRUIK_OPTIES;
+  if (huidige && !lijst.includes(huidige)) return [...lijst, huidige];
+  return lijst;
+}
+
 // Opties voor het bewerk-formulier: ALLE categorieën, plus — als vangnet — de
 // huidige waarde van het object als die (bv. legacy-data) buiten de lijst valt.
 // Dit repareert de bug waarbij een <select> zonder passende optie stilzwijgend
