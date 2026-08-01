@@ -159,6 +159,53 @@ export async function wijzigBeheerperceel(fd: FormData) {
   revalidatePath(`/landgoed/${landgoed_id}`, "layout");
 }
 
+// ── Gebouw ↔ beheerperceel (Hugo: PrimairBeheerperceelID) ──
+// Eén primair beheerperceel per gebouw: koppelen vervangt de vorige koppeling,
+// leeg laten = ontkoppelen. Vastgelegd als verband-rij met rol 'gelegen_op'.
+export async function koppelGebouwAanPerceel(fd: FormData) {
+  const landgoed_id = String(fd.get("landgoed_id"));
+  const gebouw_id = String(fd.get("gebouw_id"));
+  const perceel_id = String(fd.get("perceel_id") ?? "").trim();
+  if (!landgoed_id || !gebouw_id) return;
+
+  const supabase = await createClient();
+  await moet(
+    supabase
+      .from("verband")
+      .delete()
+      .eq("landgoed_id", landgoed_id)
+      .eq("bron_type", "stamobject")
+      .eq("bron_id", gebouw_id)
+      .eq("rol", "gelegen_op"),
+    "oude perceel-koppeling verwijderen",
+  );
+  if (perceel_id) {
+    // Het doelperceel moet van dit landgoed zijn (verband kent geen FK-check).
+    const { data: perceel } = await supabase
+      .from("stamobject")
+      .select("id")
+      .eq("id", perceel_id)
+      .eq("landgoed_id", landgoed_id)
+      .maybeSingle();
+    if (!perceel) return;
+    const { data: gebruiker } = await supabase.auth.getUser();
+    await moet(
+      supabase.from("verband").insert({
+        landgoed_id,
+        bron_type: "stamobject",
+        bron_id: gebouw_id,
+        doel_type: "stamobject",
+        doel_id: perceel_id,
+        rol: "gelegen_op",
+        status: "geaccordeerd",
+        aangemaakt_door: gebruiker.user?.id ?? null,
+      }),
+      "perceel-koppeling opslaan",
+    );
+  }
+  revalidatePath(`/landgoed/${landgoed_id}`, "layout");
+}
+
 // ── Kadastrale verankering (stap 1) ──
 // Bij het plaatsen van een perceel wordt naast de kenmerken-json (transitie)
 // ook de echte registratie gevuld: kadastraal_perceel (uniek per officiële
