@@ -845,8 +845,10 @@ export default function Kaart({
         {/* Linkerkolom: panelen en lijsten */}
         <div className="flex flex-col gap-3 lg:order-1">
 
-      {/* Indeel-paneel (fase 2) */}
-      {mode === "indelen" && selectie.length > 0 && (
+      {/* Indeel-paneel (fase 2) — direct zichtbaar zodra de modus actief is,
+          zodat meteen duidelijk is wat hier gebeurt; de maak-knop ontgrendelt
+          zodra er percelen geselecteerd zijn. */}
+      {mode === "indelen" && (
         <form
           action={async (fd) => {
             await deelPercelenIn(fd);
@@ -862,7 +864,9 @@ export default function Kaart({
           ))}
           <div className="min-w-[220px] flex-1">
             <label className="label-up mb-1 block">
-              {selectie.length} perceel{selectie.length > 1 ? "en" : ""} geselecteerd — indelen bij
+              {selectie.length === 0
+                ? "Klik percelen aan (kaart of lijst) — indelen bij"
+                : `${selectie.length} perceel${selectie.length > 1 ? "en" : ""} geselecteerd — indelen bij`}
             </label>
             <select
               className="input"
@@ -897,12 +901,18 @@ export default function Kaart({
               </select>
             </div>
           )}
-          <SubmitKnop className="btn btn-primary" pendingTekst="Indelen…">
+          <SubmitKnop
+            className="btn btn-primary"
+            pendingTekst="Indelen…"
+            disabled={selectie.length === 0}
+          >
             {koppelId ? "Toevoegen aan bestaand" : "Beheerperceel maken"}
           </SubmitKnop>
-          <button type="button" className="btn btn-ghost btn-sm" onClick={() => setSelectie([])}>
-            Wis selectie
-          </button>
+          {selectie.length > 0 && (
+            <button type="button" className="btn btn-ghost btn-sm" onClick={() => setSelectie([])}>
+              Wis selectie
+            </button>
+          )}
         </form>
       )}
 
