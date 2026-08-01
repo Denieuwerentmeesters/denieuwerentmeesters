@@ -93,6 +93,7 @@ const GEBRUIK = [
   "Bedrijf",
   "Natuur",
   "Agrarisch",
+  "Water",
   "Recreatie",
   "Maatschappelijk",
 ];
@@ -110,6 +111,7 @@ const GEBRUIK_KLEUR: Record<string, string> = {
   Agrarisch: "#C9A227",
   Wonen: "#B0574F",
   Bedrijf: "#8A5A2B",
+  Water: "#3B82C4",
   Recreatie: "#7B4FA0",
   Maatschappelijk: "#4A8A8A",
 };

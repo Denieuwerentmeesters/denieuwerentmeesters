@@ -45,6 +45,7 @@ export const GEBRUIK_OPTIES = [
   "Bedrijf",
   "Natuur",
   "Agrarisch",
+  "Water",
   "Recreatie",
   "Maatschappelijk",
 ];
