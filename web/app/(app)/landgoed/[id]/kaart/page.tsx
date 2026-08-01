@@ -12,6 +12,7 @@ import {
   verwijderBezit,
   deelPercelenIn,
   wijzigBeheerperceel,
+  koppelGebouwAanPerceel,
 } from "./acties";
 
 function haTekst(m2: unknown): string | null {
@@ -82,6 +83,21 @@ export default async function KaartPage({
     ingedeeld: ingedeeldIds.has(p.id),
   }));
 
+  // Gebouw ↔ beheerperceel: op welk beheerperceel staat elk gebouw?
+  // (verband-rij met rol 'gelegen_op', één primair perceel per gebouw.)
+  const { data: ligtOpData } = await supabase
+    .from("verband")
+    .select("bron_id, doel_id")
+    .eq("landgoed_id", id)
+    .eq("bron_type", "stamobject")
+    .eq("doel_type", "stamobject")
+    .eq("rol", "gelegen_op")
+    .eq("status", "geaccordeerd");
+  const staatOpVan = new Map(
+    (ligtOpData ?? []).map((v) => [v.bron_id as string, v.doel_id as string]),
+  );
+  const naamVan = new Map((data ?? []).map((o) => [o.id, o.naam]));
+
   const kadVan = new Map<string, { aanduiding: string; oppervlakteM2: number | null; geom: unknown; dekking: string }[]>();
   for (const rij of (kadData ?? []) as unknown as {
     stamobject_id: string;
@@ -135,6 +151,10 @@ export default async function KaartPage({
       geoms: kadGeoms.length ? kadGeoms : k.geom_3857 != null ? [k.geom_3857] : [],
       kadastraal,
       herkomstLabel: herkomstLabel(o.herkomst, o.aangemaakt_op),
+      staatOpId: staatOpVan.get(o.id) ?? null,
+      staatOp: staatOpVan.has(o.id)
+        ? (naamVan.get(staatOpVan.get(o.id)!) ?? null)
+        : null,
     };
   });
 
@@ -271,6 +291,7 @@ export default async function KaartPage({
           verwijderBezit={verwijderBezit}
           deelPercelenIn={deelPercelenIn}
           wijzigBeheerperceel={wijzigBeheerperceel}
+          koppelGebouwAanPerceel={koppelGebouwAanPerceel}
         />
       </div>
     </div>

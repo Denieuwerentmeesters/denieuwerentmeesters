@@ -31,6 +31,10 @@ type PlaatsObject = {
   kadastraal?: string | null;
   // "AI · 12 jul" of "handmatig · 30 jul" — waar komt dit object vandaan?
   herkomstLabel?: string | null;
+  // Gebouw ↔ beheerperceel (Hugo: PrimairBeheerperceelID): op welk
+  // beheerperceel staat dit gebouw? Eén primair perceel per gebouw.
+  staatOp?: string | null;
+  staatOpId?: string | null;
 };
 
 function objectDetails(o: PlaatsObject): string {
@@ -41,6 +45,7 @@ function objectDetails(o: PlaatsObject): string {
         o.oppervlakteM2 ? `${o.oppervlakteM2} m²` : null,
         o.pandstatus,
         o.bouwjaar ? `bouwjaar ${o.bouwjaar}` : null,
+        o.staatOp ? `staat op ${o.staatOp}` : null,
       ]
     : [o.gebruik, o.oppervlakteHa, o.kadastraal];
   return [o.categorie, ...delen, o.herkomstLabel].filter(Boolean).join(" · ");
@@ -122,8 +127,10 @@ function kleurVoorGebruik(gebruik: string | null): string {
   return GEBRUIK_KLEUR[gebruik ?? ""] ?? KLEUR_GEEN_GEBRUIK;
 }
 
+// Eerst de grond-groepen (de beheerpercelen, per gebruik), dan pas de
+// gebouwen: "de grond, en dan wat erop staat" — zelfde denklaag als de kaart.
 const KAARTGROEP_LABELS = [
-  "Gebouwen",
+  "Wonen",
   "Agrarisch",
   "Natuur",
   "Recreatie",
@@ -131,6 +138,7 @@ const KAARTGROEP_LABELS = [
   "Infrastructuur",
   "Water & Klimaat",
   "Overig",
+  "Gebouwen",
 ] as const;
 
 type KaartGroepLabel = (typeof KAARTGROEP_LABELS)[number];
@@ -150,16 +158,17 @@ function kaartGroep(o: PlaatsObject): KaartGroepLabel {
   if (["infrastructuur", "weg_pad", "brug", "hek", "kabel_leiding"].includes(cat)) return "Infrastructuur";
   if (["water", "waterloop", "vijver_sloot"].includes(cat)) return "Water & Klimaat";
 
-  // Percelen: indeling via gebruik-veld
+  // Percelen: indeling via gebruik-veld. Een woonperceel is grond en hoort
+  // dus onder "Wonen" — niet tussen de gebouwen die erop staan.
   if (cat === "pachtperceel") {
-    if (gebruik === "wonen") return "Gebouwen";
+    if (gebruik === "wonen") return "Wonen";
     if (gebruik === "agrarisch") return "Agrarisch";
     if (gebruik === "natuur") return "Natuur";
     if (gebruik === "recreatie") return "Recreatie";
     if (gebruik === "bedrijf") return "Werken";
     if (gebruik === "maatschappelijk") return "Werken";
     if (gebruik === "water") return "Water & Klimaat";
-    return "Agrarisch"; // standaard voor percelen zonder gebruik
+    return "Overig"; // geen gebruik gekozen: grijs op de kaart, dus ook hier neutraal
   }
 
   return "Overig";
@@ -256,6 +265,7 @@ export default function Kaart({
   verwijderBezit,
   deelPercelenIn,
   wijzigBeheerperceel,
+  koppelGebouwAanPerceel,
 }: {
   landgoedId: string;
   objecten: PlaatsObject[];
@@ -277,6 +287,7 @@ export default function Kaart({
   verwijderBezit: (fd: FormData) => Promise<void>;
   deelPercelenIn: (fd: FormData) => Promise<void>;
   wijzigBeheerperceel: (fd: FormData) => Promise<void>;
+  koppelGebouwAanPerceel: (fd: FormData) => Promise<void>;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<LMap | null>(null);
@@ -309,6 +320,7 @@ export default function Kaart({
   const [selectie, setSelectie] = useState<string[]>([]);
   // Beheerperceel waarvan het wijzig-formulier (naam/gebruik) openstaat.
   const [wijzigId, setWijzigId] = useState<string | null>(null);
+  const [koppelGebouwId, setKoppelGebouwId] = useState<string | null>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const bezitLaagRef = useRef<any>(null);
   const bezitRef = useRef<BezitPerceel[]>(bezit);
@@ -1232,6 +1244,18 @@ export default function Kaart({
                               Wijzig
                             </button>
                           )}
+                          {GEBOUW_CATS.has(o.categorie) && (
+                            <button
+                              type="button"
+                              className="text-[11.5px] hover:underline"
+                              style={{ color: "var(--text-2)" }}
+                              onClick={() =>
+                                setKoppelGebouwId(koppelGebouwId === o.id ? null : o.id)
+                              }
+                            >
+                              Koppel aan perceel
+                            </button>
+                          )}
                           <form action={verwijderObject} style={{ color: "var(--red)" }}>
                             <input type="hidden" name="landgoed_id" value={landgoedId} />
                             <input type="hidden" name="id" value={o.id} />
@@ -1295,6 +1319,48 @@ export default function Kaart({
                               type="button"
                               className="btn btn-ghost btn-sm"
                               onClick={() => setWijzigId(null)}
+                            >
+                              Annuleer
+                            </button>
+                          </form>
+                        )}
+                        {koppelGebouwId === o.id && (
+                          <form
+                            action={async (fd) => {
+                              await koppelGebouwAanPerceel(fd);
+                              setKoppelGebouwId(null);
+                            }}
+                            className="flex flex-wrap items-end gap-3 pb-3"
+                          >
+                            <input type="hidden" name="landgoed_id" value={landgoedId} />
+                            <input type="hidden" name="gebouw_id" value={o.id} />
+                            <div className="min-w-[220px] flex-1">
+                              <label className="label-up mb-1 block">
+                                Staat op beheerperceel
+                              </label>
+                              <select
+                                className="input"
+                                name="perceel_id"
+                                defaultValue={o.staatOpId ?? ""}
+                              >
+                                <option value="">— geen —</option>
+                                {objecten
+                                  .filter((p) => PERCEEL_CATS.has(p.categorie))
+                                  .map((p) => (
+                                    <option key={p.id} value={p.id}>
+                                      {p.naam}
+                                      {p.gebruik ? ` (${p.gebruik})` : ""}
+                                    </option>
+                                  ))}
+                              </select>
+                            </div>
+                            <SubmitKnop className="btn btn-primary btn-sm" pendingTekst="Opslaan…">
+                              Opslaan
+                            </SubmitKnop>
+                            <button
+                              type="button"
+                              className="btn btn-ghost btn-sm"
+                              onClick={() => setKoppelGebouwId(null)}
                             >
                               Annuleer
                             </button>
