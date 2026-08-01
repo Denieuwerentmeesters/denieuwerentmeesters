@@ -304,6 +304,13 @@ export default function Kaart({
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const LRef = useRef<any>(null);
   const modeRef = useRef<Mode>("bekijk");
+  // Alle getekende vlakken per object-id, met hun basisstijl — zodat de
+  // spotlight-selectie stijlen kan aanpassen én weer kan herstellen.
+  const vlakkenRef = useRef<
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    Map<string, { poly: any; basis: { weight: number; fillOpacity: number } }[]>
+  >(new Map());
+  const geselecteerdRef = useRef<string | null>(null);
 
   const [mode, setMode] = useState<Mode>("bekijk");
   const [toonNatura, setToonNatura] = useState(false);
@@ -345,10 +352,37 @@ export default function Kaart({
   // Tekent alle aangevinkte percelen (groen vlak) + gebouwen (groene stip).
   // Zo zie je in één oogopslag welke percelen al wél en nog niet zijn aangeklikt.
   // Onthoudt de gezamenlijke bounds zodat de kaart op het landgoed kan inzoomen.
+  // Spotlight-selectie: het gekozen object blijft in zijn eigen gebruikskleur
+  // maar vol aan; al het andere vervaagt. Zo is "wat hoort erbij" altijd
+  // leesbaar, ook als de gebruikskleur zelf op rood lijkt (Wonen).
+  function spotlight(id: string | null) {
+    for (const [oid, vlakken] of vlakkenRef.current) {
+      for (const { poly, basis } of vlakken) {
+        if (id === null) poly.setStyle({ opacity: 1, ...basis });
+        else if (oid === id)
+          poly.setStyle({ opacity: 1, weight: 4.5, fillOpacity: 0.6 });
+        else poly.setStyle({ opacity: 0.25, weight: 1.5, fillOpacity: 0.05 });
+      }
+    }
+  }
+
+  useEffect(() => {
+    geselecteerdRef.current = geselecteerd;
+    spotlight(geselecteerd);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [geselecteerd]);
+
   // Kaart → lijst: klik in bekijk-modus op een vlak en de lijst springt naar
-  // de bijbehorende rij (de omgekeerde richting van selecteer()).
+  // de bijbehorende rij (de omgekeerde richting van selecteer()). Nogmaals
+  // klikken heft de selectie weer op.
   function toonInLijst(id: string) {
     if (modeRef.current !== "bekijk") return;
+    // De kaart-klik eronder mag deze selectie niet direct weer wissen.
+    laagKlikRef.current = true;
+    if (geselecteerdRef.current === id) {
+      setGeselecteerd(null);
+      return;
+    }
     setGeselecteerd(id);
     document
       .getElementById(`obj-rij-${id}`)
@@ -364,6 +398,7 @@ export default function Kaart({
       overzichtRef.current = null;
     }
     boundsRef.current = null;
+    vlakkenRef.current = new Map();
     const groep = L.layerGroup();
     const bounds = L.latLngBounds([]);
     for (const o of objecten) {
@@ -389,10 +424,13 @@ export default function Kaart({
             `${o.naam}${o.gebruik ? ` · ${o.gebruik}` : ""}${o.kadastraal ? ` · ${o.kadastraal}` : ""}`,
             { sticky: true },
           );
+          // Hover-oplichten alleen zolang er geen spotlight-selectie actief is.
           poly.on("mouseover", () => {
+            if (geselecteerdRef.current) return;
             for (const p of eenheid) p.setStyle({ weight: 4.5, fillOpacity: 0.45 });
           });
           poly.on("mouseout", () => {
+            if (geselecteerdRef.current) return;
             for (const p of eenheid) p.setStyle({ weight: 2.5, fillOpacity: 0.25 });
           });
           poly.on("click", () => toonInLijst(o.id));
@@ -401,7 +439,16 @@ export default function Kaart({
           bounds.extend(poly.getBounds());
           getekend = true;
         }
-        if (getekend) continue;
+        if (getekend) {
+          vlakkenRef.current.set(
+            o.id,
+            eenheid.map((p) => ({
+              poly: p,
+              basis: { weight: 2.5, fillOpacity: 0.25 },
+            })),
+          );
+          continue;
+        }
       }
       // Gebouwen (en andere objecten met een vorm): teken de echte contour,
       // gekleurd naar gebruik — dan zie je in één oogopslag welke panden
@@ -422,6 +469,9 @@ export default function Kaart({
         poly.on("click", () => toonInLijst(o.id));
         poly.addTo(groep);
         bounds.extend(poly.getBounds());
+        vlakkenRef.current.set(o.id, [
+          { poly, basis: { weight: 2, fillOpacity: 0.45 } },
+        ]);
         continue;
       }
       // Terugval: geen contour bekend, dan een stip op het opgeslagen punt.
@@ -439,6 +489,8 @@ export default function Kaart({
     groep.addTo(map);
     overzichtRef.current = groep;
     if (bounds.isValid()) boundsRef.current = bounds;
+    // Na een herteken (bv. na wijzigen) de actieve spotlight opnieuw toepassen.
+    spotlight(geselecteerdRef.current);
   }
 
   function zoomNaarLandgoed() {
@@ -489,18 +541,24 @@ export default function Kaart({
       const latlngs = geomNaarLatlngs(L, p.geom);
       if (!latlngs) continue;
       const geselecteerd = selectie.includes(p.id);
+      // Ingedeelde percelen niet-interactief maken: klik en hover vallen dan
+      // door naar het gekleurde beheerperceel eronder (tooltip, spotlight,
+      // kaart-naar-lijst). De bezit-laag hoeft alleen het nog in te delen
+      // bezit zelf af te vangen.
       const poly = L.polygon(
         latlngs,
         geselecteerd
           ? { color: "#d97706", weight: 3, fillColor: "#d97706", fillOpacity: 0.3 }
           : p.ingedeeld
-            ? { weight: 0, opacity: 0, fillColor: "#6b7280", fillOpacity: 0.02 }
+            ? { interactive: false, weight: 0, opacity: 0, fillOpacity: 0 }
             : { color: "#6b7280", weight: 2, dashArray: "6 4", fillColor: "#9ca3af", fillOpacity: 0.15 },
       );
-      poly.bindTooltip(
-        `${p.aanduiding}${p.ingedeeld ? "" : " · nog in te delen"}`,
-        { sticky: true },
-      );
+      if (!p.ingedeeld || geselecteerd) {
+        poly.bindTooltip(
+          `${p.aanduiding}${p.ingedeeld ? "" : " · nog in te delen"}`,
+          { sticky: true },
+        );
+      }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       poly.on("click", async (e: any) => {
         const m = modeRef.current;
@@ -656,8 +714,11 @@ export default function Kaart({
         const lat = e.latlng.lat;
         const lon = e.latlng.lng;
         const m = modeRef.current;
-        // Bekijk-modus: kaartklikken doen bewust niets.
-        if (m === "bekijk") return;
+        // Bekijk-modus: klik naast de vlakken heft de spotlight-selectie op.
+        if (m === "bekijk") {
+          setGeselecteerd(null);
+          return;
+        }
         setGeselecteerd(null);
         setKoppelId("");
         setPunt({ lat, lon });
@@ -724,41 +785,41 @@ export default function Kaart({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  async function selecteer(o: PlaatsObject) {
+  function selecteer(o: PlaatsObject) {
     const L = LRef.current;
     const map = mapRef.current;
     if (!L || !map) return;
+    // Nogmaals klikken op de al geselecteerde rij heft de selectie op.
+    if (geselecteerd === o.id) {
+      setGeselecteerd(null);
+      return;
+    }
     setGeselecteerd(o.id);
     setPunt(null);
     setResultaat(null);
     wisHighlights();
 
-    // Beheerperceel met vormen in het register: álle vormen rood omranden en
-    // op het geheel inzoomen — geen externe lookup nodig (sneller, en de oude
-    // lookup-op-middelpunt vond altijd maar één van de kadastrale percelen).
-    if (PERCEEL_CATS.has(o.categorie) && o.geoms?.length) {
-      const bounds = tekenRand(L, map, randRef, o.geoms);
-      if (bounds?.isValid()) map.fitBounds(bounds, { padding: [60, 60], maxZoom: 17 });
+    // Object met getekende vlakken (beheerperceel of pandcontour): inzoomen op
+    // het geheel; het oplichten doet de spotlight (geen rode rand meer — die
+    // botste met de gebruikskleur van Wonen).
+    const vlakken = vlakkenRef.current.get(o.id);
+    if (vlakken?.length) {
+      const bounds = L.latLngBounds([]);
+      for (const { poly } of vlakken) bounds.extend(poly.getBounds());
+      if (bounds.isValid()) map.fitBounds(bounds, { padding: [60, 60], maxZoom: 17 });
       return;
     }
 
+    // Terugval voor objecten zonder vorm: markeer het opgeslagen punt.
     if (!Number.isFinite(o.lat) || !Number.isFinite(o.lon)) return;
     map.setView([o.lat, o.lon], 16);
-    if (o.categorie === "pachtperceel" || o.categorie === "gebouw") {
-      const r =
-        o.categorie === "gebouw"
-          ? await lookupGebouw(o.lat, o.lon)
-          : await lookupPerceel(o.lat, o.lon);
-      tekenRand(L, map, randRef, r?.geom ? [r.geom] : []);
-    } else {
-      tempRef.current = L.circleMarker([o.lat, o.lon], {
-        radius: 8,
-        color: "#1B3A28",
-        fillColor: "#2A5C3F",
-        fillOpacity: 0.9,
-        weight: 2,
-      }).addTo(map);
-    }
+    tempRef.current = L.circleMarker([o.lat, o.lon], {
+      radius: 8,
+      color: "#1B3A28",
+      fillColor: "#2A5C3F",
+      fillOpacity: 0.9,
+      weight: 2,
+    }).addTo(map);
   }
 
   const k = resultaat?.kenmerken ?? {};
@@ -898,11 +959,11 @@ export default function Kaart({
           />
           nog geen gebruik
         </span>
-        · beweeg over een vlak om het hele beheerperceel op te laten lichten ·{" "}
+        · beweeg over een vlak om het hele beheerperceel op te laten lichten ·
+        klik op een vlak of een rij: de selectie licht op en de rest vervaagt
+        (nogmaals klikken heft op) ·{" "}
         <span style={{ color: "#6b7280" }}>grijs gestippeld</span> = nog in te delen ·{" "}
-        <span style={{ color: "#d97706" }}>amber</span> = indeel-selectie ·{" "}
-        <span style={{ color: "#dc2626" }}>rood</span> = selectie (lijst-klik of
-        aangeklikt gebouw).
+        <span style={{ color: "#d97706" }}>amber</span> = indeel-selectie.
       </p>
         </div>
 
