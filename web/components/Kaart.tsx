@@ -11,6 +11,12 @@ import type {
 } from "leaflet";
 import SubmitKnop from "@/components/SubmitKnop";
 import { VerwijderKnop } from "@/components/VerwijderKnop";
+// Eén bron voor de gebruik-lijsten (gedeeld met de stamgegevenspagina):
+// percelen en gebouwen hebben elk hun eigen gebruiksvormen.
+import {
+  GEBRUIK_OPTIES as GEBRUIK,
+  gebruikOptiesVoor,
+} from "@/app/(app)/landgoed/[id]/stamgegevens/constanten";
 
 type PlaatsObject = {
   id: string;
@@ -41,6 +47,7 @@ function objectDetails(o: PlaatsObject): string {
   const isGebouw = GEBOUW_CATS.has(o.categorie);
   const delen = isGebouw
     ? [
+        o.gebruik,
         o.adres,
         o.oppervlakteM2 ? `${o.oppervlakteM2} m²` : null,
         o.pandstatus,
@@ -94,16 +101,6 @@ const LEEG: Basis = {
   gemeente: "",
   provincie: "",
 };
-
-const GEBRUIK = [
-  "Wonen",
-  "Bedrijf",
-  "Natuur",
-  "Agrarisch",
-  "Water",
-  "Recreatie",
-  "Maatschappelijk",
-];
 
 const GEBOUW_CATS = new Set(["gebouw", "woning", "opstal"]);
 const PERCEEL_CATS = new Set(["pachtperceel"]);
@@ -1114,7 +1111,7 @@ export default function Kaart({
                   <label className="label-up mb-1 block">Gebruik</label>
                   <select className="input" name="gebruik" defaultValue="">
                     <option value="">— kies —</option>
-                    {GEBRUIK.map((g) => (
+                    {gebruikOptiesVoor(mode === "gebouw" ? "gebouw" : "pachtperceel").map((g) => (
                       <option key={g} value={g}>
                         {g}
                       </option>
@@ -1232,7 +1229,8 @@ export default function Kaart({
                           </Link>
                           {/* Zelden gebruikte acties: klein en tekstueel, niet in
                               your face (wens Steven). */}
-                          {PERCEEL_CATS.has(o.categorie) && (
+                          {(PERCEEL_CATS.has(o.categorie) ||
+                            GEBOUW_CATS.has(o.categorie)) && (
                             <button
                               type="button"
                               className="text-[11.5px] hover:underline"
@@ -1305,7 +1303,7 @@ export default function Kaart({
                                 defaultValue={o.gebruik ?? ""}
                               >
                                 <option value="">— geen —</option>
-                                {GEBRUIK.map((g) => (
+                                {gebruikOptiesVoor(o.categorie, o.gebruik).map((g) => (
                                   <option key={g} value={g}>
                                     {g}
                                   </option>
