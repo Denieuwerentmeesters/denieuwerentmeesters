@@ -37,10 +37,22 @@ export default async function KaartPage({
 
   const { data } = await supabase
     .from("stamobject")
-    .select("id, naam, categorie, kenmerken")
+    .select("id, naam, categorie, kenmerken, herkomst, aangemaakt_op")
     .eq("landgoed_id", id)
     .eq("geaccordeerd", true)
     .order("aangemaakt_op", { ascending: false });
+
+  // Kort herkomst-label ("AI · 12 jul" / "handmatig · 30 jul") zodat altijd
+  // zichtbaar is waar een object vandaan komt en wanneer het is ontstaan.
+  const herkomstLabel = (herkomst: unknown, aangemaakt: unknown): string => {
+    const d = aangemaakt ? new Date(String(aangemaakt)) : null;
+    const datum =
+      d && Number.isFinite(d.getTime())
+        ? d.toLocaleDateString("nl-NL", { day: "numeric", month: "short" })
+        : null;
+    const bron = herkomst === "ai" ? "AI" : "handmatig";
+    return datum ? `${bron} · ${datum}` : bron;
+  };
 
   // Kadastrale registratie (stap 1): per beheerperceel de gekoppelde percelen,
   // met geometrie. De weergave leest hieruit; de kenmerken-json is terugval.
@@ -121,6 +133,7 @@ export default async function KaartPage({
       geom: k.geom_3857 ?? null,
       geoms: kadGeoms.length ? kadGeoms : k.geom_3857 != null ? [k.geom_3857] : [],
       kadastraal,
+      herkomstLabel: herkomstLabel(o.herkomst, o.aangemaakt_op),
     };
   });
 

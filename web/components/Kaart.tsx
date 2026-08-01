@@ -29,6 +29,8 @@ type PlaatsObject = {
   // en een leesbaar label ("kadastraal: Baarn C 1562, C 1129").
   geoms?: unknown[];
   kadastraal?: string | null;
+  // "AI · 12 jul" of "handmatig · 30 jul" — waar komt dit object vandaan?
+  herkomstLabel?: string | null;
 };
 
 function objectDetails(o: PlaatsObject): string {
@@ -41,7 +43,7 @@ function objectDetails(o: PlaatsObject): string {
         o.bouwjaar ? `bouwjaar ${o.bouwjaar}` : null,
       ]
     : [o.gebruik, o.oppervlakteHa, o.kadastraal];
-  return [o.categorie, ...delen].filter(Boolean).join(" · ");
+  return [o.categorie, ...delen, o.herkomstLabel].filter(Boolean).join(" · ");
 }
 type Basis = {
   adres: string;
