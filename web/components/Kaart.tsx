@@ -377,7 +377,9 @@ export default function Kaart({
     setResultaat(null);
     setGeselecteerd(null);
     setKoppelId("");
-    setSelectie([]);
+    // De indeel-selectie blijft staan bij het BINNENKOMEN van de indeel-modus
+    // (een lijstklik schakelt daarheen mét selectie); bij het verlaten wist hij.
+    if (mode !== "indelen") setSelectie([]);
     setMelding(null);
     wisHighlights();
     // In basis-modus: toon het hele landgoed i.p.v. handmatig inzoomen.
@@ -385,9 +387,12 @@ export default function Kaart({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mode]);
 
-  // (Her)teken de overzichtslaag wanneer de objecten wijzigen (na toevoegen/verwijderen).
+  // (Her)teken de overzichtslaag wanneer de objecten wijzigen (na toevoegen/
+  // verwijderen). Daarna óók de bezit-laag opnieuw, zodat die altijd bovenop
+  // ligt — anders vangen beheer-vlakken de klikken van grijze percelen af.
   useEffect(() => {
     tekenOverzicht();
+    tekenBezit();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [objecten]);
 
@@ -450,6 +455,24 @@ export default function Kaart({
     tekenBezit();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bezit, selectie]);
+
+  // Selecteer een bezit-perceel vanuit de lijst: schakel naar de indeel-modus,
+  // wissel de selectie en zoom ernaartoe (als het een vorm heeft).
+  function selecteerBezit(p: BezitPerceel) {
+    if (p.ingedeeld) return;
+    setMode("indelen");
+    setSelectie((prev) =>
+      prev.includes(p.id) ? prev.filter((x) => x !== p.id) : [...prev, p.id],
+    );
+    const L = LRef.current;
+    const map = mapRef.current;
+    if (L && map) {
+      const latlngs = geomNaarLatlngs(L, p.geom);
+      if (latlngs) {
+        map.fitBounds(L.polygon(latlngs).getBounds(), { padding: [60, 60], maxZoom: 17 });
+      }
+    }
+  }
 
   // Natura 2000-overlay aan/uit op basis van de toggle.
   useEffect(() => {
@@ -972,29 +995,48 @@ export default function Kaart({
         <div>
           <div className="mb-2 text-[13px] font-semibold">
             Nog in te delen ({bezit.filter((p) => !p.ingedeeld).length})
+            <span className="ml-2 font-normal text-[12px]" style={{ color: "var(--text-3)" }}>
+              klik een perceel om het te selecteren voor indelen
+            </span>
           </div>
           <div className="card divide-y" style={{ borderColor: "var(--border)" }}>
             {bezit
               .filter((p) => !p.ingedeeld)
-              .map((p) => (
-                <div key={p.id} className="flex items-center gap-3 px-4 py-2.5">
-                  <div className="flex-1 text-[13.5px] font-medium">
-                    {p.aanduiding}
-                    {p.oppervlakteHa && (
-                      <span className="font-normal" style={{ color: "var(--text-2)" }}>
-                        {" "}· {p.oppervlakteHa}
-                      </span>
-                    )}
-                  </div>
-                  <form action={verwijderBezit}>
-                    <input type="hidden" name="landgoed_id" value={landgoedId} />
-                    <input type="hidden" name="perceel_id" value={p.id} />
-                    <button className="btn btn-ghost btn-sm" style={{ color: "var(--red)" }}>
-                      Verwijder
+              .map((p) => {
+                const isGeselecteerd = selectie.includes(p.id);
+                return (
+                  <div
+                    key={p.id}
+                    className="flex items-center gap-3 px-4 py-2.5"
+                    style={{ background: isGeselecteerd ? "#fef3c7" : undefined }}
+                  >
+                    <button
+                      type="button"
+                      onClick={() => selecteerBezit(p)}
+                      className="flex-1 text-left text-[13.5px] font-medium"
+                    >
+                      {p.aanduiding}
+                      {p.oppervlakteHa && (
+                        <span className="font-normal" style={{ color: "var(--text-2)" }}>
+                          {" "}· {p.oppervlakteHa}
+                        </span>
+                      )}
+                      {isGeselecteerd && (
+                        <span className="font-semibold" style={{ color: "#92400e" }}>
+                          {" "}· geselecteerd
+                        </span>
+                      )}
                     </button>
-                  </form>
-                </div>
-              ))}
+                    <form action={verwijderBezit}>
+                      <input type="hidden" name="landgoed_id" value={landgoedId} />
+                      <input type="hidden" name="perceel_id" value={p.id} />
+                      <button className="btn btn-ghost btn-sm" style={{ color: "var(--red)" }}>
+                        Verwijder
+                      </button>
+                    </form>
+                  </div>
+                );
+              })}
           </div>
         </div>
       )}
