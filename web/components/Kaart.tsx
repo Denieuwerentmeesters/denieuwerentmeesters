@@ -283,6 +283,11 @@ export default function Kaart({
   const bezitLaagRef = useRef<any>(null);
   const bezitRef = useRef<BezitPerceel[]>(bezit);
   bezitRef.current = bezit;
+  // Klik-arbitrage: als een perceel-vlak de klik afhandelt, moet de kaart-klik
+  // (die eronder óók afgaat) niets doen — anders verwijdert het vlak zichzelf
+  // en registreert de kaart-lookup het perceel direct opnieuw. stopPropagation
+  // is hiervoor niet in elke renderer betrouwbaar; deze vlag wel.
+  const laagKlikRef = useRef(false);
   const [bezig, setBezig] = useState(false);
   const [geselecteerd, setGeselecteerd] = useState<string | null>(null);
   const [koppelId, setKoppelId] = useState("");
@@ -427,15 +432,21 @@ export default function Kaart({
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       poly.on("click", async (e: any) => {
         // Voorkom dat de kaart-klik (lookup/registratie) er ook op afgaat.
+        laagKlikRef.current = true;
         if (e.originalEvent) L.DomEvent.stopPropagation(e.originalEvent);
         const m = modeRef.current;
         if (m === "indelen") {
+          if (p.ingedeeld) return;
           setSelectie((prev) =>
             prev.includes(p.id) ? prev.filter((x) => x !== p.id) : [...prev, p.id],
           );
         } else if (m === "perceel") {
           if (p.ingedeeld) {
             setMelding(`${p.aanduiding} is al ingedeeld bij een beheerperceel.`);
+            return;
+          }
+          if (!window.confirm(`${p.aanduiding} uit het bezit verwijderen?`)) {
+            setMelding(null);
             return;
           }
           const fd = new FormData();
@@ -554,6 +565,13 @@ export default function Kaart({
       zoomNaarLandgoed();
 
       map.on("click", async (e: LeafletMouseEvent) => {
+        // Heeft een perceel-vlak deze klik al afgehandeld? Dan niets doen —
+        // anders zou de lookup het zojuist verwijderde perceel direct opnieuw
+        // registreren (of een selectie-klik als nieuwe registratie behandelen).
+        if (laagKlikRef.current) {
+          laagKlikRef.current = false;
+          return;
+        }
         const lat = e.latlng.lat;
         const lon = e.latlng.lng;
         const m = modeRef.current;
