@@ -36,10 +36,6 @@ export default async function KaartPage({
             <h1 className="text-[22px] font-bold">
               Kaart{landgoed?.naam ? ` · ${landgoed.naam}` : ""}
             </h1>
-            <p className="mt-1 text-[13px]" style={{ color: "var(--text-2)" }}>
-              {totaalHa} ha · {aantalPercelen} percelen · {aantalGebouwen}{" "}
-              gebouwen
-            </p>
           </div>
           <Link href={`/landgoed/${id}/kaart/invoer`} className="btn btn-primary btn-sm">
             Pas de kaart aan
@@ -52,6 +48,9 @@ export default async function KaartPage({
           bezit={bezit}
           lat={landgoed?.lat ?? null}
           lon={landgoed?.lon ?? null}
+          totaalHa={totaalHa}
+          aantalPercelen={aantalPercelen}
+          aantalGebouwen={aantalGebouwen}
         />
       </div>
     </div>

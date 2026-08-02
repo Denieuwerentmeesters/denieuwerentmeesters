@@ -76,6 +76,9 @@ export async function laadKaartData(id: string) {
     id: p.id as string,
     aanduiding: p.kadastrale_aanduiding as string,
     oppervlakteHa: haTekst(p.oppervlakte_m2),
+    oppervlakteM2: Number.isFinite(Number(p.oppervlakte_m2))
+      ? Number(p.oppervlakte_m2)
+      : null,
     geom: p.geom_3857 as unknown,
     ingedeeld: ingedeeldBijVan.has(p.id),
     ingedeeldBij: ingedeeldBijVan.get(p.id) ?? [],
@@ -203,6 +206,8 @@ export async function laadKaartData(id: string) {
       bouwjaar: k.bouwjaar != null ? String(k.bouwjaar) : null,
       adres: k.adres != null ? String(k.adres) : null,
       geom: k.geom_3857 ?? null,
+      oppervlakteM2Som:
+        kadM2 > 0 ? kadM2 : Number(k.oppervlakte_m2) || 0,
       geoms: kadGeoms.length ? kadGeoms : k.geom_3857 != null ? [k.geom_3857] : [],
       geomAanduidingen: kadGeoms.length ? geomAanduidingen : [],
       kadastraal,
@@ -255,10 +260,19 @@ export async function laadKaartData(id: string) {
       aantalGebouwen++;
     }
   }
-  const totaalHa = (perceelM2 / 10000).toLocaleString("nl-NL", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  });
+  // De kadastrale registratie is leidend voor het totaal; de oude
+  // kenmerken-som is alleen nog de terugval voor landgoederen zonder register.
+  const bezitM2 = (bezitData ?? []).reduce(
+    (som, p) => som + (Number(p.oppervlakte_m2) || 0),
+    0,
+  );
+  const totaalHa = ((bezitM2 > 0 ? bezitM2 : perceelM2) / 10000).toLocaleString(
+    "nl-NL",
+    {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    },
+  );
 
   const basisIngesteld = Boolean(
     landgoed?.adres || (landgoed?.lat && landgoed?.lon),

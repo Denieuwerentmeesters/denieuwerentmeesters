@@ -16,6 +16,9 @@ export type KaartObject = {
   lat: number;
   lon: number;
   geom: unknown;
+  // Oppervlakte in m² (kadastrale registratie, anders kenmerken) — voor
+  // optelsommen over een selectie.
+  oppervlakteM2Som?: number;
   // Uit de kadastrale registratie (stap 1): álle gekoppelde perceel-vormen
   // en een leesbaar label ("kadastraal: Baarn C 1562, C 1129").
   geoms?: unknown[];
