@@ -35,6 +35,9 @@ type PlaatsObject = {
   // Uit de kadastrale registratie (stap 1): álle gekoppelde perceel-vormen
   // en een leesbaar label ("kadastraal: Baarn C 1562, C 1129").
   geoms?: unknown[];
+  // Aanduiding per vorm, in dezelfde volgorde als geoms — voor de gerichte
+  // tooltip per vlak.
+  geomAanduidingen?: string[];
   kadastraal?: string | null;
   // "AI · 12 jul" of "handmatig · 30 jul" — waar komt dit object vandaan?
   herkomstLabel?: string | null;
@@ -448,7 +451,8 @@ export default function Kaart({
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const eenheid: any[] = [];
         let getekend = false;
-        for (const vorm of vormen) {
+        for (let vi = 0; vi < vormen.length; vi++) {
+          const vorm = vormen[vi];
           const latlngs = geomNaarLatlngs(L, vorm);
           if (!latlngs) continue;
           const poly = L.polygon(latlngs, {
@@ -457,8 +461,14 @@ export default function Kaart({
             fillColor: kleur,
             fillOpacity: 0.25,
           });
+          // Gerichte tooltip per vlak: éérst het kadastrale nummer van dít
+          // vlak, dan bij welk beheerperceel het hoort — niet de hele
+          // kadastrale waslijst van het beheerperceel (wens Steven).
+          const aanduiding = o.geomAanduidingen?.[vi];
           poly.bindTooltip(
-            `${o.naam}${o.gebruik ? ` · ${o.gebruik}` : ""}${o.kadastraal ? ` · ${o.kadastraal}` : ""}`,
+            aanduiding
+              ? `${aanduiding} · behoort bij beheerperceel: ${o.naam}${o.gebruik ? ` (${o.gebruik})` : ""}`
+              : `${o.naam}${o.gebruik ? ` · ${o.gebruik}` : ""}${o.kadastraal ? ` · ${o.kadastraal}` : ""}`,
             { sticky: true },
           );
           // Hover-oplichten alleen zolang er geen spotlight-selectie actief is.

@@ -166,7 +166,13 @@ export default async function KaartPage({
     // Registratie is leidend: som-oppervlakte, aanduidingen en álle vormen.
     const kad = kadVan.get(o.id) ?? [];
     const kadM2 = kad.reduce((som, p) => som + (p.oppervlakteM2 ?? 0), 0);
-    const kadGeoms = kad.map((p) => p.geom).filter((g) => g != null);
+    // Vormen mét hun aanduiding, in dezelfde volgorde — zo kan de kaart per
+    // vlak een gerichte tooltip tonen ("K 2233 · behoort bij ...").
+    const kadMetVorm = kad.filter((p) => p.geom != null);
+    const kadGeoms = kadMetVorm.map((p) => p.geom);
+    const geomAanduidingen = kadMetVorm.map(
+      (p) => p.aanduiding + (p.dekking === "gedeeltelijk" ? " (deels)" : ""),
+    );
     const kadastraal = kad.length
       ? `kadastraal: ${kad
           .map((p) => p.aanduiding + (p.dekking === "gedeeltelijk" ? " (deels)" : ""))
@@ -186,6 +192,7 @@ export default async function KaartPage({
       adres: k.adres != null ? String(k.adres) : null,
       geom: k.geom_3857 ?? null,
       geoms: kadGeoms.length ? kadGeoms : k.geom_3857 != null ? [k.geom_3857] : [],
+      geomAanduidingen: kadGeoms.length ? geomAanduidingen : [],
       kadastraal,
       herkomstLabel: herkomstLabel(o.herkomst, o.aangemaakt_op),
       staatOpId: staatOpVan.get(o.id) ?? null,
