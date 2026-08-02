@@ -1,8 +1,9 @@
 "use client";
 
 // De kijk-kaart (menu-item "Kaart"): dezelfde kaarttaal als de invoerpagina,
-// maar zonder invoer. Kijken, filteren op gebruikssoort, de kadastrale
-// weergave en doorklikken naar de invoerpagina — meer niet.
+// maar zonder invoer. Kijken, filteren op gebruikssoort, meerdere
+// beheerpercelen tegelijk oplichten, de kadastrale weergave en doorklikken
+// naar de invoerpagina — meer niet.
 import "leaflet/dist/leaflet.css";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
@@ -24,10 +25,21 @@ import {
   geomNaarLatlngs,
 } from "@/components/kaartDelen";
 
-type BezitVlak = { id: string; aanduiding: string; geom: unknown };
+type BezitVlak = {
+  id: string;
+  aanduiding: string;
+  oppervlakteHa: string | null;
+  geom: unknown;
+};
 
 // Sentinel voor de filter-chip "nog geen gebruik".
 const GEEN_GEBRUIK = "__geen__";
+
+// Kort perceelnummer voor het kaartlabel: "Middelburg S 3193" → "S 3193".
+function kortNummer(aanduiding: string): string {
+  const delen = aanduiding.split(" ");
+  return delen.length >= 2 ? delen.slice(-2).join(" ") : aanduiding;
+}
 
 export default function KaartWeergave({
   landgoedId,
@@ -68,7 +80,11 @@ export default function KaartWeergave({
       }[]
     >
   >(new Map());
-  const geselecteerdRef = useRef<string | null>(null);
+  // De kadastrale vlakken per bezit-perceel (voor selectie in die weergave).
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const kadVlakkenRef = useRef<Map<string, any>>(new Map());
+  const selectieRef = useRef<string[]>([]);
+  const kadSelectieRef = useRef<string[]>([]);
   const filterRef = useRef<string | null>(null);
 
   const [grijzeKaart, setGrijzeKaart] = useState(true);
@@ -76,15 +92,18 @@ export default function KaartWeergave({
   const [toonNnn, setToonNnn] = useState(false);
   const [kadastraal, setKadastraal] = useState(false);
   const [filterGebruik, setFilterGebruik] = useState<string | null>(null);
-  const [geselecteerd, setGeselecteerd] = useState<string | null>(null);
+  // Meervoudige selectie: meerdere beheerpercelen (of kadastrale percelen)
+  // tegelijk laten oplichten.
+  const [selectie, setSelectie] = useState<string[]>([]);
+  const [kadSelectie, setKadSelectie] = useState<string[]>([]);
 
   // Eén stijl-pass over alle vlakken: selectie wint van filter, filter wint
   // van de basisweergave. Alles wat niet meedoet vervaagt.
-  function pasStijlenToe(sel: string | null, filter: string | null) {
+  function pasStijlenToe(sel: string[], filter: string | null) {
     for (const [oid, vlakken] of vlakkenRef.current) {
       for (const { poly, basis, gebruik } of vlakken) {
-        const vol = sel
-          ? oid === sel
+        const vol = sel.length
+          ? sel.includes(oid)
           : filter
             ? (gebruik ?? GEEN_GEBRUIK) === filter
             : null;
@@ -95,12 +114,67 @@ export default function KaartWeergave({
     }
   }
 
+  function pasKadStijlenToe(sel: string[]) {
+    for (const [pid, poly] of kadVlakkenRef.current) {
+      if (!sel.length)
+        poly.setStyle({ opacity: 1, weight: 1.5, fillOpacity: 0.03 });
+      else if (sel.includes(pid))
+        poly.setStyle({ opacity: 1, weight: 3, fillOpacity: 0.2 });
+      else poly.setStyle({ opacity: 0.35, weight: 1, fillOpacity: 0.01 });
+    }
+  }
+
+  // Zoom naar de gezamenlijke omtrek van een set vlakken; leeg = het hele
+  // landgoed weer in beeld (wens Steven: ontklikken = uitzoomen).
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  function zoomNaar(polys: any[]) {
+    const L = LRef.current;
+    const map = mapRef.current;
+    if (!L || !map) return;
+    if (!polys.length) {
+      if (boundsRef.current?.isValid())
+        map.fitBounds(boundsRef.current, { padding: [40, 40], maxZoom: 16 });
+      return;
+    }
+    const bounds = L.latLngBounds([]);
+    for (const p of polys) bounds.extend(p.getBounds());
+    if (bounds.isValid()) map.fitBounds(bounds, { padding: [60, 60], maxZoom: 17 });
+  }
+
+  const vorigeSelectie = useRef(0);
   useEffect(() => {
-    geselecteerdRef.current = geselecteerd;
+    selectieRef.current = selectie;
     filterRef.current = filterGebruik;
-    pasStijlenToe(geselecteerd, filterGebruik);
+    pasStijlenToe(selectie, filterGebruik);
+    if (selectie.length) {
+      zoomNaar(
+        selectie.flatMap((id) =>
+          (vlakkenRef.current.get(id) ?? []).map((v) => v.poly),
+        ),
+      );
+    } else if (vorigeSelectie.current > 0) {
+      zoomNaar([]);
+    }
+    vorigeSelectie.current = selectie.length;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [geselecteerd, filterGebruik]);
+  }, [selectie, filterGebruik]);
+
+  const vorigeKadSelectie = useRef(0);
+  useEffect(() => {
+    kadSelectieRef.current = kadSelectie;
+    pasKadStijlenToe(kadSelectie);
+    if (kadSelectie.length) {
+      zoomNaar(
+        kadSelectie
+          .map((id) => kadVlakkenRef.current.get(id))
+          .filter(Boolean),
+      );
+    } else if (vorigeKadSelectie.current > 0) {
+      zoomNaar([]);
+    }
+    vorigeKadSelectie.current = kadSelectie.length;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [kadSelectie]);
 
   // Kaart opbouwen (eenmalig): lagen + alle vlakken.
   useEffect(() => {
@@ -188,11 +262,11 @@ export default function KaartWeergave({
             { sticky: true },
           );
           poly.on("mouseover", () => {
-            if (geselecteerdRef.current || filterRef.current) return;
+            if (selectieRef.current.length || filterRef.current) return;
             for (const p of eenheid) p.setStyle({ weight: 4, fillOpacity: 0.45 });
           });
           poly.on("mouseout", () => {
-            if (geselecteerdRef.current || filterRef.current) return;
+            if (selectieRef.current.length || filterRef.current) return;
             for (const p of eenheid) p.setStyle({ opacity: 1, ...basis });
           });
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -214,8 +288,9 @@ export default function KaartWeergave({
       groep.addTo(map);
       overzichtRef.current = groep;
 
-      // ── De kadastrale laag: alle percelen strak omlijnd, met nummer ──
+      // ── De kadastrale laag: alle percelen strak omlijnd, met kort nummer ──
       const kadGroep = L.layerGroup();
+      kadVlakkenRef.current = new Map();
       for (const p of bezit) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const latlngs = geomNaarLatlngs(L, p.geom) as any;
@@ -226,12 +301,19 @@ export default function KaartWeergave({
           fillColor: "#374151",
           fillOpacity: 0.03,
         });
-        poly.bindTooltip(p.aanduiding, {
+        poly.bindTooltip(kortNummer(p.aanduiding), {
           permanent: true,
           direction: "center",
           className: "kadastraal-label",
         });
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        poly.on("click", (e: any) => {
+          if (e.originalEvent) L.DomEvent.stopPropagation(e.originalEvent);
+          toonKadInLijst(p.id);
+        });
         poly.addTo(kadGroep);
+        kadVlakkenRef.current.set(p.id, poly);
+        bounds.extend(poly.getBounds());
       }
       kadastraalLaagRef.current = kadGroep;
 
@@ -242,7 +324,11 @@ export default function KaartWeergave({
         map.setView([lat, lon], 14);
       }
 
-      map.on("click", () => setGeselecteerd(null));
+      // Klik naast de vlakken: alles ontkiezen (het uitzoomen volgt vanzelf).
+      map.on("click", () => {
+        setSelectie([]);
+        setKadSelectie([]);
+      });
     })();
     return () => {
       cancelled = true;
@@ -274,55 +360,60 @@ export default function KaartWeergave({
   }, [toonNnn]);
 
   // Kadastrale weergave: de gekleurde beheer-laag maakt plaats voor de
-  // clean kadasterkaart met perceelnummers.
+  // clean kadasterkaart met perceelnummers; selecties over en weer wissen.
   useEffect(() => {
     const map = mapRef.current;
     if (!map || !overzichtRef.current || !kadastraalLaagRef.current) return;
     if (kadastraal) {
+      setSelectie([]);
       overzichtRef.current.remove();
       kadastraalLaagRef.current.addTo(map);
     } else {
+      setKadSelectie([]);
       kadastraalLaagRef.current.remove();
       overzichtRef.current.addTo(map);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [kadastraal]);
 
-  // Kaart → lijst: klik op een vlak, de lijst springt naar de rij.
+  // Kaart → lijst: klik op een vlak, de rij springt in beeld. Klikken werkt
+  // stapelend (meervoudige selectie); nogmaals klikken haalt hem er weer af.
   function toonInLijst(id: string) {
     setFilterGebruik(null);
-    if (geselecteerdRef.current === id) {
-      setGeselecteerd(null);
-      return;
+    const wasGekozen = selectieRef.current.includes(id);
+    setSelectie((prev) =>
+      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id],
+    );
+    if (!wasGekozen) {
+      document
+        .getElementById(`weergave-rij-${id}`)
+        ?.scrollIntoView({ behavior: "smooth", block: "center" });
     }
-    setGeselecteerd(id);
-    document
-      .getElementById(`weergave-rij-${id}`)
-      ?.scrollIntoView({ behavior: "smooth", block: "center" });
   }
 
-  // Lijst → kaart: klik op een rij, de kaart zoomt en licht op.
+  function toonKadInLijst(id: string) {
+    const wasGekozen = kadSelectieRef.current.includes(id);
+    setKadSelectie((prev) =>
+      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id],
+    );
+    if (!wasGekozen) {
+      document
+        .getElementById(`weergave-kad-${id}`)
+        ?.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  }
+
+  // Lijst → kaart: rij aanklikken stapelt de selectie; zoomen doet het
+  // selectie-effect (gezamenlijke omtrek van alles wat aan staat).
   function selecteer(o: KaartObject) {
-    const L = LRef.current;
-    const map = mapRef.current;
-    if (!L || !map) return;
     setFilterGebruik(null);
-    if (geselecteerd === o.id) {
-      setGeselecteerd(null);
-      return;
-    }
-    setGeselecteerd(o.id);
-    const vlakken = vlakkenRef.current.get(o.id);
-    if (vlakken?.length) {
-      const bounds = L.latLngBounds([]);
-      for (const { poly } of vlakken) bounds.extend(poly.getBounds());
-      if (bounds.isValid()) map.fitBounds(bounds, { padding: [60, 60], maxZoom: 17 });
-    } else if (Number.isFinite(o.lat) && Number.isFinite(o.lon)) {
-      map.setView([o.lat, o.lon], 16);
-    }
+    setSelectie((prev) =>
+      prev.includes(o.id) ? prev.filter((x) => x !== o.id) : [...prev, o.id],
+    );
   }
 
   function kiesFilter(gebruik: string) {
-    setGeselecteerd(null);
+    setSelectie([]);
     setFilterGebruik((huidig) => (huidig === gebruik ? null : gebruik));
   }
 
@@ -334,47 +425,49 @@ export default function KaartWeergave({
 
   return (
     <div className="flex flex-col gap-3">
-      {/* Filter op gebruikssoort + kaartlagen */}
-      <div className="flex flex-wrap items-center gap-2 text-[12.5px]">
-        <span style={{ color: "var(--text-2)" }}>Licht op:</span>
-        {Object.entries(GEBRUIK_KLEUR).map(([naam, kleur]) => (
+      {/* Filter op gebruikssoort (niet in de kadastrale weergave) */}
+      {!kadastraal && (
+        <div className="flex flex-wrap items-center gap-2 text-[12.5px]">
+          <span style={{ color: "var(--text-2)" }}>Licht op:</span>
+          {Object.entries(GEBRUIK_KLEUR).map(([naam, kleur]) => (
+            <button
+              key={naam}
+              type="button"
+              onClick={() => kiesFilter(naam)}
+              className="flex items-center gap-1.5 rounded-full border px-2.5 py-1"
+              style={{
+                borderColor: filterGebruik === naam ? kleur : "var(--border)",
+                background: filterGebruik === naam ? `${kleur}22` : undefined,
+                fontWeight: filterGebruik === naam ? 600 : 400,
+              }}
+            >
+              <span
+                className="inline-block h-2.5 w-2.5 rounded-sm"
+                style={{ background: kleur }}
+              />
+              {naam}
+            </button>
+          ))}
           <button
-            key={naam}
             type="button"
-            onClick={() => kiesFilter(naam)}
+            onClick={() => kiesFilter(GEEN_GEBRUIK)}
             className="flex items-center gap-1.5 rounded-full border px-2.5 py-1"
             style={{
-              borderColor: filterGebruik === naam ? kleur : "var(--border)",
-              background: filterGebruik === naam ? `${kleur}22` : undefined,
-              fontWeight: filterGebruik === naam ? 600 : 400,
+              borderColor:
+                filterGebruik === GEEN_GEBRUIK ? KLEUR_GEEN_GEBRUIK : "var(--border)",
+              background:
+                filterGebruik === GEEN_GEBRUIK ? `${KLEUR_GEEN_GEBRUIK}22` : undefined,
+              fontWeight: filterGebruik === GEEN_GEBRUIK ? 600 : 400,
             }}
           >
             <span
               className="inline-block h-2.5 w-2.5 rounded-sm"
-              style={{ background: kleur }}
+              style={{ background: KLEUR_GEEN_GEBRUIK }}
             />
-            {naam}
+            nog geen gebruik
           </button>
-        ))}
-        <button
-          type="button"
-          onClick={() => kiesFilter(GEEN_GEBRUIK)}
-          className="flex items-center gap-1.5 rounded-full border px-2.5 py-1"
-          style={{
-            borderColor:
-              filterGebruik === GEEN_GEBRUIK ? KLEUR_GEEN_GEBRUIK : "var(--border)",
-            background:
-              filterGebruik === GEEN_GEBRUIK ? `${KLEUR_GEEN_GEBRUIK}22` : undefined,
-            fontWeight: filterGebruik === GEEN_GEBRUIK ? 600 : 400,
-          }}
-        >
-          <span
-            className="inline-block h-2.5 w-2.5 rounded-sm"
-            style={{ background: KLEUR_GEEN_GEBRUIK }}
-          />
-          nog geen gebruik
-        </button>
-      </div>
+        </div>
+      )}
 
       <div className="flex flex-wrap items-center gap-3 text-[12.5px]" style={{ color: "var(--text-2)" }}>
         <label className="flex items-center gap-1.5">
@@ -420,56 +513,97 @@ export default function KaartWeergave({
             style={{ padding: 0 }}
           />
           <p className="text-[12px]" style={{ color: "var(--text-2)" }}>
-            Klik op een vlak of een rij om het beheerperceel op te laten lichten
-            — nogmaals klikken heft op. Kleur = gebruik.
+            Klik vlakken of rijen aan om ze op te laten lichten — meerdere
+            tegelijk kan, nogmaals klikken haalt ze er weer af, klik naast de
+            vlakken en de kaart zoomt weer uit. Kleur = gebruik.
           </p>
         </div>
 
         <div className="flex flex-col gap-3 lg:order-1">
-          {KAARTGROEP_LABELS.map((label) => {
-            const lijst = groepenMap.get(label)!;
-            if (lijst.length === 0) return null;
-            return (
-              <div key={label} className="card p-4">
-                <div
-                  className="mb-2 text-[12px] font-semibold uppercase tracking-wide"
-                  style={{ color: "var(--text-2)" }}
-                >
-                  {label} ({lijst.length})
-                </div>
-                <div className="divide-y" style={{ borderColor: "var(--border)" }}>
-                  {lijst.map((o) => (
-                    <div
-                      key={o.id}
-                      id={`weergave-rij-${o.id}`}
-                      className="flex items-center gap-3 py-2.5"
-                      style={{
-                        background:
-                          geselecteerd === o.id ? "var(--primary-light)" : undefined,
-                      }}
-                    >
-                      <button
-                        type="button"
-                        onClick={() => selecteer(o)}
-                        className="flex-1 text-left"
-                      >
-                        <div className="text-[14px] font-semibold">{o.naam}</div>
-                        <div className="text-[12px]" style={{ color: "var(--text-2)" }}>
-                          {objectDetails(o)}
-                        </div>
-                      </button>
-                      <Link
-                        href={`/landgoed/${landgoedId}/object/${o.id}`}
-                        className="btn btn-ghost btn-sm"
-                      >
-                        Details
-                      </Link>
-                    </div>
-                  ))}
-                </div>
+          {kadastraal ? (
+            /* Kadastrale weergave: alle percelen plat onder elkaar. */
+            <div className="card p-4">
+              <div
+                className="mb-2 text-[12px] font-semibold uppercase tracking-wide"
+                style={{ color: "var(--text-2)" }}
+              >
+                Kadastrale percelen ({bezit.length})
               </div>
-            );
-          })}
+              <div className="divide-y" style={{ borderColor: "var(--border)" }}>
+                {bezit.map((p) => (
+                  <div
+                    key={p.id}
+                    id={`weergave-kad-${p.id}`}
+                    className="flex items-center gap-3 py-2"
+                    style={{
+                      background: kadSelectie.includes(p.id)
+                        ? "var(--primary-light)"
+                        : undefined,
+                    }}
+                  >
+                    <button
+                      type="button"
+                      onClick={() => toonKadInLijst(p.id)}
+                      className="flex-1 text-left text-[13.5px] font-medium"
+                    >
+                      {p.aanduiding}
+                      {p.oppervlakteHa && (
+                        <span className="font-normal" style={{ color: "var(--text-2)" }}>
+                          {" "}· {p.oppervlakteHa}
+                        </span>
+                      )}
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : (
+            KAARTGROEP_LABELS.map((label) => {
+              const lijst = groepenMap.get(label)!;
+              if (lijst.length === 0) return null;
+              return (
+                <div key={label} className="card p-4">
+                  <div
+                    className="mb-2 text-[12px] font-semibold uppercase tracking-wide"
+                    style={{ color: "var(--text-2)" }}
+                  >
+                    {label} ({lijst.length})
+                  </div>
+                  <div className="divide-y" style={{ borderColor: "var(--border)" }}>
+                    {lijst.map((o) => (
+                      <div
+                        key={o.id}
+                        id={`weergave-rij-${o.id}`}
+                        className="flex items-center gap-3 py-2.5"
+                        style={{
+                          background: selectie.includes(o.id)
+                            ? "var(--primary-light)"
+                            : undefined,
+                        }}
+                      >
+                        <button
+                          type="button"
+                          onClick={() => selecteer(o)}
+                          className="flex-1 text-left"
+                        >
+                          <div className="text-[14px] font-semibold">{o.naam}</div>
+                          <div className="text-[12px]" style={{ color: "var(--text-2)" }}>
+                            {objectDetails(o)}
+                          </div>
+                        </button>
+                        <Link
+                          href={`/landgoed/${landgoedId}/object/${o.id}`}
+                          className="btn btn-ghost btn-sm"
+                        >
+                          Details
+                        </Link>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              );
+            })
+          )}
         </div>
       </div>
     </div>
