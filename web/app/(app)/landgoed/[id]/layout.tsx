@@ -50,7 +50,10 @@ export default async function LandgoedLayout({
     { href: `/landgoed/${id}/profiel`,   label: "Profiel en Stamgegevens", icon: "profiel",    group: "Menu" },
     { href: `/landgoed/${id}/overzicht`, label: "Overzicht (agenda en taken)", icon: "overzicht", group: "Menu",
       badge: openTaken ?? undefined, badgeKleur: (openTaken ?? 0) > 0 ? "oranje" : "grijs" },
-    { href: `/landgoed/${id}/kaart`,     label: "Kaart",      icon: "kaart",       group: "Menu" },
+    // "Kaart" is bewust uit het menu (besluit Steven, 2 aug): de kaartpagina
+    // is in de praktijk het invoergereedschap voor stamgegevens, bereikbaar
+    // via "Stamgegevens invoeren / wijzigen" op het profiel. Zodra er een
+    // echte kaart-beleefpagina is, komt het menu-item hier terug.
     // ── Communicatie ──
     { href: `/landgoed/${id}/inbox`,     label: "Inbox",      icon: "inbox",       group: "Communicatie",
       badge: inboxConcept ?? undefined, badgeKleur: (inboxConcept ?? 0) > 0 ? "rood" : "grijs" },
