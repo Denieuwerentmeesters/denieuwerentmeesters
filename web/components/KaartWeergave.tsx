@@ -29,8 +29,16 @@ type BezitVlak = {
   id: string;
   aanduiding: string;
   oppervlakteHa: string | null;
+  oppervlakteM2: number | null;
   geom: unknown;
 };
+
+function haGetal(m2: number): string {
+  return `${(m2 / 10000).toLocaleString("nl-NL", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  })} ha`;
+}
 
 // Sentinel voor de filter-chip "nog geen gebruik".
 const GEEN_GEBRUIK = "__geen__";
@@ -47,12 +55,18 @@ export default function KaartWeergave({
   bezit,
   lat,
   lon,
+  totaalHa,
+  aantalPercelen,
+  aantalGebouwen,
 }: {
   landgoedId: string;
   objecten: KaartObject[];
   bezit: BezitVlak[];
   lat: number | null;
   lon: number | null;
+  totaalHa: string;
+  aantalPercelen: number;
+  aantalGebouwen: number;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<LMap | null>(null);
@@ -423,8 +437,29 @@ export default function KaartWeergave({
   );
   for (const o of objecten) groepenMap.get(kaartGroep(o))!.push(o);
 
+  // Het ha-sommetje beweegt mee met de selectie: niets aangeklikt = het
+  // totaal; wel iets aangeklikt = de som van wat er oplicht.
+  const selectieM2 = selectie.reduce((som, id) => {
+    const o = objecten.find((x) => x.id === id);
+    return som + (o?.oppervlakteM2Som ?? 0);
+  }, 0);
+  const kadSelectieM2 = kadSelectie.reduce((som, id) => {
+    const p = bezit.find((x) => x.id === id);
+    return som + (p?.oppervlakteM2 ?? 0);
+  }, 0);
+  const somRegel =
+    kadastraal && kadSelectie.length
+      ? `Selectie: ${haGetal(kadSelectieM2)} · ${kadSelectie.length} kadastra${kadSelectie.length > 1 ? "le percelen" : "al perceel"}`
+      : !kadastraal && selectie.length
+        ? `Selectie: ${haGetal(selectieM2)} · ${selectie.length} beheerperce${selectie.length > 1 ? "len" : "el"}`
+        : `${totaalHa} ha · ${aantalPercelen} beheerpercelen · ${aantalGebouwen} gebouwen`;
+
   return (
     <div className="flex flex-col gap-3">
+      <p className="text-[13px] font-medium" style={{ color: "var(--text-2)" }}>
+        {somRegel}
+      </p>
+
       {/* Filter op gebruikssoort (niet in de kadastrale weergave) */}
       {!kadastraal && (
         <div className="flex flex-wrap items-center gap-2 text-[12.5px]">
