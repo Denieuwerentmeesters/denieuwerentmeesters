@@ -62,7 +62,11 @@ function objectDetails(o: PlaatsObject): string {
         o.bouwjaar ? `bouwjaar ${o.bouwjaar}` : null,
         o.staatOp ? `staat op ${o.staatOp}` : null,
       ]
-    : [o.gebruik, o.oppervlakteHa, o.kadastraal];
+    : [
+        o.gebruik,
+        o.oppervlakteHa,
+        o.kadastraal ?? "nog geen percelen gekoppeld",
+      ];
   return [o.categorie, ...delen, o.herkomstLabel].filter(Boolean).join(" · ");
 }
 type Basis = {
@@ -1276,10 +1280,15 @@ export default function Kaart({
       {mode === "indelen" && (
         <form
           action={async (fd) => {
+            const leeg = selectie.length === 0;
             await deelPercelenIn(fd);
             setSelectie([]);
             setKoppelId("");
-            setMelding("Percelen ingedeeld.");
+            setMelding(
+              leeg
+                ? "Leeg beheerperceel aangemaakt — klik nu percelen aan en kies het bij 'indelen bij'."
+                : "Percelen ingedeeld.",
+            );
           }}
           className="card flex flex-wrap items-end gap-3 p-4"
         >
@@ -1290,7 +1299,7 @@ export default function Kaart({
           <div className="min-w-[220px] flex-1">
             <label className="label-up mb-1 block">
               {selectie.length === 0
-                ? "Klik percelen aan (kaart of lijst) — indelen bij"
+                ? "Klik percelen aan (kaart of lijst) — of maak alvast een leeg beheerperceel"
                 : `${selectie.length} perceel${selectie.length > 1 ? "en" : ""} geselecteerd — indelen bij`}
             </label>
             <select
@@ -1326,12 +1335,19 @@ export default function Kaart({
               </select>
             </div>
           )}
+          {/* Een nieuw beheerperceel mag ook léég worden aangemaakt (handig
+              voor deelgebruik: eerst de bak, dan de percelen erbij). Alleen
+              "niets toevoegen aan bestaand" is zinloos en blijft op slot. */}
           <SubmitKnop
             className="btn btn-primary"
             pendingTekst="Indelen…"
-            disabled={selectie.length === 0}
+            disabled={selectie.length === 0 && koppelId !== ""}
           >
-            {koppelId ? "Toevoegen aan bestaand" : "Beheerperceel maken"}
+            {koppelId
+              ? "Toevoegen aan bestaand"
+              : selectie.length === 0
+                ? "Leeg beheerperceel maken"
+                : "Beheerperceel maken"}
           </SubmitKnop>
           {selectie.length > 0 && (
             <button type="button" className="btn btn-ghost btn-sm" onClick={() => setSelectie([])}>

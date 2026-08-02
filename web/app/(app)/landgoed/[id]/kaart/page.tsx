@@ -200,9 +200,14 @@ export default async function KaartPage({
     };
   });
 
+  // Beheerpercelen tonen we ook zónder geo: een leeg aangemaakt beheerperceel
+  // (of een AI-huls) hoort zichtbaar te zijn, met de hint dat er nog geen
+  // kadastrale percelen aan hangen.
   const geplaatst = objecten.filter(
     (m) =>
-      (Number.isFinite(m.lat) && Number.isFinite(m.lon)) || m.geoms.length > 0,
+      (Number.isFinite(m.lat) && Number.isFinite(m.lon)) ||
+      m.geoms.length > 0 ||
+      m.categorie === "pachtperceel",
   );
 
   // Alle stamgegevens (ook zonder geo, bv. AI-objecten) voor de koppel-dropdown.
