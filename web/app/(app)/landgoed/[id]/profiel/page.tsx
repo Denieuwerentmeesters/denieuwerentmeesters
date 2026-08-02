@@ -227,7 +227,7 @@ export default async function ProfielPage({
             <a href="#bewerken" className="btn btn-ghost btn-sm">
               Profiel bewerken
             </a>
-            <Link href={`/landgoed/${id}/kaart`} className="btn btn-ghost btn-sm">
+            <Link href={`/landgoed/${id}/kaart/invoer`} className="btn btn-ghost btn-sm">
               Stamgegevens invoeren / wijzigen
             </Link>
           </div>
@@ -351,7 +351,7 @@ export default async function ProfielPage({
             {verdelingRijen.length === 0 ? (
               <p className="text-[13px]" style={{ color: "var(--text-2)" }}>
                 Nog geen percelen met oppervlakte. Plaats percelen op de{" "}
-                <Link href={`/landgoed/${id}/kaart`} className="underline">
+                <Link href={`/landgoed/${id}/kaart/invoer`} className="underline">
                   kaart
                 </Link>
                 .
