@@ -606,7 +606,9 @@ export default function Kaart({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [splitsing]);
 
-  // De getekende splitslijn op de kaart bijhouden.
+  // De getekende splitslijn op de kaart bijhouden. Elk gezet punt krijgt
+  // direct een stip — anders is de allereerste klik onzichtbaar (een lijn
+  // bestaat pas vanaf twee punten) en lijkt er niets te gebeuren.
   useEffect(() => {
     const L = LRef.current;
     const map = mapRef.current;
@@ -616,11 +618,25 @@ export default function Kaart({
       lijnRef.current = null;
     }
     if (lijn.length) {
-      lijnRef.current = L.polyline(lijn, {
-        color: "#111827",
-        weight: 2.5,
-        dashArray: "6 4",
-      }).addTo(map);
+      const groep = L.layerGroup();
+      for (const punt of lijn) {
+        L.circleMarker(punt, {
+          radius: 5,
+          color: "#111827",
+          weight: 2,
+          fillColor: "#ffffff",
+          fillOpacity: 1,
+        }).addTo(groep);
+      }
+      if (lijn.length > 1) {
+        L.polyline(lijn, {
+          color: "#111827",
+          weight: 2.5,
+          dashArray: "6 4",
+        }).addTo(groep);
+      }
+      groep.addTo(map);
+      lijnRef.current = groep;
     }
   }, [lijn]);
 
