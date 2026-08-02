@@ -652,6 +652,88 @@ async function bewaarGebiedsligging(
   } catch {
     // idem
   }
+  try {
+    await bewaarGebiedsliggingPerPerceel(supabase, landgoed_id);
+  } catch {
+    // idem
+  }
+}
+
+// Natura 2000 + NNN per kadastraal perceel (gemeten op het middelpunt van
+// elk perceel). Het landgoed-punt alleen was te grof: een landgoed waarvan
+// enkel de rand in een gebied ligt, kwam als "nee" terug. Ligt minstens één
+// perceel erin, dan wordt ook de landgoed-vlag aangezet — daar kijkt de
+// subsidie-matchmotor naar.
+async function bewaarGebiedsliggingPerPerceel(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  landgoed_id: string,
+) {
+  const { data: percelen } = await supabase
+    .from("kadastraal_perceel")
+    .select("id, geom_3857")
+    .eq("landgoed_id", landgoed_id);
+  if (!percelen?.length) return;
+
+  // In kleine groepjes tegelijk: snel genoeg, zonder PDOK te bestoken.
+  for (let i = 0; i < percelen.length; i += 6) {
+    await Promise.all(
+      percelen.slice(i, i + 6).map(async (p) => {
+        const c = centroid3857(p.geom_3857);
+        if (!c) return;
+        const [lon, lat] = invMerc3857(c[0], c[1]);
+        try {
+          const [n, m] = await Promise.all([
+            puntInWmsLaag(NATURA2000_WMS, "natura2000", lat, lon),
+            puntInWmsLaag(NNN_WMS, "PS.ProtectedSite", lat, lon),
+          ]);
+          const gebied = n.hit
+            ? String(
+                n.props.naamN2K ?? n.props.naam ?? n.props.gebiedsnaam ?? "",
+              ) || null
+            : null;
+          await supabase
+            .from("kadastraal_perceel")
+            .update({
+              ligt_in_natura2000: n.hit,
+              natura2000_gebied: gebied,
+              ligt_in_nnn: m.hit,
+              gebiedsligging_gecontroleerd_op: new Date().toISOString(),
+            })
+            .eq("id", p.id);
+        } catch {
+          // PDOK onbereikbaar voor dit perceel -> overslaan; volgende
+          // controle probeert opnieuw.
+        }
+      }),
+    );
+  }
+
+  // Landgoed-vlaggen aanscherpen: één perceel erin = landgoed erin.
+  const { data: telling } = await supabase
+    .from("kadastraal_perceel")
+    .select("ligt_in_natura2000, ligt_in_nnn, natura2000_gebied")
+    .eq("landgoed_id", landgoed_id);
+  const inN2k = (telling ?? []).filter((t) => t.ligt_in_natura2000);
+  if (inN2k.length) {
+    await supabase
+      .from("landgoed")
+      .update({ ligt_in_natura2000: true })
+      .eq("id", landgoed_id);
+    const gebied = inN2k.find((t) => t.natura2000_gebied)?.natura2000_gebied;
+    if (gebied) {
+      await supabase
+        .from("landgoed")
+        .update({ natura2000_gebied: gebied })
+        .eq("id", landgoed_id)
+        .is("natura2000_gebied", null);
+    }
+  }
+  if ((telling ?? []).some((t) => t.ligt_in_nnn)) {
+    await supabase
+      .from("landgoed")
+      .update({ ligt_in_nnn: true })
+      .eq("id", landgoed_id);
+  }
 }
 
 // ANLb-leefgebieden per pachtperceel bepalen (i.p.v. één punt op landgoedniveau).

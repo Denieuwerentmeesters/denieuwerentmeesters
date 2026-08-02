@@ -300,6 +300,7 @@ export default function Kaart({
   splitsPerceel,
   wisSplitsing,
   ontkoppelPerceel,
+  gebiedsligging,
 }: {
   landgoedId: string;
   objecten: PlaatsObject[];
@@ -325,6 +326,9 @@ export default function Kaart({
   splitsPerceel: (fd: FormData) => Promise<void>;
   wisSplitsing: (fd: FormData) => Promise<void>;
   ontkoppelPerceel: (fd: FormData) => Promise<void>;
+  // Samenvatting "x van n percelen in Natura 2000 / NNN", of null als er
+  // nog nooit gecontroleerd is.
+  gebiedsligging?: string | null;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<LMap | null>(null);
@@ -1132,6 +1136,11 @@ export default function Kaart({
               Controleer gebiedsligging
             </SubmitKnop>
           </form>
+        )}
+        {gebiedsligging && (
+          <span className="text-[12px]" style={{ color: "var(--text-2)" }}>
+            {gebiedsligging}
+          </span>
         )}
         {basisIngesteld && mode !== "basis" && (
           <button
