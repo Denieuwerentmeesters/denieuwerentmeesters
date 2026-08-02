@@ -81,26 +81,32 @@ export async function deelPercelenIn(fd: FormData) {
   const naam = String(fd.get("naam") ?? "").trim();
   const gebruik = String(fd.get("gebruik") ?? "").trim();
   const ids = fd.getAll("perceel_id").map(String).filter(Boolean);
-  if (!landgoed_id || !ids.length) return;
+  if (!landgoed_id) return;
+  // Zonder selectie is alleen een níeuw (leeg) beheerperceel zinvol — handig
+  // voor deelgebruik: eerst de bak aanmaken, daarna percelen erbij klikken.
+  if (!ids.length && bestaand_id) return;
 
   const supabase = await createClient();
-  const percelen = await moet(
-    supabase
-      .from("kadastraal_perceel")
-      .select("id, geom_3857")
-      .eq("landgoed_id", landgoed_id)
-      .in("id", ids),
-    "percelen ophalen",
-  );
-  if (!percelen.length) return;
+  const percelen = ids.length
+    ? await moet(
+        supabase
+          .from("kadastraal_perceel")
+          .select("id, geom_3857")
+          .eq("landgoed_id", landgoed_id)
+          .in("id", ids),
+        "percelen ophalen",
+      )
+    : [];
+  if (ids.length && !percelen.length) return;
 
   let stamobject_id = bestaand_id;
   if (!stamobject_id) {
     if (!naam) return;
-    // Marker-punt voor lijst/zoom: zwaartepunt van de eerste vorm.
+    // Marker-punt voor lijst/zoom: zwaartepunt van de eerste vorm (indien er
+    // al percelen geselecteerd zijn).
     let lat: number | null = null;
     let lon: number | null = null;
-    const c = centroid3857(percelen[0].geom_3857);
+    const c = percelen.length ? centroid3857(percelen[0].geom_3857) : null;
     if (c) [lon, lat] = invMerc3857(c[0], c[1]);
     const nieuw = await moet(
       supabase
@@ -124,6 +130,10 @@ export async function deelPercelenIn(fd: FormData) {
     stamobject_id = nieuw.id;
   }
 
+  if (!percelen.length) {
+    revalidatePath(`/landgoed/${landgoed_id}/kaart`);
+    return;
+  }
   await moet(
     supabase.from("beheerperceel_kadastraal").upsert(
       percelen.map((p) => ({ landgoed_id, stamobject_id, kadastraal_perceel_id: p.id })),
