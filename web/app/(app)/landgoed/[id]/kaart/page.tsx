@@ -219,10 +219,12 @@ export default async function KaartPage({
   );
 
   // Alle stamgegevens (ook zonder geo, bv. AI-objecten) voor de koppel-dropdown.
+  // Gebruik gaat mee zodat de dropdown dezelfde groepskopjes kan tonen als de lijst.
   const koppelbaar = (data ?? []).map((o) => ({
     id: o.id,
     naam: o.naam,
     categorie: o.categorie as string,
+    gebruik: ((o.kenmerken ?? {}) as { gebruik?: string }).gebruik ?? null,
   }));
 
   // Totalen: som van de gronden (percelen) + aantallen.

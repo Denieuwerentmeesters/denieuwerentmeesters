@@ -160,7 +160,10 @@ type KaartGroepLabel = (typeof KAARTGROEP_LABELS)[number];
 // Bepaalt de groep op basis van categorie + gebruik.
 // Percelen erven hun groep van het gebruik-veld; vaste objectcategorieën
 // (gebouwen, infrastructuur, enz.) worden direct ingedeeld.
-function kaartGroep(o: PlaatsObject): KaartGroepLabel {
+function kaartGroep(o: {
+  categorie: string;
+  gebruik?: string | null;
+}): KaartGroepLabel {
   const cat = o.categorie;
   const gebruik = (o.gebruik ?? "").toLowerCase();
 
@@ -186,6 +189,20 @@ function kaartGroep(o: PlaatsObject): KaartGroepLabel {
   }
 
   return "Overig";
+}
+
+// Opties voor een dropdown, gegroepeerd met dezelfde kopjes en volgorde als
+// de lijst — zo blijft de kaartpagina overal dezelfde taal spreken.
+function groepeerOpties<T extends { categorie: string; gebruik?: string | null }>(
+  opties: T[],
+): [KaartGroepLabel, T[]][] {
+  const per = new Map<KaartGroepLabel, T[]>(
+    KAARTGROEP_LABELS.map((l) => [l, []]),
+  );
+  for (const o of opties) per.get(kaartGroep(o))!.push(o);
+  return KAARTGROEP_LABELS.map(
+    (l) => [l, per.get(l)!] as [KaartGroepLabel, T[]],
+  ).filter(([, lijst]) => lijst.length > 0);
 }
 
 function haTekst(m2: unknown): string {
@@ -286,7 +303,7 @@ export default function Kaart({
 }: {
   landgoedId: string;
   objecten: PlaatsObject[];
-  koppelbaar: { id: string; naam: string; categorie: string }[];
+  koppelbaar: { id: string; naam: string; categorie: string; gebruik?: string | null }[];
   basisIngesteld: boolean;
   lat: number | null;
   lon: number | null;
@@ -1331,10 +1348,14 @@ export default function Kaart({
               onChange={(e) => setKoppelId(e.target.value)}
             >
               <option value="">— Nieuw beheerperceel —</option>
-              {koppelOpties.map((o) => (
-                <option key={o.id} value={o.id}>
-                  {o.naam}
-                </option>
+              {groepeerOpties(koppelOpties).map(([label, lijst]) => (
+                <optgroup key={label} label={label}>
+                  {lijst.map((o) => (
+                    <option key={o.id} value={o.id}>
+                      {o.naam}
+                    </option>
+                  ))}
+                </optgroup>
               ))}
             </select>
           </div>
@@ -1836,14 +1857,20 @@ export default function Kaart({
                                 defaultValue={o.staatOpId ?? ""}
                               >
                                 <option value="">— geen —</option>
-                                {objecten
-                                  .filter((p) => PERCEEL_CATS.has(p.categorie))
-                                  .map((p) => (
-                                    <option key={p.id} value={p.id}>
-                                      {p.naam}
-                                      {p.gebruik ? ` (${p.gebruik})` : ""}
-                                    </option>
-                                  ))}
+                                {groepeerOpties(
+                                  objecten.filter((p) =>
+                                    PERCEEL_CATS.has(p.categorie),
+                                  ),
+                                ).map(([label, lijst]) => (
+                                  <optgroup key={label} label={label}>
+                                    {lijst.map((p) => (
+                                      <option key={p.id} value={p.id}>
+                                        {p.naam}
+                                        {p.gebruik ? ` (${p.gebruik})` : ""}
+                                      </option>
+                                    ))}
+                                  </optgroup>
+                                ))}
                               </select>
                             </div>
                             <SubmitKnop className="btn btn-primary btn-sm" pendingTekst="Opslaan…">
