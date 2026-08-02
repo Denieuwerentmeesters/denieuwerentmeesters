@@ -732,7 +732,13 @@ export default function Kaart({
         const bij = p.ingedeeldBij.map((b) => b.naam).join(", ");
         poly.bindTooltip(
           p.ingedeeld
-            ? `${p.aanduiding} · ingedeeld bij ${bij}${mode === "indelen" ? " — klik voor deelgebruik" : ""}`
+            ? `${p.aanduiding} · ingedeeld bij ${bij}${
+                mode === "indelen"
+                  ? koppelId
+                    ? " — klik om toe te voegen (deelgebruik)"
+                    : " — deelgebruik: kies eerst 'indelen bij'"
+                  : ""
+              }`
             : `${p.aanduiding} · nog in te delen`,
           { sticky: true },
         );
@@ -748,17 +754,19 @@ export default function Kaart({
           if (e.originalEvent) L.DomEvent.stopPropagation(e.originalEvent);
         }
         if (m === "indelen") {
-          // Deelgebruik: een al ingedeeld perceel mag óók bij dit (nieuwe)
-          // beheerperceel — na een expliciete bevestiging. Beide koppelingen
-          // worden dan dekking 'gedeeltelijk'.
+          // Deelgebruik: een al ingedeeld perceel mag óók bij een ander
+          // beheerperceel — maar eerst het doel kiezen, dan pas aanwijzen
+          // (wens Steven: geen overval-popup). Zonder gekozen doel legt een
+          // melding de volgorde uit; mét doel selecteert de klik gewoon.
           if (p.ingedeeld && !selectie.includes(p.id)) {
             const bij = p.ingedeeldBij.map((b) => b.naam).join(", ");
-            if (
-              !window.confirm(
-                `${p.aanduiding} is al ingedeeld bij ${bij}. Ook koppelen aan dit beheerperceel (deelgebruik)? Het perceel telt dan bij beide als gedeeld.`,
-              )
-            )
+            if (!koppelId) {
+              setMelding(
+                `${p.aanduiding} is al ingedeeld bij ${bij}. Óók bij een ander beheerperceel? Kies dat beheerperceel eerst hierboven bij "indelen bij" en klik het perceel dan nogmaals.`,
+              );
               return;
+            }
+            setMelding(null);
           }
           setSelectie((prev) =>
             prev.includes(p.id) ? prev.filter((x) => x !== p.id) : [...prev, p.id],
@@ -787,8 +795,10 @@ export default function Kaart({
 
   useEffect(() => {
     tekenBezit();
+    // koppelId hoort erbij: het klikgedrag en de tooltip van ingedeelde
+    // percelen hangen af van het gekozen doel-beheerperceel.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [bezit, selectie, mode]);
+  }, [bezit, selectie, mode, koppelId]);
 
   // Selecteer een bezit-perceel vanuit de lijst: schakel naar de indeel-modus,
   // wissel de selectie en zoom ernaartoe (als het een vorm heeft).
@@ -1353,6 +1363,23 @@ export default function Kaart({
             <button type="button" className="btn btn-ghost btn-sm" onClick={() => setSelectie([])}>
               Wis selectie
             </button>
+          )}
+          {/* Wat gaat er gebeuren: per geselecteerd perceel, met de
+              deelgebruik-gevallen expliciet benoemd. */}
+          {selectie.length > 0 && (
+            <div className="w-full text-[12px]" style={{ color: "var(--text-2)" }}>
+              Geselecteerd:{" "}
+              {selectie
+                .map((pid) => {
+                  const p = bezit.find((b) => b.id === pid);
+                  if (!p) return null;
+                  return p.ingedeeld
+                    ? `${p.aanduiding} (al bij ${p.ingedeeldBij.map((b) => b.naam).join(", ")} — wordt gedeeld gebruik)`
+                    : p.aanduiding;
+                })
+                .filter(Boolean)
+                .join(" · ")}
+            </div>
           )}
         </form>
       )}
