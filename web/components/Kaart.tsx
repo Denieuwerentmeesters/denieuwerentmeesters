@@ -365,6 +365,9 @@ export default function Kaart({
   // Beheerperceel waarvan het wijzig-formulier (naam/gebruik) openstaat.
   const [wijzigId, setWijzigId] = useState<string | null>(null);
   const [koppelGebouwId, setKoppelGebouwId] = useState<string | null>(null);
+  // Deelgebruik-knop in het indeel-paneel: pas na een bewuste druk hierop
+  // zijn al-ingedeelde percelen aanklikbaar om extra te koppelen.
+  const [extraKoppelen, setExtraKoppelen] = useState(false);
   // Splitslijn-flow: welk kadastraal perceel wordt gesplitst, de getekende
   // lijnpunten, de geknipte delen en per deel het gekozen beheerperceel.
   const [splitsing, setSplitsing] = useState<{
@@ -573,6 +576,7 @@ export default function Kaart({
     // De indeel-selectie blijft staan bij het BINNENKOMEN van de indeel-modus
     // (een lijstklik schakelt daarheen mét selectie); bij het verlaten wist hij.
     if (mode !== "indelen") setSelectie([]);
+    setExtraKoppelen(false);
     // De splitslijn-flow leeft alleen in de bekijk-modus.
     if (mode !== "bekijk") setSplitsing(null);
     setMelding(null);
@@ -744,11 +748,13 @@ export default function Kaart({
       const latlngs = geomNaarLatlngs(L, p.geom);
       if (!latlngs) continue;
       const geselecteerd = selectie.includes(p.id);
-      // Ingedeelde percelen zijn in de bekijk-modus niet-interactief: klik en
-      // hover vallen dan door naar het gekleurde beheerperceel eronder
-      // (tooltip, spotlight, kaart-naar-lijst). In de invoer-modi zijn ze wél
-      // aanklikbaar — voor de "al ingedeeld"-melding en voor deelgebruik.
-      const invoerModus = mode === "indelen" || mode === "perceel";
+      // Ingedeelde percelen zijn normaal niet-interactief: klik en hover
+      // vallen door naar het gekleurde beheerperceel eronder (tooltip,
+      // spotlight, kaart-naar-lijst). Aanklikbaar zijn ze alleen in de
+      // bezit-laadmodus (voor de "al ingedeeld"-melding) en in de indeel-
+      // modus nádat de deelgebruik-knop is ingedrukt.
+      const invoerModus =
+        mode === "perceel" || (mode === "indelen" && extraKoppelen);
       const poly = L.polygon(
         latlngs,
         geselecteerd
@@ -762,10 +768,8 @@ export default function Kaart({
         poly.bindTooltip(
           p.ingedeeld
             ? `${p.aanduiding} · ingedeeld bij ${bij}${
-                mode === "indelen"
-                  ? koppelId
-                    ? " — klik om toe te voegen (deelgebruik)"
-                    : " — deelgebruik: kies eerst 'indelen bij'"
+                mode === "indelen" && extraKoppelen
+                  ? " — klik om extra te koppelen (deelgebruik)"
                   : ""
               }`
             : `${p.aanduiding} · nog in te delen`,
@@ -783,20 +787,10 @@ export default function Kaart({
           if (e.originalEvent) L.DomEvent.stopPropagation(e.originalEvent);
         }
         if (m === "indelen") {
-          // Deelgebruik: een al ingedeeld perceel mag óók bij een ander
-          // beheerperceel — maar eerst het doel kiezen, dan pas aanwijzen
-          // (wens Steven: geen overval-popup). Zonder gekozen doel legt een
-          // melding de volgorde uit; mét doel selecteert de klik gewoon.
-          if (p.ingedeeld && !selectie.includes(p.id)) {
-            const bij = p.ingedeeldBij.map((b) => b.naam).join(", ");
-            if (!koppelId) {
-              setMelding(
-                `${p.aanduiding} is al ingedeeld bij ${bij}. Óók bij een ander beheerperceel? Kies dat beheerperceel eerst hierboven bij "indelen bij" en klik het perceel dan nogmaals.`,
-              );
-              return;
-            }
-            setMelding(null);
-          }
+          // Vanaf hier is een ingedeeld perceel gewoon een perceel als alle
+          // andere: de deelgebruik-knop was de bewuste tussenstap, de rest
+          // van de indeel-flow kent geen uitzonderingen meer (wens Steven).
+          setMelding(null);
           setSelectie((prev) =>
             prev.includes(p.id) ? prev.filter((x) => x !== p.id) : [...prev, p.id],
           );
@@ -824,10 +818,10 @@ export default function Kaart({
 
   useEffect(() => {
     tekenBezit();
-    // koppelId hoort erbij: het klikgedrag en de tooltip van ingedeelde
-    // percelen hangen af van het gekozen doel-beheerperceel.
+    // extraKoppelen hoort erbij: het bepaalt of ingedeelde percelen
+    // aanklikbaar zijn (deelgebruik-knop in het indeel-paneel).
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [bezit, selectie, mode, koppelId]);
+  }, [bezit, selectie, mode, extraKoppelen]);
 
   // Selecteer een bezit-perceel vanuit de lijst: schakel naar de indeel-modus,
   // wissel de selectie en zoom ernaartoe (als het een vorm heeft).
@@ -1397,6 +1391,26 @@ export default function Kaart({
               Wis selectie
             </button>
           )}
+          {/* Deelgebruik als bewuste tussenstap: pas na deze knop zijn
+              al-ingedeelde percelen aanklikbaar; daarna gedragen ze zich als
+              elk ander geselecteerd perceel. */}
+          <div className="w-full">
+            <button
+              type="button"
+              className={`btn btn-sm ${extraKoppelen ? "btn-primary" : "btn-ghost"}`}
+              onClick={() => setExtraKoppelen((v) => !v)}
+            >
+              {extraKoppelen
+                ? "✓ Klaar met extra aanwijzen"
+                : "+ Perceel van een ander beheerperceel erbij"}
+            </button>
+            {extraKoppelen && (
+              <span className="ml-2 text-[12px]" style={{ color: "var(--text-2)" }}>
+                Klik op de kaart op het perceel dat je óók aan dit beheerperceel
+                wilt koppelen — het wordt dan gedeeld gebruik.
+              </span>
+            )}
+          </div>
           {/* Wat gaat er gebeuren: per geselecteerd perceel, met de
               deelgebruik-gevallen expliciet benoemd. */}
           {selectie.length > 0 && (
@@ -1598,8 +1612,10 @@ export default function Kaart({
         </form>
       )}
 
-      {/* Bezit dat nog niet is ingedeeld (werkvoorraad — mag blijven staan) */}
-      {bezit.some((p) => !p.ingedeeld) && (
+      {/* Bezit dat nog niet is ingedeeld (werkvoorraad — mag blijven staan).
+          Via de deelgebruik-knop aangewezen (al-ingedeelde) percelen schuiven
+          hier ook in, zodat ze verder als elk ander perceel meedoen. */}
+      {bezit.some((p) => !p.ingedeeld || selectie.includes(p.id)) && (
         <div>
           <div className="mb-2 text-[13px] font-semibold">
             Nog in te delen ({bezit.filter((p) => !p.ingedeeld).length})
@@ -1609,7 +1625,7 @@ export default function Kaart({
           </div>
           <div className="card divide-y" style={{ borderColor: "var(--border)" }}>
             {bezit
-              .filter((p) => !p.ingedeeld)
+              .filter((p) => !p.ingedeeld || selectie.includes(p.id))
               .map((p) => {
                 const isGeselecteerd = selectie.includes(p.id);
                 return (
@@ -1629,12 +1645,18 @@ export default function Kaart({
                           {" "}· {p.oppervlakteHa}
                         </span>
                       )}
+                      {p.ingedeeld && (
+                        <span className="font-normal" style={{ color: "var(--text-2)" }}>
+                          {" "}· al bij {p.ingedeeldBij.map((b) => b.naam).join(", ")} — wordt gedeeld gebruik
+                        </span>
+                      )}
                       {isGeselecteerd && (
                         <span className="font-semibold" style={{ color: "#92400e" }}>
                           {" "}· geselecteerd
                         </span>
                       )}
                     </button>
+                    {p.ingedeeld ? null : (
                     <form action={verwijderBezit}>
                       <input type="hidden" name="landgoed_id" value={landgoedId} />
                       <input type="hidden" name="perceel_id" value={p.id} />
@@ -1645,6 +1667,7 @@ export default function Kaart({
                         Verwijder
                       </button>
                     </form>
+                    )}
                   </div>
                 );
               })}
