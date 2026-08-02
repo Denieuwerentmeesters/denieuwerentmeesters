@@ -226,6 +226,54 @@ export async function splitsPerceel(fd: FormData) {
   revalidatePath(`/landgoed/${landgoed_id}`, "layout");
 }
 
+// Eén kadastraal perceel losmaken van één beheerperceel — het botte
+// "Hef indeling op" (heel het beheerperceel weg) is daarvoor te grof.
+// Het perceel blijft in het bezit; zonder overgebleven koppelingen wordt
+// het weer "nog in te delen".
+export async function ontkoppelPerceel(fd: FormData) {
+  const landgoed_id = String(fd.get("landgoed_id"));
+  const stamobject_id = String(fd.get("stamobject_id"));
+  const perceel_id = String(fd.get("perceel_id"));
+  if (!landgoed_id || !stamobject_id || !perceel_id) return;
+
+  const supabase = await createClient();
+  await moet(
+    supabase
+      .from("beheerperceel_kadastraal")
+      .delete()
+      .eq("landgoed_id", landgoed_id)
+      .eq("stamobject_id", stamobject_id)
+      .eq("kadastraal_perceel_id", perceel_id),
+    "perceel ontkoppelen",
+  );
+
+  // Blijft er nog precies één koppeling over, dan is het perceel niet langer
+  // gedeeld: dekking terug naar 'volledig' en een eventuele splitslijn wissen
+  // (die slaat met één eigenaar nergens meer op).
+  const rest = await moet(
+    supabase
+      .from("beheerperceel_kadastraal")
+      .select("id")
+      .eq("landgoed_id", landgoed_id)
+      .eq("kadastraal_perceel_id", perceel_id),
+    "resterende koppelingen tellen",
+  );
+  if (rest.length === 1) {
+    await moet(
+      supabase
+        .from("beheerperceel_kadastraal")
+        .update({
+          dekking: "volledig",
+          deel_geom_3857: null,
+          deel_oppervlakte_m2: null,
+        })
+        .eq("id", rest[0].id),
+      "dekking herstellen",
+    );
+  }
+  revalidatePath(`/landgoed/${landgoed_id}`, "layout");
+}
+
 // Splitsing weggooien: terug naar gewoon deelgebruik zonder lijn.
 export async function wisSplitsing(fd: FormData) {
   const landgoed_id = String(fd.get("landgoed_id"));

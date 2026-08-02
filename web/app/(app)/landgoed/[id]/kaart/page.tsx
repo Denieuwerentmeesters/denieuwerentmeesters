@@ -15,6 +15,7 @@ import {
   koppelGebouwAanPerceel,
   splitsPerceel,
   wisSplitsing,
+  ontkoppelPerceel,
 } from "./acties";
 
 function haTekst(m2: unknown): string | null {
@@ -341,6 +342,7 @@ export default async function KaartPage({
           koppelGebouwAanPerceel={koppelGebouwAanPerceel}
           splitsPerceel={splitsPerceel}
           wisSplitsing={wisSplitsing}
+          ontkoppelPerceel={ontkoppelPerceel}
         />
       </div>
     </div>
