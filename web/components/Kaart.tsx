@@ -18,60 +18,31 @@ import {
   gebruikOptiesVoor,
 } from "@/app/(app)/landgoed/[id]/stamgegevens/constanten";
 import { merc3857, oppervlakte3857, splitsPolygoon3857 } from "@/lib/geo";
+// Gedeelde kaart-bouwstenen (kleuren, groepen, PDOK-lagen, geometrie) — één
+// bron voor deze invoerpagina én de kijk-pagina (KaartWeergave).
+import {
+  type KaartObject,
+  objectDetails,
+  PDOK_TILES,
+  KADASTER_WMS,
+  BAG_WMS,
+  NATURA2000_WMS,
+  NNN_WMS,
+  GEBOUW_CATS,
+  PERCEEL_CATS,
+  GEBRUIK_KLEUR,
+  KLEUR_GEEN_GEBRUIK,
+  kleurVoorGebruik,
+  KAARTGROEP_LABELS,
+  type KaartGroepLabel,
+  kaartGroep,
+  groepeerOpties,
+  haTekst,
+  geomNaarLatlngs,
+} from "@/components/kaartDelen";
 
-type PlaatsObject = {
-  id: string;
-  naam: string;
-  categorie: string;
-  gebruik: string | null;
-  oppervlakteHa: string | null;
-  oppervlakteM2: string | null;
-  pandstatus: string | null;
-  bouwjaar: string | null;
-  adres: string | null;
-  lat: number;
-  lon: number;
-  geom: unknown;
-  // Uit de kadastrale registratie (stap 1): álle gekoppelde perceel-vormen
-  // en een leesbaar label ("kadastraal: Baarn C 1562, C 1129").
-  geoms?: unknown[];
-  // Aanduiding per vorm, in dezelfde volgorde als geoms — voor de gerichte
-  // tooltip per vlak.
-  geomAanduidingen?: string[];
-  kadastraal?: string | null;
-  // "AI · 12 jul" of "handmatig · 30 jul" — waar komt dit object vandaan?
-  herkomstLabel?: string | null;
-  // Gebouw ↔ beheerperceel (Hugo: PrimairBeheerperceelID): op welk
-  // beheerperceel staat dit gebouw? Eén primair perceel per gebouw.
-  staatOp?: string | null;
-  staatOpId?: string | null;
-  // De gekoppelde kadastrale percelen (voor deelgebruik en splitsen).
-  kadDelen?: {
-    perceelId: string;
-    aanduiding: string;
-    dekking: string;
-    gesplitst: boolean;
-  }[];
-};
+type PlaatsObject = KaartObject;
 
-function objectDetails(o: PlaatsObject): string {
-  const isGebouw = GEBOUW_CATS.has(o.categorie);
-  const delen = isGebouw
-    ? [
-        o.gebruik,
-        o.adres,
-        o.oppervlakteM2 ? `${o.oppervlakteM2} m²` : null,
-        o.pandstatus,
-        o.bouwjaar ? `bouwjaar ${o.bouwjaar}` : null,
-        o.staatOp ? `staat op ${o.staatOp}` : null,
-      ]
-    : [
-        o.gebruik,
-        o.oppervlakteHa,
-        o.kadastraal ?? "nog geen percelen gekoppeld",
-      ];
-  return [o.categorie, ...delen, o.herkomstLabel].filter(Boolean).join(" · ");
-}
 type Basis = {
   adres: string;
   postcode: string;
@@ -101,16 +72,6 @@ type BezitPerceel = {
   ingedeeld: boolean;
 };
 
-// BRT-Achtergrondkaart: zelfde bron, twee smaken. Op "grijs" springen de
-// gebruikskleuren van de beheerpercelen er veel duidelijker uit.
-const PDOK_TILES = (variant: "standaard" | "grijs") =>
-  `https://service.pdok.nl/brt/achtergrondkaart/wmts/v2_0/${variant}/EPSG:3857/{z}/{x}/{y}.png`;
-const KADASTER_WMS = "https://service.pdok.nl/kadaster/kadastralekaart/wms/v5_0";
-const BAG_WMS = "https://service.pdok.nl/lv/bag/wms/v2_0";
-const NATURA2000_WMS = "https://service.pdok.nl/rvo/natura2000/wms/v1_0";
-const NNN_WMS =
-  "https://service.pdok.nl/provincies/natuurnetwerk-nederland/wms/v1_0";
-
 const LEEG: Basis = {
   adres: "",
   postcode: "",
@@ -118,101 +79,6 @@ const LEEG: Basis = {
   gemeente: "",
   provincie: "",
 };
-
-const GEBOUW_CATS = new Set(["gebouw", "woning", "opstal"]);
-const PERCEEL_CATS = new Set(["pachtperceel"]);
-
-// Kleur = gebruik: de kaart vertelt in één oogopslag wat er met de grond
-// gebeurt (zelfde taal als de oppervlakteverdeling op het profiel). De eenheid
-// van een beheerperceel zie je door eroverheen te bewegen: alle vlakken van
-// dat beheerperceel lichten samen op. Rood en amber zijn gereserveerd
-// (aangeklikt gebouw / indeel-selectie) en zitten niet in dit palet.
-const GEBRUIK_KLEUR: Record<string, string> = {
-  Natuur: "#2F7D4F",
-  Agrarisch: "#C9A227",
-  Wonen: "#B0574F",
-  Bedrijf: "#8A5A2B",
-  Water: "#3B82C4",
-  Recreatie: "#7B4FA0",
-  Maatschappelijk: "#4A8A8A",
-};
-const KLEUR_GEEN_GEBRUIK = "#64748b";
-function kleurVoorGebruik(gebruik: string | null): string {
-  return GEBRUIK_KLEUR[gebruik ?? ""] ?? KLEUR_GEEN_GEBRUIK;
-}
-
-// Eerst de grond-groepen (de beheerpercelen, per gebruik), dan pas de
-// gebouwen: "de grond, en dan wat erop staat" — zelfde denklaag als de kaart.
-const KAARTGROEP_LABELS = [
-  "Wonen",
-  "Agrarisch",
-  "Natuur",
-  "Recreatie",
-  "Werken",
-  "Infrastructuur",
-  "Water & Klimaat",
-  "Overig",
-  "Gebouwen",
-] as const;
-
-type KaartGroepLabel = (typeof KAARTGROEP_LABELS)[number];
-
-// Bepaalt de groep op basis van categorie + gebruik.
-// Percelen erven hun groep van het gebruik-veld; vaste objectcategorieën
-// (gebouwen, infrastructuur, enz.) worden direct ingedeeld.
-function kaartGroep(o: {
-  categorie: string;
-  gebruik?: string | null;
-}): KaartGroepLabel {
-  const cat = o.categorie;
-  const gebruik = (o.gebruik ?? "").toLowerCase();
-
-  // Vaste objectcategorieën
-  if (["gebouw", "woning", "opstal"].includes(cat)) return "Gebouwen";
-  if (["natuur", "natuurbeheertype", "onderhoudszone"].includes(cat)) return "Natuur";
-  if (["tuin", "wandelroute", "bomenlaan", "risicoplek"].includes(cat)) return "Recreatie";
-  if (["bedrijf", "werken"].includes(cat)) return "Werken";
-  if (["infrastructuur", "weg_pad", "brug", "hek", "kabel_leiding"].includes(cat)) return "Infrastructuur";
-  if (["water", "waterloop", "vijver_sloot"].includes(cat)) return "Water & Klimaat";
-
-  // Percelen: indeling via gebruik-veld. Een woonperceel is grond en hoort
-  // dus onder "Wonen" — niet tussen de gebouwen die erop staan.
-  if (cat === "pachtperceel") {
-    if (gebruik === "wonen") return "Wonen";
-    if (gebruik === "agrarisch") return "Agrarisch";
-    if (gebruik === "natuur") return "Natuur";
-    if (gebruik === "recreatie") return "Recreatie";
-    if (gebruik === "bedrijf") return "Werken";
-    if (gebruik === "maatschappelijk") return "Werken";
-    if (gebruik === "water") return "Water & Klimaat";
-    return "Overig"; // geen gebruik gekozen: grijs op de kaart, dus ook hier neutraal
-  }
-
-  return "Overig";
-}
-
-// Opties voor een dropdown, gegroepeerd met dezelfde kopjes en volgorde als
-// de lijst — zo blijft de kaartpagina overal dezelfde taal spreken.
-function groepeerOpties<T extends { categorie: string; gebruik?: string | null }>(
-  opties: T[],
-): [KaartGroepLabel, T[]][] {
-  const per = new Map<KaartGroepLabel, T[]>(
-    KAARTGROEP_LABELS.map((l) => [l, []]),
-  );
-  for (const o of opties) per.get(kaartGroep(o))!.push(o);
-  return KAARTGROEP_LABELS.map(
-    (l) => [l, per.get(l)!] as [KaartGroepLabel, T[]],
-  ).filter(([, lijst]) => lijst.length > 0);
-}
-
-function haTekst(m2: unknown): string {
-  const n = Number(m2);
-  if (!Number.isFinite(n)) return "";
-  return `${(n / 10000).toLocaleString("nl-NL", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  })} ha`;
-}
 
 async function reverseGeocode(lat: number, lon: number): Promise<Basis> {
   const fl =
@@ -232,19 +98,6 @@ async function reverseGeocode(lat: number, lon: number): Promise<Basis> {
   } catch {
     return LEEG;
   }
-}
-
-// Zet een geom (EPSG:3857) om naar Leaflet-latlngs, of null als ongeldig.
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function geomNaarLatlngs(L: any, geom: unknown): unknown {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const g = geom as any;
-  if (!g?.coordinates) return null;
-  const ring = (rng: number[][]) =>
-    rng.map(([x, y]) => L.CRS.EPSG3857.unproject(L.point(x, y)));
-  return g.type === "MultiPolygon"
-    ? g.coordinates.map((poly: number[][][]) => poly.map(ring))
-    : g.coordinates.map(ring);
 }
 
 // Tekent de rode selectierand om één of meer vlakken (geoms in EPSG:3857) —

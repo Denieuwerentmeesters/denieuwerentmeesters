@@ -48,7 +48,7 @@ export async function registreerBezit(
     }),
     "bezit registreren",
   );
-  revalidatePath(`/landgoed/${landgoed_id}/kaart`);
+  revalidatePath(`/landgoed/${landgoed_id}`, "layout");
   return { status: "toegevoegd", aanduiding };
 }
 
@@ -71,7 +71,7 @@ export async function verwijderBezit(fd: FormData) {
       .eq("landgoed_id", landgoed_id),
     "bezit verwijderen",
   );
-  revalidatePath(`/landgoed/${landgoed_id}/kaart`);
+  revalidatePath(`/landgoed/${landgoed_id}`, "layout");
 }
 
 // Fase 2: geselecteerde bezit-percelen indelen — nieuw beheerperceel of bij bestaand.
@@ -131,7 +131,7 @@ export async function deelPercelenIn(fd: FormData) {
   }
 
   if (!percelen.length) {
-    revalidatePath(`/landgoed/${landgoed_id}/kaart`);
+    revalidatePath(`/landgoed/${landgoed_id}`, "layout");
     return;
   }
   await moet(
@@ -168,7 +168,7 @@ export async function deelPercelenIn(fd: FormData) {
       "dekking bijwerken",
     );
   }
-  revalidatePath(`/landgoed/${landgoed_id}/kaart`);
+  revalidatePath(`/landgoed/${landgoed_id}`, "layout");
 }
 
 // ── Splitslijn: deelgeometrie per koppeling ──
@@ -545,7 +545,7 @@ export async function setBasisLocatie(fd: FormData) {
   if (lat != null && lon != null) {
     await bewaarGebiedsligging(supabase, landgoed_id, lat, lon);
   }
-  revalidatePath(`/landgoed/${landgoed_id}/kaart`);
+  revalidatePath(`/landgoed/${landgoed_id}`, "layout");
 }
 
 // ── Gebiedsligging via PDOK-WMS (Natura 2000 + NNN + Bodemkaart), server-side (geen CORS) ──
@@ -1132,7 +1132,7 @@ export async function controleerGebiedsligging(fd: FormData) {
   if (lat == null || lon == null) return;
   const supabase = await createClient();
   await bewaarGebiedsligging(supabase, landgoed_id, lat, lon);
-  revalidatePath(`/landgoed/${landgoed_id}/kaart`);
+  revalidatePath(`/landgoed/${landgoed_id}`, "layout");
 }
 
 // Een geplaatst object/perceel verwijderen (incl. koppelingen ernaartoe).
@@ -1146,7 +1146,7 @@ export async function verwijderObject(fd: FormData) {
     .delete()
     .or(`bron_id.eq.${id},doel_id.eq.${id}`);
   await supabase.from("stamobject").delete().eq("id", id);
-  revalidatePath(`/landgoed/${landgoed_id}/kaart`);
+  revalidatePath(`/landgoed/${landgoed_id}`, "layout");
 }
 
 // Basislocatie wissen.
@@ -1165,7 +1165,7 @@ export async function wisBasis(fd: FormData) {
       lon: null,
     })
     .eq("id", landgoed_id);
-  revalidatePath(`/landgoed/${landgoed_id}/kaart`);
+  revalidatePath(`/landgoed/${landgoed_id}`, "layout");
 }
 
 // Perceel opzoeken via PDOK Kadastrale Kaart WMS GetFeatureInfo. Server-side
@@ -1344,5 +1344,5 @@ export async function plaatsOpKaart(fd: FormData) {
     );
     await registreerKadastraalPerceel(supabase, landgoed_id, nieuw.id, geo);
   }
-  revalidatePath(`/landgoed/${landgoed_id}/kaart`);
+  revalidatePath(`/landgoed/${landgoed_id}`, "layout");
 }
