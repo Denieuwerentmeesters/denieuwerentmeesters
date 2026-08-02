@@ -64,7 +64,7 @@ export default async function KaartPage({
   const { data: kadData } = await supabase
     .from("beheerperceel_kadastraal")
     .select(
-      "stamobject_id, kadastraal_perceel_id, dekking, deel_geom_3857, deel_oppervlakte_m2, kadastraal_perceel(kadastrale_aanduiding, oppervlakte_m2, geom_3857)",
+      "stamobject_id, kadastraal_perceel_id, dekking, deel_geom_3857, deel_oppervlakte_m2, kadastraal_perceel(kadastrale_aanduiding, oppervlakte_m2, geom_3857, ligt_in_natura2000, ligt_in_nnn)",
     )
     .eq("landgoed_id", id);
   // Al het bezit (ook nog niet ingedeeld) + welke percelen al ingedeeld zijn
@@ -72,7 +72,9 @@ export default async function KaartPage({
   const [{ data: bezitData }, { data: koppelingData }] = await Promise.all([
     supabase
       .from("kadastraal_perceel")
-      .select("id, kadastrale_aanduiding, oppervlakte_m2, geom_3857")
+      .select(
+        "id, kadastrale_aanduiding, oppervlakte_m2, geom_3857, ligt_in_natura2000, ligt_in_nnn, gebiedsligging_gecontroleerd_op",
+      )
       .eq("landgoed_id", id)
       .order("kadastrale_aanduiding"),
     supabase
@@ -99,6 +101,20 @@ export default async function KaartPage({
     ingedeeldBij: ingedeeldBijVan.get(p.id) ?? [],
   }));
 
+  // Samenvatting van de gebiedsligging per perceel ("2 van 18 in NNN"),
+  // getoond naast de controle-knop. Alleen als er al eens is gecontroleerd.
+  const perceelTotaal = (bezitData ?? []).length;
+  const gecontroleerdOp = (bezitData ?? [])
+    .map((p) => p.gebiedsligging_gecontroleerd_op)
+    .filter(Boolean)
+    .sort()
+    .pop();
+  const gebiedsligging = gecontroleerdOp
+    ? `${(bezitData ?? []).filter((p) => p.ligt_in_natura2000).length} van ${perceelTotaal} percelen in Natura 2000 · ${
+        (bezitData ?? []).filter((p) => p.ligt_in_nnn).length
+      } van ${perceelTotaal} in NNN · gecontroleerd ${new Date(String(gecontroleerdOp)).toLocaleDateString("nl-NL", { day: "numeric", month: "short" })}`
+    : null;
+
   // Gebouw ↔ beheerperceel: op welk beheerperceel staat elk gebouw?
   // (verband-rij met rol 'gelegen_op', één primair perceel per gebouw.)
   const { data: ligtOpData } = await supabase
@@ -124,6 +140,7 @@ export default async function KaartPage({
       geom: unknown;
       dekking: string;
       gesplitst: boolean;
+      gebieden: string;
     }[]
   >();
   for (const rij of (kadData ?? []) as unknown as {
@@ -132,13 +149,25 @@ export default async function KaartPage({
     dekking: string;
     deel_geom_3857: unknown;
     deel_oppervlakte_m2: number | null;
-    kadastraal_perceel: { kadastrale_aanduiding: string; oppervlakte_m2: number | null; geom_3857: unknown } | null;
+    kadastraal_perceel: {
+      kadastrale_aanduiding: string;
+      oppervlakte_m2: number | null;
+      geom_3857: unknown;
+      ligt_in_natura2000: boolean | null;
+      ligt_in_nnn: boolean | null;
+    } | null;
   }[]) {
     if (!rij.kadastraal_perceel) continue;
     const lijst = kadVan.get(rij.stamobject_id) ?? [];
     lijst.push({
       perceelId: rij.kadastraal_perceel_id,
       aanduiding: rij.kadastraal_perceel.kadastrale_aanduiding,
+      gebieden: [
+        rij.kadastraal_perceel.ligt_in_natura2000 ? "Natura 2000" : null,
+        rij.kadastraal_perceel.ligt_in_nnn ? "NNN" : null,
+      ]
+        .filter(Boolean)
+        .join(" · "),
       oppervlakteM2:
         rij.deel_oppervlakte_m2 != null
           ? Number(rij.deel_oppervlakte_m2)
@@ -171,7 +200,10 @@ export default async function KaartPage({
     const kadMetVorm = kad.filter((p) => p.geom != null);
     const kadGeoms = kadMetVorm.map((p) => p.geom);
     const geomAanduidingen = kadMetVorm.map(
-      (p) => p.aanduiding + (p.dekking === "gedeeltelijk" ? " (deels)" : ""),
+      (p) =>
+        p.aanduiding +
+        (p.dekking === "gedeeltelijk" ? " (deels)" : "") +
+        (p.gebieden ? ` · ${p.gebieden}` : ""),
     );
     const kadastraal = kad.length
       ? `kadastraal: ${kad
@@ -352,6 +384,7 @@ export default async function KaartPage({
           splitsPerceel={splitsPerceel}
           wisSplitsing={wisSplitsing}
           ontkoppelPerceel={ontkoppelPerceel}
+          gebiedsligging={gebiedsligging}
         />
       </div>
     </div>
