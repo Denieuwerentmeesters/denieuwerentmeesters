@@ -17,6 +17,7 @@ import {
   GEBRUIK_OPTIES as GEBRUIK,
   gebruikOptiesVoor,
 } from "@/app/(app)/landgoed/[id]/stamgegevens/constanten";
+import { merc3857, oppervlakte3857, splitsPolygoon3857 } from "@/lib/geo";
 
 type PlaatsObject = {
   id: string;
@@ -41,6 +42,13 @@ type PlaatsObject = {
   // beheerperceel staat dit gebouw? Eén primair perceel per gebouw.
   staatOp?: string | null;
   staatOpId?: string | null;
+  // De gekoppelde kadastrale percelen (voor deelgebruik en splitsen).
+  kadDelen?: {
+    perceelId: string;
+    aanduiding: string;
+    dekking: string;
+    gesplitst: boolean;
+  }[];
 };
 
 function objectDetails(o: PlaatsObject): string {
@@ -75,8 +83,10 @@ type Resultaat = LookupResult & { soort: "perceel" | "gebouw" };
 // niet meer tussen de hoofdmodi — bereikbaar via een aparte knop/link.
 type Mode = "bekijk" | "basis" | "perceel" | "indelen" | "gebouw";
 
-// Eén kadastraal perceel uit het bezit-register (fase 1), met indeel-status.
+// Eén kadastraal perceel uit het bezit-register (fase 1), met indeel-status
+// en bij welke beheerpercelen het hoort (voor deelgebruik en kaart→lijst).
 type BezitPerceel = {
+  ingedeeldBij: { id: string; naam: string }[];
   id: string;
   aanduiding: string;
   oppervlakteHa: string | null;
@@ -263,6 +273,8 @@ export default function Kaart({
   deelPercelenIn,
   wijzigBeheerperceel,
   koppelGebouwAanPerceel,
+  splitsPerceel,
+  wisSplitsing,
 }: {
   landgoedId: string;
   objecten: PlaatsObject[];
@@ -285,6 +297,8 @@ export default function Kaart({
   deelPercelenIn: (fd: FormData) => Promise<void>;
   wijzigBeheerperceel: (fd: FormData) => Promise<void>;
   koppelGebouwAanPerceel: (fd: FormData) => Promise<void>;
+  splitsPerceel: (fd: FormData) => Promise<void>;
+  wisSplitsing: (fd: FormData) => Promise<void>;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<LMap | null>(null);
@@ -325,6 +339,21 @@ export default function Kaart({
   // Beheerperceel waarvan het wijzig-formulier (naam/gebruik) openstaat.
   const [wijzigId, setWijzigId] = useState<string | null>(null);
   const [koppelGebouwId, setKoppelGebouwId] = useState<string | null>(null);
+  // Splitslijn-flow: welk kadastraal perceel wordt gesplitst, de getekende
+  // lijnpunten, de geknipte delen en per deel het gekozen beheerperceel.
+  const [splitsing, setSplitsing] = useState<{
+    perceelId: string;
+    aanduiding: string;
+  } | null>(null);
+  const [lijn, setLijn] = useState<[number, number][]>([]);
+  const [delen, setDelen] = useState<{ geom: unknown }[] | null>(null);
+  const [toewijzing, setToewijzing] = useState<string[]>([]);
+  const splitsingRef = useRef<string | null>(null);
+  const delenKlaarRef = useRef(false);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const lijnRef = useRef<any>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const delenLaagRef = useRef<any>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const bezitLaagRef = useRef<any>(null);
   const bezitRef = useRef<BezitPerceel[]>(bezit);
@@ -376,6 +405,8 @@ export default function Kaart({
   // de bijbehorende rij (de omgekeerde richting van selecteer()). Nogmaals
   // klikken heft de selectie weer op.
   function toonInLijst(id: string) {
+    // Tijdens het splitsen tekent elke kaartklik de lijn (via de map-handler).
+    if (splitsingRef.current) return;
     if (modeRef.current !== "bekijk") return;
     // De kaart-klik eronder mag deze selectie niet direct weer wissen.
     laagKlikRef.current = true;
@@ -509,12 +540,151 @@ export default function Kaart({
     // De indeel-selectie blijft staan bij het BINNENKOMEN van de indeel-modus
     // (een lijstklik schakelt daarheen mét selectie); bij het verlaten wist hij.
     if (mode !== "indelen") setSelectie([]);
+    // De splitslijn-flow leeft alleen in de bekijk-modus.
+    if (mode !== "bekijk") setSplitsing(null);
     setMelding(null);
     wisHighlights();
     // In bekijk-modus: toon het hele landgoed i.p.v. handmatig inzoomen.
     if (mode === "bekijk") zoomNaarLandgoed();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mode]);
+
+  // Splitslijn-flow: bij starten inzoomen op het perceel, bij stoppen alles
+  // opruimen. (Na de modus-effect gedeclareerd, zodat deze zoom wint.)
+  useEffect(() => {
+    splitsingRef.current = splitsing ? splitsing.perceelId : null;
+    setLijn([]);
+    setDelen(null);
+    setToewijzing([]);
+    if (!splitsing) return;
+    const L = LRef.current;
+    const map = mapRef.current;
+    const p = bezit.find((b) => b.id === splitsing.perceelId);
+    if (L && map && p) {
+      const latlngs = geomNaarLatlngs(L, p.geom);
+      if (latlngs) {
+        map.fitBounds(L.polygon(latlngs).getBounds(), { padding: [80, 80] });
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [splitsing]);
+
+  // De getekende splitslijn op de kaart bijhouden.
+  useEffect(() => {
+    const L = LRef.current;
+    const map = mapRef.current;
+    if (!L || !map) return;
+    if (lijnRef.current) {
+      lijnRef.current.remove();
+      lijnRef.current = null;
+    }
+    if (lijn.length) {
+      lijnRef.current = L.polyline(lijn, {
+        color: "#111827",
+        weight: 2.5,
+        dashArray: "6 4",
+      }).addTo(map);
+    }
+  }, [lijn]);
+
+  // Voorbeeld van de geknipte delen, gekleurd naar het gekozen beheerperceel.
+  useEffect(() => {
+    delenKlaarRef.current = !!delen;
+    const L = LRef.current;
+    const map = mapRef.current;
+    if (!L || !map) return;
+    if (delenLaagRef.current) {
+      delenLaagRef.current.remove();
+      delenLaagRef.current = null;
+    }
+    if (!delen) return;
+    const groep = L.layerGroup();
+    delen.forEach((d, i) => {
+      const eigenaar = objecten.find((o) => o.id === toewijzing[i]);
+      const kleur = kleurVoorGebruik(eigenaar?.gebruik ?? null);
+      const latlngs = geomNaarLatlngs(L, d.geom);
+      if (!latlngs) return;
+      L.polygon(latlngs, {
+        color: kleur,
+        weight: 3,
+        fillColor: kleur,
+        fillOpacity: 0.5,
+      })
+        .bindTooltip(`Deel ${i + 1}${eigenaar ? ` → ${eigenaar.naam}` : ""}`, {
+          sticky: true,
+        })
+        .addTo(groep);
+    });
+    groep.addTo(map);
+    delenLaagRef.current = groep;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [delen, toewijzing]);
+
+  // Knip het perceel langs de getekende lijn en zet de toewijzing klaar.
+  function knip() {
+    if (!splitsing) return;
+    const p = bezit.find((b) => b.id === splitsing.perceelId);
+    if (!p) return;
+    const lijn3857 = lijn.map(([lat, lng]) => merc3857(lng, lat));
+    const parts = splitsPolygoon3857(p.geom, lijn3857);
+    if (parts.length < 2) {
+      setMelding(
+        "De lijn doorsnijdt het perceel niet — begin en eindig búiten het perceel en probeer opnieuw.",
+      );
+      setLijn([]);
+      return;
+    }
+    setMelding(null);
+    const eigenaren = splitsEigenaren();
+    setDelen(parts.map((geom) => ({ geom })));
+    setToewijzing(parts.map((_, i) => eigenaren[i]?.id ?? ""));
+  }
+
+  // De beheerpercelen die dit kadastrale perceel delen (de toewijs-opties).
+  function splitsEigenaren(): PlaatsObject[] {
+    if (!splitsing) return [];
+    return objecten.filter((o) =>
+      o.kadDelen?.some((d) => d.perceelId === splitsing.perceelId),
+    );
+  }
+
+  async function slaSplitsingOp() {
+    if (!splitsing || !delen) return;
+    // Meerdere delen naar hetzelfde beheerperceel mag: die vormen samen een
+    // MultiPolygon. Er moeten wel minstens twee beheerpercelen gekozen zijn.
+    const perEigenaar = new Map<string, unknown[]>();
+    delen.forEach((d, i) => {
+      const eigenaar = toewijzing[i];
+      if (!eigenaar) return;
+      const lijst = perEigenaar.get(eigenaar) ?? [];
+      lijst.push(d.geom);
+      perEigenaar.set(eigenaar, lijst);
+    });
+    if (perEigenaar.size < 2) {
+      setMelding("Wijs de delen aan minstens twee verschillende beheerpercelen toe.");
+      return;
+    }
+    const payload = [...perEigenaar.entries()].map(([stamobject_id, geoms]) => ({
+      stamobject_id,
+      geom:
+        geoms.length === 1
+          ? geoms[0]
+          : {
+              type: "MultiPolygon",
+              coordinates: geoms.map(
+                (g) => (g as { coordinates: unknown }).coordinates,
+              ),
+            },
+    }));
+    const fd = new FormData();
+    fd.set("landgoed_id", landgoedId);
+    fd.set("perceel_id", splitsing.perceelId);
+    fd.set("delen", JSON.stringify(payload));
+    const aanduiding = splitsing.aanduiding;
+    await splitsPerceel(fd);
+    setSplitsing(null);
+    setMelding(`Splitsing van ${aanduiding} opgeslagen.`);
+  }
 
   // (Her)teken de overzichtslaag wanneer de objecten wijzigen (na toevoegen/
   // verwijderen). Daarna óók de bezit-laag opnieuw, zodat die altijd bovenop
@@ -541,21 +711,25 @@ export default function Kaart({
       const latlngs = geomNaarLatlngs(L, p.geom);
       if (!latlngs) continue;
       const geselecteerd = selectie.includes(p.id);
-      // Ingedeelde percelen niet-interactief maken: klik en hover vallen dan
-      // door naar het gekleurde beheerperceel eronder (tooltip, spotlight,
-      // kaart-naar-lijst). De bezit-laag hoeft alleen het nog in te delen
-      // bezit zelf af te vangen.
+      // Ingedeelde percelen zijn in de bekijk-modus niet-interactief: klik en
+      // hover vallen dan door naar het gekleurde beheerperceel eronder
+      // (tooltip, spotlight, kaart-naar-lijst). In de invoer-modi zijn ze wél
+      // aanklikbaar — voor de "al ingedeeld"-melding en voor deelgebruik.
+      const invoerModus = mode === "indelen" || mode === "perceel";
       const poly = L.polygon(
         latlngs,
         geselecteerd
           ? { color: "#d97706", weight: 3, fillColor: "#d97706", fillOpacity: 0.3 }
           : p.ingedeeld
-            ? { interactive: false, weight: 0, opacity: 0, fillOpacity: 0 }
+            ? { interactive: invoerModus, weight: 0, opacity: 0, fillColor: "#6b7280", fillOpacity: 0.02 }
             : { color: "#6b7280", weight: 2, dashArray: "6 4", fillColor: "#9ca3af", fillOpacity: 0.15 },
       );
-      if (!p.ingedeeld || geselecteerd) {
+      if (!p.ingedeeld || geselecteerd || invoerModus) {
+        const bij = p.ingedeeldBij.map((b) => b.naam).join(", ");
         poly.bindTooltip(
-          `${p.aanduiding}${p.ingedeeld ? "" : " · nog in te delen"}`,
+          p.ingedeeld
+            ? `${p.aanduiding} · ingedeeld bij ${bij}${mode === "indelen" ? " — klik voor deelgebruik" : ""}`
+            : `${p.aanduiding} · nog in te delen`,
           { sticky: true },
         );
       }
@@ -570,7 +744,18 @@ export default function Kaart({
           if (e.originalEvent) L.DomEvent.stopPropagation(e.originalEvent);
         }
         if (m === "indelen") {
-          if (p.ingedeeld) return;
+          // Deelgebruik: een al ingedeeld perceel mag óók bij dit (nieuwe)
+          // beheerperceel — na een expliciete bevestiging. Beide koppelingen
+          // worden dan dekking 'gedeeltelijk'.
+          if (p.ingedeeld && !selectie.includes(p.id)) {
+            const bij = p.ingedeeldBij.map((b) => b.naam).join(", ");
+            if (
+              !window.confirm(
+                `${p.aanduiding} is al ingedeeld bij ${bij}. Ook koppelen aan dit beheerperceel (deelgebruik)? Het perceel telt dan bij beide als gedeeld.`,
+              )
+            )
+              return;
+          }
           setSelectie((prev) =>
             prev.includes(p.id) ? prev.filter((x) => x !== p.id) : [...prev, p.id],
           );
@@ -599,7 +784,7 @@ export default function Kaart({
   useEffect(() => {
     tekenBezit();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [bezit, selectie]);
+  }, [bezit, selectie, mode]);
 
   // Selecteer een bezit-perceel vanuit de lijst: schakel naar de indeel-modus,
   // wissel de selectie en zoom ernaartoe (als het een vorm heeft).
@@ -704,6 +889,14 @@ export default function Kaart({
       zoomNaarLandgoed();
 
       map.on("click", async (e: LeafletMouseEvent) => {
+        // Splitslijn tekenen: elke klik is een lijnpunt (tot er geknipt is).
+        if (splitsingRef.current) {
+          laagKlikRef.current = false;
+          if (!delenKlaarRef.current) {
+            setLijn((prev) => [...prev, [e.latlng.lat, e.latlng.lng]]);
+          }
+          return;
+        }
         // Heeft een perceel-vlak deze klik al afgehandeld? Dan niets doen —
         // anders zou de lookup het zojuist verwijderde perceel direct opnieuw
         // registreren (of een selectie-klik als nieuwe registratie behandelen).
@@ -925,7 +1118,7 @@ export default function Kaart({
               ? "Selecteer een of meer grijze percelen en maak er samen een beheerperceel van — of voeg ze toe aan een bestaand beheerperceel."
               : "Klik op een gebouw; adres, oppervlakte, pandstatus en monumentstatus (RCE) worden opgehaald."}
       </p>
-      {melding && (mode === "perceel" || mode === "indelen") && (
+      {melding && (mode === "perceel" || mode === "indelen" || mode === "bekijk") && (
         <p className="text-[12.5px] font-medium" style={{ color: "var(--text-2)" }}>
           {melding}
         </p>
@@ -935,6 +1128,113 @@ export default function Kaart({
           in beeld — sticky). Op smal scherm: gestapeld zoals voorheen. */}
       <div className="flex flex-col gap-3 lg:grid lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] lg:items-start lg:gap-4">
         <div className="flex flex-col gap-2 lg:order-2 lg:sticky lg:top-4">
+          {/* Splitslijn-paneel: lijn tekenen → knippen → delen toewijzen. */}
+          {splitsing && (
+            <div className="card p-4 text-[13px]">
+              <div className="mb-1 font-semibold">
+                Splits {splitsing.aanduiding}
+              </div>
+              {!delen ? (
+                <>
+                  <p style={{ color: "var(--text-2)" }}>
+                    Klik punten op de kaart om de splitslijn te tekenen — begin
+                    en eindig búiten het perceel, zodat de lijn het helemaal
+                    doorsnijdt. {lijn.length === 0 ? "Nog geen punten gezet." : `${lijn.length} punt${lijn.length > 1 ? "en" : ""} gezet.`}
+                  </p>
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    <button
+                      type="button"
+                      className="btn btn-primary btn-sm"
+                      disabled={lijn.length < 2}
+                      onClick={knip}
+                    >
+                      Knip
+                    </button>
+                    <button
+                      type="button"
+                      className="btn btn-ghost btn-sm"
+                      disabled={!lijn.length}
+                      onClick={() => setLijn([])}
+                    >
+                      Lijn wissen
+                    </button>
+                    <button
+                      type="button"
+                      className="btn btn-ghost btn-sm"
+                      onClick={() => setSplitsing(null)}
+                    >
+                      Annuleer
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <p style={{ color: "var(--text-2)" }}>
+                    {delen.length} delen — wijs elk deel toe aan een
+                    beheerperceel (beweeg over de kaart om ze te herkennen):
+                  </p>
+                  {(() => {
+                    const opp = delen.map((d) => oppervlakte3857(d.geom));
+                    const totaal = opp.reduce((s, o) => s + o, 0) || 1;
+                    return delen.map((d, i) => (
+                      <div key={i} className="mt-1.5 flex items-center gap-2">
+                        <span className="whitespace-nowrap">
+                          Deel {i + 1} (~{Math.round((100 * opp[i]) / totaal)}%)
+                        </span>
+                        <select
+                          className="input"
+                          value={toewijzing[i] ?? ""}
+                          onChange={(e) =>
+                            setToewijzing((prev) => {
+                              const kopie = [...prev];
+                              kopie[i] = e.target.value;
+                              return kopie;
+                            })
+                          }
+                        >
+                          <option value="">— kies beheerperceel —</option>
+                          {splitsEigenaren().map((eig) => (
+                            <option key={eig.id} value={eig.id}>
+                              {eig.naam}
+                              {eig.gebruik ? ` (${eig.gebruik})` : ""}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    ));
+                  })()}
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    <button
+                      type="button"
+                      className="btn btn-primary btn-sm"
+                      disabled={toewijzing.some((t) => !t)}
+                      onClick={slaSplitsingOp}
+                    >
+                      Opslaan
+                    </button>
+                    <button
+                      type="button"
+                      className="btn btn-ghost btn-sm"
+                      onClick={() => {
+                        setDelen(null);
+                        setToewijzing([]);
+                        setLijn([]);
+                      }}
+                    >
+                      Opnieuw
+                    </button>
+                    <button
+                      type="button"
+                      className="btn btn-ghost btn-sm"
+                      onClick={() => setSplitsing(null)}
+                    >
+                      Annuleer
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
+          )}
           <div
             ref={containerRef}
             className="card h-[480px] overflow-hidden lg:h-[calc(100vh-200px)]"
@@ -1459,6 +1759,51 @@ export default function Kaart({
                             </button>
                           </form>
                         )}
+                        {/* Deelgebruik: percelen die dit beheerperceel deelt
+                            met een ander kunnen met een lijn gesplitst worden. */}
+                        {PERCEEL_CATS.has(o.categorie) &&
+                          (o.kadDelen ?? []).some(
+                            (d) => d.dekking === "gedeeltelijk",
+                          ) && (
+                            <div
+                              className="flex flex-wrap items-center gap-3 pb-2 text-[11.5px]"
+                              style={{ color: "var(--text-2)" }}
+                            >
+                              {(o.kadDelen ?? [])
+                                .filter((d) => d.dekking === "gedeeltelijk")
+                                .map((d) =>
+                                  d.gesplitst ? (
+                                    <form
+                                      key={d.perceelId}
+                                      action={wisSplitsing}
+                                      className="flex items-center gap-1.5"
+                                    >
+                                      <input type="hidden" name="landgoed_id" value={landgoedId} />
+                                      <input type="hidden" name="perceel_id" value={d.perceelId} />
+                                      <span>{d.aanduiding} is gesplitst ·</span>
+                                      <button className="hover:underline" style={{ color: "var(--red)" }}>
+                                        herstel splitsing
+                                      </button>
+                                    </form>
+                                  ) : (
+                                    <button
+                                      key={d.perceelId}
+                                      type="button"
+                                      className="hover:underline"
+                                      onClick={() => {
+                                        setMode("bekijk");
+                                        setSplitsing({
+                                          perceelId: d.perceelId,
+                                          aanduiding: d.aanduiding,
+                                        });
+                                      }}
+                                    >
+                                      Splits {d.aanduiding} met een lijn
+                                    </button>
+                                  ),
+                                )}
+                            </div>
+                          )}
                       </div>
                     ))}
                   </div>

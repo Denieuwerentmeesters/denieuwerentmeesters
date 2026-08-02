@@ -13,6 +13,8 @@ import {
   deelPercelenIn,
   wijzigBeheerperceel,
   koppelGebouwAanPerceel,
+  splitsPerceel,
+  wisSplitsing,
 } from "./acties";
 
 function haTekst(m2: unknown): string | null {
@@ -60,9 +62,12 @@ export default async function KaartPage({
   // met geometrie. De weergave leest hieruit; de kenmerken-json is terugval.
   const { data: kadData } = await supabase
     .from("beheerperceel_kadastraal")
-    .select("stamobject_id, dekking, kadastraal_perceel(kadastrale_aanduiding, oppervlakte_m2, geom_3857)")
+    .select(
+      "stamobject_id, kadastraal_perceel_id, dekking, deel_geom_3857, deel_oppervlakte_m2, kadastraal_perceel(kadastrale_aanduiding, oppervlakte_m2, geom_3857)",
+    )
     .eq("landgoed_id", id);
-  // Al het bezit (ook nog niet ingedeeld) + welke percelen al ingedeeld zijn.
+  // Al het bezit (ook nog niet ingedeeld) + welke percelen al ingedeeld zijn
+  // (mét bij welke beheerpercelen — nodig voor deelgebruik en kaart→lijst).
   const [{ data: bezitData }, { data: koppelingData }] = await Promise.all([
     supabase
       .from("kadastraal_perceel")
@@ -71,16 +76,26 @@ export default async function KaartPage({
       .order("kadastrale_aanduiding"),
     supabase
       .from("beheerperceel_kadastraal")
-      .select("kadastraal_perceel_id")
+      .select("kadastraal_perceel_id, stamobject_id")
       .eq("landgoed_id", id),
   ]);
-  const ingedeeldIds = new Set((koppelingData ?? []).map((k) => k.kadastraal_perceel_id));
+  const naamVanObject = new Map((data ?? []).map((o) => [o.id, o.naam]));
+  const ingedeeldBijVan = new Map<string, { id: string; naam: string }[]>();
+  for (const k of koppelingData ?? []) {
+    const lijst = ingedeeldBijVan.get(k.kadastraal_perceel_id) ?? [];
+    lijst.push({
+      id: k.stamobject_id as string,
+      naam: naamVanObject.get(k.stamobject_id) ?? "onbekend",
+    });
+    ingedeeldBijVan.set(k.kadastraal_perceel_id, lijst);
+  }
   const bezit = (bezitData ?? []).map((p) => ({
     id: p.id as string,
     aanduiding: p.kadastrale_aanduiding as string,
     oppervlakteHa: haTekst(p.oppervlakte_m2),
     geom: p.geom_3857 as unknown,
-    ingedeeld: ingedeeldIds.has(p.id),
+    ingedeeld: ingedeeldBijVan.has(p.id),
+    ingedeeldBij: ingedeeldBijVan.get(p.id) ?? [],
   }));
 
   // Gebouw ↔ beheerperceel: op welk beheerperceel staat elk gebouw?
@@ -96,21 +111,42 @@ export default async function KaartPage({
   const staatOpVan = new Map(
     (ligtOpData ?? []).map((v) => [v.bron_id as string, v.doel_id as string]),
   );
-  const naamVan = new Map((data ?? []).map((o) => [o.id, o.naam]));
 
-  const kadVan = new Map<string, { aanduiding: string; oppervlakteM2: number | null; geom: unknown; dekking: string }[]>();
+  // Per beheerperceel de gekoppelde percelen. Is er een splitslijn getekend,
+  // dan gelden de deelvorm en de naar rato verdeelde oppervlakte.
+  const kadVan = new Map<
+    string,
+    {
+      perceelId: string;
+      aanduiding: string;
+      oppervlakteM2: number | null;
+      geom: unknown;
+      dekking: string;
+      gesplitst: boolean;
+    }[]
+  >();
   for (const rij of (kadData ?? []) as unknown as {
     stamobject_id: string;
+    kadastraal_perceel_id: string;
     dekking: string;
+    deel_geom_3857: unknown;
+    deel_oppervlakte_m2: number | null;
     kadastraal_perceel: { kadastrale_aanduiding: string; oppervlakte_m2: number | null; geom_3857: unknown } | null;
   }[]) {
     if (!rij.kadastraal_perceel) continue;
     const lijst = kadVan.get(rij.stamobject_id) ?? [];
     lijst.push({
+      perceelId: rij.kadastraal_perceel_id,
       aanduiding: rij.kadastraal_perceel.kadastrale_aanduiding,
-      oppervlakteM2: rij.kadastraal_perceel.oppervlakte_m2 != null ? Number(rij.kadastraal_perceel.oppervlakte_m2) : null,
-      geom: rij.kadastraal_perceel.geom_3857 ?? null,
+      oppervlakteM2:
+        rij.deel_oppervlakte_m2 != null
+          ? Number(rij.deel_oppervlakte_m2)
+          : rij.kadastraal_perceel.oppervlakte_m2 != null
+            ? Number(rij.kadastraal_perceel.oppervlakte_m2)
+            : null,
+      geom: rij.deel_geom_3857 ?? rij.kadastraal_perceel.geom_3857 ?? null,
       dekking: rij.dekking,
+      gesplitst: rij.deel_geom_3857 != null,
     });
     kadVan.set(rij.stamobject_id, lijst);
   }
@@ -153,8 +189,14 @@ export default async function KaartPage({
       herkomstLabel: herkomstLabel(o.herkomst, o.aangemaakt_op),
       staatOpId: staatOpVan.get(o.id) ?? null,
       staatOp: staatOpVan.has(o.id)
-        ? (naamVan.get(staatOpVan.get(o.id)!) ?? null)
+        ? (naamVanObject.get(staatOpVan.get(o.id)!) ?? null)
         : null,
+      kadDelen: kad.map((p) => ({
+        perceelId: p.perceelId,
+        aanduiding: p.aanduiding,
+        dekking: p.dekking,
+        gesplitst: p.gesplitst,
+      })),
     };
   });
 
@@ -292,6 +334,8 @@ export default async function KaartPage({
           deelPercelenIn={deelPercelenIn}
           wijzigBeheerperceel={wijzigBeheerperceel}
           koppelGebouwAanPerceel={koppelGebouwAanPerceel}
+          splitsPerceel={splitsPerceel}
+          wisSplitsing={wisSplitsing}
         />
       </div>
     </div>

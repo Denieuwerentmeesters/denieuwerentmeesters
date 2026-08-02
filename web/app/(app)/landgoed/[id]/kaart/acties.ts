@@ -3,6 +3,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 import { moet } from "@/lib/db";
+import { oppervlakte3857 } from "@/lib/geo";
 
 // ── Twee-fasen-invoer: bezit inladen, daarna indelen ──
 // Fase 1: een aangeklikt kadastraal perceel gaat direct het register in,
@@ -130,7 +131,106 @@ export async function deelPercelenIn(fd: FormData) {
     ),
     "percelen indelen",
   );
+
+  // Deelgebruik: hoort een perceel nu bij méér dan één beheerperceel, dan
+  // worden ál zijn koppelingen dekking 'gedeeltelijk'.
+  const koppelingen = await moet(
+    supabase
+      .from("beheerperceel_kadastraal")
+      .select("kadastraal_perceel_id")
+      .eq("landgoed_id", landgoed_id)
+      .in("kadastraal_perceel_id", ids),
+    "koppelingen tellen",
+  );
+  const aantalPer = new Map<string, number>();
+  for (const k of koppelingen) {
+    const id = k.kadastraal_perceel_id as string;
+    aantalPer.set(id, (aantalPer.get(id) ?? 0) + 1);
+  }
+  const gedeeld = ids.filter((id) => (aantalPer.get(id) ?? 0) > 1);
+  if (gedeeld.length) {
+    await moet(
+      supabase
+        .from("beheerperceel_kadastraal")
+        .update({ dekking: "gedeeltelijk" })
+        .eq("landgoed_id", landgoed_id)
+        .in("kadastraal_perceel_id", gedeeld),
+      "dekking bijwerken",
+    );
+  }
   revalidatePath(`/landgoed/${landgoed_id}/kaart`);
+}
+
+// ── Splitslijn: deelgeometrie per koppeling ──
+// Bij deelgebruik kan een getekende lijn vastleggen wélk deel van het
+// kadastrale perceel bij welk beheerperceel hoort. De officiële kadastrale
+// oppervlakte wordt naar rato van de deelvlakken verdeeld (de Mercator-
+// vertekening valt in die verhouding weg).
+export async function splitsPerceel(fd: FormData) {
+  const landgoed_id = String(fd.get("landgoed_id"));
+  const perceel_id = String(fd.get("perceel_id"));
+  let delen: { stamobject_id: string; geom: unknown }[] = [];
+  try {
+    delen = JSON.parse(String(fd.get("delen") ?? "[]"));
+  } catch {
+    return;
+  }
+  if (!landgoed_id || !perceel_id || delen.length < 2) return;
+  // Elk deel hoort bij een ander beheerperceel.
+  if (new Set(delen.map((d) => d.stamobject_id)).size < delen.length) return;
+
+  const supabase = await createClient();
+  const perceel = await moet(
+    supabase
+      .from("kadastraal_perceel")
+      .select("id, oppervlakte_m2")
+      .eq("id", perceel_id)
+      .eq("landgoed_id", landgoed_id)
+      .maybeSingle(),
+    "perceel ophalen",
+  );
+  if (!perceel) return;
+
+  const opp = delen.map((d) => oppervlakte3857(d.geom));
+  const totaal = opp.reduce((s, o) => s + o, 0);
+  const officieel = Number(perceel.oppervlakte_m2);
+  for (let i = 0; i < delen.length; i++) {
+    const m2 =
+      totaal > 0 && Number.isFinite(officieel)
+        ? Math.round((officieel * opp[i]) / totaal)
+        : null;
+    await moet(
+      supabase
+        .from("beheerperceel_kadastraal")
+        .update({
+          deel_geom_3857: delen[i].geom,
+          deel_oppervlakte_m2: m2,
+          dekking: "gedeeltelijk",
+        })
+        .eq("landgoed_id", landgoed_id)
+        .eq("kadastraal_perceel_id", perceel_id)
+        .eq("stamobject_id", delen[i].stamobject_id),
+      "deelgeometrie opslaan",
+    );
+  }
+  revalidatePath(`/landgoed/${landgoed_id}`, "layout");
+}
+
+// Splitsing weggooien: terug naar gewoon deelgebruik zonder lijn.
+export async function wisSplitsing(fd: FormData) {
+  const landgoed_id = String(fd.get("landgoed_id"));
+  const perceel_id = String(fd.get("perceel_id"));
+  if (!landgoed_id || !perceel_id) return;
+  const supabase = await createClient();
+  await moet(
+    supabase
+      .from("beheerperceel_kadastraal")
+      .update({ deel_geom_3857: null, deel_oppervlakte_m2: null })
+      .eq("landgoed_id", landgoed_id)
+      .eq("kadastraal_perceel_id", perceel_id),
+    "splitsing wissen",
+  );
+  revalidatePath(`/landgoed/${landgoed_id}`, "layout");
 }
 
 // Naam en/of gebruik van een beheerperceel wijzigen zonder de indeling te
