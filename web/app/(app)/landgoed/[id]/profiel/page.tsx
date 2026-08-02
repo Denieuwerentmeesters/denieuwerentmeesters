@@ -228,7 +228,7 @@ export default async function ProfielPage({
               Profiel bewerken
             </a>
             <Link href={`/landgoed/${id}/kaart`} className="btn btn-ghost btn-sm">
-              Kadasterkaart openen
+              Stamgegevens invoeren / wijzigen
             </Link>
           </div>
         </header>
