@@ -279,6 +279,7 @@ export default function Kaart({
   koppelGebouwAanPerceel,
   splitsPerceel,
   wisSplitsing,
+  ontkoppelPerceel,
 }: {
   landgoedId: string;
   objecten: PlaatsObject[];
@@ -303,6 +304,7 @@ export default function Kaart({
   koppelGebouwAanPerceel: (fd: FormData) => Promise<void>;
   splitsPerceel: (fd: FormData) => Promise<void>;
   wisSplitsing: (fd: FormData) => Promise<void>;
+  ontkoppelPerceel: (fd: FormData) => Promise<void>;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<LMap | null>(null);
@@ -1760,6 +1762,50 @@ export default function Kaart({
                             </button>
                           </form>
                         )}
+                        {/* Bij Wijzig ook de gekoppelde percelen, elk met een
+                            eigen ontkoppel-knopje — fijner dan alleen het
+                            botte "Hef indeling op". */}
+                        {wijzigId === o.id &&
+                          PERCEEL_CATS.has(o.categorie) &&
+                          (o.kadDelen?.length ?? 0) > 0 && (
+                            <div
+                              className="flex flex-col gap-1 pb-3 text-[12px]"
+                              style={{ color: "var(--text-2)" }}
+                            >
+                              <div className="label-up">
+                                Gekoppelde kadastrale percelen
+                              </div>
+                              {(o.kadDelen ?? []).map((d) => (
+                                <div
+                                  key={d.perceelId}
+                                  className="flex items-center gap-2"
+                                >
+                                  <span>
+                                    {d.aanduiding}
+                                    {d.dekking === "gedeeltelijk" ? " (deels)" : ""}
+                                  </span>
+                                  <form
+                                    action={ontkoppelPerceel}
+                                    style={{ color: "var(--red)" }}
+                                  >
+                                    <input type="hidden" name="landgoed_id" value={landgoedId} />
+                                    <input type="hidden" name="stamobject_id" value={o.id} />
+                                    <input type="hidden" name="perceel_id" value={d.perceelId} />
+                                    <VerwijderKnop
+                                      className="text-[11.5px] hover:underline"
+                                      vraag={`de koppeling van ${d.aanduiding} met "${o.naam}" (het perceel blijft in het bezit${
+                                        d.dekking === "gedeeltelijk"
+                                          ? " en bij de andere beheerpercelen"
+                                          : ' en wordt weer "nog in te delen"'
+                                      })`}
+                                    >
+                                      ontkoppel
+                                    </VerwijderKnop>
+                                  </form>
+                                </div>
+                              ))}
+                            </div>
+                          )}
                         {koppelGebouwId === o.id && (
                           <form
                             action={async (fd) => {
