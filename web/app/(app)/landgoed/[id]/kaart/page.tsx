@@ -31,6 +31,45 @@ export default async function KaartPage({
       </div>
 
       <div className="p-7">
+        {/* Basislocatie-banner — zelfde kop als de invoerpagina. */}
+        {(landgoed?.adres || landgoed?.naam) && (
+          <div
+            className="card mb-5 flex items-center gap-3 p-4"
+            style={{ background: "var(--primary-light)" }}
+          >
+            <div className="flex-1 text-[14px]">
+              <span className="font-bold">{landgoed?.naam}</span>
+              {landgoed?.adres ? `, ${landgoed.adres}` : ""}
+              <span style={{ color: "var(--text-2)" }}>
+                {landgoed?.gemeente ? ` · Gemeente ${landgoed.gemeente}` : ""}
+                {landgoed?.provincie ? ` · ${landgoed.provincie}` : ""}
+              </span>
+            </div>
+          </div>
+        )}
+
+        {/* Landgoed-totaal */}
+        <div className="card mb-5 flex flex-wrap gap-8 p-4">
+          <div>
+            <div className="text-[22px] font-bold">{totaalHa} ha</div>
+            <div className="text-[12px]" style={{ color: "var(--text-2)" }}>
+              grond (som percelen)
+            </div>
+          </div>
+          <div>
+            <div className="text-[22px] font-bold">{aantalPercelen}</div>
+            <div className="text-[12px]" style={{ color: "var(--text-2)" }}>
+              beheerpercelen
+            </div>
+          </div>
+          <div>
+            <div className="text-[22px] font-bold">{aantalGebouwen}</div>
+            <div className="text-[12px]" style={{ color: "var(--text-2)" }}>
+              gebouwen
+            </div>
+          </div>
+        </div>
+
         <header className="mb-4 flex flex-wrap items-end justify-between gap-3">
           <div>
             <h1 className="text-[22px] font-bold">
@@ -48,9 +87,6 @@ export default async function KaartPage({
           bezit={bezit}
           lat={landgoed?.lat ?? null}
           lon={landgoed?.lon ?? null}
-          totaalHa={totaalHa}
-          aantalPercelen={aantalPercelen}
-          aantalGebouwen={aantalGebouwen}
         />
       </div>
     </div>

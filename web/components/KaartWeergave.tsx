@@ -56,18 +56,12 @@ export default function KaartWeergave({
   bezit,
   lat,
   lon,
-  totaalHa,
-  aantalPercelen,
-  aantalGebouwen,
 }: {
   landgoedId: string;
   objecten: KaartObject[];
   bezit: BezitVlak[];
   lat: number | null;
   lon: number | null;
-  totaalHa: string;
-  aantalPercelen: number;
-  aantalGebouwen: number;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<LMap | null>(null);
@@ -453,8 +447,8 @@ export default function KaartWeergave({
   );
   for (const o of objecten) groepenMap.get(kaartGroep(o))!.push(o);
 
-  // Het ha-sommetje beweegt mee met de selectie: niets aangeklikt = het
-  // totaal; wel iets aangeklikt = de som van wat er oplicht.
+  // Het ha-sommetje van de actieve selectie (de vaste totalen staan in het
+  // totalen-kaartje bovenaan de pagina).
   const selectieM2 = selectie.reduce((som, id) => {
     const o = objecten.find((x) => x.id === id);
     return som + (o?.oppervlakteM2Som ?? 0);
@@ -468,15 +462,15 @@ export default function KaartWeergave({
       ? `Selectie: ${haGetal(kadSelectieM2)} · ${kadSelectie.length} kadastra${kadSelectie.length > 1 ? "le percelen" : "al perceel"}`
       : !kadastraal && selectie.length
         ? `Selectie: ${haGetal(selectieM2)} · ${selectie.length} beheerperce${selectie.length > 1 ? "len" : "el"}`
-        : `${totaalHa} ha · ${aantalPercelen} beheerpercelen · ${aantalGebouwen} gebouwen`;
+        : null;
 
   return (
     <div className="flex flex-col gap-3">
-      <div className="flex flex-wrap items-center gap-3">
-        <p className="text-[13px] font-medium" style={{ color: "var(--text-2)" }}>
-          {somRegel}
-        </p>
-        {(selectie.length > 0 || kadSelectie.length > 0) && (
+      {somRegel && (
+        <div className="flex flex-wrap items-center gap-3">
+          <p className="text-[13px] font-medium" style={{ color: "var(--text-2)" }}>
+            {somRegel}
+          </p>
           <button
             type="button"
             className="btn btn-ghost btn-sm"
@@ -487,8 +481,8 @@ export default function KaartWeergave({
           >
             Wis selectie
           </button>
-        )}
-      </div>
+        </div>
+      )}
 
       {/* Filter op gebruikssoort (niet in de kadastrale weergave). De chips
           volgen het actieve tabblad: perceel- of gebouw-gebruiksvormen. */}
