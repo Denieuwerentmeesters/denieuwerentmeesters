@@ -231,6 +231,8 @@ export default function Kaart({
   // Beheerperceel waarvan het wijzig-formulier (naam/gebruik) openstaat.
   const [wijzigId, setWijzigId] = useState<string | null>(null);
   const [koppelGebouwId, setKoppelGebouwId] = useState<string | null>(null);
+  // De lijst kent twee tabbladen: grond (beheerpercelen) en gebouwen.
+  const [lijstTab, setLijstTab] = useState<"percelen" | "gebouwen">("percelen");
   // Deelgebruik-knop in het indeel-paneel: pas na een bewuste druk hierop
   // zijn al-ingedeelde percelen aanklikbaar om extra te koppelen.
   const [extraKoppelen, setExtraKoppelen] = useState(false);
@@ -310,9 +312,14 @@ export default function Kaart({
       return;
     }
     setGeselecteerd(id);
-    document
-      .getElementById(`obj-rij-${id}`)
-      ?.scrollIntoView({ behavior: "smooth", block: "center" });
+    // De rij staat mogelijk op het andere tabblad — dan eerst omschakelen.
+    const o = objecten.find((x) => x.id === id);
+    if (o) setLijstTab(kaartGroep(o) === "Gebouwen" ? "gebouwen" : "percelen");
+    setTimeout(() => {
+      document
+        .getElementById(`obj-rij-${id}`)
+        ?.scrollIntoView({ behavior: "smooth", block: "center" });
+    }, 0);
   }
 
   function tekenOverzicht() {
@@ -1633,7 +1640,29 @@ export default function Kaart({
             <div className="text-[13px] font-semibold">
               Geplaatste objecten ({objecten.length})
             </div>
-            {KAARTGROEP_LABELS.map((label) => {
+            {/* Grond en gebouwen als aparte tabbladen (wens Steven: door
+                elkaar was onduidelijk of "Wonen" grond of pand betekende). */}
+            <div className="flex gap-2">
+              <button
+                type="button"
+                className={`btn btn-sm ${lijstTab === "percelen" ? "btn-primary" : "btn-ghost"}`}
+                onClick={() => setLijstTab("percelen")}
+              >
+                Percelen (
+                {objecten.filter((o) => kaartGroep(o) !== "Gebouwen").length})
+              </button>
+              <button
+                type="button"
+                className={`btn btn-sm ${lijstTab === "gebouwen" ? "btn-primary" : "btn-ghost"}`}
+                onClick={() => setLijstTab("gebouwen")}
+              >
+                Gebouwen (
+                {objecten.filter((o) => kaartGroep(o) === "Gebouwen").length})
+              </button>
+            </div>
+            {KAARTGROEP_LABELS.filter((l) =>
+              lijstTab === "gebouwen" ? l === "Gebouwen" : l !== "Gebouwen",
+            ).map((label) => {
               const lijst = groepenMap.get(label)!;
               if (lijst.length === 0) return null;
               return (
