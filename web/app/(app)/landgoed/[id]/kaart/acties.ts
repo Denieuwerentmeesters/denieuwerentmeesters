@@ -310,9 +310,30 @@ export async function wijzigBeheerperceel(fd: FormData) {
   if (gebruik) kenmerken.gebruik = gebruik;
   else delete kenmerken.gebruik;
 
+  const update: Record<string, unknown> = { naam, kenmerken };
+
+  // Gebouwen-cluster: alleen als het formulier het veld meestuurt (bij
+  // gebouwen) raken we bovenliggend_id aan. Leeg = losmaken. Het gekozen
+  // hoofdgebouw moet van dit landgoed zijn en mag zelf geen bijgebouw zijn
+  // (één niveau diep — geen kettingen of lussen).
+  if (fd.has("hoofdgebouw_id")) {
+    const hoofdgebouw_id = String(fd.get("hoofdgebouw_id") ?? "").trim();
+    let bovenliggend: string | null = null;
+    if (hoofdgebouw_id && hoofdgebouw_id !== id) {
+      const { data: hoofd } = await supabase
+        .from("stamobject")
+        .select("id, bovenliggend_id")
+        .eq("id", hoofdgebouw_id)
+        .eq("landgoed_id", landgoed_id)
+        .maybeSingle();
+      if (hoofd && !hoofd.bovenliggend_id) bovenliggend = hoofd.id;
+    }
+    update.bovenliggend_id = bovenliggend;
+  }
+
   await moet(
-    supabase.from("stamobject").update({ naam, kenmerken }).eq("id", id),
-    "beheerperceel wijzigen",
+    supabase.from("stamobject").update(update).eq("id", id),
+    "object wijzigen",
   );
   revalidatePath(`/landgoed/${landgoed_id}`, "layout");
 }

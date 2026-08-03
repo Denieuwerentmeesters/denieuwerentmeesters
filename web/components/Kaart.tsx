@@ -37,6 +37,7 @@ import {
   type KaartGroepLabel,
   kaartGroep,
   groepeerOpties,
+  ordenGebouwen,
   haTekst,
   geomNaarLatlngs,
 } from "@/components/kaartDelen";
@@ -1573,13 +1574,19 @@ export default function Kaart({
                     {label} ({lijst.length})
                   </div>
                   <div className="divide-y" style={{ borderColor: "var(--border)" }}>
-                    {lijst.map((o) => (
+                    {/* Gebouwen als clusters: bijgebouwen ingesprongen onder
+                        hun hoofdgebouw. */}
+                    {(label === "Gebouwen"
+                      ? ordenGebouwen(lijst)
+                      : lijst.map((item) => ({ item, ingesprongen: false }))
+                    ).map(({ item: o, ingesprongen }) => (
                       <div
                         key={o.id}
                         id={`obj-rij-${o.id}`}
                         style={{
                           background:
                             geselecteerd === o.id ? "var(--primary-light)" : undefined,
+                          paddingLeft: ingesprongen ? 18 : undefined,
                         }}
                       >
                         <div className="flex items-center gap-3 py-2.5">
@@ -1682,6 +1689,34 @@ export default function Kaart({
                                 ))}
                               </select>
                             </div>
+                            {/* Gebouwen-cluster: schuur/stal onder zijn
+                                hoofdgebouw hangen (één niveau diep). */}
+                            {GEBOUW_CATS.has(o.categorie) && (
+                              <div>
+                                <label className="label-up mb-1 block">
+                                  Hoort bij (hoofdgebouw)
+                                </label>
+                                <select
+                                  className="input"
+                                  name="hoofdgebouw_id"
+                                  defaultValue={o.hoortBijId ?? ""}
+                                >
+                                  <option value="">— geen —</option>
+                                  {objecten
+                                    .filter(
+                                      (g) =>
+                                        GEBOUW_CATS.has(g.categorie) &&
+                                        g.id !== o.id &&
+                                        !g.hoortBijId,
+                                    )
+                                    .map((g) => (
+                                      <option key={g.id} value={g.id}>
+                                        {g.naam}
+                                      </option>
+                                    ))}
+                                </select>
+                              </div>
+                            )}
                             <SubmitKnop className="btn btn-primary btn-sm" pendingTekst="Opslaan…">
                               Opslaan
                             </SubmitKnop>
