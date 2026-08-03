@@ -228,11 +228,14 @@ export function maakKadastraleLaag(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const latlngs = geomNaarLatlngs(L, p.geom) as any;
     if (!latlngs) continue;
+    // Paars: een kleur die verder nergens op de kaart voorkomt, zodat de
+    // kadastrale weergave niet te verwarren is met groen uit de topografie
+    // of de gebruikskleuren.
     const poly = L.polygon(latlngs, {
-      color: "#1B3A28",
+      color: "#5B21B6",
       weight: 2,
-      fillColor: "#2A5C3F",
-      fillOpacity: 0.18,
+      fillColor: "#8B5CF6",
+      fillOpacity: 0.16,
       interactive: Boolean(opAanklik),
     });
     if (opAanklik) {
