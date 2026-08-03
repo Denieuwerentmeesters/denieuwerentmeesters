@@ -45,6 +45,12 @@ export default async function KaartPage({
                 {landgoed?.provincie ? ` · ${landgoed.provincie}` : ""}
               </span>
             </div>
+            <Link
+              href={`/landgoed/${id}/kaart/invoer`}
+              className="btn btn-primary btn-sm"
+            >
+              Pas de kaart aan
+            </Link>
           </div>
         )}
 
@@ -69,17 +75,6 @@ export default async function KaartPage({
             </div>
           </div>
         </div>
-
-        <header className="mb-4 flex flex-wrap items-end justify-between gap-3">
-          <div>
-            <h1 className="text-[22px] font-bold">
-              Kaart{landgoed?.naam ? ` · ${landgoed.naam}` : ""}
-            </h1>
-          </div>
-          <Link href={`/landgoed/${id}/kaart/invoer`} className="btn btn-primary btn-sm">
-            Pas de kaart aan
-          </Link>
-        </header>
 
         <KaartWeergave
           landgoedId={id}
