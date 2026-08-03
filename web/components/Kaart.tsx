@@ -519,9 +519,14 @@ export default function Kaart({
             });
           }
           perceelWmsRef.current!.addTo(map);
+          // PDOK tekent deze laag alleen voldoende ingezoomd. Zolang je
+          // bezit inlaadt, houden we de kaart daarom op dat niveau —
+          // uitzoomen tot "percelen weg" kan dan niet; rondslepen wel.
+          map.setMinZoom(15);
           if (map.getZoom() < 15) map.setZoom(15);
         } else {
           perceelWmsRef.current?.remove();
+          map.setMinZoom(0);
         }
       }
     }
