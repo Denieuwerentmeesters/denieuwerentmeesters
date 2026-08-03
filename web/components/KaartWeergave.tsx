@@ -97,6 +97,10 @@ export default function KaartWeergave({
   const selectieRef = useRef<string[]>([]);
   const kadSelectieRef = useRef<string[]>([]);
   const filterRef = useRef<string | null>(null);
+  // Heeft een vlak deze klik al afgehandeld? Dan mag de kaart-klik eronder
+  // de selectie niet direct weer wissen (zelfde patroon als de invoerpagina —
+  // stopPropagation alleen bleek niet overal betrouwbaar).
+  const laagKlikRef = useRef(false);
 
   const [grijzeKaart, setGrijzeKaart] = useState(true);
   const [toonNatura, setToonNatura] = useState(false);
@@ -288,6 +292,7 @@ export default function KaartWeergave({
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           poly.on("click", (e: any) => {
             if (e.originalEvent) L.DomEvent.stopPropagation(e.originalEvent);
+            laagKlikRef.current = true;
             toonInLijst(o.id);
           });
           eenheid.push(poly);
@@ -306,7 +311,10 @@ export default function KaartWeergave({
 
       // ── De kadastrale laag (gedeelde bouwsteen): landgoed-percelen in een
       // herkenbare tint, korte nummers, labels alleen als ze passen ──
-      const kad = maakKadastraleLaag(L, bezit, toonKadInLijst);
+      const kad = maakKadastraleLaag(L, bezit, (id) => {
+        laagKlikRef.current = true;
+        toonKadInLijst(id);
+      });
       kadastraalLaagRef.current = kad.groep;
       kadVlakkenRef.current = kad.vlakken;
       werkLabelsBijRef.current = () => kad.werkLabelsBij(map);
@@ -321,7 +329,12 @@ export default function KaartWeergave({
       }
 
       // Klik naast de vlakken: alles ontkiezen (het uitzoomen volgt vanzelf).
+      // Een klik die al door een vlak is afgehandeld telt niet mee.
       map.on("click", () => {
+        if (laagKlikRef.current) {
+          laagKlikRef.current = false;
+          return;
+        }
         setSelectie([]);
         setKadSelectie([]);
       });
@@ -442,9 +455,23 @@ export default function KaartWeergave({
 
   return (
     <div className="flex flex-col gap-3">
-      <p className="text-[13px] font-medium" style={{ color: "var(--text-2)" }}>
-        {somRegel}
-      </p>
+      <div className="flex flex-wrap items-center gap-3">
+        <p className="text-[13px] font-medium" style={{ color: "var(--text-2)" }}>
+          {somRegel}
+        </p>
+        {(selectie.length > 0 || kadSelectie.length > 0) && (
+          <button
+            type="button"
+            className="btn btn-ghost btn-sm"
+            onClick={() => {
+              setSelectie([]);
+              setKadSelectie([]);
+            }}
+          >
+            Wis selectie
+          </button>
+        )}
+      </div>
 
       {/* Filter op gebruikssoort (niet in de kadastrale weergave) */}
       {!kadastraal && (
