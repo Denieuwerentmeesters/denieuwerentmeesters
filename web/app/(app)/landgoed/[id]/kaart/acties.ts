@@ -303,7 +303,7 @@ export async function wijzigBeheerperceel(fd: FormData) {
   const supabase = await createClient();
   const { data: best } = await supabase
     .from("stamobject")
-    .select("kenmerken")
+    .select("kenmerken, bovenliggend_id")
     .eq("id", id)
     .maybeSingle();
   const kenmerken = { ...((best?.kenmerken as object) ?? {}) } as Record<string, unknown>;
@@ -313,22 +313,44 @@ export async function wijzigBeheerperceel(fd: FormData) {
   const update: Record<string, unknown> = { naam, kenmerken };
 
   // Gebouwen-cluster: alleen als het formulier het veld meestuurt (bij
-  // gebouwen) raken we bovenliggend_id aan. Leeg = losmaken. Het gekozen
-  // hoofdgebouw moet van dit landgoed zijn en mag zelf geen bijgebouw zijn
-  // (één niveau diep — geen kettingen of lussen).
+  // gebouwen) raken we bovenliggend_id aan — en alléén de gebouw-op-gebouw
+  // variant. De AI-extractie hangt objecten in de stamgegevens-boom soms
+  // onder andere (niet-gebouw) ouders; die hiërarchie laten we met rust.
   if (fd.has("hoofdgebouw_id")) {
+    const GEBOUWEN = new Set(["gebouw", "woning", "opstal"]);
+    const isGebouw = async (objectId: string | null): Promise<boolean> => {
+      if (!objectId) return false;
+      const { data: o } = await supabase
+        .from("stamobject")
+        .select("categorie")
+        .eq("id", objectId)
+        .maybeSingle();
+      return GEBOUWEN.has(o?.categorie ?? "");
+    };
+
     const hoofdgebouw_id = String(fd.get("hoofdgebouw_id") ?? "").trim();
-    let bovenliggend: string | null = null;
     if (hoofdgebouw_id && hoofdgebouw_id !== id) {
       const { data: hoofd } = await supabase
         .from("stamobject")
-        .select("id, bovenliggend_id")
+        .select("id, categorie, bovenliggend_id")
         .eq("id", hoofdgebouw_id)
         .eq("landgoed_id", landgoed_id)
         .maybeSingle();
-      if (hoofd && !hoofd.bovenliggend_id) bovenliggend = hoofd.id;
+      // Het hoofdgebouw moet een gebouw zijn en mag zelf geen bijgebouw
+      // zijn (één niveau diep — geen kettingen of lussen). Een niet-gebouw
+      // stamgegevens-ouder van het hoofdgebouw is daarbij geen bezwaar.
+      if (
+        hoofd &&
+        GEBOUWEN.has(hoofd.categorie ?? "") &&
+        !(await isGebouw(hoofd.bovenliggend_id))
+      ) {
+        update.bovenliggend_id = hoofd.id;
+      }
+    } else if (!hoofdgebouw_id && (await isGebouw(best?.bovenliggend_id ?? null))) {
+      // Leeg gekozen: alleen losmaken als de huidige ouder een gebouw is —
+      // een stamgegevens-ouder blijft staan.
+      update.bovenliggend_id = null;
     }
-    update.bovenliggend_id = bovenliggend;
   }
 
   await moet(
