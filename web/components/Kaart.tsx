@@ -519,6 +519,10 @@ export default function Kaart({
             });
           }
           perceelWmsRef.current!.addTo(map);
+          // PDOK tekent deze laag alleen voldoende ingezoomd — bij binnenkomst
+          // dus even bijzoomen. Uitzoomen blijft daarna gewoon kunnen (voor
+          // het overzicht); de uitleg-tekst legt uit waarom de percelen dan
+          // even verdwijnen.
           if (map.getZoom() < 15) map.setZoom(15);
         } else {
           perceelWmsRef.current?.remove();
@@ -1125,7 +1129,16 @@ export default function Kaart({
         </div>
       )}
 
-      <p className="text-[12px]" style={{ color: "var(--text-3)" }}>
+      {/* Modus-uitleg: belangrijke gebruiksinfo, dus in een opvallend kader
+          in plaats van grijs weggemoffeld (wens Steven). */}
+      <p
+        className="rounded-md border px-3 py-2 text-[12.5px] font-medium"
+        style={{
+          background: "#FEF3C7",
+          borderColor: "#F59E0B",
+          color: "#92400E",
+        }}
+      >
         {mode === "bekijk"
           ? "Bekijk-modus: klikken op de kaart doet niets. Kies een invoer-modus om percelen of gebouwen toe te voegen."
           : mode === "basis"
@@ -1133,7 +1146,7 @@ export default function Kaart({
             ? "Klik op de kaart om de landgoed-locatie te wijzigen."
             : "Klik op de hoofdlocatie van het landgoed; adres/gemeente/provincie wordt opgezocht."
           : mode === "perceel"
-            ? "Klik-klik-klik: elk aangeklikt perceel gaat direct het bezit in (PDOK Kadaster). Nogmaals klikken op een grijs perceel verwijdert het weer. Indelen komt daarna."
+            ? "Klik-klik-klik: elk aangeklikt perceel gaat direct het bezit in (PDOK Kadaster). Nogmaals klikken op een grijs perceel verwijdert het weer. Let op: zoom je ver uit, dan verbergt het Kadaster de perceelgrenzen en nummers — zoom in en ze verschijnen weer. Indelen komt daarna."
             : mode === "indelen"
               ? "Selecteer een of meer grijze percelen en maak er samen een beheerperceel van — of voeg ze toe aan een bestaand beheerperceel."
               : "Klik op een gebouw; adres, oppervlakte, pandstatus en monumentstatus (RCE) worden opgehaald."}
