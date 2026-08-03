@@ -103,6 +103,10 @@ export default function KaartWeergave({
   const [toonNnn, setToonNnn] = useState(false);
   const [kadastraal, setKadastraal] = useState(false);
   const [filterGebruik, setFilterGebruik] = useState<string | null>(null);
+  // De lijst kent twee tabbladen: grond (de beheerpercelen) en gebouwen —
+  // door elkaar was het onduidelijk wanneer "Wonen" over grond ging en
+  // wanneer over een pand (wens Steven).
+  const [lijstTab, setLijstTab] = useState<"percelen" | "gebouwen">("percelen");
   // Meervoudige selectie: meerdere beheerpercelen (of kadastrale percelen)
   // tegelijk laten oplichten.
   const [selectie, setSelectie] = useState<string[]>([]);
@@ -389,9 +393,14 @@ export default function KaartWeergave({
       prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id],
     );
     if (!wasGekozen) {
-      document
-        .getElementById(`weergave-rij-${id}`)
-        ?.scrollIntoView({ behavior: "smooth", block: "center" });
+      // De rij staat mogelijk op het andere tabblad — dan eerst omschakelen.
+      const o = objecten.find((x) => x.id === id);
+      if (o) setLijstTab(kaartGroep(o) === "Gebouwen" ? "gebouwen" : "percelen");
+      setTimeout(() => {
+        document
+          .getElementById(`weergave-rij-${id}`)
+          ?.scrollIntoView({ behavior: "smooth", block: "center" });
+      }, 0);
     }
   }
 
@@ -597,7 +606,29 @@ export default function KaartWeergave({
               </div>
             </div>
           ) : (
-            KAARTGROEP_LABELS.map((label) => {
+            <>
+              {/* Grond en gebouwen als aparte tabbladen. */}
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  className={`btn btn-sm ${lijstTab === "percelen" ? "btn-primary" : "btn-ghost"}`}
+                  onClick={() => setLijstTab("percelen")}
+                >
+                  Percelen (
+                  {objecten.filter((o) => kaartGroep(o) !== "Gebouwen").length})
+                </button>
+                <button
+                  type="button"
+                  className={`btn btn-sm ${lijstTab === "gebouwen" ? "btn-primary" : "btn-ghost"}`}
+                  onClick={() => setLijstTab("gebouwen")}
+                >
+                  Gebouwen (
+                  {objecten.filter((o) => kaartGroep(o) === "Gebouwen").length})
+                </button>
+              </div>
+              {KAARTGROEP_LABELS.filter((l) =>
+                lijstTab === "gebouwen" ? l === "Gebouwen" : l !== "Gebouwen",
+              ).map((label) => {
               const lijst = groepenMap.get(label)!;
               if (lijst.length === 0) return null;
               return (
@@ -647,7 +678,8 @@ export default function KaartWeergave({
                   </div>
                 </div>
               );
-            })
+              })}
+            </>
           )}
         </div>
       </div>
