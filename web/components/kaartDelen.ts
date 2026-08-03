@@ -32,6 +32,10 @@ export type KaartObject = {
   // beheerperceel staat dit gebouw? Eén primair perceel per gebouw.
   staatOp?: string | null;
   staatOpId?: string | null;
+  // Gebouwen-cluster: een bijgebouw (schuur, stal) hangt onder zijn
+  // hoofdgebouw via stamobject.bovenliggend_id.
+  hoortBij?: string | null;
+  hoortBijId?: string | null;
   // De gekoppelde kadastrale percelen (voor deelgebruik en splitsen).
   kadDelen?: {
     perceelId: string;
@@ -51,6 +55,7 @@ export function objectDetails(o: KaartObject): string {
         o.pandstatus,
         o.bouwjaar ? `bouwjaar ${o.bouwjaar}` : null,
         o.staatOp ? `staat op ${o.staatOp}` : null,
+        o.hoortBij ? `hoort bij ${o.hoortBij}` : null,
       ]
     : [
         o.gebruik,
@@ -156,6 +161,32 @@ export function groepeerOpties<
   return KAARTGROEP_LABELS.map(
     (l) => [l, per.get(l)!] as [KaartGroepLabel, T[]],
   ).filter(([, lijst]) => lijst.length > 0);
+}
+
+// Ordent de gebouwen-lijst als clusters: elk hoofdgebouw gevolgd door zijn
+// bijgebouwen (ingesprongen). Gebouwen zonder cluster blijven gewoon staan.
+export function ordenGebouwen<T extends { id: string; hoortBijId?: string | null }>(
+  lijst: T[],
+): { item: T; ingesprongen: boolean }[] {
+  const bijgebouwenVan = new Map<string, T[]>();
+  const hoofd: T[] = [];
+  for (const g of lijst) {
+    if (g.hoortBijId && lijst.some((h) => h.id === g.hoortBijId)) {
+      const l = bijgebouwenVan.get(g.hoortBijId) ?? [];
+      l.push(g);
+      bijgebouwenVan.set(g.hoortBijId, l);
+    } else {
+      hoofd.push(g);
+    }
+  }
+  const uit: { item: T; ingesprongen: boolean }[] = [];
+  for (const h of hoofd) {
+    uit.push({ item: h, ingesprongen: false });
+    for (const b of bijgebouwenVan.get(h.id) ?? []) {
+      uit.push({ item: b, ingesprongen: true });
+    }
+  }
+  return uit;
 }
 
 export function haTekst(m2: unknown): string {

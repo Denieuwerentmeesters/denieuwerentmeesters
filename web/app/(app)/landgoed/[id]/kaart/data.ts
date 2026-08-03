@@ -22,7 +22,7 @@ export async function laadKaartData(id: string) {
 
   const { data } = await supabase
     .from("stamobject")
-    .select("id, naam, categorie, kenmerken, herkomst, aangemaakt_op")
+    .select("id, naam, categorie, kenmerken, herkomst, aangemaakt_op, bovenliggend_id")
     .eq("landgoed_id", id)
     .eq("geaccordeerd", true)
     .order("aangemaakt_op", { ascending: false });
@@ -215,6 +215,11 @@ export async function laadKaartData(id: string) {
       staatOpId: staatOpVan.get(o.id) ?? null,
       staatOp: staatOpVan.has(o.id)
         ? (naamVanObject.get(staatOpVan.get(o.id)!) ?? null)
+        : null,
+      // Gebouwen-cluster (bovenliggend_id): schuur hoort bij boerderij.
+      hoortBijId: (o.bovenliggend_id as string | null) ?? null,
+      hoortBij: o.bovenliggend_id
+        ? (naamVanObject.get(o.bovenliggend_id) ?? null)
         : null,
       kadDelen: kad.map((p) => ({
         perceelId: p.perceelId,

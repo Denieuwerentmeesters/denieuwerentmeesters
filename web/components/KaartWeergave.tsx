@@ -22,6 +22,7 @@ import {
   KAARTGROEP_LABELS,
   type KaartGroepLabel,
   kaartGroep,
+  ordenGebouwen,
   geomNaarLatlngs,
 } from "@/components/kaartDelen";
 
@@ -605,7 +606,12 @@ export default function KaartWeergave({
                     {label} ({lijst.length})
                   </div>
                   <div className="divide-y" style={{ borderColor: "var(--border)" }}>
-                    {lijst.map((o) => (
+                    {/* Gebouwen als clusters: bijgebouwen ingesprongen onder
+                        hun hoofdgebouw. */}
+                    {(label === "Gebouwen"
+                      ? ordenGebouwen(lijst)
+                      : lijst.map((item) => ({ item, ingesprongen: false }))
+                    ).map(({ item: o, ingesprongen }) => (
                       <div
                         key={o.id}
                         id={`weergave-rij-${o.id}`}
@@ -614,6 +620,7 @@ export default function KaartWeergave({
                           background: selectie.includes(o.id)
                             ? "var(--primary-light)"
                             : undefined,
+                          paddingLeft: ingesprongen ? 18 : undefined,
                         }}
                       >
                         <button
