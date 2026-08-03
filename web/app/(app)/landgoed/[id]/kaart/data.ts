@@ -63,6 +63,10 @@ export async function laadKaartData(id: string) {
       .eq("landgoed_id", id),
   ]);
   const naamVanObject = new Map((data ?? []).map((o) => [o.id, o.naam]));
+  const catVanObject = new Map(
+    (data ?? []).map((o) => [o.id, o.categorie as string]),
+  );
+  const GEBOUW_CATS_DATA = new Set(["gebouw", "woning", "opstal"]);
   const ingedeeldBijVan = new Map<string, { id: string; naam: string }[]>();
   for (const k of koppelingData ?? []) {
     const lijst = ingedeeldBijVan.get(k.kadastraal_perceel_id) ?? [];
@@ -216,11 +220,19 @@ export async function laadKaartData(id: string) {
       staatOp: staatOpVan.has(o.id)
         ? (naamVanObject.get(staatOpVan.get(o.id)!) ?? null)
         : null,
-      // Gebouwen-cluster (bovenliggend_id): schuur hoort bij boerderij.
-      hoortBijId: (o.bovenliggend_id as string | null) ?? null,
-      hoortBij: o.bovenliggend_id
-        ? (naamVanObject.get(o.bovenliggend_id) ?? null)
-        : null,
+      // Gebouwen-cluster: alléén als de bovenliggende óók een gebouw is —
+      // de AI-extractie hangt objecten in de stamgegevens-boom soms onder
+      // andere (niet-gebouw) ouders, en dat is geen cluster.
+      hoortBijId:
+        o.bovenliggend_id &&
+        GEBOUW_CATS_DATA.has(catVanObject.get(o.bovenliggend_id) ?? "")
+          ? (o.bovenliggend_id as string)
+          : null,
+      hoortBij:
+        o.bovenliggend_id &&
+        GEBOUW_CATS_DATA.has(catVanObject.get(o.bovenliggend_id) ?? "")
+          ? (naamVanObject.get(o.bovenliggend_id) ?? null)
+          : null,
       kadDelen: kad.map((p) => ({
         perceelId: p.perceelId,
         aanduiding: p.aanduiding,
