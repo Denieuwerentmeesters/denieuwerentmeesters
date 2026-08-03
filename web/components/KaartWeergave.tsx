@@ -97,10 +97,6 @@ export default function KaartWeergave({
   const selectieRef = useRef<string[]>([]);
   const kadSelectieRef = useRef<string[]>([]);
   const filterRef = useRef<string | null>(null);
-  // Heeft een vlak deze klik al afgehandeld? Dan mag de kaart-klik eronder
-  // de selectie niet direct weer wissen (zelfde patroon als de invoerpagina —
-  // stopPropagation alleen bleek niet overal betrouwbaar).
-  const laagKlikRef = useRef(false);
 
   const [grijzeKaart, setGrijzeKaart] = useState(true);
   const [toonNatura, setToonNatura] = useState(false);
@@ -292,7 +288,6 @@ export default function KaartWeergave({
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           poly.on("click", (e: any) => {
             if (e.originalEvent) L.DomEvent.stopPropagation(e.originalEvent);
-            laagKlikRef.current = true;
             toonInLijst(o.id);
           });
           eenheid.push(poly);
@@ -311,10 +306,7 @@ export default function KaartWeergave({
 
       // ── De kadastrale laag (gedeelde bouwsteen): landgoed-percelen in een
       // herkenbare tint, korte nummers, labels alleen als ze passen ──
-      const kad = maakKadastraleLaag(L, bezit, (id) => {
-        laagKlikRef.current = true;
-        toonKadInLijst(id);
-      });
+      const kad = maakKadastraleLaag(L, bezit, toonKadInLijst);
       kadastraalLaagRef.current = kad.groep;
       kadVlakkenRef.current = kad.vlakken;
       werkLabelsBijRef.current = () => kad.werkLabelsBij(map);
@@ -328,16 +320,10 @@ export default function KaartWeergave({
         map.setView([lat, lon], 14);
       }
 
-      // Klik naast de vlakken: alles ontkiezen (het uitzoomen volgt vanzelf).
-      // Een klik die al door een vlak is afgehandeld telt niet mee.
-      map.on("click", () => {
-        if (laagKlikRef.current) {
-          laagKlikRef.current = false;
-          return;
-        }
-        setSelectie([]);
-        setKadSelectie([]);
-      });
+      // Bewust géén "klik naast de vlakken = alles wissen": bij het
+      // aanklikken van meerdere percelen was één misklik anders een
+      // sloopknop voor de hele selectie (wens Steven). Wissen kan per vlak
+      // (nogmaals klikken) of in één keer via de knop "Wis selectie".
     })();
     return () => {
       cancelled = true;
@@ -567,8 +553,8 @@ export default function KaartWeergave({
           />
           <p className="text-[12px]" style={{ color: "var(--text-2)" }}>
             Klik vlakken of rijen aan om ze op te laten lichten — meerdere
-            tegelijk kan, nogmaals klikken haalt ze er weer af, klik naast de
-            vlakken en de kaart zoomt weer uit. Kleur = gebruik.
+            tegelijk kan, nogmaals klikken haalt ze er weer af, en met
+            &quot;Wis selectie&quot; is alles in één keer uit. Kleur = gebruik.
           </p>
         </div>
 
