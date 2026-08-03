@@ -38,6 +38,15 @@ const ROL_LABEL: Record<string, string> = {
   betreft: "Betreft",
 };
 
+// Leesbare tekst voor een object↔object-koppeling, afhankelijk van de
+// kijkrichting ("gelegen_op" leest bij het gebouw anders dan bij het perceel).
+function verbandTekst(rol: string | null, ikBenBron: boolean): string {
+  if (rol === "gelegen_op")
+    return ikBenBron ? "Staat op beheerperceel" : "Gebouw op dit beheerperceel";
+  if (rol && ROL_LABEL[rol]) return ROL_LABEL[rol];
+  return rol ?? "Gekoppeld aan";
+}
+
 function euro(n: unknown): string | null {
   const x = Number(n);
   if (!Number.isFinite(x)) return null;
@@ -132,6 +141,9 @@ export default async function ObjectDetailPage({
       status: v.status as string,
       voorstel_reden: v.voorstel_reden as string | null,
       anderId: v.bron_id === objectId ? v.doel_id : v.bron_id,
+      // Richting bepaalt de leesbare tekst: "staat op beheerperceel X" vs.
+      // "gebouw op dit beheerperceel".
+      ikBenBron: v.bron_id === objectId,
     }));
   const anderIds = [...new Set(objectVerbanden.map((v) => v.anderId))];
   const { data: andereObjectenData } = anderIds.length
@@ -667,7 +679,7 @@ export default async function ObjectDetailPage({
                     <div className="min-w-[200px] flex-1">
                       <div className="text-[14px]">
                         <span style={{ color: "var(--text-2)" }}>
-                          {v.rol ?? "gekoppeld aan"}:{" "}
+                          {verbandTekst(v.rol, v.ikBenBron)}:{" "}
                         </span>
                         {ander ? (
                           <Link

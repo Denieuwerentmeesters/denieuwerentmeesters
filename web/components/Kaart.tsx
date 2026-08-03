@@ -1806,7 +1806,9 @@ export default function Kaart({
                                 setKoppelGebouwId(koppelGebouwId === o.id ? null : o.id)
                               }
                             >
-                              Koppel aan perceel
+                              {o.staatOpId
+                                ? "Wijzig / ontkoppel perceel"
+                                : "Koppel aan perceel"}
                             </button>
                           )}
                           <form action={verwijderObject} style={{ color: "var(--red)" }}>
