@@ -49,24 +49,45 @@ comment on column beheerperceel_kadastraal.deel_geom_rd is
 --    worden vóór de transformatie — anders transformeert ST_Transform
 --    vanuit SRID 0 en faalt hij (of erger: doet hij niets).
 -- ------------------------------------------------------------
+--    Defensief: levert de omzetting niets bruikbaars op (geen polygoon,
+--    onparsebare GeoJSON), dan is het antwoord NULL en geen fout. De radar
+--    mist dat perceel dan — zichtbaar via geometrie_controle.onvertaalbaar —
+--    maar het inladen van bezit blijft werken. Andersom zou een trigger op
+--    kadastraal_perceel de importflow van de kaart kunnen breken op iets wat
+--    niets met de radar te maken heeft, en dat is de verkeerde ruil.
 create or replace function geojson_3857_naar_rd(g jsonb)
 returns extensions.geometry(MultiPolygon, 28992)
-language sql
+language plpgsql
 immutable
 set search_path = public, extensions
 as $$
-  select case
-    when g is null then null
-    else extensions.st_multi(
-           extensions.st_transform(
-             extensions.st_setsrid(extensions.st_geomfromgeojson(g::text), 3857),
-             28992))
-  end;
+declare
+  vorm extensions.geometry;
+begin
+  if g is null then
+    return null;
+  end if;
+
+  vorm := extensions.st_setsrid(extensions.st_geomfromgeojson(g::text), 3857);
+
+  -- Alleen vlakken zijn zinnig als perceelvorm; een punt of lijn zou hier
+  -- toch stuklopen op het kolomtype.
+  if extensions.st_geometrytype(vorm) not in ('ST_Polygon', 'ST_MultiPolygon') then
+    return null;
+  end if;
+
+  return extensions.st_multi(extensions.st_transform(vorm, 28992));
+exception
+  when others then
+    return null;
+end;
 $$;
 
 comment on function geojson_3857_naar_rd(jsonb) is
-  'Zet een GeoJSON-vorm in EPSG:3857 om naar een PostGIS-MultiPolygon in RD. '
-  'Enige toegestane route van tekengeometrie naar rekengeometrie.';
+  'Zet een GeoJSON-vlak in EPSG:3857 om naar een PostGIS-MultiPolygon in RD. '
+  'Enige toegestane route van tekengeometrie naar rekengeometrie. Geeft NULL '
+  'terug bij onbruikbare invoer in plaats van een fout, zodat een trigger op '
+  'kadastraal_perceel nooit een schrijfactie van de kaart kan blokkeren.';
 
 -- ------------------------------------------------------------
 -- 3. Triggers — houden de RD-kolom synchroon met de bron
@@ -140,24 +161,43 @@ create index if not exists beheerperceel_deel_geom_rd_idx
 create or replace view geometrie_controle as
 select
   k.landgoed_id,
-  count(*)                                                as percelen,
-  round(sum(k.oppervlakte_m2))                            as kadaster_m2,
+  -- Percelen die meetellen in de vergelijking hieronder.
+  count(*) filter (where k.meetbaar)                      as percelen,
+  -- Percelen met wél een tekenvorm maar geen rekenvorm: onzichtbaar voor de
+  -- radar. Hoort 0 te zijn; is het dat niet, dan levert de bron iets anders
+  -- aan dan een vlak en slikt geojson_3857_naar_rd dat stil in.
+  count(*) filter (
+    where k.geom_3857 is not null and k.geom_rd is null
+  )                                                       as onvertaalbaar,
+  round(sum(k.oppervlakte_m2) filter (where k.meetbaar))   as kadaster_m2,
   -- ST_Area geeft double precision; round(double, int) bestaat niet in
   -- Postgres, vandaar de cast naar numeric.
-  round(sum(extensions.st_area(k.geom_rd))::numeric)      as rd_m2,
+  round(sum(k.rd_opp) filter (where k.meetbaar)::numeric)  as rd_m2,
   round(
-    100 * abs(sum(extensions.st_area(k.geom_rd))::numeric - sum(k.oppervlakte_m2))
-    / nullif(sum(k.oppervlakte_m2), 0)
+    100 * abs(
+      sum(k.rd_opp) filter (where k.meetbaar)::numeric
+      - sum(k.oppervlakte_m2) filter (where k.meetbaar)
+    ) / nullif(sum(k.oppervlakte_m2) filter (where k.meetbaar), 0)
   , 3)                                                    as afwijking_pct
-from kadastraal_perceel k
-where k.geom_rd is not null and k.oppervlakte_m2 is not null
+from (
+  select
+    landgoed_id,
+    geom_3857,
+    geom_rd,
+    oppervlakte_m2,
+    extensions.st_area(geom_rd)                              as rd_opp,
+    (geom_rd is not null and oppervlakte_m2 is not null)     as meetbaar
+  from kadastraal_perceel
+) k
 group by k.landgoed_id;
 
 comment on view geometrie_controle is
   'Vergelijkt de berekende RD-oppervlakte met de officiele kadastrale oppervlakte, '
   'per landgoed. Afwijking hoort ver onder 1% te blijven (gemeten 3 aug 2026: '
   '0,17% voor Ter Hooge, 0,04% voor de testcase). Loopt dit richting 158%, dan '
-  'wordt er ergens op geom_3857 gerekend in plaats van op geom_rd.';
+  'wordt er ergens op geom_3857 gerekend in plaats van op geom_rd. Kolom '
+  'onvertaalbaar hoort 0 te zijn: alles daarboven is een perceel dat de radar '
+  'niet ziet.';
 
 do $$
 declare
