@@ -189,6 +189,9 @@ export default function Kaart({
   const mapRef = useRef<LMap | null>(null);
   const tempRef = useRef<CircleMarker | null>(null);
   const kadRef = useRef<TileLayer | null>(null);
+  // Volledige kadastrale kaart (grenzen + perceelnummers), alleen zichtbaar
+  // in de bezit-laadmodus — dan zie je wáár je moet klikken.
+  const perceelWmsRef = useRef<TileLayer | null>(null);
   const bagRef = useRef<TileLayer | null>(null);
   const achtergrondRef = useRef<TileLayer | null>(null);
   const natRef = useRef<TileLayer | null>(null);
@@ -496,6 +499,32 @@ export default function Kaart({
     wisHighlights();
     // In bekijk-modus: toon het hele landgoed i.p.v. handmatig inzoomen.
     if (mode === "bekijk") zoomNaarLandgoed();
+    // Bezit inladen: de volledige kadastrale kaart erbij (grenzen +
+    // perceelnummers), zodat zichtbaar is wáár je kunt klikken. PDOK tekent
+    // die pas bij voldoende inzoomen — dus zonodig even bijzoomen.
+    {
+      const L = LRef.current;
+      const map = mapRef.current;
+      if (L && map) {
+        if (mode === "perceel") {
+          if (!perceelWmsRef.current) {
+            perceelWmsRef.current = L.tileLayer.wms(KADASTER_WMS, {
+              layers: "Perceel",
+              styles: "",
+              format: "image/png",
+              transparent: true,
+              version: "1.3.0",
+              maxZoom: 19,
+              attribution: "© Kadaster",
+            });
+          }
+          perceelWmsRef.current!.addTo(map);
+          if (map.getZoom() < 15) map.setZoom(15);
+        } else {
+          perceelWmsRef.current?.remove();
+        }
+      }
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mode]);
 
