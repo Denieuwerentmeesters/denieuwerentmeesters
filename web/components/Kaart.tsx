@@ -155,6 +155,8 @@ export default function Kaart({
   splitsPerceel,
   wisSplitsing,
   ontkoppelPerceel,
+  zoekPercelenBinnenOmtrek,
+  registreerBezitBinnenOmtrek,
   gebiedsligging,
 }: {
   landgoedId: string;
@@ -181,6 +183,20 @@ export default function Kaart({
   splitsPerceel: (fd: FormData) => Promise<void>;
   wisSplitsing: (fd: FormData) => Promise<void>;
   ontkoppelPerceel: (fd: FormData) => Promise<void>;
+  zoekPercelenBinnenOmtrek: (
+    landgoedId: string,
+    omtrek: [number, number][],
+  ) => Promise<
+    | { status: "ok"; nieuw: number; bestaand: number; afgekapt: boolean }
+    | { status: "fout"; melding: string }
+  >;
+  registreerBezitBinnenOmtrek: (
+    landgoedId: string,
+    omtrek: [number, number][],
+  ) => Promise<
+    | { status: "ok"; toegevoegd: number; overgeslagen: number }
+    | { status: "fout"; melding: string }
+  >;
   // Samenvatting "x van n percelen in Natura 2000 / NNN", of null als er
   // nog nooit gecontroleerd is.
   gebiedsligging?: string | null;
@@ -241,6 +257,18 @@ export default function Kaart({
   const [extraKoppelen, setExtraKoppelen] = useState(false);
   // Splitslijn-flow: welk kadastraal perceel wordt gesplitst, de getekende
   // lijnpunten, de geknipte delen en per deel het gekozen beheerperceel.
+  // Voordeur 1: omtrek tekenen in de bezit-laadmodus (bulk inladen).
+  const [omtrekActief, setOmtrekActief] = useState(false);
+  const [omtrek, setOmtrek] = useState<[number, number][]>([]);
+  const [omtrekResultaat, setOmtrekResultaat] = useState<{
+    nieuw: number;
+    bestaand: number;
+    afgekapt: boolean;
+  } | null>(null);
+  const [omtrekBezig, setOmtrekBezig] = useState(false);
+  const omtrekActiefRef = useRef(false);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const omtrekLaagRef = useRef<any>(null);
   const [splitsing, setSplitsing] = useState<{
     perceelId: string;
     aanduiding: string;
@@ -493,6 +521,12 @@ export default function Kaart({
     // (een lijstklik schakelt daarheen mét selectie); bij het verlaten wist hij.
     if (mode !== "indelen") setSelectie([]);
     setExtraKoppelen(false);
+    // De omtrek-flow leeft alleen in de bezit-laadmodus.
+    if (mode !== "perceel") {
+      setOmtrekActief(false);
+      setOmtrek([]);
+      setOmtrekResultaat(null);
+    }
     // De splitslijn-flow leeft alleen in de bekijk-modus.
     if (mode !== "bekijk") setSplitsing(null);
     setMelding(null);
@@ -553,6 +587,48 @@ export default function Kaart({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [splitsing]);
+
+  // De getekende omtrek (voordeur 1) op de kaart bijhouden: stippen per punt,
+  // en vanaf drie punten een gesloten, licht gevuld vlak-voorbeeld.
+  useEffect(() => {
+    omtrekActiefRef.current = omtrekActief;
+    const L = LRef.current;
+    const map = mapRef.current;
+    if (!L || !map) return;
+    if (omtrekLaagRef.current) {
+      omtrekLaagRef.current.remove();
+      omtrekLaagRef.current = null;
+    }
+    if (!omtrekActief || omtrek.length === 0) return;
+    const groep = L.layerGroup();
+    for (const punt of omtrek) {
+      L.circleMarker(punt, {
+        radius: 5,
+        color: "#111827",
+        weight: 2,
+        fillColor: "#ffffff",
+        fillOpacity: 1,
+      }).addTo(groep);
+    }
+    if (omtrek.length >= 3) {
+      L.polygon(omtrek, {
+        color: "#111827",
+        weight: 2,
+        dashArray: "6 4",
+        fillColor: "#111827",
+        fillOpacity: 0.06,
+      }).addTo(groep);
+    } else if (omtrek.length === 2) {
+      L.polyline(omtrek, {
+        color: "#111827",
+        weight: 2,
+        dashArray: "6 4",
+      }).addTo(groep);
+    }
+    groep.addTo(map);
+    omtrekLaagRef.current = groep;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [omtrek, omtrekActief]);
 
   // De getekende splitslijn op de kaart bijhouden. Elk gezet punt krijgt
   // direct een stip — anders is de allereerste klik onzichtbaar (een lijn
@@ -743,6 +819,15 @@ export default function Kaart({
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       poly.on("click", async (e: any) => {
         const m = modeRef.current;
+        // Tijdens het omtrek-tekenen is óók een klik op een (grijs) bezit-vlak
+        // gewoon een hoekpunt.
+        if (m === "perceel" && omtrekActiefRef.current) {
+          laagKlikRef.current = true;
+          if (e.originalEvent) L.DomEvent.stopPropagation(e.originalEvent);
+          setOmtrek((prev) => [...prev, [e.latlng.lat, e.latlng.lng]]);
+          setOmtrekResultaat(null);
+          return;
+        }
         // Alleen in de modi waar het vlak de klik zelf afhandelt de kaart-klik
         // onderdrukken; in de basis-modus moet een klik óp een perceel gewoon
         // de landgoed-locatie kunnen zetten.
@@ -923,6 +1008,12 @@ export default function Kaart({
         // Bekijk-modus: klik naast de vlakken heft de spotlight-selectie op.
         if (m === "bekijk") {
           setGeselecteerd(null);
+          return;
+        }
+        // Omtrek tekenen (voordeur 1): elke kaartklik is een hoekpunt.
+        if (m === "perceel" && omtrekActiefRef.current) {
+          setOmtrek((prev) => [...prev, [lat, lon]]);
+          setOmtrekResultaat(null);
           return;
         }
         setGeselecteerd(null);
@@ -1307,6 +1398,149 @@ export default function Kaart({
 
         {/* Linkerkolom: panelen en lijsten */}
         <div className="flex flex-col gap-3 lg:order-1">
+
+      {/* Omtrek-paneel (voordeur 1): in de bezit-laadmodus een gebied
+          omtrekken en alle percelen erbinnen in één keer inladen. */}
+      {mode === "perceel" && (
+        <div className="card flex flex-wrap items-center gap-3 p-4 text-[13px]">
+          {!omtrekActief ? (
+            <>
+              <button
+                type="button"
+                className="btn btn-ghost btn-sm"
+                onClick={() => {
+                  setOmtrekActief(true);
+                  setOmtrek([]);
+                  setOmtrekResultaat(null);
+                }}
+              >
+                ✏️ Teken een omtrek (bulk inladen)
+              </button>
+              <span style={{ color: "var(--text-2)" }}>
+                Omtrek een gebied en alle percelen erbinnen gaan in één keer
+                het bezit in — sneller dan stuk voor stuk klikken.
+              </span>
+            </>
+          ) : omtrekResultaat ? (
+            <>
+              <span className="font-medium">
+                {omtrekResultaat.nieuw} nieuwe percelen gevonden ·{" "}
+                {omtrekResultaat.bestaand} al in bezit
+                {omtrekResultaat.afgekapt
+                  ? " · let op: gebied te groot, niet alles doorzocht — teken kleiner"
+                  : ""}
+              </span>
+              <button
+                type="button"
+                className="btn btn-primary btn-sm"
+                disabled={omtrekBezig || omtrekResultaat.nieuw === 0}
+                onClick={async () => {
+                  setOmtrekBezig(true);
+                  const omtrek3857 = omtrek.map(([la, lo]) =>
+                    merc3857(lo, la),
+                  );
+                  const r = await registreerBezitBinnenOmtrek(
+                    landgoedId,
+                    omtrek3857,
+                  );
+                  setOmtrekBezig(false);
+                  if (r.status === "fout") {
+                    setMelding(r.melding);
+                    return;
+                  }
+                  setOmtrek([]);
+                  setOmtrekResultaat(null);
+                  setOmtrekActief(false);
+                  setMelding(
+                    `${r.toegevoegd} percelen toegevoegd aan het bezit${
+                      r.overgeslagen
+                        ? ` (${r.overgeslagen} stond${r.overgeslagen > 1 ? "en" : ""} er al in)`
+                        : ""
+                    }.`,
+                  );
+                }}
+              >
+                {omtrekBezig
+                  ? "Toevoegen…"
+                  : `Voeg ${omtrekResultaat.nieuw} percelen toe`}
+              </button>
+              <button
+                type="button"
+                className="btn btn-ghost btn-sm"
+                disabled={omtrekBezig}
+                onClick={() => {
+                  setOmtrek([]);
+                  setOmtrekResultaat(null);
+                }}
+              >
+                Opnieuw
+              </button>
+              <button
+                type="button"
+                className="btn btn-ghost btn-sm"
+                disabled={omtrekBezig}
+                onClick={() => {
+                  setOmtrekActief(false);
+                  setOmtrek([]);
+                  setOmtrekResultaat(null);
+                }}
+              >
+                Stop
+              </button>
+            </>
+          ) : (
+            <>
+              <span style={{ color: "var(--text-2)" }}>
+                {omtrek.length === 0
+                  ? "Klik hoekpunten op de kaart om het gebied te omtrekken (minstens 3)."
+                  : `${omtrek.length} hoekpunt${omtrek.length > 1 ? "en" : ""} gezet — elke kaartklik voegt er een toe.`}
+              </span>
+              <button
+                type="button"
+                className="btn btn-primary btn-sm"
+                disabled={omtrek.length < 3 || omtrekBezig}
+                onClick={async () => {
+                  setOmtrekBezig(true);
+                  const omtrek3857 = omtrek.map(([la, lo]) =>
+                    merc3857(lo, la),
+                  );
+                  const r = await zoekPercelenBinnenOmtrek(
+                    landgoedId,
+                    omtrek3857,
+                  );
+                  setOmtrekBezig(false);
+                  if (r.status === "fout") {
+                    setMelding(r.melding);
+                    return;
+                  }
+                  setOmtrekResultaat(r);
+                }}
+              >
+                {omtrekBezig ? "Zoeken…" : "Zoek percelen binnen de omtrek"}
+              </button>
+              <button
+                type="button"
+                className="btn btn-ghost btn-sm"
+                disabled={omtrek.length === 0 || omtrekBezig}
+                onClick={() => setOmtrek([])}
+              >
+                Wis omtrek
+              </button>
+              <button
+                type="button"
+                className="btn btn-ghost btn-sm"
+                disabled={omtrekBezig}
+                onClick={() => {
+                  setOmtrekActief(false);
+                  setOmtrek([]);
+                }}
+              >
+                Stop
+              </button>
+            </>
+          )}
+        </div>
+      )}
 
       {/* Indeel-paneel (fase 2) in twee losgekoppelde blokken (wens Steven):
           eerst beheerpercelen maken (altijd leeg, altijd simpel), daarna

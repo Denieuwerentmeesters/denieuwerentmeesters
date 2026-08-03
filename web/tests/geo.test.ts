@@ -4,6 +4,7 @@ import {
   labelPunt3857,
   merc3857,
   oppervlakte3857,
+  puntInVlak3857,
   splitsPolygoon3857,
 } from "@/lib/geo";
 
@@ -65,6 +66,38 @@ describe("oppervlakte3857", () => {
   it("is 0 voor onbruikbare invoer", () => {
     expect(oppervlakte3857(null)).toBe(0);
     expect(oppervlakte3857({})).toBe(0);
+  });
+});
+
+describe("puntInVlak3857", () => {
+  it("herkent binnen en buiten bij een vierkant", () => {
+    expect(puntInVlak3857([X + 50, Y + 50], vierkant)).toBe(true);
+    expect(puntInVlak3857([X - 10, Y + 50], vierkant)).toBe(false);
+    expect(puntInVlak3857([X + 50, Y + 150], vierkant)).toBe(false);
+  });
+
+  it("telt een gat als buiten", () => {
+    const metGat = {
+      type: "Polygon",
+      coordinates: [
+        vierkant.coordinates[0],
+        [
+          [X + 20, Y + 20],
+          [X + 40, Y + 20],
+          [X + 40, Y + 40],
+          [X + 20, Y + 40],
+          [X + 20, Y + 20],
+        ],
+      ],
+    };
+    expect(puntInVlak3857([X + 30, Y + 30], metGat)).toBe(false);
+    expect(puntInVlak3857([X + 50, Y + 50], metGat)).toBe(true);
+  });
+
+  it("werkt op MultiPolygon en onbruikbare invoer", () => {
+    const mp = { type: "MultiPolygon", coordinates: [vierkant.coordinates] };
+    expect(puntInVlak3857([X + 50, Y + 50], mp)).toBe(true);
+    expect(puntInVlak3857([X + 50, Y + 50], null)).toBe(false);
   });
 });
 

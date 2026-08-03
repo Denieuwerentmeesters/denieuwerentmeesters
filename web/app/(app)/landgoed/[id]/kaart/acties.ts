@@ -4,7 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 import { after } from "next/server";
 import { moet } from "@/lib/db";
-import { oppervlakte3857 } from "@/lib/geo";
+import { oppervlakte3857, puntInVlak3857 } from "@/lib/geo";
 
 // ── Twee-fasen-invoer: bezit inladen, daarna indelen ──
 // Fase 1: een aangeklikt kadastraal perceel gaat direct het register in,
@@ -57,13 +57,212 @@ export async function registreerBezit(
   // antwoord (after), zodat de klik-registratie er niet trager van wordt.
   after(async () => {
     try {
-      await bewaarGebiedsliggingPerPerceel(supabase, landgoed_id, nieuw.id);
+      await bewaarGebiedsliggingPerPerceel(supabase, landgoed_id, [nieuw.id]);
     } catch {
       // PDOK onbereikbaar -> overslaan; een latere verversing haalt het in.
     }
   });
   revalidatePath(`/landgoed/${landgoed_id}`, "layout");
   return { status: "toegevoegd", aanduiding };
+}
+
+// ── Voordeur 1: bezit inladen met een getekende omtrek ──
+// Alle PDOK-percelen waarvan het zwaartepunt binnen de omtrek valt, in één
+// keer als bezit registreren. Eerst zoeken (voorvertoning met aantallen),
+// dan pas toevoegen — beide vanaf dezelfde omtrek, zodat de server nooit op
+// een client-lijstje hoeft te vertrouwen.
+const KADASTER_WFS =
+  "https://service.pdok.nl/kadaster/kadastralekaart/wfs/v5_0";
+
+type OmtrekKandidaat = {
+  aanduiding: string;
+  kenmerken: Record<string, unknown>;
+};
+
+async function zoekKandidatenBinnenOmtrek(
+  omtrek: [number, number][],
+): Promise<{ kandidaten: OmtrekKandidaat[]; afgekapt: boolean }> {
+  // Gesloten ring van de getekende omtrek (3857).
+  const ring = [...omtrek, omtrek[0]];
+  const vlak = { type: "Polygon", coordinates: [ring] };
+  const xs = omtrek.map((p) => p[0]);
+  const ys = omtrek.map((p) => p[1]);
+  const bbox = `${Math.min(...xs)},${Math.min(...ys)},${Math.max(...xs)},${Math.max(...ys)}`;
+
+  const kandidaten: OmtrekKandidaat[] = [];
+  let afgekapt = false;
+  // WFS-paging: per 1000, met een harde grens zodat een veel te grote omtrek
+  // niet stilletjes half werk oplevert.
+  for (let start = 0; start < 3000; start += 1000) {
+    const url =
+      `${KADASTER_WFS}?service=WFS&version=2.0.0&request=GetFeature` +
+      `&typeNames=kadastralekaart:Perceel&outputFormat=application/json` +
+      `&srsName=EPSG:3857&count=1000&startIndex=${start}` +
+      `&bbox=${bbox},EPSG:3857`;
+    const res = await fetch(url, { signal: AbortSignal.timeout(20000) });
+    if (!res.ok) throw new Error(`PDOK WFS: ${res.status}`);
+    const gj = await res.json();
+    const features = (gj?.features ?? []) as {
+      properties?: Record<string, unknown>;
+      geometry?: unknown;
+    }[];
+    for (const f of features) {
+      const c = centroid3857(f.geometry);
+      if (!c || !puntInVlak3857(c, vlak)) continue;
+      const pr = f.properties ?? {};
+      const gem = String(pr.kadastraleGemeenteWaarde ?? "");
+      const sectie = String(pr.sectie ?? "");
+      const nr = String(pr.perceelnummer ?? "");
+      if (!gem || !sectie || !nr) continue;
+      const aanduiding = `${gem} ${sectie} ${nr}`;
+      kandidaten.push({
+        aanduiding,
+        kenmerken: {
+          kadastrale_aanduiding: aanduiding,
+          kadastrale_gemeente: gem,
+          sectie,
+          perceelnummer: nr,
+          oppervlakte_m2: pr.kadastraleGrootteWaarde ?? null,
+          identificatie: pr.identificatieLokaalID ?? null,
+          geom_3857: f.geometry ?? null,
+        },
+      });
+    }
+    if (features.length < 1000) break;
+    if (start === 2000) afgekapt = true;
+  }
+  return { kandidaten, afgekapt };
+}
+
+// Sleutel waarop een perceel uniek is binnen een landgoed (zelfde als de
+// dedupe in registreerBezit).
+function perceelSleutel(gem: unknown, sectie: unknown, nr: unknown): string {
+  return `${String(gem ?? "").trim()}|${String(sectie ?? "").trim()}|${String(nr ?? "").trim()}`;
+}
+
+async function bestaandeSleutels(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  landgoed_id: string,
+): Promise<Set<string>> {
+  const { data } = await supabase
+    .from("kadastraal_perceel")
+    .select("kadastrale_gemeente, sectie, perceelnummer")
+    .eq("landgoed_id", landgoed_id);
+  return new Set(
+    (data ?? []).map((p) =>
+      perceelSleutel(p.kadastrale_gemeente, p.sectie, p.perceelnummer),
+    ),
+  );
+}
+
+export async function zoekPercelenBinnenOmtrek(
+  landgoed_id: string,
+  omtrek: [number, number][],
+): Promise<
+  | { status: "ok"; nieuw: number; bestaand: number; afgekapt: boolean }
+  | { status: "fout"; melding: string }
+> {
+  if (!landgoed_id || omtrek.length < 3)
+    return { status: "fout", melding: "Teken eerst een omtrek van minstens 3 punten." };
+  try {
+    const supabase = await createClient();
+    const [{ kandidaten, afgekapt }, bestaand] = await Promise.all([
+      zoekKandidatenBinnenOmtrek(omtrek),
+      bestaandeSleutels(supabase, landgoed_id),
+    ]);
+    const nieuw = kandidaten.filter(
+      (k) =>
+        !bestaand.has(
+          perceelSleutel(
+            k.kenmerken.kadastrale_gemeente,
+            k.kenmerken.sectie,
+            k.kenmerken.perceelnummer,
+          ),
+        ),
+    );
+    return {
+      status: "ok",
+      nieuw: nieuw.length,
+      bestaand: kandidaten.length - nieuw.length,
+      afgekapt,
+    };
+  } catch {
+    return {
+      status: "fout",
+      melding: "PDOK is niet bereikbaar — probeer het zo nog eens.",
+    };
+  }
+}
+
+export async function registreerBezitBinnenOmtrek(
+  landgoed_id: string,
+  omtrek: [number, number][],
+): Promise<
+  | { status: "ok"; toegevoegd: number; overgeslagen: number }
+  | { status: "fout"; melding: string }
+> {
+  if (!landgoed_id || omtrek.length < 3)
+    return { status: "fout", melding: "Teken eerst een omtrek van minstens 3 punten." };
+  try {
+    const supabase = await createClient();
+    const [{ kandidaten }, bestaand] = await Promise.all([
+      zoekKandidatenBinnenOmtrek(omtrek),
+      bestaandeSleutels(supabase, landgoed_id),
+    ]);
+    // Dedupe binnen de vangst zelf én tegen het bestaande bezit.
+    const gezien = new Set<string>();
+    const nieuw = kandidaten.filter((k) => {
+      const sleutel = perceelSleutel(
+        k.kenmerken.kadastrale_gemeente,
+        k.kenmerken.sectie,
+        k.kenmerken.perceelnummer,
+      );
+      if (bestaand.has(sleutel) || gezien.has(sleutel)) return false;
+      gezien.add(sleutel);
+      return true;
+    });
+    if (!nieuw.length)
+      return { status: "ok", toegevoegd: 0, overgeslagen: kandidaten.length };
+
+    const rijen = nieuw.map((k) => {
+      const opp = Number(k.kenmerken.oppervlakte_m2);
+      return {
+        landgoed_id,
+        kadastrale_gemeente: String(k.kenmerken.kadastrale_gemeente),
+        sectie: String(k.kenmerken.sectie),
+        perceelnummer: String(k.kenmerken.perceelnummer),
+        kadastrale_aanduiding: k.aanduiding,
+        oppervlakte_m2: Number.isFinite(opp) ? opp : null,
+        bron_identificatie: String(k.kenmerken.identificatie ?? "").trim() || null,
+        geom_3857: k.kenmerken.geom_3857 ?? null,
+        opgehaald_op: new Date().toISOString(),
+      };
+    });
+    const toegevoegd = await moet(
+      supabase.from("kadastraal_perceel").insert(rijen).select("id"),
+      "bezit registreren (omtrek)",
+    );
+    // Gebiedsligging voor de nieuwe percelen ná het antwoord bepalen.
+    const nieuweIds = toegevoegd.map((r) => r.id as string);
+    after(async () => {
+      try {
+        await bewaarGebiedsliggingPerPerceel(supabase, landgoed_id, nieuweIds);
+      } catch {
+        // PDOK onbereikbaar -> een latere verversing haalt het in.
+      }
+    });
+    revalidatePath(`/landgoed/${landgoed_id}`, "layout");
+    return {
+      status: "ok",
+      toegevoegd: nieuw.length,
+      overgeslagen: kandidaten.length - nieuw.length,
+    };
+  } catch {
+    return {
+      status: "fout",
+      melding: "PDOK is niet bereikbaar — probeer het zo nog eens.",
+    };
+  }
 }
 
 // Fase 1: verwijderen (vergissing herstellen) — alleen zolang niet ingedeeld.
@@ -724,14 +923,14 @@ async function bewaarGebiedsligging(
 async function bewaarGebiedsliggingPerPerceel(
   supabase: Awaited<ReturnType<typeof createClient>>,
   landgoed_id: string,
-  alleenPerceelId?: string,
+  alleenPerceelIds?: string[],
 ) {
   let query = supabase
     .from("kadastraal_perceel")
     .select("id, geom_3857")
     .eq("landgoed_id", landgoed_id);
-  // Bij het inladen van één nieuw perceel checken we alleen dat perceel.
-  if (alleenPerceelId) query = query.eq("id", alleenPerceelId);
+  // Bij het inladen van nieuwe percelen checken we alleen die percelen.
+  if (alleenPerceelIds?.length) query = query.in("id", alleenPerceelIds);
   const { data: percelen } = await query;
   if (!percelen?.length) return;
 
