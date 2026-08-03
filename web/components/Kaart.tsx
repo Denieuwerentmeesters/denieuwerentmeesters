@@ -268,6 +268,11 @@ export default function Kaart({
     "klikken",
   );
   const omtrekActief = bezitMethode === "omtrek";
+  // Tijdens het tekenen is de omtrek een open lijn; sluiten (laatste →
+  // eerste punt) is een bewuste stap. Voorkomt het verwarrende "rood en dan
+  // weer zwart"-geknipper van een automatisch meesluitende ring.
+  const [omtrekGesloten, setOmtrekGesloten] = useState(false);
+  const omtrekGeslotenRef = useRef(false);
   const [omtrek, setOmtrek] = useState<[number, number][]>([]);
   const [omtrekResultaat, setOmtrekResultaat] = useState<{
     nieuw: number;
@@ -535,6 +540,7 @@ export default function Kaart({
       setBezitMethode("klikken");
       setOmtrek([]);
       setOmtrekResultaat(null);
+      setOmtrekGesloten(false);
     }
     // De splitslijn-flow leeft alleen in de bekijk-modus.
     if (mode !== "bekijk") setSplitsing(null);
@@ -597,20 +603,24 @@ export default function Kaart({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [splitsing]);
 
-  // De getekende omtrek (voordeur 1) op de kaart bijhouden: stippen per punt,
-  // en vanaf drie punten een gesloten, licht gevuld vlak-voorbeeld.
+  // De getekende omtrek (voordeur 1) op de kaart bijhouden: tijdens het
+  // tekenen een open lijn met stippen; pas na "Sluit de omtrek" een gesloten,
+  // licht gevuld vlak. Een zelfkruisend pad kleurt rood.
   useEffect(() => {
     omtrekActiefRef.current = omtrekActief;
+    omtrekGeslotenRef.current = omtrekGesloten;
     const L = LRef.current;
     const map = mapRef.current;
     if (!L || !map) return;
+    // Dubbelklik-zoomen zit het snelle punten-klikken in de weg.
+    if (omtrekActief) map.doubleClickZoom.disable();
+    else map.doubleClickZoom.enable();
     if (omtrekLaagRef.current) {
       omtrekLaagRef.current.remove();
       omtrekLaagRef.current = null;
     }
     if (!omtrekActief || omtrek.length === 0) return;
-    // Een zelfkruisende omtrek kleurt rood: die kan niet gebruikt worden.
-    const kruist = isZelfkruisend(omtrek);
+    const kruist = isZelfkruisend(omtrek, omtrekGesloten);
     const kleur = kruist ? "#dc2626" : "#111827";
     const groep = L.layerGroup();
     for (const punt of omtrek) {
@@ -622,7 +632,7 @@ export default function Kaart({
         fillOpacity: 1,
       }).addTo(groep);
     }
-    if (omtrek.length >= 3) {
+    if (omtrekGesloten && omtrek.length >= 3) {
       L.polygon(omtrek, {
         color: kleur,
         weight: 2,
@@ -630,9 +640,9 @@ export default function Kaart({
         fillColor: kleur,
         fillOpacity: 0.06,
       }).addTo(groep);
-    } else if (omtrek.length === 2) {
+    } else if (omtrek.length >= 2) {
       L.polyline(omtrek, {
-        color: "#111827",
+        color: kleur,
         weight: 2,
         dashArray: "6 4",
       }).addTo(groep);
@@ -640,7 +650,7 @@ export default function Kaart({
     groep.addTo(map);
     omtrekLaagRef.current = groep;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [omtrek, omtrekActief]);
+  }, [omtrek, omtrekActief, omtrekGesloten]);
 
   // De getekende splitslijn op de kaart bijhouden. Elk gezet punt krijgt
   // direct een stip — anders is de allereerste klik onzichtbaar (een lijn
@@ -836,8 +846,10 @@ export default function Kaart({
         if (m === "perceel" && omtrekActiefRef.current) {
           laagKlikRef.current = true;
           if (e.originalEvent) L.DomEvent.stopPropagation(e.originalEvent);
-          setOmtrek((prev) => [...prev, [e.latlng.lat, e.latlng.lng]]);
-          setOmtrekResultaat(null);
+          if (!omtrekGeslotenRef.current) {
+            setOmtrek((prev) => [...prev, [e.latlng.lat, e.latlng.lng]]);
+            setOmtrekResultaat(null);
+          }
           return;
         }
         // Alleen in de modi waar het vlak de klik zelf afhandelt de kaart-klik
@@ -1022,10 +1034,13 @@ export default function Kaart({
           setGeselecteerd(null);
           return;
         }
-        // Omtrek tekenen (voordeur 1): elke kaartklik is een hoekpunt.
+        // Omtrek tekenen (voordeur 1): elke kaartklik is een hoekpunt —
+        // behalve als de omtrek al gesloten is (eerst weer openen).
         if (m === "perceel" && omtrekActiefRef.current) {
-          setOmtrek((prev) => [...prev, [lat, lon]]);
-          setOmtrekResultaat(null);
+          if (!omtrekGeslotenRef.current) {
+            setOmtrek((prev) => [...prev, [lat, lon]]);
+            setOmtrekResultaat(null);
+          }
           return;
         }
         setGeselecteerd(null);
@@ -1251,6 +1266,7 @@ export default function Kaart({
               setBezitMethode("klikken");
               setOmtrek([]);
               setOmtrekResultaat(null);
+              setOmtrekGesloten(false);
             }}
           >
             Percelen aanklikken
@@ -1292,7 +1308,7 @@ export default function Kaart({
             : "Klik op de hoofdlocatie van het landgoed; adres/gemeente/provincie wordt opgezocht."
           : mode === "perceel"
             ? bezitMethode === "omtrek"
-              ? "Omtrek tekenen: klik hoekpunten op volgorde langs de rand van het gebied (minstens 3) en kies dan “Zoek percelen binnen de omtrek” — alle percelen erbinnen gaan in één keer het bezit in. Zoom je ver uit, dan verbergt het Kadaster de perceelgrenzen; zoom in en ze verschijnen weer."
+              ? "Omtrek tekenen: klik hoekpunten langs de rand van het gebied (minstens 3), druk op “Sluit de omtrek” als de vorm af is, en kies dan “Zoek percelen binnen de omtrek” — alle percelen erbinnen gaan in één keer het bezit in."
               : "Klik-klik-klik: elk aangeklikt perceel gaat direct het bezit in (PDOK Kadaster). Nogmaals klikken op een grijs perceel verwijdert het weer. Let op: zoom je ver uit, dan verbergt het Kadaster de perceelgrenzen en nummers — zoom in en ze verschijnen weer. Indelen komt daarna."
             : mode === "indelen"
               ? "Selecteer een of meer grijze percelen en maak er samen een beheerperceel van — of voeg ze toe aan een bestaand beheerperceel."
@@ -1483,6 +1499,7 @@ export default function Kaart({
                   }
                   setOmtrek([]);
                   setOmtrekResultaat(null);
+                  setOmtrekGesloten(false);
                   setBezitMethode("klikken");
                   setMelding(
                     `${r.toegevoegd} percelen toegevoegd aan het bezit${
@@ -1504,30 +1521,22 @@ export default function Kaart({
                 onClick={() => {
                   setOmtrek([]);
                   setOmtrekResultaat(null);
+                  setOmtrekGesloten(false);
                 }}
               >
                 Opnieuw
               </button>
             </>
-          ) : (
+          ) : omtrekGesloten ? (
             <>
-              <span
-                style={{
-                  color: isZelfkruisend(omtrek) ? "var(--red)" : "var(--text-2)",
-                }}
-              >
-                {isZelfkruisend(omtrek)
-                  ? "De omtrek kruist zichzelf (rood) — klik de hoekpunten op volgorde langs de rand. Haal het laatste punt weg of wis de omtrek."
-                  : omtrek.length === 0
-                    ? "Nog geen hoekpunten gezet — klik op de kaart."
-                    : `${omtrek.length} hoekpunt${omtrek.length > 1 ? "en" : ""} gezet — elke kaartklik voegt er een toe.`}
+              <span style={{ color: "var(--text-2)" }}>
+                Omtrek gesloten ({omtrek.length} hoekpunten) — zoek de
+                percelen, of open de omtrek weer om aan te passen.
               </span>
               <button
                 type="button"
                 className="btn btn-primary btn-sm"
-                disabled={
-                  omtrek.length < 3 || omtrekBezig || isZelfkruisend(omtrek)
-                }
+                disabled={omtrekBezig}
                 onClick={async () => {
                   setOmtrekBezig(true);
                   const omtrek3857 = omtrek.map(([la, lo]) =>
@@ -1546,6 +1555,58 @@ export default function Kaart({
                 }}
               >
                 {omtrekBezig ? "Zoeken…" : "Zoek percelen binnen de omtrek"}
+              </button>
+              <button
+                type="button"
+                className="btn btn-ghost btn-sm"
+                disabled={omtrekBezig}
+                onClick={() => setOmtrekGesloten(false)}
+              >
+                Open de omtrek weer
+              </button>
+              <button
+                type="button"
+                className="btn btn-ghost btn-sm"
+                disabled={omtrekBezig}
+                onClick={() => {
+                  setOmtrek([]);
+                  setOmtrekGesloten(false);
+                }}
+              >
+                Wis omtrek
+              </button>
+            </>
+          ) : (
+            <>
+              <span
+                style={{
+                  color: isZelfkruisend(omtrek, false)
+                    ? "var(--red)"
+                    : "var(--text-2)",
+                }}
+              >
+                {isZelfkruisend(omtrek, false)
+                  ? "De lijn kruist zichzelf (rood) — haal het laatste punt weg of pas de vorm aan."
+                  : omtrek.length === 0
+                    ? "Nog geen hoekpunten gezet — klik op de kaart."
+                    : `${omtrek.length} hoekpunt${omtrek.length > 1 ? "en" : ""} gezet — sluit de omtrek als de vorm af is.`}
+              </span>
+              <button
+                type="button"
+                className="btn btn-primary btn-sm"
+                disabled={omtrek.length < 3 || omtrekBezig}
+                onClick={() => {
+                  if (isZelfkruisend(omtrek, true)) {
+                    setMelding(
+                      "Sluiten zou de omtrek zichzelf laten kruisen — haal het laatste punt weg of pas de vorm aan.",
+                    );
+                    return;
+                  }
+                  setMelding(null);
+                  setOmtrekGesloten(true);
+                }}
+              >
+                Sluit de omtrek
               </button>
               <button
                 type="button"

@@ -115,6 +115,34 @@ describe("isZelfkruisend", () => {
       ]),
     ).toBe(false);
   });
+
+  it("open pad: sluitzijde telt niet mee", () => {
+    // Het open pad is netjes, maar de denkbeeldige sluitlijn (laatste →
+    // eerste punt) zou dwars door de bovenzijde snijden.
+    const pad: [number, number][] = [
+      [0, 0],
+      [10, 0],
+      [10, 10],
+      [0, 10],
+      [4, 12],
+    ];
+    expect(isZelfkruisend(pad, false)).toBe(false);
+    expect(isZelfkruisend(pad, true)).toBe(true);
+  });
+
+  it("open pad: eigen kruising wordt wel gezien", () => {
+    expect(
+      isZelfkruisend(
+        [
+          [0, 0],
+          [10, 0],
+          [10, 10],
+          [5, -5],
+        ],
+        false,
+      ),
+    ).toBe(true);
+  });
 });
 
 describe("puntInVlak3857", () => {
