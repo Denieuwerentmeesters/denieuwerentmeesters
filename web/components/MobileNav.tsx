@@ -129,7 +129,9 @@ export default function MobileNav({
                   </div>
                 )}
                 {groep.items.map((item) => {
-                  const actief = pathname === item.href || pathname.startsWith(item.href + "/");
+                  const actief =
+                    pathname === item.href ||
+                    (!item.exact && pathname.startsWith(item.href + "/"));
                   const badgeKleur = item.badgeKleur ?? "grijs";
                   return (
                     <Link
