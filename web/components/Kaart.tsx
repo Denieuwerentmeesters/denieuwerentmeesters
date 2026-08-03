@@ -1415,7 +1415,18 @@ export default function Kaart({
             )}
             <div className="w-full text-[12px]" style={{ color: "var(--text-2)" }}>
               {selectie.length === 0 ? (
-                "Klik percelen aan op de kaart of in de lijst hieronder."
+                // Hulptekst die meedenkt met de situatie: wat valt er
+                // werkelijk aan te klikken?
+                (() => {
+                  const nogInTeDelen = bezit.filter((b) => !b.ingedeeld).length;
+                  if (bezit.length === 0)
+                    return "Nog geen bezit ingeladen — begin bij 1 · Bezit inladen.";
+                  if (nogInTeDelen > 0)
+                    return `Klik de nog in te delen percelen (grijs gestippeld) aan op de kaart of in de lijst hieronder — nog ${nogInTeDelen}.`;
+                  if (extraKoppelen)
+                    return "Deelgebruik staat aan: klik een al-ingedeeld perceel aan om het óók aan een tweede beheerperceel toe te wijzen.";
+                  return `Alle ${bezit.length} percelen zijn ingedeeld — er valt niets meer toe te wijzen. Wil je een perceel óók bij een tweede beheerperceel voegen? Zet dan het deelgebruik-vinkje hieronder aan. Een perceel verplaatsen? Ontkoppel het eerst via Wijzig bij het beheerperceel.`;
+                })()
               ) : (
                 <>
                   Geselecteerd:{" "}
