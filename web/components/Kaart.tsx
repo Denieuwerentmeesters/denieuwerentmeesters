@@ -781,13 +781,19 @@ export default function Kaart({
     else laag.remove();
   }, [toonNatura]);
 
-  // NNN-overlay aan/uit op basis van de toggle.
+  // NNN-overlay aan/uit op basis van de toggle. De klasse kleurt de grijze
+  // PDOK-stijl groen (na elke addTo opnieuw: Leaflet bouwt de laag-container
+  // dan opnieuw op).
   useEffect(() => {
     const map = mapRef.current;
     const laag = nnnRef.current;
     if (!map || !laag) return;
-    if (toonNnn) laag.addTo(map);
-    else laag.remove();
+    if (toonNnn) {
+      laag.addTo(map);
+      laag.getContainer()?.classList.add("nnn-groen");
+    } else {
+      laag.remove();
+    }
   }, [toonNnn]);
 
   useEffect(() => {
