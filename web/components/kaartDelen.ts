@@ -198,6 +198,67 @@ export function haTekst(m2: unknown): string {
   })} ha`;
 }
 
+// Kort perceelnummer voor het kaartlabel: "Middelburg S 3193" → "S 3193".
+export function kortNummer(aanduiding: string): string {
+  const delen = aanduiding.split(" ");
+  return delen.length >= 2 ? delen.slice(-2).join(" ") : aanduiding;
+}
+
+// Bouwt de kadastrale weergave-laag: alle percelen van het landgoed in een
+// herkenbare (huisstijl-groene) tint — zo vallen ze op tussen het omliggende
+// kadaster — met het korte perceelnummer als label in het vlak.
+// werkLabelsBij(map) verbergt labels van percelen die op het scherm te smal
+// zijn voor hun nummer (geen overlappende tekstbrij bij uitzoomen); aanroepen
+// bij zoomen en bij het tonen van de laag.
+export function maakKadastraleLaag(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  L: any,
+  percelen: { id: string; aanduiding: string; geom: unknown }[],
+  opAanklik?: (id: string) => void,
+) {
+  const groep = L.layerGroup();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const vlakken = new Map<string, any>();
+  for (const p of percelen) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const latlngs = geomNaarLatlngs(L, p.geom) as any;
+    if (!latlngs) continue;
+    const poly = L.polygon(latlngs, {
+      color: "#1B3A28",
+      weight: 2,
+      fillColor: "#2A5C3F",
+      fillOpacity: 0.12,
+      interactive: Boolean(opAanklik),
+    });
+    poly.bindTooltip(kortNummer(p.aanduiding), {
+      permanent: true,
+      direction: "center",
+      className: "kadastraal-label",
+    });
+    if (opAanklik) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      poly.on("click", (e: any) => {
+        if (e.originalEvent) L.DomEvent.stopPropagation(e.originalEvent);
+        opAanklik(p.id);
+      });
+    }
+    poly.addTo(groep);
+    vlakken.set(p.id, poly);
+  }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const werkLabelsBij = (map: any) => {
+    for (const poly of vlakken.values()) {
+      const b = poly.getBounds();
+      const breedte = Math.abs(
+        map.latLngToLayerPoint(b.getNorthEast()).x -
+          map.latLngToLayerPoint(b.getSouthWest()).x,
+      );
+      poly.getTooltip()?.setOpacity(breedte > 50 ? 1 : 0);
+    }
+  };
+  return { groep, vlakken, werkLabelsBij };
+}
+
 // Zet een geom (EPSG:3857) om naar Leaflet-latlngs, of null als ongeldig.
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function geomNaarLatlngs(L: any, geom: unknown): unknown {

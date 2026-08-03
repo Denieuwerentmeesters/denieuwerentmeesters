@@ -24,6 +24,7 @@ import {
   kaartGroep,
   ordenGebouwen,
   geomNaarLatlngs,
+  maakKadastraleLaag,
 } from "@/components/kaartDelen";
 
 type BezitVlak = {
@@ -43,12 +44,6 @@ function haGetal(m2: number): string {
 
 // Sentinel voor de filter-chip "nog geen gebruik".
 const GEEN_GEBRUIK = "__geen__";
-
-// Kort perceelnummer voor het kaartlabel: "Middelburg S 3193" → "S 3193".
-function kortNummer(aanduiding: string): string {
-  const delen = aanduiding.split(" ");
-  return delen.length >= 2 ? delen.slice(-2).join(" ") : aanduiding;
-}
 
 export default function KaartWeergave({
   landgoedId,
@@ -98,6 +93,7 @@ export default function KaartWeergave({
   // De kadastrale vlakken per bezit-perceel (voor selectie in die weergave).
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const kadVlakkenRef = useRef<Map<string, any>>(new Map());
+  const werkLabelsBijRef = useRef<(() => void) | null>(null);
   const selectieRef = useRef<string[]>([]);
   const kadSelectieRef = useRef<string[]>([]);
   const filterRef = useRef<string | null>(null);
@@ -132,10 +128,10 @@ export default function KaartWeergave({
   function pasKadStijlenToe(sel: string[]) {
     for (const [pid, poly] of kadVlakkenRef.current) {
       if (!sel.length)
-        poly.setStyle({ opacity: 1, weight: 1.5, fillOpacity: 0.03 });
+        poly.setStyle({ opacity: 1, weight: 2, fillOpacity: 0.12 });
       else if (sel.includes(pid))
-        poly.setStyle({ opacity: 1, weight: 3, fillOpacity: 0.2 });
-      else poly.setStyle({ opacity: 0.35, weight: 1, fillOpacity: 0.01 });
+        poly.setStyle({ opacity: 1, weight: 3.5, fillOpacity: 0.3 });
+      else poly.setStyle({ opacity: 0.35, weight: 1, fillOpacity: 0.04 });
     }
   }
 
@@ -303,34 +299,14 @@ export default function KaartWeergave({
       groep.addTo(map);
       overzichtRef.current = groep;
 
-      // ── De kadastrale laag: alle percelen strak omlijnd, met kort nummer ──
-      const kadGroep = L.layerGroup();
-      kadVlakkenRef.current = new Map();
-      for (const p of bezit) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const latlngs = geomNaarLatlngs(L, p.geom) as any;
-        if (!latlngs) continue;
-        const poly = L.polygon(latlngs, {
-          color: "#374151",
-          weight: 1.5,
-          fillColor: "#374151",
-          fillOpacity: 0.03,
-        });
-        poly.bindTooltip(kortNummer(p.aanduiding), {
-          permanent: true,
-          direction: "center",
-          className: "kadastraal-label",
-        });
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        poly.on("click", (e: any) => {
-          if (e.originalEvent) L.DomEvent.stopPropagation(e.originalEvent);
-          toonKadInLijst(p.id);
-        });
-        poly.addTo(kadGroep);
-        kadVlakkenRef.current.set(p.id, poly);
-        bounds.extend(poly.getBounds());
-      }
-      kadastraalLaagRef.current = kadGroep;
+      // ── De kadastrale laag (gedeelde bouwsteen): landgoed-percelen in een
+      // herkenbare tint, korte nummers, labels alleen als ze passen ──
+      const kad = maakKadastraleLaag(L, bezit, toonKadInLijst);
+      kadastraalLaagRef.current = kad.groep;
+      kadVlakkenRef.current = kad.vlakken;
+      werkLabelsBijRef.current = () => kad.werkLabelsBij(map);
+      map.on("zoomend", () => werkLabelsBijRef.current?.());
+      for (const poly of kad.vlakken.values()) bounds.extend(poly.getBounds());
 
       if (bounds.isValid()) {
         boundsRef.current = bounds;
@@ -383,6 +359,7 @@ export default function KaartWeergave({
       setSelectie([]);
       overzichtRef.current.remove();
       kadastraalLaagRef.current.addTo(map);
+      werkLabelsBijRef.current?.();
     } else {
       setKadSelectie([]);
       kadastraalLaagRef.current.remove();
