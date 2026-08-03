@@ -2,6 +2,7 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
+import { after } from "next/server";
 import { moet } from "@/lib/db";
 import { oppervlakte3857 } from "@/lib/geo";
 
@@ -52,14 +53,15 @@ export async function registreerBezit(
       .single(),
     "bezit registreren",
   );
-  // Gebiedsligging (Natura 2000/NNN) direct voor dít ene perceel bepalen —
-  // zo is de knop "Ververs gebiedsligging" alleen nog nodig als beleid
-  // wijzigt, niet bij het gewone inladen.
-  try {
-    await bewaarGebiedsliggingPerPerceel(supabase, landgoed_id, nieuw.id);
-  } catch {
-    // PDOK onbereikbaar -> overslaan; een latere verversing haalt het in.
-  }
+  // Gebiedsligging (Natura 2000/NNN) voor dít ene perceel bepalen — ná het
+  // antwoord (after), zodat de klik-registratie er niet trager van wordt.
+  after(async () => {
+    try {
+      await bewaarGebiedsliggingPerPerceel(supabase, landgoed_id, nieuw.id);
+    } catch {
+      // PDOK onbereikbaar -> overslaan; een latere verversing haalt het in.
+    }
+  });
   revalidatePath(`/landgoed/${landgoed_id}`, "layout");
   return { status: "toegevoegd", aanduiding };
 }
