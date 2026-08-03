@@ -262,8 +262,12 @@ export default function Kaart({
   const [extraKoppelen, setExtraKoppelen] = useState(false);
   // Splitslijn-flow: welk kadastraal perceel wordt gesplitst, de getekende
   // lijnpunten, de geknipte delen en per deel het gekozen beheerperceel.
-  // Voordeur 1: omtrek tekenen in de bezit-laadmodus (bulk inladen).
-  const [omtrekActief, setOmtrekActief] = useState(false);
+  // Bezit-laadmodus kent drie voordeuren; de gekozen methode bepaalt wat een
+  // kaartklik doet en welke uitleg het gele kader toont.
+  const [bezitMethode, setBezitMethode] = useState<"klikken" | "omtrek">(
+    "klikken",
+  );
+  const omtrekActief = bezitMethode === "omtrek";
   const [omtrek, setOmtrek] = useState<[number, number][]>([]);
   const [omtrekResultaat, setOmtrekResultaat] = useState<{
     nieuw: number;
@@ -528,7 +532,7 @@ export default function Kaart({
     setExtraKoppelen(false);
     // De omtrek-flow leeft alleen in de bezit-laadmodus.
     if (mode !== "perceel") {
-      setOmtrekActief(false);
+      setBezitMethode("klikken");
       setOmtrek([]);
       setOmtrekResultaat(null);
     }
@@ -1233,6 +1237,43 @@ export default function Kaart({
         </div>
       )}
 
+      {/* Bezit inladen: eerst de methode kiezen (de drie voordeuren), dan
+          pas de uitleg — de uitleg in het gele kader volgt de keuze. */}
+      {mode === "perceel" && (
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="text-[12.5px]" style={{ color: "var(--text-2)" }}>
+            Bezit inladen via:
+          </span>
+          <button
+            type="button"
+            className={`btn btn-sm ${bezitMethode === "klikken" ? "btn-primary" : "btn-ghost"}`}
+            onClick={() => {
+              setBezitMethode("klikken");
+              setOmtrek([]);
+              setOmtrekResultaat(null);
+            }}
+          >
+            Percelen aanklikken
+          </button>
+          <button
+            type="button"
+            className={`btn btn-sm ${bezitMethode === "omtrek" ? "btn-primary" : "btn-ghost"}`}
+            onClick={() => setBezitMethode("omtrek")}
+          >
+            ✏️ Omtrek tekenen
+          </button>
+          <button
+            type="button"
+            className="btn btn-ghost btn-sm"
+            disabled
+            title="Voordeur 3 — in ontwikkeling"
+            style={{ opacity: 0.5 }}
+          >
+            📄 Uittreksel uploaden · binnenkort
+          </button>
+        </div>
+      )}
+
       {/* Modus-uitleg: belangrijke gebruiksinfo, dus in een opvallend kader
           in plaats van grijs weggemoffeld (wens Steven). */}
       <p
@@ -1250,7 +1291,9 @@ export default function Kaart({
             ? "Klik op de kaart om de landgoed-locatie te wijzigen."
             : "Klik op de hoofdlocatie van het landgoed; adres/gemeente/provincie wordt opgezocht."
           : mode === "perceel"
-            ? "Klik-klik-klik: elk aangeklikt perceel gaat direct het bezit in (PDOK Kadaster). Nogmaals klikken op een grijs perceel verwijdert het weer. Let op: zoom je ver uit, dan verbergt het Kadaster de perceelgrenzen en nummers — zoom in en ze verschijnen weer. Indelen komt daarna."
+            ? bezitMethode === "omtrek"
+              ? "Omtrek tekenen: klik hoekpunten op volgorde langs de rand van het gebied (minstens 3) en kies dan “Zoek percelen binnen de omtrek” — alle percelen erbinnen gaan in één keer het bezit in. Zoom je ver uit, dan verbergt het Kadaster de perceelgrenzen; zoom in en ze verschijnen weer."
+              : "Klik-klik-klik: elk aangeklikt perceel gaat direct het bezit in (PDOK Kadaster). Nogmaals klikken op een grijs perceel verwijdert het weer. Let op: zoom je ver uit, dan verbergt het Kadaster de perceelgrenzen en nummers — zoom in en ze verschijnen weer. Indelen komt daarna."
             : mode === "indelen"
               ? "Selecteer een of meer grijze percelen en maak er samen een beheerperceel van — of voeg ze toe aan een bestaand beheerperceel."
               : "Klik op een gebouw; adres, oppervlakte, pandstatus en monumentstatus (RCE) worden opgehaald."}
@@ -1407,29 +1450,11 @@ export default function Kaart({
         {/* Linkerkolom: panelen en lijsten */}
         <div className="flex flex-col gap-3 lg:order-1">
 
-      {/* Omtrek-paneel (voordeur 1): in de bezit-laadmodus een gebied
-          omtrekken en alle percelen erbinnen in één keer inladen. */}
-      {mode === "perceel" && (
+      {/* Omtrek-paneel (voordeur 1): bedienknoppen bij de gekozen methode
+          "Omtrek tekenen" — de uitleg staat in het gele kader hierboven. */}
+      {mode === "perceel" && omtrekActief && (
         <div className="card flex flex-wrap items-center gap-3 p-4 text-[13px]">
-          {!omtrekActief ? (
-            <>
-              <button
-                type="button"
-                className="btn btn-ghost btn-sm"
-                onClick={() => {
-                  setOmtrekActief(true);
-                  setOmtrek([]);
-                  setOmtrekResultaat(null);
-                }}
-              >
-                ✏️ Teken een omtrek (bulk inladen)
-              </button>
-              <span style={{ color: "var(--text-2)" }}>
-                Omtrek een gebied en alle percelen erbinnen gaan in één keer
-                het bezit in — sneller dan stuk voor stuk klikken.
-              </span>
-            </>
-          ) : omtrekResultaat ? (
+          {omtrekResultaat ? (
             <>
               <span className="font-medium">
                 {omtrekResultaat.nieuw} nieuwe percelen gevonden ·{" "}
@@ -1458,7 +1483,7 @@ export default function Kaart({
                   }
                   setOmtrek([]);
                   setOmtrekResultaat(null);
-                  setOmtrekActief(false);
+                  setBezitMethode("klikken");
                   setMelding(
                     `${r.toegevoegd} percelen toegevoegd aan het bezit${
                       r.overgeslagen
@@ -1483,18 +1508,6 @@ export default function Kaart({
               >
                 Opnieuw
               </button>
-              <button
-                type="button"
-                className="btn btn-ghost btn-sm"
-                disabled={omtrekBezig}
-                onClick={() => {
-                  setOmtrekActief(false);
-                  setOmtrek([]);
-                  setOmtrekResultaat(null);
-                }}
-              >
-                Stop
-              </button>
             </>
           ) : (
             <>
@@ -1506,7 +1519,7 @@ export default function Kaart({
                 {isZelfkruisend(omtrek)
                   ? "De omtrek kruist zichzelf (rood) — klik de hoekpunten op volgorde langs de rand. Haal het laatste punt weg of wis de omtrek."
                   : omtrek.length === 0
-                    ? "Klik hoekpunten op de kaart om het gebied te omtrekken (minstens 3), op volgorde langs de rand."
+                    ? "Nog geen hoekpunten gezet — klik op de kaart."
                     : `${omtrek.length} hoekpunt${omtrek.length > 1 ? "en" : ""} gezet — elke kaartklik voegt er een toe.`}
               </span>
               <button
@@ -1549,17 +1562,6 @@ export default function Kaart({
                 onClick={() => setOmtrek([])}
               >
                 Wis omtrek
-              </button>
-              <button
-                type="button"
-                className="btn btn-ghost btn-sm"
-                disabled={omtrekBezig}
-                onClick={() => {
-                  setOmtrekActief(false);
-                  setOmtrek([]);
-                }}
-              >
-                Stop
               </button>
             </>
           )}
