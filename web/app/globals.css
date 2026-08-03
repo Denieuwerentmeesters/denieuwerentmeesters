@@ -192,3 +192,13 @@ body {
 .leaflet-layer.nnn-groen {
   filter: sepia(1) saturate(4) hue-rotate(70deg);
 }
+
+/* Hover-tooltips op de kaart: lange regels ("K 2702 · behoort bij
+   beheerperceel: ...") lopen als compact blokje om in plaats van één
+   onleesbare regel. De permanente perceelnummer-labels (kadastrale
+   weergave) blijven bewust één regel. */
+.leaflet-tooltip:not(.kadastraal-label) {
+  white-space: normal;
+  max-width: 240px;
+  line-height: 1.35;
+}
