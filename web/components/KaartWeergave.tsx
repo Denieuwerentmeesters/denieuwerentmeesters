@@ -16,7 +16,6 @@ import {
   BAG_WMS,
   NATURA2000_WMS,
   NNN_WMS,
-  GEBRUIK_KLEUR,
   KLEUR_GEEN_GEBRUIK,
   kleurVoorGebruik,
   KAARTGROEP_LABELS,
@@ -26,6 +25,12 @@ import {
   geomNaarLatlngs,
   maakKadastraleLaag,
 } from "@/components/kaartDelen";
+// De gebruik-lijsten per soort: percelen en gebouwen hebben elk hun eigen
+// gebruiksvormen — de filterchips volgen het actieve tabblad.
+import {
+  GEBRUIK_OPTIES,
+  GEBRUIK_GEBOUW_OPTIES,
+} from "@/app/(app)/landgoed/[id]/stamgegevens/constanten";
 
 type BezitVlak = {
   id: string;
@@ -87,6 +92,7 @@ export default function KaartWeergave({
         poly: any;
         basis: { weight: number; fillOpacity: number };
         gebruik: string | null;
+        isPerceel: boolean;
       }[]
     >
   >(new Map());
@@ -113,14 +119,20 @@ export default function KaartWeergave({
   const [kadSelectie, setKadSelectie] = useState<string[]>([]);
 
   // Eén stijl-pass over alle vlakken: selectie wint van filter, filter wint
-  // van de basisweergave. Alles wat niet meedoet vervaagt.
-  function pasStijlenToe(sel: string[], filter: string | null) {
+  // van de basisweergave. Alles wat niet meedoet vervaagt. Het filter slaat
+  // alleen op het soort van het actieve tabblad (percelen óf gebouwen).
+  function pasStijlenToe(
+    sel: string[],
+    filter: string | null,
+    tab: "percelen" | "gebouwen",
+  ) {
     for (const [oid, vlakken] of vlakkenRef.current) {
-      for (const { poly, basis, gebruik } of vlakken) {
+      for (const { poly, basis, gebruik, isPerceel } of vlakken) {
         const vol = sel.length
           ? sel.includes(oid)
           : filter
-            ? (gebruik ?? GEEN_GEBRUIK) === filter
+            ? (gebruik ?? GEEN_GEBRUIK) === filter &&
+              (tab === "gebouwen" ? !isPerceel : isPerceel)
             : null;
         if (vol === null) poly.setStyle({ opacity: 1, ...basis });
         else if (vol) poly.setStyle({ opacity: 1, weight: 4, fillOpacity: 0.55 });
@@ -160,7 +172,7 @@ export default function KaartWeergave({
   useEffect(() => {
     selectieRef.current = selectie;
     filterRef.current = filterGebruik;
-    pasStijlenToe(selectie, filterGebruik);
+    pasStijlenToe(selectie, filterGebruik, lijstTab);
     if (selectie.length) {
       zoomNaar(
         selectie.flatMap((id) =>
@@ -172,7 +184,7 @@ export default function KaartWeergave({
     }
     vorigeSelectie.current = selectie.length;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectie, filterGebruik]);
+  }, [selectie, filterGebruik, lijstTab]);
 
   const vorigeKadSelectie = useRef(0);
   useEffect(() => {
@@ -301,7 +313,12 @@ export default function KaartWeergave({
         if (eenheid.length) {
           vlakkenRef.current.set(
             o.id,
-            eenheid.map((p) => ({ poly: p, basis, gebruik: o.gebruik })),
+            eenheid.map((p) => ({
+              poly: p,
+              basis,
+              gebruik: o.gebruik,
+              isPerceel,
+            })),
           );
         }
       }
@@ -473,29 +490,37 @@ export default function KaartWeergave({
         )}
       </div>
 
-      {/* Filter op gebruikssoort (niet in de kadastrale weergave) */}
+      {/* Filter op gebruikssoort (niet in de kadastrale weergave). De chips
+          volgen het actieve tabblad: perceel- of gebouw-gebruiksvormen. */}
       {!kadastraal && (
         <div className="flex flex-wrap items-center gap-2 text-[12.5px]">
-          <span style={{ color: "var(--text-2)" }}>Licht op:</span>
-          {Object.entries(GEBRUIK_KLEUR).map(([naam, kleur]) => (
-            <button
-              key={naam}
-              type="button"
-              onClick={() => kiesFilter(naam)}
-              className="flex items-center gap-1.5 rounded-full border px-2.5 py-1"
-              style={{
-                borderColor: filterGebruik === naam ? kleur : "var(--border)",
-                background: filterGebruik === naam ? `${kleur}22` : undefined,
-                fontWeight: filterGebruik === naam ? 600 : 400,
-              }}
-            >
-              <span
-                className="inline-block h-2.5 w-2.5 rounded-sm"
-                style={{ background: kleur }}
-              />
-              {naam}
-            </button>
-          ))}
+          <span style={{ color: "var(--text-2)" }}>
+            Licht op ({lijstTab === "gebouwen" ? "gebouwen" : "percelen"}):
+          </span>
+          {(lijstTab === "gebouwen" ? GEBRUIK_GEBOUW_OPTIES : GEBRUIK_OPTIES).map(
+            (naam) => {
+              const kleur = kleurVoorGebruik(naam);
+              return (
+                <button
+                  key={naam}
+                  type="button"
+                  onClick={() => kiesFilter(naam)}
+                  className="flex items-center gap-1.5 rounded-full border px-2.5 py-1"
+                  style={{
+                    borderColor: filterGebruik === naam ? kleur : "var(--border)",
+                    background: filterGebruik === naam ? `${kleur}22` : undefined,
+                    fontWeight: filterGebruik === naam ? 600 : 400,
+                  }}
+                >
+                  <span
+                    className="inline-block h-2.5 w-2.5 rounded-sm"
+                    style={{ background: kleur }}
+                  />
+                  {naam}
+                </button>
+              );
+            },
+          )}
           <button
             type="button"
             onClick={() => kiesFilter(GEEN_GEBRUIK)}
@@ -612,7 +637,10 @@ export default function KaartWeergave({
                 <button
                   type="button"
                   className={`btn btn-sm ${lijstTab === "percelen" ? "btn-primary" : "btn-ghost"}`}
-                  onClick={() => setLijstTab("percelen")}
+                  onClick={() => {
+                    setLijstTab("percelen");
+                    setFilterGebruik(null);
+                  }}
                 >
                   Percelen (
                   {objecten.filter((o) => kaartGroep(o) !== "Gebouwen").length})
@@ -620,7 +648,10 @@ export default function KaartWeergave({
                 <button
                   type="button"
                   className={`btn btn-sm ${lijstTab === "gebouwen" ? "btn-primary" : "btn-ghost"}`}
-                  onClick={() => setLijstTab("gebouwen")}
+                  onClick={() => {
+                    setLijstTab("gebouwen");
+                    setFilterGebruik(null);
+                  }}
                 >
                   Gebouwen (
                   {objecten.filter((o) => kaartGroep(o) === "Gebouwen").length})
