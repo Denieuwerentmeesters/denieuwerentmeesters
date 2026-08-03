@@ -40,6 +40,7 @@ import {
   ordenGebouwen,
   haTekst,
   geomNaarLatlngs,
+  maakKadastraleLaag,
 } from "@/components/kaartDelen";
 
 type PlaatsObject = KaartObject;
@@ -214,6 +215,13 @@ export default function Kaart({
   const [toonNatura, setToonNatura] = useState(false);
   const [toonNnn, setToonNnn] = useState(false);
   const [grijzeKaart, setGrijzeKaart] = useState(false);
+  // Kadastrale weergave: de gekleurde beheer-laag maakt plaats voor de clean
+  // kadasterkaart met perceelnummers (zelfde laag als op de kijk-pagina).
+  const [kadastraalWeergave, setKadastraalWeergave] = useState(false);
+  const kadastraalWeergaveRef = useRef(false);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const kadWeergaveLaagRef = useRef<any>(null);
+  const werkLabelsBijRef = useRef<(() => void) | null>(null);
   const [punt, setPunt] = useState<{ lat: number; lon: number } | null>(null);
   const [basis, setBasis] = useState<Basis>(LEEG);
   const [resultaat, setResultaat] = useState<Resultaat | null>(null);
@@ -411,12 +419,52 @@ export default function Kaart({
         bounds.extend([o.lat, o.lon]);
       }
     }
-    groep.addTo(map);
+    // In de kadastrale weergave blijft de gekleurde laag van de kaart af;
+    // de toggle zet hem terug.
+    if (!kadastraalWeergaveRef.current) groep.addTo(map);
     overzichtRef.current = groep;
     if (bounds.isValid()) boundsRef.current = bounds;
     // Na een herteken (bv. na wijzigen) de actieve spotlight opnieuw toepassen.
     spotlight(geselecteerdRef.current);
   }
+
+  // De kadastrale weergave-laag (her)bouwen zodra het bezit bekend is of
+  // wijzigt. Zonder klik-handler: de bezit-laag erboven blijft de invoer doen.
+  function bouwKadastraleLaag() {
+    const L = LRef.current;
+    const map = mapRef.current;
+    if (!L || !map) return;
+    if (kadWeergaveLaagRef.current) {
+      kadWeergaveLaagRef.current.remove();
+      kadWeergaveLaagRef.current = null;
+    }
+    const kad = maakKadastraleLaag(L, bezit);
+    kadWeergaveLaagRef.current = kad.groep;
+    werkLabelsBijRef.current = () => kad.werkLabelsBij(map);
+    if (kadastraalWeergaveRef.current) {
+      kad.groep.addTo(map);
+      werkLabelsBijRef.current();
+    }
+  }
+
+  useEffect(() => {
+    bouwKadastraleLaag();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [bezit]);
+
+  useEffect(() => {
+    kadastraalWeergaveRef.current = kadastraalWeergave;
+    const map = mapRef.current;
+    if (!map || !overzichtRef.current || !kadWeergaveLaagRef.current) return;
+    if (kadastraalWeergave) {
+      overzichtRef.current.remove();
+      kadWeergaveLaagRef.current.addTo(map);
+      werkLabelsBijRef.current?.();
+    } else {
+      kadWeergaveLaagRef.current.remove();
+      overzichtRef.current.addTo(map);
+    }
+  }, [kadastraalWeergave]);
 
   function zoomNaarLandgoed() {
     const map = mapRef.current;
@@ -797,6 +845,8 @@ export default function Kaart({
       // Toon bij laden alle aangevinkte percelen en zoom in op het landgoed.
       tekenOverzicht();
       tekenBezit();
+      bouwKadastraleLaag();
+      map.on("zoomend", () => werkLabelsBijRef.current?.());
       zoomNaarLandgoed();
 
       map.on("click", async (e: LeafletMouseEvent) => {
@@ -957,6 +1007,14 @@ export default function Kaart({
 
       {/* Kaartlagen + gebiedsligging */}
       <div className="flex flex-wrap items-center gap-3">
+        <label className="flex items-center gap-1.5 text-[12.5px]" style={{ color: "var(--text-2)" }}>
+          <input
+            type="checkbox"
+            checked={kadastraalWeergave}
+            onChange={(e) => setKadastraalWeergave(e.target.checked)}
+          />
+          Kadastrale weergave
+        </label>
         <label className="flex items-center gap-1.5 text-[12.5px]" style={{ color: "var(--text-2)" }}>
           <input
             type="checkbox"
