@@ -54,6 +54,41 @@ export function oppervlakte3857(geom: unknown): number {
     : polyOpp(g.coordinates as number[][][]);
 }
 
+// Kruist een getekende omtrek zichzelf? Bij een zelfkruisende ring geeft de
+// even-odd-regel verrassende "binnen/buiten"-uitkomsten, dus zo'n omtrek
+// weigeren we. Controle: elk paar niet-aangrenzende zijden (van de gesloten
+// ring) mag elkaar niet snijden. O(n²), maar n is klein (handgeklikte punten).
+export function isZelfkruisend(punten: [number, number][]): boolean {
+  const n = punten.length;
+  if (n < 4) return false;
+  const ring = [...punten, punten[0]];
+  const snijden = (
+    a: [number, number],
+    b: [number, number],
+    c: [number, number],
+    d: [number, number],
+  ): boolean => {
+    const kruis = (
+      p: [number, number],
+      q: [number, number],
+      r: [number, number],
+    ) => (q[0] - p[0]) * (r[1] - p[1]) - (q[1] - p[1]) * (r[0] - p[0]);
+    const d1 = kruis(a, b, c);
+    const d2 = kruis(a, b, d);
+    const d3 = kruis(c, d, a);
+    const d4 = kruis(c, d, b);
+    return d1 * d2 < 0 && d3 * d4 < 0;
+  };
+  for (let i = 0; i < n; i++) {
+    for (let j = i + 2; j < n; j++) {
+      // De sluitende zijde (j = n-1) grenst aan zijde 0 — die overslaan.
+      if (i === 0 && j === n - 1) continue;
+      if (snijden(ring[i], ring[i + 1], ring[j], ring[j + 1])) return true;
+    }
+  }
+  return false;
+}
+
 // Ligt een punt binnen een Polygon/MultiPolygon? Even-odd raycast; gaten
 // tellen daardoor vanzelf als "buiten". Gebruikt door voordeur 1 (omtrek
 // tekenen): valt het zwaartepunt van een PDOK-perceel binnen de omtrek?

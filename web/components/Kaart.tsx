@@ -17,7 +17,12 @@ import {
   GEBRUIK_OPTIES as GEBRUIK,
   gebruikOptiesVoor,
 } from "@/app/(app)/landgoed/[id]/stamgegevens/constanten";
-import { merc3857, oppervlakte3857, splitsPolygoon3857 } from "@/lib/geo";
+import {
+  isZelfkruisend,
+  merc3857,
+  oppervlakte3857,
+  splitsPolygoon3857,
+} from "@/lib/geo";
 // Gedeelde kaart-bouwstenen (kleuren, groepen, PDOK-lagen, geometrie) — één
 // bron voor deze invoerpagina én de kijk-pagina (KaartWeergave).
 import {
@@ -600,11 +605,14 @@ export default function Kaart({
       omtrekLaagRef.current = null;
     }
     if (!omtrekActief || omtrek.length === 0) return;
+    // Een zelfkruisende omtrek kleurt rood: die kan niet gebruikt worden.
+    const kruist = isZelfkruisend(omtrek);
+    const kleur = kruist ? "#dc2626" : "#111827";
     const groep = L.layerGroup();
     for (const punt of omtrek) {
       L.circleMarker(punt, {
         radius: 5,
-        color: "#111827",
+        color: kleur,
         weight: 2,
         fillColor: "#ffffff",
         fillOpacity: 1,
@@ -612,10 +620,10 @@ export default function Kaart({
     }
     if (omtrek.length >= 3) {
       L.polygon(omtrek, {
-        color: "#111827",
+        color: kleur,
         weight: 2,
         dashArray: "6 4",
-        fillColor: "#111827",
+        fillColor: kleur,
         fillOpacity: 0.06,
       }).addTo(groep);
     } else if (omtrek.length === 2) {
@@ -1490,15 +1498,23 @@ export default function Kaart({
             </>
           ) : (
             <>
-              <span style={{ color: "var(--text-2)" }}>
-                {omtrek.length === 0
-                  ? "Klik hoekpunten op de kaart om het gebied te omtrekken (minstens 3)."
-                  : `${omtrek.length} hoekpunt${omtrek.length > 1 ? "en" : ""} gezet — elke kaartklik voegt er een toe.`}
+              <span
+                style={{
+                  color: isZelfkruisend(omtrek) ? "var(--red)" : "var(--text-2)",
+                }}
+              >
+                {isZelfkruisend(omtrek)
+                  ? "De omtrek kruist zichzelf (rood) — klik de hoekpunten op volgorde langs de rand. Haal het laatste punt weg of wis de omtrek."
+                  : omtrek.length === 0
+                    ? "Klik hoekpunten op de kaart om het gebied te omtrekken (minstens 3), op volgorde langs de rand."
+                    : `${omtrek.length} hoekpunt${omtrek.length > 1 ? "en" : ""} gezet — elke kaartklik voegt er een toe.`}
               </span>
               <button
                 type="button"
                 className="btn btn-primary btn-sm"
-                disabled={omtrek.length < 3 || omtrekBezig}
+                disabled={
+                  omtrek.length < 3 || omtrekBezig || isZelfkruisend(omtrek)
+                }
                 onClick={async () => {
                   setOmtrekBezig(true);
                   const omtrek3857 = omtrek.map(([la, lo]) =>
@@ -1517,6 +1533,14 @@ export default function Kaart({
                 }}
               >
                 {omtrekBezig ? "Zoeken…" : "Zoek percelen binnen de omtrek"}
+              </button>
+              <button
+                type="button"
+                className="btn btn-ghost btn-sm"
+                disabled={omtrek.length === 0 || omtrekBezig}
+                onClick={() => setOmtrek((prev) => prev.slice(0, -1))}
+              >
+                Laatste punt weg
               </button>
               <button
                 type="button"
