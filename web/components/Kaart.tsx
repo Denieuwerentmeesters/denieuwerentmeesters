@@ -1303,59 +1303,33 @@ export default function Kaart({
         {/* Linkerkolom: panelen en lijsten */}
         <div className="flex flex-col gap-3 lg:order-1">
 
-      {/* Indeel-paneel (fase 2) — direct zichtbaar zodra de modus actief is,
-          zodat meteen duidelijk is wat hier gebeurt; de maak-knop ontgrendelt
-          zodra er percelen geselecteerd zijn. */}
+      {/* Indeel-paneel (fase 2) in twee losgekoppelde blokken (wens Steven):
+          eerst beheerpercelen maken (altijd leeg, altijd simpel), daarna
+          percelen toewijzen aan een bestáánd beheerperceel. Deelgebruik is
+          een bescheiden vinkje onderin — uit de hoofdflow, vindbaar waar je
+          het nodig hebt. */}
       {mode === "indelen" && (
-        <form
-          action={async (fd) => {
-            const leeg = selectie.length === 0;
-            await deelPercelenIn(fd);
-            setSelectie([]);
-            setKoppelId("");
-            setMelding(
-              leeg
-                ? "Leeg beheerperceel aangemaakt — klik nu percelen aan en kies het bij 'indelen bij'."
-                : "Percelen ingedeeld.",
-            );
-          }}
-          className="card flex flex-wrap items-end gap-3 p-4"
-        >
-          <input type="hidden" name="landgoed_id" value={landgoedId} />
-          {selectie.map((pid) => (
-            <input key={pid} type="hidden" name="perceel_id" value={pid} />
-          ))}
-          <div className="min-w-[220px] flex-1">
-            <label className="label-up mb-1 block">
-              {selectie.length === 0
-                ? "Klik percelen aan (kaart of lijst) — of maak alvast een leeg beheerperceel"
-                : `${selectie.length} perceel${selectie.length > 1 ? "en" : ""} geselecteerd — indelen bij`}
-            </label>
-            <select
-              className="input"
-              name="bestaand_id"
-              value={koppelId}
-              onChange={(e) => setKoppelId(e.target.value)}
+        <>
+          <form
+            action={async (fd) => {
+              await deelPercelenIn(fd);
+              setMelding(
+                'Beheerperceel aangemaakt — kies het hieronder bij "Wijs toe aan".',
+              );
+            }}
+            className="card flex flex-wrap items-end gap-3 p-4"
+          >
+            <input type="hidden" name="landgoed_id" value={landgoedId} />
+            <div
+              className="w-full text-[12px] font-semibold uppercase tracking-wide"
+              style={{ color: "var(--text-2)" }}
             >
-              <option value="">— Nieuw beheerperceel —</option>
-              {groepeerOpties(koppelOpties).map(([label, lijst]) => (
-                <optgroup key={label} label={label}>
-                  {lijst.map((o) => (
-                    <option key={o.id} value={o.id}>
-                      {o.naam}
-                    </option>
-                  ))}
-                </optgroup>
-              ))}
-            </select>
-          </div>
-          {koppelId === "" && (
+              1 · Beheerpercelen maken
+            </div>
             <div className="min-w-[180px] flex-1">
               <label className="label-up mb-1 block">Naam</label>
               <input className="input" name="naam" placeholder="bv. Weiland zuid" required />
             </div>
-          )}
-          {koppelId === "" && (
             <div>
               <label className="label-up mb-1 block">Gebruik</label>
               <select className="input" name="gebruik" defaultValue="">
@@ -1367,64 +1341,111 @@ export default function Kaart({
                 ))}
               </select>
             </div>
-          )}
-          {/* Een nieuw beheerperceel mag ook léég worden aangemaakt (handig
-              voor deelgebruik: eerst de bak, dan de percelen erbij). Alleen
-              "niets toevoegen aan bestaand" is zinloos en blijft op slot. */}
-          <SubmitKnop
-            className="btn btn-primary"
-            pendingTekst="Indelen…"
-            disabled={selectie.length === 0 && koppelId !== ""}
+            <SubmitKnop className="btn btn-primary" pendingTekst="Maken…">
+              + Maak beheerperceel
+            </SubmitKnop>
+          </form>
+
+          <form
+            action={async (fd) => {
+              const aantal = selectie.length;
+              const doel = koppelOpties.find((o) => o.id === koppelId)?.naam ?? "";
+              await deelPercelenIn(fd);
+              setSelectie([]);
+              setMelding(
+                `${aantal} perceel${aantal > 1 ? "en" : ""} toegewezen aan ${doel}.`,
+              );
+            }}
+            className="card flex flex-wrap items-end gap-3 p-4"
           >
-            {koppelId
-              ? "Toevoegen aan bestaand"
-              : selectie.length === 0
-                ? "Leeg beheerperceel maken"
-                : "Beheerperceel maken"}
-          </SubmitKnop>
-          {selectie.length > 0 && (
-            <button type="button" className="btn btn-ghost btn-sm" onClick={() => setSelectie([])}>
-              Wis selectie
-            </button>
-          )}
-          {/* Deelgebruik als bewuste tussenstap: pas na deze knop zijn
-              al-ingedeelde percelen aanklikbaar; daarna gedragen ze zich als
-              elk ander geselecteerd perceel. */}
-          <div className="w-full">
-            <button
-              type="button"
-              className={`btn btn-sm ${extraKoppelen ? "btn-primary" : "btn-ghost"}`}
-              onClick={() => setExtraKoppelen((v) => !v)}
+            <input type="hidden" name="landgoed_id" value={landgoedId} />
+            {selectie.map((pid) => (
+              <input key={pid} type="hidden" name="perceel_id" value={pid} />
+            ))}
+            <div
+              className="w-full text-[12px] font-semibold uppercase tracking-wide"
+              style={{ color: "var(--text-2)" }}
             >
-              {extraKoppelen
-                ? "✓ Klaar met extra aanwijzen"
-                : "+ Perceel van een ander beheerperceel erbij"}
-            </button>
-            {extraKoppelen && (
-              <span className="ml-2 text-[12px]" style={{ color: "var(--text-2)" }}>
-                Klik op de kaart op het perceel dat je óók aan dit beheerperceel
-                wilt koppelen — het wordt dan gedeeld gebruik.
-              </span>
-            )}
-          </div>
-          {/* Wat gaat er gebeuren: per geselecteerd perceel, met de
-              deelgebruik-gevallen expliciet benoemd. */}
-          {selectie.length > 0 && (
-            <div className="w-full text-[12px]" style={{ color: "var(--text-2)" }}>
-              Geselecteerd:{" "}
-              {selectie
-                .map((pid) => {
-                  const p = bezit.find((b) => b.id === pid);
-                  if (!p) return null;
-                  return p.ingedeeld
-                    ? `${p.aanduiding} (al bij ${p.ingedeeldBij.map((b) => b.naam).join(", ")} — wordt gedeeld gebruik)`
-                    : p.aanduiding;
-                })
-                .filter(Boolean)
-                .join(" · ")}
+              2 · Percelen toewijzen
             </div>
-          )}
-        </form>
+            <div className="min-w-[220px] flex-1">
+              <label className="label-up mb-1 block">Wijs toe aan</label>
+              <select
+                className="input"
+                name="bestaand_id"
+                value={koppelId}
+                onChange={(e) => setKoppelId(e.target.value)}
+              >
+                <option value="">— kies beheerperceel —</option>
+                {groepeerOpties(koppelOpties).map(([label, lijst]) => (
+                  <optgroup key={label} label={label}>
+                    {lijst.map((o) => (
+                      <option key={o.id} value={o.id}>
+                        {o.naam}
+                      </option>
+                    ))}
+                  </optgroup>
+                ))}
+              </select>
+            </div>
+            <SubmitKnop
+              className="btn btn-primary"
+              pendingTekst="Toewijzen…"
+              disabled={selectie.length === 0 || koppelId === ""}
+            >
+              {selectie.length > 0 && koppelId
+                ? `Wijs ${selectie.length} perceel${selectie.length > 1 ? "en" : ""} toe aan ${
+                    koppelOpties.find((o) => o.id === koppelId)?.naam ?? ""
+                  }`
+                : "Wijs toe"}
+            </SubmitKnop>
+            {selectie.length > 0 && (
+              <button
+                type="button"
+                className="btn btn-ghost btn-sm"
+                onClick={() => setSelectie([])}
+              >
+                Wis selectie
+              </button>
+            )}
+            <div className="w-full text-[12px]" style={{ color: "var(--text-2)" }}>
+              {selectie.length === 0 ? (
+                "Klik percelen aan op de kaart of in de lijst hieronder."
+              ) : (
+                <>
+                  Geselecteerd:{" "}
+                  {selectie
+                    .map((pid) => {
+                      const p = bezit.find((b) => b.id === pid);
+                      if (!p) return null;
+                      return p.ingedeeld
+                        ? `${p.aanduiding} (al bij ${p.ingedeeldBij.map((b) => b.naam).join(", ")} — wordt gedeeld gebruik)`
+                        : p.aanduiding;
+                    })
+                    .filter(Boolean)
+                    .join(" · ")}
+                </>
+              )}
+            </div>
+            {/* Deelgebruik: instelling in plaats van actie-knop. */}
+            <label
+              className="flex w-full items-start gap-2 text-[12px]"
+              style={{ color: "var(--text-2)" }}
+            >
+              <input
+                type="checkbox"
+                className="mt-0.5"
+                checked={extraKoppelen}
+                onChange={(e) => setExtraKoppelen(e.target.checked)}
+              />
+              <span>
+                Ook al-ingedeelde percelen aanklikbaar maken (deelgebruik: één
+                perceel bij twee beheerpercelen — het telt dan bij beide als
+                gedeeld).
+              </span>
+            </label>
+          </form>
+        </>
       )}
 
       {/* Basis-paneel */}
