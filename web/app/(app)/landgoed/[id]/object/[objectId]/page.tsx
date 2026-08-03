@@ -67,10 +67,16 @@ type Verband = {
 
 export default async function ObjectDetailPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ id: string; objectId: string }>;
+  searchParams: Promise<{ van?: string }>;
 }) {
   const { id, objectId } = await params;
+  // Waar kwam de bezoeker vandaan? Zo wijst "Terug" naar de juiste pagina
+  // (de invoerpagina en de kijk-kaart zijn sinds #65 aparte plekken).
+  const { van } = await searchParams;
+  const terugNaarInvoer = van === "invoer";
   const supabase = await createClient();
 
   const { data: object } = await supabase
@@ -214,11 +220,11 @@ export default async function ObjectDetailPage({
         style={{ borderBottom: "1px solid var(--border)" }}
       >
         <Link
-          href={`/landgoed/${id}/kaart`}
+          href={`/landgoed/${id}/kaart${terugNaarInvoer ? "/invoer" : ""}`}
           className="text-[12.5px]"
           style={{ color: "var(--text-2)" }}
         >
-          ← Terug naar kaart
+          ← Terug naar {terugNaarInvoer ? "invoerpagina" : "kaart"}
         </Link>
       </div>
 

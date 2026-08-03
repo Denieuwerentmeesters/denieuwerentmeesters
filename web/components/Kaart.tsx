@@ -1659,7 +1659,7 @@ export default function Kaart({
                             </div>
                           </button>
                           <Link
-                            href={`/landgoed/${landgoedId}/object/${o.id}`}
+                            href={`/landgoed/${landgoedId}/object/${o.id}?van=invoer`}
                             className="btn btn-ghost btn-sm"
                           >
                             Details
