@@ -2,6 +2,7 @@
 // invoerpagina (Kaart): kleuren, groepen, PDOK-lagen en geometrie-tekenwerk.
 // Eén bron, zodat beide pagina's dezelfde taal spreken en er geen kopie van
 // het kaartwerk ontstaat.
+import { labelPunt3857 } from "@/lib/geo";
 
 export type KaartObject = {
   id: string;
@@ -206,10 +207,12 @@ export function kortNummer(aanduiding: string): string {
 
 // Bouwt de kadastrale weergave-laag: alle percelen van het landgoed in een
 // herkenbare (huisstijl-groene) tint — zo vallen ze op tussen het omliggende
-// kadaster — met het korte perceelnummer als label in het vlak.
+// kadaster — met het korte perceelnummer als label op een punt dat
+// gegarandeerd bínnen het vlak ligt (labelPunt3857; het middelpunt van de
+// omtrek valt bij smalle percelen vaak in de buurman).
 // werkLabelsBij(map) verbergt labels van percelen die op het scherm te smal
-// zijn voor hun nummer (geen overlappende tekstbrij bij uitzoomen); aanroepen
-// bij zoomen en bij het tonen van de laag.
+// zijn voor hun eigen nummer (geen overlappende tekstbrij bij uitzoomen);
+// aanroepen bij zoomen en bij het tonen van de laag.
 export function maakKadastraleLaag(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   L: any,
@@ -219,6 +222,8 @@ export function maakKadastraleLaag(
   const groep = L.layerGroup();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const vlakken = new Map<string, any>();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const labels: { label: any; poly: any; tekst: string }[] = [];
   for (const p of percelen) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const latlngs = geomNaarLatlngs(L, p.geom) as any;
@@ -227,13 +232,8 @@ export function maakKadastraleLaag(
       color: "#1B3A28",
       weight: 2,
       fillColor: "#2A5C3F",
-      fillOpacity: 0.12,
+      fillOpacity: 0.18,
       interactive: Boolean(opAanklik),
-    });
-    poly.bindTooltip(kortNummer(p.aanduiding), {
-      permanent: true,
-      direction: "center",
-      className: "kadastraal-label",
     });
     if (opAanklik) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -244,16 +244,31 @@ export function maakKadastraleLaag(
     }
     poly.addTo(groep);
     vlakken.set(p.id, poly);
+
+    const punt = labelPunt3857(p.geom);
+    if (punt) {
+      const tekst = kortNummer(p.aanduiding);
+      const label = L.tooltip({
+        permanent: true,
+        direction: "center",
+        className: "kadastraal-label",
+      })
+        .setLatLng(L.CRS.EPSG3857.unproject(L.point(punt[0], punt[1])))
+        .setContent(tekst);
+      label.addTo(groep);
+      labels.push({ label, poly, tekst });
+    }
   }
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const werkLabelsBij = (map: any) => {
-    for (const poly of vlakken.values()) {
+    for (const { label, poly, tekst } of labels) {
       const b = poly.getBounds();
       const breedte = Math.abs(
         map.latLngToLayerPoint(b.getNorthEast()).x -
           map.latLngToLayerPoint(b.getSouthWest()).x,
       );
-      poly.getTooltip()?.setOpacity(breedte > 50 ? 1 : 0);
+      // Past het nummer (± 7px per teken) niet in het vlak, dan geen label.
+      label.setOpacity(breedte > tekst.length * 7 + 12 ? 1 : 0);
     }
   };
   return { groep, vlakken, werkLabelsBij };

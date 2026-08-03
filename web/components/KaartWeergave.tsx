@@ -198,6 +198,11 @@ export default function KaartWeergave({
         maxZoom: 19,
         attribution: "© PDOK BRT-Achtergrondkaart",
       }).addTo(map);
+      // Grijs staat hier standaard aan; de filterklasse hoort daar meteen bij
+      // (de toggle-effect draaide al vóór de kaart bestond).
+      achtergrondRef.current
+        ?.getContainer()
+        ?.classList.add("ondergrond-grijs");
       L.tileLayer
         .wms(KADASTER_WMS, {
           layers: "KadastraleGrens",
@@ -334,6 +339,9 @@ export default function KaartWeergave({
   // Laag-toggles.
   useEffect(() => {
     achtergrondRef.current?.setUrl(PDOK_TILES(grijzeKaart ? "grijs" : "standaard"));
+    achtergrondRef.current
+      ?.getContainer()
+      ?.classList.toggle("ondergrond-grijs", grijzeKaart);
   }, [grijzeKaart]);
   useEffect(() => {
     const map = mapRef.current;

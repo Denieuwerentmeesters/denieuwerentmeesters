@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   invMerc3857,
+  labelPunt3857,
   merc3857,
   oppervlakte3857,
   splitsPolygoon3857,
@@ -64,6 +65,43 @@ describe("oppervlakte3857", () => {
   it("is 0 voor onbruikbare invoer", () => {
     expect(oppervlakte3857(null)).toBe(0);
     expect(oppervlakte3857({})).toBe(0);
+  });
+});
+
+describe("labelPunt3857", () => {
+  it("kiest het midden van een vierkant", () => {
+    const p = labelPunt3857(vierkant);
+    expect(p?.[0]).toBeCloseTo(X + 50, 3);
+    expect(p?.[1]).toBeCloseTo(Y + 50, 3);
+  });
+
+  it("valt bij een U-vorm binnen een van de poten (niet in het gat)", () => {
+    // U-vorm: het middelpunt van de omtrek ligt in de opening.
+    const u = {
+      type: "Polygon",
+      coordinates: [
+        [
+          [0, 0],
+          [30, 0],
+          [30, 20],
+          [20, 20],
+          [20, 5],
+          [10, 5],
+          [10, 20],
+          [0, 20],
+          [0, 0],
+        ],
+      ],
+    };
+    const p = labelPunt3857(u);
+    // Breedste doorsnede op y=10 is [0,10] (of [20,30]) — midden = 5.
+    expect(p?.[1]).toBeCloseTo(10, 5);
+    expect(p && (p[0] < 10 || p[0] > 20)).toBe(true);
+  });
+
+  it("is null voor onbruikbare invoer", () => {
+    expect(labelPunt3857(null)).toBeNull();
+    expect(labelPunt3857({})).toBeNull();
   });
 });
 

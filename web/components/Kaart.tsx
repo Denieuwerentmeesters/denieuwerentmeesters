@@ -763,9 +763,13 @@ export default function Kaart({
     }
   }
 
-  // Ondergrond wisselen tussen kleur en grijs (zelfde PDOK-bron, andere smaak).
+  // Ondergrond wisselen tussen kleur en grijs (zelfde PDOK-bron, andere
+  // smaak) + een grayscale-filter die de laatste zachte kleuren wegneemt.
   useEffect(() => {
     achtergrondRef.current?.setUrl(PDOK_TILES(grijzeKaart ? "grijs" : "standaard"));
+    achtergrondRef.current
+      ?.getContainer()
+      ?.classList.toggle("ondergrond-grijs", grijzeKaart);
   }, [grijzeKaart]);
 
   // Natura 2000-overlay aan/uit op basis van de toggle.
