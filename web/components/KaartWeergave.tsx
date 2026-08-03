@@ -367,8 +367,13 @@ export default function KaartWeergave({
     const map = mapRef.current;
     const laag = nnnRef.current;
     if (!map || !laag) return;
-    if (toonNnn) laag.addTo(map);
-    else laag.remove();
+    if (toonNnn) {
+      laag.addTo(map);
+      // Grijze PDOK-stijl groen kleuren (na elke addTo opnieuw).
+      laag.getContainer()?.classList.add("nnn-groen");
+    } else {
+      laag.remove();
+    }
   }, [toonNnn]);
 
   // Kadastrale weergave: de gekleurde beheer-laag maakt plaats voor de

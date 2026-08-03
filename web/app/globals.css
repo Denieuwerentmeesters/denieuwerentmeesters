@@ -185,3 +185,10 @@ body {
 .leaflet-layer.ondergrond-grijs {
   filter: grayscale(1);
 }
+
+/* NNN-laag: de PDOK-stijl is grijs — net onzichtbaar op onze grijze
+   ondergrond. Deze filter kleurt de arcering groen (grijs heeft geen
+   tint om te draaien, dus eerst sepia om er kleur in te krijgen). */
+.leaflet-layer.nnn-groen {
+  filter: sepia(1) saturate(4) hue-rotate(70deg);
+}
