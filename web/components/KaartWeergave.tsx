@@ -676,7 +676,17 @@ export default function KaartWeergave({
                     {(label === "Gebouwen"
                       ? ordenGebouwen(lijst)
                       : lijst.map((item) => ({ item, ingesprongen: false }))
-                    ).map(({ item: o, ingesprongen }) => (
+                    ).map(({ item: o, ingesprongen }) => {
+                      // Filter actief: passende rijen lichten op in de
+                      // filterkleur, de rest dimt licht — zelfde taal als de
+                      // kaart (wens Steven).
+                      const filterRaak =
+                        !selectie.length &&
+                        filterGebruik != null &&
+                        (o.gebruik ?? GEEN_GEBRUIK) === filterGebruik;
+                      const filterMis =
+                        !selectie.length && filterGebruik != null && !filterRaak;
+                      return (
                       <div
                         key={o.id}
                         id={`weergave-rij-${o.id}`}
@@ -684,7 +694,10 @@ export default function KaartWeergave({
                         style={{
                           background: selectie.includes(o.id)
                             ? "var(--primary-light)"
-                            : undefined,
+                            : filterRaak
+                              ? `${kleurVoorGebruik(o.gebruik)}1f`
+                              : undefined,
+                          opacity: filterMis ? 0.45 : undefined,
                           paddingLeft: ingesprongen ? 18 : undefined,
                         }}
                       >
@@ -705,7 +718,8 @@ export default function KaartWeergave({
                           Details
                         </Link>
                       </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 </div>
               );
