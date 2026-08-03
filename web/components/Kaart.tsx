@@ -1090,12 +1090,15 @@ export default function Kaart({
           NNN tonen
         </label>
         {lat != null && lon != null && (
-          <form action={controleerGebiedsligging}>
+          <form
+            action={controleerGebiedsligging}
+            title="Controleert Natura 2000, NNN, bodemtype en ANLb-leefgebieden opnieuw bij de overheid (PDOK). Nieuw ingeladen percelen worden al automatisch gecheckt — verversen is alleen nodig als beleidsgebieden wijzigen (± jaarlijks)."
+          >
             <input type="hidden" name="landgoed_id" value={landgoedId} />
             <input type="hidden" name="lat" value={lat} />
             <input type="hidden" name="lon" value={lon} />
-            <SubmitKnop className="btn btn-ghost btn-sm" pendingTekst="Controleren…">
-              Controleer gebiedsligging
+            <SubmitKnop className="btn btn-ghost btn-sm" pendingTekst="Verversen…">
+              Ververs gebiedsligging
             </SubmitKnop>
           </form>
         )}

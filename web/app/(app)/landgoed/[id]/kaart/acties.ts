@@ -34,20 +34,32 @@ export async function registreerBezit(
   if (bestaand) return { status: "bestond", aanduiding };
 
   const opp = Number(kenmerken.oppervlakte_m2);
-  await moet(
-    supabase.from("kadastraal_perceel").insert({
-      landgoed_id,
-      kadastrale_gemeente: gem,
-      sectie,
-      perceelnummer: nr,
-      kadastrale_aanduiding: aanduiding,
-      oppervlakte_m2: Number.isFinite(opp) ? opp : null,
-      bron_identificatie: String(kenmerken.identificatie ?? "").trim() || null,
-      geom_3857: kenmerken.geom_3857 ?? null,
-      opgehaald_op: new Date().toISOString(),
-    }),
+  const nieuw = await moet(
+    supabase
+      .from("kadastraal_perceel")
+      .insert({
+        landgoed_id,
+        kadastrale_gemeente: gem,
+        sectie,
+        perceelnummer: nr,
+        kadastrale_aanduiding: aanduiding,
+        oppervlakte_m2: Number.isFinite(opp) ? opp : null,
+        bron_identificatie: String(kenmerken.identificatie ?? "").trim() || null,
+        geom_3857: kenmerken.geom_3857 ?? null,
+        opgehaald_op: new Date().toISOString(),
+      })
+      .select("id")
+      .single(),
     "bezit registreren",
   );
+  // Gebiedsligging (Natura 2000/NNN) direct voor dít ene perceel bepalen —
+  // zo is de knop "Ververs gebiedsligging" alleen nog nodig als beleid
+  // wijzigt, niet bij het gewone inladen.
+  try {
+    await bewaarGebiedsliggingPerPerceel(supabase, landgoed_id, nieuw.id);
+  } catch {
+    // PDOK onbereikbaar -> overslaan; een latere verversing haalt het in.
+  }
   revalidatePath(`/landgoed/${landgoed_id}`, "layout");
   return { status: "toegevoegd", aanduiding };
 }
@@ -710,11 +722,15 @@ async function bewaarGebiedsligging(
 async function bewaarGebiedsliggingPerPerceel(
   supabase: Awaited<ReturnType<typeof createClient>>,
   landgoed_id: string,
+  alleenPerceelId?: string,
 ) {
-  const { data: percelen } = await supabase
+  let query = supabase
     .from("kadastraal_perceel")
     .select("id, geom_3857")
     .eq("landgoed_id", landgoed_id);
+  // Bij het inladen van één nieuw perceel checken we alleen dat perceel.
+  if (alleenPerceelId) query = query.eq("id", alleenPerceelId);
+  const { data: percelen } = await query;
   if (!percelen?.length) return;
 
   // In kleine groepjes tegelijk: snel genoeg, zonder PDOK te bestoken.
