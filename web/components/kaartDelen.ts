@@ -55,7 +55,7 @@ export function objectDetails(o: KaartObject): string {
         o.oppervlakteM2 ? `${o.oppervlakteM2} m²` : null,
         o.pandstatus,
         o.bouwjaar ? `bouwjaar ${o.bouwjaar}` : null,
-        o.staatOp ? `staat op ${o.staatOp}` : null,
+        o.staatOp ? `staat op beheerperceel ${o.staatOp}` : null,
         o.hoortBij ? `hoort bij ${o.hoortBij}` : null,
       ]
     : [
