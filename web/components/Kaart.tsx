@@ -520,10 +520,12 @@ export default function Kaart({
           }
           perceelWmsRef.current!.addTo(map);
           // PDOK tekent deze laag alleen voldoende ingezoomd — bij binnenkomst
-          // dus even bijzoomen. Uitzoomen blijft daarna gewoon kunnen (voor
-          // het overzicht); de uitleg-tekst legt uit waarom de percelen dan
+          // dus even bijzoomen. Bewust zónder animatie: klikte je tijdens het
+          // inzoomen, dan schoof de kaart nog onder je muis door en
+          // registreerde je het verkeerde perceel. Uitzoomen blijft daarna
+          // gewoon kunnen; de uitleg-tekst legt uit waarom percelen dan
           // even verdwijnen.
-          if (map.getZoom() < 15) map.setZoom(15);
+          if (map.getZoom() < 15) map.setZoom(15, { animate: false });
         } else {
           perceelWmsRef.current?.remove();
         }
