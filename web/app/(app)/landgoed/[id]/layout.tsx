@@ -52,7 +52,7 @@ export default async function LandgoedLayout({
       badge: openTaken ?? undefined, badgeKleur: (openTaken ?? 0) > 0 ? "oranje" : "grijs" },
     // "Kaart" = de kijk-pagina; invoeren gebeurt op /kaart/invoer (bereikbaar
     // via "Pas de kaart aan" en via het profiel).
-    { href: `/landgoed/${id}/kaart`,     label: "Kaart",      icon: "kaart",       group: "Menu" },
+    { href: `/landgoed/${id}/kaart`,     label: "Kaart",      icon: "kaart",       group: "Menu", exact: true },
     // ── Communicatie ──
     { href: `/landgoed/${id}/inbox`,     label: "Inbox",      icon: "inbox",       group: "Communicatie",
       badge: inboxConcept ?? undefined, badgeKleur: (inboxConcept ?? 0) > 0 ? "rood" : "grijs" },

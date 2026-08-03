@@ -10,6 +10,9 @@ export type NavItem = {
   badgeKleur?: "rood" | "oranje" | "grijs";
   icon?: string;
   group?: string;
+  // Alleen oplichten bij een exacte match — voor items met subpagina's die
+  // een éigen plek zijn (bv. /kaart vs. /kaart/invoer).
+  exact?: boolean;
 };
 
 // ── Kleine SVG-icoontjes (Heroicons outline, 16×16 viewport) ──────────────
@@ -131,7 +134,9 @@ export default function LandgoedNav({ items }: { items: NavItem[] }) {
             </div>
           )}
           {groep.items.map((item) => {
-            const actief = pathname === item.href || pathname.startsWith(item.href + "/");
+            const actief =
+              pathname === item.href ||
+              (!item.exact && pathname.startsWith(item.href + "/"));
             const badgeKleur = item.badgeKleur ?? "grijs";
             return (
               <Link
