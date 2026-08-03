@@ -177,3 +177,11 @@ body {
 .leaflet-tooltip.kadastraal-label::before {
   display: none;
 }
+
+/* "Grijze ondergrond": de PDOK-grijsvariant houdt nog zachte kleuren over;
+   deze filter maakt de basiskaart echt kleurloos, zodat de eigen kleuren
+   (gebruik, kadastrale tint) er ondubbelzinnig uitspringen. Alleen op de
+   achtergrondlaag — overlays (Natura 2000, NNN) behouden hun kleur. */
+.leaflet-layer.ondergrond-grijs {
+  filter: grayscale(1);
+}

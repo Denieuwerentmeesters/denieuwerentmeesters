@@ -54,6 +54,53 @@ export function oppervlakte3857(geom: unknown): number {
     : polyOpp(g.coordinates as number[][][]);
 }
 
+// Een punt dat gegarandeerd bínnen het vlak ligt, voor kaartlabels. Het
+// simpele middelpunt van de omtrek valt bij smalle of L-vormige percelen
+// vaak búiten het vlak (en dus in de buurman). Aanpak: neem de horizontale
+// lijn door het midden, bepaal waar die het vlak doorsnijdt, en kies het
+// midden van de breedste doorsnede.
+export function labelPunt3857(geom: unknown): [number, number] | null {
+  const g = geom as Geom3857 | null;
+  if (!g?.coordinates) return null;
+  const polys =
+    g.type === "MultiPolygon"
+      ? (g.coordinates as number[][][][])
+      : [g.coordinates as number[][][]];
+  // Bij meerdere vlakken: label in het grootste.
+  let beste: number[][][] | null = null;
+  let besteOpp = -1;
+  for (const p of polys) {
+    const opp = oppervlakte3857({ type: "Polygon", coordinates: p });
+    if (opp > besteOpp) {
+      besteOpp = opp;
+      beste = p;
+    }
+  }
+  const ring = beste?.[0];
+  if (!ring || ring.length < 4) return null;
+  const ys = ring.map((c) => c[1]);
+  const cy = (Math.min(...ys) + Math.max(...ys)) / 2;
+  const xs: number[] = [];
+  for (let i = 0; i < ring.length - 1; i++) {
+    const [x1, y1] = ring[i];
+    const [x2, y2] = ring[i + 1];
+    if ((y1 <= cy && y2 > cy) || (y2 <= cy && y1 > cy)) {
+      xs.push(x1 + ((cy - y1) / (y2 - y1)) * (x2 - x1));
+    }
+  }
+  xs.sort((a, b) => a - b);
+  let besteX: number | null = null;
+  let besteBreedte = -1;
+  for (let i = 0; i + 1 < xs.length; i += 2) {
+    const breedte = xs[i + 1] - xs[i];
+    if (breedte > besteBreedte) {
+      besteBreedte = breedte;
+      besteX = (xs[i] + xs[i + 1]) / 2;
+    }
+  }
+  return besteX == null ? null : [besteX, cy];
+}
+
 // Splitst een Polygon (3857) langs een getekende lijn. Geeft de losse delen
 // als zelfstandige Polygon-geometrieën terug; komt er maar één deel terug,
 // dan sneed de lijn het perceel niet door. MultiPolygon-percelen (meerdere
