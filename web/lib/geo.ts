@@ -54,6 +54,42 @@ export function oppervlakte3857(geom: unknown): number {
     : polyOpp(g.coordinates as number[][][]);
 }
 
+// Ligt een punt binnen een Polygon/MultiPolygon? Even-odd raycast; gaten
+// tellen daardoor vanzelf als "buiten". Gebruikt door voordeur 1 (omtrek
+// tekenen): valt het zwaartepunt van een PDOK-perceel binnen de omtrek?
+export function puntInVlak3857(
+  punt: [number, number],
+  geom: unknown,
+): boolean {
+  const g = geom as Geom3857 | null;
+  if (!g?.coordinates) return false;
+  const polys =
+    g.type === "MultiPolygon"
+      ? (g.coordinates as number[][][][])
+      : [g.coordinates as number[][][]];
+  const [px, py] = punt;
+  const inRing = (ring: number[][]): boolean => {
+    let binnen = false;
+    for (let i = 0, j = ring.length - 2; i < ring.length - 1; j = i++) {
+      const [xi, yi] = ring[i];
+      const [xj, yj] = ring[j];
+      if (
+        yi > py !== yj > py &&
+        px < ((xj - xi) * (py - yi)) / (yj - yi) + xi
+      ) {
+        binnen = !binnen;
+      }
+    }
+    return binnen;
+  };
+  for (const rings of polys) {
+    let binnen = false;
+    for (const ring of rings) if (inRing(ring)) binnen = !binnen;
+    if (binnen) return true;
+  }
+  return false;
+}
+
 // Een punt dat gegarandeerd bínnen het vlak ligt, voor kaartlabels. Het
 // simpele middelpunt van de omtrek valt bij smalle of L-vormige percelen
 // vaak búiten het vlak (en dus in de buurman). Aanpak: neem de horizontale

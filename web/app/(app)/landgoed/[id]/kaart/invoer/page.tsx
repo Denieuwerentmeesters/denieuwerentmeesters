@@ -16,6 +16,8 @@ import {
   splitsPerceel,
   wisSplitsing,
   ontkoppelPerceel,
+  zoekPercelenBinnenOmtrek,
+  registreerBezitBinnenOmtrek,
 } from "../acties";
 
 // De invoerpagina: stamgegevens invoeren en wijzigen via de kaart.
@@ -139,6 +141,8 @@ export default async function KaartInvoerPage({
           splitsPerceel={splitsPerceel}
           wisSplitsing={wisSplitsing}
           ontkoppelPerceel={ontkoppelPerceel}
+          zoekPercelenBinnenOmtrek={zoekPercelenBinnenOmtrek}
+          registreerBezitBinnenOmtrek={registreerBezitBinnenOmtrek}
           gebiedsligging={gebiedsligging}
         />
       </div>
