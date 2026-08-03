@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   invMerc3857,
+  isZelfkruisend,
   labelPunt3857,
   merc3857,
   oppervlakte3857,
@@ -66,6 +67,53 @@ describe("oppervlakte3857", () => {
   it("is 0 voor onbruikbare invoer", () => {
     expect(oppervlakte3857(null)).toBe(0);
     expect(oppervlakte3857({})).toBe(0);
+  });
+});
+
+describe("isZelfkruisend", () => {
+  it("laat een net vierkant door", () => {
+    expect(
+      isZelfkruisend([
+        [0, 0],
+        [10, 0],
+        [10, 10],
+        [0, 10],
+      ]),
+    ).toBe(false);
+  });
+
+  it("herkent een vlinderdas (gekruiste zijden)", () => {
+    expect(
+      isZelfkruisend([
+        [0, 0],
+        [10, 10],
+        [10, 0],
+        [0, 10],
+      ]),
+    ).toBe(true);
+  });
+
+  it("laat een concave (L-vormige) omtrek door", () => {
+    expect(
+      isZelfkruisend([
+        [0, 0],
+        [10, 0],
+        [10, 4],
+        [4, 4],
+        [4, 10],
+        [0, 10],
+      ]),
+    ).toBe(false);
+  });
+
+  it("is false onder de 4 punten", () => {
+    expect(
+      isZelfkruisend([
+        [0, 0],
+        [10, 0],
+        [5, 10],
+      ]),
+    ).toBe(false);
   });
 });
 

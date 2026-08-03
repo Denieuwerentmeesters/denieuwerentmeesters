@@ -4,7 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 import { after } from "next/server";
 import { moet } from "@/lib/db";
-import { oppervlakte3857, puntInVlak3857 } from "@/lib/geo";
+import { isZelfkruisend, oppervlakte3857, puntInVlak3857 } from "@/lib/geo";
 
 // ── Twee-fasen-invoer: bezit inladen, daarna indelen ──
 // Fase 1: een aangeklikt kadastraal perceel gaat direct het register in,
@@ -164,6 +164,11 @@ export async function zoekPercelenBinnenOmtrek(
 > {
   if (!landgoed_id || omtrek.length < 3)
     return { status: "fout", melding: "Teken eerst een omtrek van minstens 3 punten." };
+  if (isZelfkruisend(omtrek))
+    return {
+      status: "fout",
+      melding: "De omtrek kruist zichzelf — teken de hoekpunten op volgorde langs de rand.",
+    };
   try {
     const supabase = await createClient();
     const [{ kandidaten, afgekapt }, bestaand] = await Promise.all([
@@ -203,6 +208,11 @@ export async function registreerBezitBinnenOmtrek(
 > {
   if (!landgoed_id || omtrek.length < 3)
     return { status: "fout", melding: "Teken eerst een omtrek van minstens 3 punten." };
+  if (isZelfkruisend(omtrek))
+    return {
+      status: "fout",
+      melding: "De omtrek kruist zichzelf — teken de hoekpunten op volgorde langs de rand.",
+    };
   try {
     const supabase = await createClient();
     const [{ kandidaten }, bestaand] = await Promise.all([
