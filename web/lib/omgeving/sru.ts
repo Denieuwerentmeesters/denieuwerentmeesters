@@ -71,7 +71,12 @@ export async function haalPublicaties(v: SruVraag): Promise<{
   totaal: number;
   afgekapt: boolean;
 }> {
-  const maximaal = v.maximaal ?? 500;
+  // Ruim genoeg voor een jaar van een grote gemeente: Middelburg publiceerde
+  // er 1231 in twaalf maanden, Veere 1374. Met de oude grens van 500 zagen we
+  // ongeveer 40% van het jaar — en dat is precies het soort stille
+  // onvolledigheid waar deze module aan kapot gaat. De grens blijft bestaan
+  // als noodrem, maar ligt nu boven het werkelijke volume.
+  const maximaal = v.maximaal ?? 5000;
   const query =
     `c.product-area==officielepublicaties` +
     ` and dt.creator=="${cqlWaarde(v.organisatie)}"` +

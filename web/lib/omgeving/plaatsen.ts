@@ -124,10 +124,27 @@ function parseRd(punt: unknown): { x: number; y: number } | null {
   return Number.isFinite(x) && Number.isFinite(y) ? { x, y } : null;
 }
 
-// Onder deze score is een treffer niet te vertrouwen. Geijkt op een echte
-// maand Middelburg: goede adressen scoren 27, straatnamen 19-25, en een
-// willekeurige woonplaats-gok blijft onder de 12.
-const MINIMALE_SCORE = 13;
+// Het TYPE is het oordeel, niet de score.
+//
+// Eerste opzet gebruikte een scoredrempel van 13. Dat was verkeerd geijkt op
+// titels mét volledige postcode (score 19-27); zodra er extra woorden in de
+// titel staan zakt een perfect adres naar 11-13. Gevolg: "Noordweg 482 te
+// Sint Laurens" vond keurig 'Noordweg 482S, 4333KM Middelburg' met score 12,6
+// en werd afgewezen op 0,4 punt. Het bericht belandde daardoor in de
+// vangnet-bak en werd getoond ZONDER afstandstoets — terwijl het 4 km van het
+// landgoed ligt. Het filter faalde dus niet ondanks de misser, maar erdoor.
+//
+// Wat wél betrouwbaar is: het type dat de Locatieserver teruggeeft.
+//   adres/postcode -> een echt pand gevonden
+//   weg            -> straatniveau, bruikbaar maar grover
+//   woonplaats/gemeente/provincie -> "niets gevonden, hier is het gebied maar"
+//
+// Die laatste groep is een verkapte misser en telt niet als plaatsing.
+const ECHTE_TREFFER = new Set(["adres", "postcode", "weg"]);
+
+// Vloertje om regelrechte onzin te blokkeren: "Ploegam B.V." levert een
+// willekeurig adres op met score 4,6. Echte treffers zitten boven de 10.
+const ABSOLUTE_ONDERGRENS = 8;
 
 /**
  * Geocodeert een tekst binnen één gemeente.
@@ -158,11 +175,16 @@ export async function geocodeer(
 
   const punt = parseRd(doc.centroide_rd);
   const score = Number(doc.score ?? 0);
-  if (!punt || score < MINIMALE_SCORE) return null;
-
   const soort = String(doc.type ?? "");
-  const niveau: GeoNiveau =
-    soort === "adres" || soort === "postcode" ? 2 : soort === "weg" ? 4 : 5;
+
+  if (!punt) return null;
+  // Geen echt pand of straat gevonden: dan is dit geen plaatsing, hoe hoog de
+  // score ook is. Beter in de "niet te plaatsen"-bak dan een schijnprecisie
+  // waar de afstandstoets vervolgens op vertrouwt.
+  if (!ECHTE_TREFFER.has(soort)) return null;
+  if (score < ABSOLUTE_ONDERGRENS) return null;
+
+  const niveau: GeoNiveau = soort === "weg" ? 4 : 2;
 
   return {
     niveau,

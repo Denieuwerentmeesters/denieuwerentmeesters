@@ -70,6 +70,49 @@ function termijnVoor(rubriek: string | null, datum: string | null) {
   return { soort: t.soort, einddatum: d.toISOString().slice(0, 10) };
 }
 
+// Rubrieken waarbij een gemiste termijn werkelijk onherstelbaar is: plannen en
+// verordeningen waar je één keer een zienswijze op kunt indienen. Een
+// omgevingsvergunning staat er bewust NIET bij — dat is verreweg het grootste
+// volume en het gaat meestal om een dakkapel drie kilometer verderop.
+const VANGNET_RUBRIEKEN = new Set([
+  "omgevingsplan",
+  "bestemmingsplan",
+  "omgevingsverordening",
+  "waterschapsverordening",
+  "peilbesluit",
+  "verordeningen",
+]);
+
+/**
+ * De vangnetregel: mag een bericht dat we niet konden plaatsen tóch bewaard
+ * worden?
+ *
+ * Eerste opzet zei "ja, zodra er een termijn aan hangt". Dat bleek veel te
+ * ruim: van de eerste 49 bewaarde berichten waren er 46 op deze manier
+ * binnengekomen, vrijwel allemaal gewone vergunningen kilometers verderop.
+ * De regel was bedoeld als zeldzame uitzondering, niet als hoofdingang.
+ *
+ * Nu drie voorwaarden tegelijk: het is niet te plaatsen, de termijn loopt nog,
+ * en het gaat om een besluitsoort waar missen echt onherstelbaar is.
+ */
+export function vangnetGeldt(
+  status: string,
+  termijn: { soort: string; einddatum: string } | null,
+  rubriek: string | null,
+): boolean {
+  if (status === "geplaatst") return false;
+  if (!termijn) return false;
+
+  // Een termijn die al verstreken is helpt niemand meer. Dit is wat een
+  // eerste ronde over twaalf maanden anders volstopt met oud nieuws.
+  if (termijn.einddatum < new Date().toISOString().slice(0, 10)) return false;
+
+  // Een zienswijze is de onherstelbare: daarna is het plan vastgesteld.
+  if (termijn.soort === "zienswijze") return true;
+
+  return rubriek != null && VANGNET_RUBRIEKEN.has(rubriek.toLowerCase());
+}
+
 export type Bron = {
   id: string | null;
   organisatie: string;
@@ -154,15 +197,8 @@ export async function haalBronOp(
     }
 
     // 4. Bewaren of weggooien?
-    //
-    //    Door de poort -> bewaren. Niet te plaatsen MAAR met een harde termijn
-    //    -> ook bewaren, in de aparte bak. Dat is de vangnetregel: een gemiste
-    //    zienswijzetermijn is onherstelbaar, een overbodig bericht alleen
-    //    irritant. De rest wordt niet bewaard; dat is wat de module bruikbaar
-    //    houdt.
     const doorPoort = poort?.geo_relatie != null && poort.geo_relatie !== "geen";
-    const vangnet = plaatsing.status !== "geplaatst" && termijn != null;
-    if (!doorPoort && !vangnet) continue;
+    if (!doorPoort && !vangnetGeldt(plaatsing.status, termijn, p.rubriek)) continue;
 
     const verantwoording =
       plaatsing.status === "geplaatst"
