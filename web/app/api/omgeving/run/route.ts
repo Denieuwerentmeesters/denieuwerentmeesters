@@ -1,5 +1,5 @@
 import { createServiceClient, serviceBeschikbaar } from "@/lib/supabase/service";
-import { haalBronOp, telOp, type Bron, type Trechter } from "@/lib/omgeving/ingest";
+import { haalPublicatiesOp, ontdubbel, type OphaalCijfers } from "@/lib/omgeving/publicaties";
 
 // Dagelijkse ophaalronde van de omgevingsradar, voor álle landgoederen met de
 // module aan.
@@ -7,14 +7,21 @@ import { haalBronOp, telOp, type Bron, type Trechter } from "@/lib/omgeving/inge
 //   POST /api/omgeving/run              -> laatste 7 dagen (dagelijkse ronde)
 //   POST /api/omgeving/run?maanden=12   -> eerste vulling of inhaalslag
 //
-// Waarom dit een route is en niet alleen een knop: een radar die termijnen moet
-// bewaken kan niet afhangen van iemand die eraan denkt te klikken. Een
-// zienswijzetermijn van zes weken die pas na drie weken wordt opgemerkt is een
-// termijn van drie weken geworden.
+// Twee fasen, en die scheiding is het hele punt:
+//
+//   1. Ophalen en geocoderen — PER BESTUURSORGAAN, één keer. Dit is de dure
+//      helft (HTTP naar KOOP en PDOK). Tien landgoederen in Middelburg delen
+//      dezelfde publicaties, dus dit werk hoort niet per landgoed te gebeuren.
+//   2. Matchen — per landgoed, maar puur SQL tegen een GIST-index. Dat is
+//      milliseconden, ongeacht hoeveel landgoederen er zijn.
+//
+// De oude opzet deed alles per landgoed en zou bij ongeveer 35 landgoederen
+// stilletjes op de tijdslimiet van de functie stuklopen. De kosten schalen nu
+// met het aantal gemeenten in plaats van met het aantal klanten.
 //
 // Beveiliging volgens hetzelfde patroon als /api/subsidie/import: header
-// `x-omgeving-secret` moet matchen met OMGEVING_RUN_SECRET. Ontbreekt dat
-// geheim, dan alleen buiten productie — fail-closed.
+// `x-omgeving-secret` moet matchen met OMGEVING_RUN_SECRET, of Vercels eigen
+// CRON_SECRET als bearer. Ontbreken beide, dan alleen buiten productie.
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 300;
@@ -48,8 +55,8 @@ export async function POST(req: Request): Promise<Response> {
   }
 
   const { searchParams } = new URL(req.url);
-  // Standaard een week terug: ruim genoeg om een gemiste dag op te vangen, en
-  // dedup op externe_id zorgt dat overlap niets dubbel oplevert.
+  // Standaard een week terug: ruim genoeg om een gemiste dag op te vangen. De
+  // controle op reeds bekende publicaties zorgt dat die overlap niets kost.
   const maanden = Number(searchParams.get("maanden") ?? 0);
   const dagen = maanden > 0 ? 0 : Number(searchParams.get("dagen") ?? 7);
 
@@ -64,34 +71,51 @@ export async function POST(req: Request): Promise<Response> {
 
   const supabase = createServiceClient();
 
-  const { data: modules, error: modulesFout } = await supabase
+  // ── Fase 1: ophalen en geocoderen, per bestuursorgaan ──
+  const { data: alleBronnen, error: bronnenFout } = await supabase
+    .from("omgevingsbron")
+    .select("landgoed_id, naam, bestuurslaag, organisatiecode, zoekveld, zoekgebied")
+    .eq("type", "sru")
+    .eq("actief", true);
+  if (bronnenFout) {
+    return Response.json({ fout: bronnenFout.message }, { status: 500 });
+  }
+
+  // De provincie per landgoed, nodig als zoekgebied voor provincie en waterschap.
+  const provincieVan = new Map<string, string>();
+  for (const b of alleBronnen ?? []) {
+    if (b.bestuurslaag === "provincie") {
+      provincieVan.set(b.landgoed_id as string, b.naam as string);
+    }
+  }
+
+  const organen = ontdubbel(
+    (alleBronnen ?? []).map((b) => ({
+      naam: b.naam as string,
+      bestuurslaag: b.bestuurslaag as string,
+      organisatiecode: b.organisatiecode as string | null,
+      zoekveld: b.zoekveld as string | null,
+      zoekgebied: b.zoekgebied as string | null,
+      provincie: provincieVan.get(b.landgoed_id as string) ?? null,
+    })),
+  );
+
+  const opgehaald: OphaalCijfers[] = [];
+  for (const o of organen) {
+    opgehaald.push(await haalPublicatiesOp(supabase, o, periode));
+  }
+  const alleFouten = opgehaald.flatMap((o) => o.fouten);
+
+  // ── Fase 2: matchen, per landgoed. Puur SQL. ──
+  const { data: modules } = await supabase
     .from("module_instelling")
     .select("landgoed_id")
     .eq("module", "omgevingsradar")
     .eq("actief", true);
-  if (modulesFout) {
-    return Response.json({ fout: modulesFout.message }, { status: 500 });
-  }
 
-  const uitkomst: Record<string, unknown>[] = [];
-
+  const gematcht: Record<string, unknown>[] = [];
   for (const m of modules ?? []) {
     const landgoed_id = m.landgoed_id as string;
-
-    const { data: bronnen, error: bronnenFout } = await supabase
-      .from("omgevingsbron")
-      .select("id, naam, bestuurslaag, zoekveld, zoekgebied")
-      .eq("landgoed_id", landgoed_id)
-      .eq("type", "sru")
-      .eq("actief", true);
-    if (bronnenFout) {
-      uitkomst.push({ landgoed_id, fout: bronnenFout.message });
-      continue;
-    }
-    if (!bronnen?.length) continue;
-
-    const provincie =
-      (bronnen.find((b) => b.bestuurslaag === "provincie")?.naam as string | undefined) ?? null;
 
     const { data: run } = await supabase
       .from("omgeving_run")
@@ -99,46 +123,33 @@ export async function POST(req: Request): Promise<Response> {
       .select("id")
       .single();
 
-    const delen: Trechter[] = [];
-    for (const b of bronnen) {
-      const laag = b.bestuurslaag as string;
-      const gemeentelijk = laag === "gemeente" || laag === "buurgemeente";
-      const veld =
-        (b.zoekveld as "gemeentenaam" | "provincienaam" | null) ??
-        (gemeentelijk ? "gemeentenaam" : "provincienaam");
-      const naam =
-        (b.zoekgebied as string | null) ?? (gemeentelijk ? (b.naam as string) : provincie);
-      if (!naam) continue;
+    const { data: uit, error: matchFout } = await supabase.rpc("omgeving_match_landgoed", {
+      p_landgoed_id: landgoed_id,
+      p_sinds: periode.vanaf,
+    });
+    const cijfers = (Array.isArray(uit) ? uit[0] : uit) as
+      | { nieuw: number; doorgelaten: number; weggefilterd: number }
+      | undefined;
 
-      const bron: Bron = {
-        id: b.id as string,
-        organisatie: b.naam as string,
-        gebied: { veld, naam },
-        bestuurslaag: laag,
-      };
-      delen.push(await haalBronOp(supabase, landgoed_id, bron, periode));
-      await supabase
-        .from("omgevingsbron")
-        .update({ laatste_run_op: new Date().toISOString(), laatste_run_status: "ok" })
-        .eq("id", b.id);
-    }
-
-    const t = telOp(delen);
     if (run) {
       await supabase
         .from("omgeving_run")
         .update({
           geeindigd_op: new Date().toISOString(),
-          aantal_opgehaald: t.opgehaald,
-          aantal_door_poort: t.door_poort,
-          aantal_relevant: t.bewaard,
-          aantal_onplaatsbaar: t.onplaatsbaar,
-          fout: t.fouten.length ? t.fouten.slice(0, 10).join(" | ") : null,
+          aantal_opgehaald: opgehaald.reduce((s, o) => s + o.opgehaald, 0),
+          aantal_door_poort: cijfers?.doorgelaten ?? 0,
+          aantal_relevant: cijfers?.doorgelaten ?? 0,
+          aantal_onplaatsbaar: opgehaald.reduce((s, o) => s + o.onplaatsbaar, 0),
+          fout: matchFout
+            ? matchFout.message
+            : alleFouten.length
+              ? alleFouten.slice(0, 10).join(" | ")
+              : null,
         })
         .eq("id", run.id);
     }
-    uitkomst.push({ landgoed_id, ...t, fouten: t.fouten.length });
+    gematcht.push({ landgoed_id, ...(cijfers ?? {}), fout: matchFout?.message ?? null });
   }
 
-  return Response.json({ periode, landgoederen: uitkomst });
+  return Response.json({ periode, organen: opgehaald, landgoederen: gematcht });
 }
