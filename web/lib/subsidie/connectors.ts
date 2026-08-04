@@ -26,6 +26,49 @@ export type RegelingNormaal = {
   openstelling_van?: string | null;
   openstelling_tot?: string | null;
   budget_indicatie?: string | null;
+
+  // ── Fondsenradar (Implementatieplan_Fondsenradar.md §1–§5, §9) ──
+  // Optioneel: de bestaande subsidie-connectors laten dit leeg, waarna de
+  // kolomdefaults gelden (soort_bron='subsidie', benaderbaarheid='onbekend').
+  soort_bron?: "subsidie" | "fonds" | "lening" | "fiscaal" | "eigen_bijdrage";
+  rechtskarakter?: "publiekrechtelijk" | "privaatrechtelijk" | "gemengd" | null;
+  benaderbaarheid?:
+    | "open"
+    | "open_met_drempel"
+    | "via_intermediair"
+    | "op_uitnodiging"
+    | "gesloten"
+    | "onbekend";
+  benaderwijze_notitie?: string | null;
+  geo_niveau?:
+    | "landelijk"
+    | "provincie"
+    | "regio"
+    | "gemeente"
+    | "plaats"
+    | "internationaal"
+    | null;
+  geo_waarden?: string[] | null;
+  bedrag_min?: number | null;
+  bedrag_max?: number | null;
+  bedrag_typisch?: number | null;
+  bedrag_indicatie?: string | null;
+  cofinanciering_vereist?: boolean | null;
+  max_percentage_projectkosten?: number | null;
+  financieringsrol?: "eerste_instapper" | "cofinancier" | "sluitpost" | "onbekend";
+  kostensoort?: string[] | null;
+  cooldown_maanden?: number | null;
+  hercontrole_termijn?: number | null;
+  plan_triggers?: string[] | null;
+  contact?: string | null;
+  // Per rij, want de fondsenlijst mengt geverifieerde en afgeleide kennis (§2).
+  herkomst?:
+    | "import"
+    | "handmatig"
+    | "afgeleid_tag"
+    | "geverifieerd_bron"
+    | "ai_voorstel";
+
   // De ruwe payload zoals opgehaald — gaat naar subsidie_snapshot.payload en
   // is de basis voor de wijzigings-hash.
   ruw: unknown;
@@ -44,6 +87,10 @@ export type Connector = {
 import { rvoConnector } from "./connectors/rvo";
 import { koopCvdrConnector, koopPublicatiesConnector } from "./connectors/koop";
 
+// De fondsen-connector staat BEWUST niet in deze registry: hij leest een
+// bestand uit de repo in plaats van een externe feed, en POST
+// /api/subsidie/import zonder `bron` hoort de fondsenlijst niet mee te nemen.
+// Hij heeft een eigen route (/api/fondsen/import) en deelt alleen de runner.
 export const CONNECTORS: Record<string, Connector> = {
   [rvoConnector.bronSleutel]: rvoConnector,
   [koopCvdrConnector.bronSleutel]: koopCvdrConnector,
