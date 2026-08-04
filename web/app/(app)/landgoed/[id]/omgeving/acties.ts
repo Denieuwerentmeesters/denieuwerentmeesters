@@ -153,7 +153,12 @@ export async function leidBronnenAf(fd: FormData) {
  */
 export async function haalBerichtenOp(fd: FormData) {
   const landgoed_id = String(fd.get("landgoed_id"));
-  const maanden = Math.min(24, Math.max(1, Number(fd.get("maanden") ?? 12)));
+  // Eén maand, niet twaalf. Met vijf bronnen (drie gemeenten, provincie,
+  // waterschap) komen er ruim 570 publicaties per maand binnen; bij ~0,1 s
+  // per stuk is een maand ongeveer een minuut en twaalf maanden tien — ruim
+  // over de limiet van een serverless functie. De dagelijkse ronde
+  // (/api/omgeving/run) bouwt de historie verder op.
+  const maanden = Math.min(3, Math.max(1, Number(fd.get("maanden") ?? 1)));
   const supabase = await createClient();
 
   const vanafDatum = new Date();
@@ -166,7 +171,7 @@ export async function haalBerichtenOp(fd: FormData) {
   const bronnen = await moet(
     supabase
       .from("omgevingsbron")
-      .select("id, naam, organisatiecode, bestuurslaag")
+      .select("id, naam, organisatiecode, bestuurslaag, zoekveld, zoekgebied")
       .eq("landgoed_id", landgoed_id)
       .eq("type", "sru")
       .eq("actief", true),
@@ -182,17 +187,34 @@ export async function haalBerichtenOp(fd: FormData) {
     "run starten",
   );
 
+  // De provincie waarin dit landgoed ligt. Provincie- en waterschapsbronnen
+  // publiceren over een veel groter gebied dan één gemeente, dus daar moet het
+  // geocoderen op provincienaam begrensd worden. Zonder dat vielen ze eerder
+  // helemaal buiten de radar.
+  const provincie =
+    (bronnen.find((b) => b.bestuurslaag === "provincie")?.naam as string | undefined) ??
+    null;
+
   const delen: Trechter[] = [];
   for (const b of bronnen) {
-    // Alleen gemeenten leveren adressen op die binnen die gemeente te
-    // geocoderen zijn. Provincie en waterschap publiceren over een groter
-    // gebied; die vragen een andere aanpak en slaan we in deze ronde over.
-    if (b.bestuurslaag !== "gemeente" && b.bestuurslaag !== "buurgemeente") continue;
+    const laag = b.bestuurslaag as string;
+    const gemeentelijk = laag === "gemeente" || laag === "buurgemeente";
+
+    // Zoekgebied: uit de kolom als die gevuld is, anders afleiden uit de laag.
+    const veld =
+      (b.zoekveld as "gemeentenaam" | "provincienaam" | null) ??
+      (gemeentelijk ? "gemeentenaam" : "provincienaam");
+    const naam = (b.zoekgebied as string | null) ?? (gemeentelijk ? (b.naam as string) : provincie);
+
+    // Zonder begrensd zoekgebied niet ophalen: ongefilterd geocoderen levert
+    // treffers ergens anders in Nederland op die er geldig uitzien.
+    if (!naam) continue;
+
     const bron: Bron = {
       id: b.id as string,
       organisatie: b.naam as string,
-      gemeente: b.naam as string,
-      bestuurslaag: b.bestuurslaag as string,
+      gebied: { veld, naam },
+      bestuurslaag: laag,
     };
     delen.push(await haalBronOp(supabase, landgoed_id, bron, periode));
     await supabase

@@ -14,7 +14,7 @@
 
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { haalPublicaties, NIET_RELEVANTE_RUBRIEKEN, type Publicatie } from "./sru";
-import { plaatsBericht } from "./plaatsen";
+import { plaatsBericht, type Zoekgebied } from "./plaatsen";
 
 export type Trechter = {
   opgehaald: number;
@@ -24,6 +24,7 @@ export type Trechter = {
   geen_locatie: number;
   door_poort: number;
   bewaard: number;
+  weggefilterd: number;
   overgeslagen_dubbel: number;
   fouten: string[];
 };
@@ -37,6 +38,7 @@ function leegTrechter(): Trechter {
     geen_locatie: 0,
     door_poort: 0,
     bewaard: 0,
+    weggefilterd: 0,
     overgeslagen_dubbel: 0,
     fouten: [],
   };
@@ -116,8 +118,8 @@ export function vangnetGeldt(
 export type Bron = {
   id: string | null;
   organisatie: string;
-  /** Gemeente waarbinnen geocodeerd mag worden. */
-  gemeente: string;
+  /** Waarbinnen adressen uit deze bron gezocht mogen worden. */
+  gebied: Zoekgebied;
   bestuurslaag: string;
 };
 
@@ -171,7 +173,7 @@ export async function haalBronOp(
     // 3. Plaatsen.
     let plaatsing: Awaited<ReturnType<typeof plaatsBericht>>;
     try {
-      plaatsing = await plaatsBericht(p.titel, bron.gemeente);
+      plaatsing = await plaatsBericht(p.titel, bron.gebied);
     } catch (e) {
       t.fouten.push(`geocoderen "${p.titel.slice(0, 40)}": ${(e as Error).message}`);
       plaatsing = { status: "onplaatsbaar", term: p.titel };
@@ -196,16 +198,30 @@ export async function haalBronOp(
       t.geen_locatie++;
     }
 
-    // 4. Bewaren of weggooien?
+    // 4. Doorlaten of wegfilteren?
+    //
+    //    Weggefilterde berichten worden wél bewaard, met de reden erbij. Ze
+    //    staan niet in de gewone lijst maar zijn opvraagbaar — dat is de enige
+    //    manier om te merken dát het filter te streng staat. Zonder dit is de
+    //    module blind voor zijn eigen grootste risico.
     const doorPoort = poort?.geo_relatie != null && poort.geo_relatie !== "geen";
-    if (!doorPoort && !vangnetGeldt(plaatsing.status, termijn, p.rubriek)) continue;
+    const doorVangnet = vangnetGeldt(plaatsing.status, termijn, p.rubriek);
+    const doorgelaten = doorPoort || doorVangnet;
+
+    const reden: string | null = doorgelaten
+      ? null
+      : plaatsing.status === "geplaatst"
+        ? "te_ver"
+        : plaatsing.status === "onplaatsbaar"
+          ? "niet_te_plaatsen"
+          : "geen_locatie";
 
     const verantwoording =
       plaatsing.status === "geplaatst"
         ? `${plaatsing.plaatsing.weergavenaam} (${plaatsing.plaatsing.soort}, zekerheid ${plaatsing.plaatsing.score})` +
           (poort?.afstand_m != null ? ` — ${poort.afstand_m} m van het landgoed` : "")
         : plaatsing.status === "onplaatsbaar"
-          ? `Locatie "${plaatsing.term}" niet te plaatsen binnen ${bron.gemeente}.`
+          ? `Locatie "${plaatsing.term}" niet te plaatsen binnen ${bron.gebied.naam}.`
           : "Geen locatie in de tekst gevonden.";
 
     const { data: bewaard, error } = await supabase
@@ -226,7 +242,8 @@ export async function haalBronOp(
         termijn_soort: termijn?.soort ?? null,
         termijn_einddatum: termijn?.einddatum ?? null,
         motivering: verantwoording,
-        status: "nieuw",
+        status: doorgelaten ? "nieuw" : "weggefilterd",
+        weggefilterd_reden: reden,
       })
       .select("id")
       .single();
@@ -239,7 +256,8 @@ export async function haalBronOp(
       continue;
     }
 
-    t.bewaard++;
+    if (doorgelaten) t.bewaard++;
+    else t.weggefilterd++;
 
     if (plaatsing.status === "geplaatst" && bewaard) {
       await supabase.rpc("omgevingsbericht_zet_punt", {
@@ -263,6 +281,7 @@ export function telOp(delen: Trechter[]): Trechter {
     t.geen_locatie += d.geen_locatie;
     t.door_poort += d.door_poort;
     t.bewaard += d.bewaard;
+    t.weggefilterd += d.weggefilterd;
     t.overgeslagen_dubbel += d.overgeslagen_dubbel;
     t.fouten.push(...d.fouten);
   }
