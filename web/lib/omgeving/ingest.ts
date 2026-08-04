@@ -13,7 +13,12 @@
 // het documenttype, en dat filter is gratis.
 
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { haalPublicaties, NIET_RELEVANTE_RUBRIEKEN, type Publicatie } from "./sru";
+import {
+  haalPublicaties,
+  NIET_RELEVANTE_RUBRIEKEN,
+  GEBIEDSDEKKENDE_RUBRIEKEN,
+  type Publicatie,
+} from "./sru";
 import { plaatsBericht, type Zoekgebied } from "./plaatsen";
 
 export type Trechter = {
@@ -62,8 +67,22 @@ const TERMIJN_WEKEN: Record<string, { soort: string; weken: number }> = {
   "verkeersbesluit of -mededeling": { soort: "bezwaar", weken: 6 },
 };
 
-function termijnVoor(rubriek: string | null, datum: string | null) {
-  if (!rubriek || !datum) return null;
+// Een verordening of plan draagt zijn besluitsoort niet in de rubriek maar in
+// de titel: "Ontwerpbesluit wijziging van de Waterschapsverordening" of
+// "Inspraak ontwerp Kostentoedelingsverordening". Dat is het moment waarop een
+// zienswijze nog kan — en volgens het moduleplan de kern van de module.
+const ZIENSWIJZE_IN_TITEL =
+  /\b(ontwerp|ontwerpbesluit|terinzagelegging|ter inzage|inspraak|voorontwerp)\b/i;
+
+function termijnVoor(rubriek: string | null, datum: string | null, titel = "") {
+  if (!datum) return null;
+  if (ZIENSWIJZE_IN_TITEL.test(titel)) {
+    const d = new Date(datum);
+    if (Number.isNaN(d.getTime())) return null;
+    d.setDate(d.getDate() + 6 * 7);
+    return { soort: "zienswijze", einddatum: d.toISOString().slice(0, 10) };
+  }
+  if (!rubriek) return null;
   const t = TERMIJN_WEKEN[rubriek];
   if (!t) return null;
   const d = new Date(datum);
@@ -115,6 +134,11 @@ export function vangnetGeldt(
   return rubriek != null && VANGNET_RUBRIEKEN.has(rubriek.toLowerCase());
 }
 
+/** Publiceert dit bestuursorgaan over een gebied dat veel groter is dan het landgoed? */
+export function gebiedsdekkend(bestuurslaag: string): boolean {
+  return bestuurslaag === "provincie" || bestuurslaag === "waterschap" || bestuurslaag === "rijk";
+}
+
 export type Bron = {
   id: string | null;
   organisatie: string;
@@ -146,6 +170,13 @@ export async function haalBronOp(
       vanaf: periode.vanaf,
       tot: periode.tot,
       maximaal,
+      // Een provincie of waterschap beslaat een gebied dat vele malen groter
+      // is dan het landgoed, dus hun losse vergunningen liggen vrijwel nooit
+      // in de buurt (gemeten op Scheldestromen: mediaan 22,8 km, nul binnen
+      // 500 m). Alleen hun gebiedsdekkende besluiten ophalen.
+      alleenRubrieken: gebiedsdekkend(bron.bestuurslaag)
+        ? GEBIEDSDEKKENDE_RUBRIEKEN
+        : undefined,
     });
     publicaties = uit.publicaties;
     t.opgehaald = uit.publicaties.length;
@@ -179,7 +210,7 @@ export async function haalBronOp(
       plaatsing = { status: "onplaatsbaar", term: p.titel };
     }
 
-    const termijn = termijnVoor(p.rubriek, p.datum);
+    const termijn = termijnVoor(p.rubriek, p.datum, p.titel);
     let poort: PoortUitkomst | null = null;
 
     if (plaatsing.status === "geplaatst") {
@@ -204,9 +235,19 @@ export async function haalBronOp(
     //    staan niet in de gewone lijst maar zijn opvraagbaar — dat is de enige
     //    manier om te merken dát het filter te streng staat. Zonder dit is de
     //    module blind voor zijn eigen grootste risico.
+    //    Bij een provincie of waterschap betekent "geen adres in de tekst"
+    //    niet dat het nergens over gaat, maar dat het over het hele gebied
+    //    gaat — en daar ligt dit landgoed in. Een natuurbeheerplan of
+    //    waterschapsverordening noemt geen huisnummer; die zou anders als
+    //    "geen locatie" wegvallen, terwijl het juist het document is waarvoor
+    //    we die bron aansluiten. Dat is geo-niveau 5 uit het moduleplan: de
+    //    bestuurlijke eenheid als werkingsgebied.
+    const overalGeldig =
+      gebiedsdekkend(bron.bestuurslaag) && plaatsing.status !== "geplaatst";
+
     const doorPoort = poort?.geo_relatie != null && poort.geo_relatie !== "geen";
     const doorVangnet = vangnetGeldt(plaatsing.status, termijn, p.rubriek);
-    const doorgelaten = doorPoort || doorVangnet;
+    const doorgelaten = doorPoort || doorVangnet || overalGeldig;
 
     const reden: string | null = doorgelaten
       ? null
@@ -220,9 +261,11 @@ export async function haalBronOp(
       plaatsing.status === "geplaatst"
         ? `${plaatsing.plaatsing.weergavenaam} (${plaatsing.plaatsing.soort}, zekerheid ${plaatsing.plaatsing.score})` +
           (poort?.afstand_m != null ? ` — ${poort.afstand_m} m van het landgoed` : "")
-        : plaatsing.status === "onplaatsbaar"
-          ? `Locatie "${plaatsing.term}" niet te plaatsen binnen ${bron.gebied.naam}.`
-          : "Geen locatie in de tekst gevonden.";
+        : overalGeldig
+          ? `Geldt voor het hele gebied van ${bron.organisatie} — daar ligt dit landgoed in.`
+          : plaatsing.status === "onplaatsbaar"
+            ? `Locatie "${plaatsing.term}" niet te plaatsen binnen ${bron.gebied.naam}.`
+            : "Geen locatie in de tekst gevonden.";
 
     const { data: bewaard, error } = await supabase
       .from("omgevingsbericht")
@@ -236,7 +279,7 @@ export async function haalBronOp(
         bestuursorgaan: p.organisatie,
         thema: poort?.thema ?? themaCode,
         geo_niveau: plaatsing.status === "geplaatst" ? plaatsing.plaatsing.niveau : 5,
-        geo_relatie: poort?.geo_relatie ?? null,
+        geo_relatie: poort?.geo_relatie ?? (overalGeldig ? "omvat" : null),
         geo_status: plaatsing.status,
         afstand_m: poort?.afstand_m ?? null,
         termijn_soort: termijn?.soort ?? null,

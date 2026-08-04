@@ -125,11 +125,22 @@ export default async function OmgevingPage({
     ]);
 
   const alle = berichten ?? [];
+
   // Actie vereist: er loopt een termijn die nog niet verstreken is.
   const actie = alle.filter(
     (b) => b.termijn_einddatum && dagenTot(b.termijn_einddatum) >= 0 && b.status !== "omgezet",
   );
-  const afgehandeld = alle.filter((b) => b.status === "omgezet");
+
+  // Afgehandeld = omgezet naar een taak, óf: de termijn is verlopen en er is
+  // niets mee gedaan. Dat tweede geval is geen actie meer en hoort niet in
+  // "Goed om te weten" te blijven staan — anders loopt dat vak vol met oud
+  // nieuws waar toch niets meer mee kan. Het blijft wel vindbaar.
+  const afgehandeld = alle.filter(
+    (b) =>
+      b.status === "omgezet" ||
+      (b.termijn_einddatum != null && dagenTot(b.termijn_einddatum) < 0),
+  );
+
   const weten = alle.filter((b) => !actie.includes(b) && !afgehandeld.includes(b));
   const laatsteRun = runs?.[0];
 
@@ -257,9 +268,9 @@ export default async function OmgevingPage({
               aantal={afgehandeld.length}
               eenheid="afgerond"
               titel="Afgehandeld"
-              uitleg="Omgezet naar een taak of agendapunt. Hier voor de historie."
+              uitleg="Opgevolgd, of de termijn is verlopen. Hier voor de historie."
               stip="grijs"
-              stipTekst={afgehandeld.length > 0 ? "Opgevolgd" : "Nog niets afgehandeld"}
+              stipTekst={afgehandeld.length > 0 ? "Niets meer te doen" : "Nog niets afgehandeld"}
               voet={themaRegel(afgehandeld)}
             />
           </div>
@@ -422,7 +433,7 @@ export default async function OmgevingPage({
                   ? "Raakt uw omgeving, maar u hoeft nu niets te doen."
                   : huidigSpoor === "weggefilterd"
                     ? "Wat de radar heeft gezien maar niet heeft doorgelaten, met de reden erbij. Staat hier zodat u kunt controleren of het filter niet te streng staat — mist u hier iets, laat het weten."
-                    : "Omgezet naar een taak of agendapunt."}
+                    : "Opgevolgd, of de termijn is verlopen zonder dat er iets mee is gedaan."}
             </p>
             <Bak
               titel={spoorTitel ?? ""}
