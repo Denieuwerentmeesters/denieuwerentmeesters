@@ -8,6 +8,7 @@ import {
   haalBerichtenOp,
 } from "./acties";
 import { ToevoegenToggle } from "@/components/ToevoegenToggle";
+import LangeActieKnop from "@/components/LangeActieKnop";
 
 const BESTUURSLAAG_LABEL: Record<string, string> = {
   gemeente: "gemeente",
@@ -153,17 +154,18 @@ export default async function OmgevingPage({
             <div className="flex gap-2">
               <form action={leidBronnenAf}>
                 <input type="hidden" name="landgoed_id" value={id} />
-                <button type="submit" className="btn btn-ghost btn-sm">
+                <LangeActieKnop
+                  className="btn btn-ghost btn-sm"
+                  bezigTekst="We zoeken uit welke overheden over uw grond gaan"
+                >
                   {(bronnen ?? []).length ? "Afleiding verversen" : "Bronnen afleiden"}
-                </button>
+                </LangeActieKnop>
               </form>
               {(bronnen ?? []).length > 0 && (
                 <form action={haalBerichtenOp}>
                   <input type="hidden" name="landgoed_id" value={id} />
                   <input type="hidden" name="maanden" value="12" />
-                  <button type="submit" className="btn btn-primary btn-sm">
-                    Berichten ophalen
-                  </button>
+                  <LangeActieKnop>Berichten ophalen</LangeActieKnop>
                 </form>
               )}
             </div>
