@@ -1,7 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
-import { moet } from "@/lib/db";
+import { isUuid, moet } from "@/lib/db";
 import { revalidatePath } from "next/cache";
 import { aiBeschikbaar, aiModel, laatsteAiFout } from "@/lib/ai";
 import {
@@ -103,6 +103,7 @@ export async function verrijkUitBron(fd: FormData) {
 export async function accordeerObject(fd: FormData) {
   const landgoed_id = String(fd.get("landgoed_id"));
   const id = String(fd.get("id"));
+  if (!isUuid(id)) return;
   const supabase = await createClient();
   await moet(
     supabase.from("stamobject").update({ geaccordeerd: true }).eq("id", id),
@@ -125,7 +126,8 @@ export async function accordeerObject(fd: FormData) {
 // een bestaand object (doel_id). Onderdelen en voorgestelde koppelingen verhuizen mee.
 export async function voegSamen(fd: FormData) {
   const landgoed_id = String(fd.get("landgoed_id"));
-  const id = String(fd.get("id")); // het voorstel dat verdwijnt
+  const id = String(fd.get("id"));
+  if (!isUuid(id)) return; // het voorstel dat verdwijnt
   const doel_id = String(fd.get("doel_id")); // het bestaande object dat blijft
   if (!id || !doel_id || id === doel_id) return;
   const supabase = await createClient();
@@ -169,6 +171,7 @@ export async function voegSamen(fd: FormData) {
 export async function wijsAfObject(fd: FormData) {
   const landgoed_id = String(fd.get("landgoed_id"));
   const id = String(fd.get("id"));
+  if (!isUuid(id)) return;
   const supabase = await createClient();
   // Voorstel verwijderen incl. de voorgestelde koppelingen ernaartoe.
   await moet(
@@ -193,6 +196,7 @@ export async function wijsAfObject(fd: FormData) {
 export async function accordeerVerband(fd: FormData) {
   const landgoed_id = String(fd.get("landgoed_id"));
   const id = String(fd.get("id"));
+  if (!isUuid(id)) return;
   const supabase = await createClient();
   await moet(
     supabase.from("verband").update({ status: "geaccordeerd" }).eq("id", id),
@@ -204,6 +208,7 @@ export async function accordeerVerband(fd: FormData) {
 export async function wijsAfVerband(fd: FormData) {
   const landgoed_id = String(fd.get("landgoed_id"));
   const id = String(fd.get("id"));
+  if (!isUuid(id)) return;
   const supabase = await createClient();
   await moet(
     supabase.from("verband").update({ status: "afgewezen" }).eq("id", id),
@@ -235,6 +240,7 @@ export async function objectHandmatig(fd: FormData) {
 export async function bewerkObject(fd: FormData) {
   const landgoed_id = String(fd.get("landgoed_id"));
   const id = String(fd.get("id"));
+  if (!isUuid(id)) return;
   const naam = String(fd.get("naam") ?? "").trim();
   const categorie = String(fd.get("categorie") ?? "").trim();
   const beschrijving = String(fd.get("beschrijving") ?? "").trim();
@@ -275,7 +281,7 @@ export async function bewerkObject(fd: FormData) {
 export async function verwijderObject(fd: FormData) {
   const landgoed_id = String(fd.get("landgoed_id"));
   const id = String(fd.get("id"));
-  if (!id) return;
+  if (!isUuid(id)) return;
   const supabase = await createClient();
   await moet(
     supabase

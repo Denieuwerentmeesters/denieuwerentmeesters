@@ -4,7 +4,7 @@ import { fetchExtern } from "@/lib/extern";
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 import { after } from "next/server";
-import { moet } from "@/lib/db";
+import { isUuid, moet } from "@/lib/db";
 import { isZelfkruisend, oppervlakte3857, puntInVlak3857 } from "@/lib/geo";
 
 // ── Twee-fasen-invoer: bezit inladen, daarna indelen ──
@@ -1410,7 +1410,7 @@ export async function controleerGebiedsligging(fd: FormData) {
 export async function verwijderObject(fd: FormData) {
   const landgoed_id = String(fd.get("landgoed_id"));
   const id = String(fd.get("id"));
-  if (!id) return;
+  if (!isUuid(id)) return;
   const supabase = await createClient();
   await supabase
     .from("verband")

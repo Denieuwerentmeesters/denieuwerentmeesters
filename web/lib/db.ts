@@ -30,3 +30,12 @@ export async function moet<T>(
   }
   return data as NonNullable<T>;
 }
+
+// Strikte UUID-check voor waarden die in PostgREST-filterstrings worden
+// geïnterpoleerd (.or(`bron_id.eq.${id}`)) — daar mag nooit iets anders dan
+// een UUID in belanden (issue #9).
+export function isUuid(waarde: string): boolean {
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+    waarde,
+  );
+}
