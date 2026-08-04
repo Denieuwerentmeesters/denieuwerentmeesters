@@ -40,6 +40,7 @@ type Bericht = {
   termijn_soort: string | null;
   termijn_einddatum: string | null;
   bestuursorgaan: string | null;
+  weggefilterd_reden?: string | null;
 };
 
 /** Dagen tot een termijn verloopt; negatief betekent verstreken. */
@@ -62,17 +63,27 @@ export default async function OmgevingPage({
   // lijst erachter. Zelfde opbouw als de subsidieradar, zodat "een radar" in
   // dit platform overal hetzelfde werkt.
   const huidigSpoor =
-    spoor === "actie" || spoor === "weten" || spoor === "afgehandeld" ? spoor : null;
+    spoor === "actie" || spoor === "weten" || spoor === "afgehandeld" || spoor === "weggefilterd"
+      ? spoor
+      : null;
   const supabase = await createClient();
 
-  const [{ data: berichten }, { data: profiel }, { data: bronnen }, { data: runs }] =
-    await Promise.all([
+  const [
+    { data: berichten },
+    { data: profiel },
+    { data: bronnen },
+    { data: runs },
+    { data: gefilterdeRijen, count: gefilterdCount },
+  ] = await Promise.all([
       supabase
         .from("omgevingsbericht")
         .select(
           "id, titel, samenvatting, relevantie_score, relevant, motivering, thema, status, url, bericht_datum, geo_relatie, geo_status, geo_niveau, afstand_m, termijn_soort, termijn_einddatum, bestuursorgaan",
         )
         .eq("landgoed_id", id)
+        // Weggefilterde berichten horen niet in de gewone lijst; die komen
+        // alleen boven bij het doorklikken.
+        .neq("status", "weggefilterd")
         .order("termijn_einddatum", { ascending: true, nullsFirst: false })
         .order("bericht_datum", { ascending: false }),
       supabase
@@ -93,14 +104,43 @@ export default async function OmgevingPage({
         .eq("landgoed_id", id)
         .order("gestart_op", { ascending: false })
         .limit(1),
+      // Wat is er weggefilterd? Dit is het tegengif tegen een filter dat te
+      // streng staat zonder dat iemand het merkt. Alleen ophalen als ernaar
+      // gevraagd wordt — het zijn er honderden per ronde.
+      spoor === "weggefilterd"
+        ? supabase
+            .from("omgevingsbericht")
+            .select(
+              "id, titel, samenvatting, motivering, thema, status, url, bericht_datum, geo_relatie, geo_status, afstand_m, termijn_soort, termijn_einddatum, bestuursorgaan, weggefilterd_reden",
+            )
+            .eq("landgoed_id", id)
+            .eq("status", "weggefilterd")
+            .order("afstand_m", { ascending: true, nullsFirst: false })
+            .limit(300)
+        : supabase
+            .from("omgevingsbericht")
+            .select("id", { count: "exact", head: true })
+            .eq("landgoed_id", id)
+            .eq("status", "weggefilterd"),
     ]);
 
   const alle = berichten ?? [];
+
   // Actie vereist: er loopt een termijn die nog niet verstreken is.
   const actie = alle.filter(
     (b) => b.termijn_einddatum && dagenTot(b.termijn_einddatum) >= 0 && b.status !== "omgezet",
   );
-  const afgehandeld = alle.filter((b) => b.status === "omgezet");
+
+  // Afgehandeld = omgezet naar een taak, óf: de termijn is verlopen en er is
+  // niets mee gedaan. Dat tweede geval is geen actie meer en hoort niet in
+  // "Goed om te weten" te blijven staan — anders loopt dat vak vol met oud
+  // nieuws waar toch niets meer mee kan. Het blijft wel vindbaar.
+  const afgehandeld = alle.filter(
+    (b) =>
+      b.status === "omgezet" ||
+      (b.termijn_einddatum != null && dagenTot(b.termijn_einddatum) < 0),
+  );
+
   const weten = alle.filter((b) => !actie.includes(b) && !afgehandeld.includes(b));
   const laatsteRun = runs?.[0];
 
@@ -113,6 +153,9 @@ export default async function OmgevingPage({
   const opGrond = weten.filter((b) => b.geo_relatie === "overlap").length;
   const nietTePlaatsen = weten.filter((b) => b.geo_status !== "geplaatst").length;
 
+  const gefilterd = (gefilterdeRijen ?? []) as unknown as Bericht[];
+  const weggefilterd = huidigSpoor === "weggefilterd" ? gefilterd.length : (gefilterdCount ?? 0);
+
   const spoorTitel =
     huidigSpoor === "actie"
       ? "Actie vereist"
@@ -120,10 +163,18 @@ export default async function OmgevingPage({
         ? "Goed om te weten"
         : huidigSpoor === "afgehandeld"
           ? "Afgehandeld"
-          : null;
+          : huidigSpoor === "weggefilterd"
+            ? "Weggefilterd"
+            : null;
 
   const spoorBerichten =
-    huidigSpoor === "actie" ? actie : huidigSpoor === "weten" ? weten : afgehandeld;
+    huidigSpoor === "actie"
+      ? actie
+      : huidigSpoor === "weten"
+        ? weten
+        : huidigSpoor === "weggefilterd"
+          ? gefilterd
+          : afgehandeld;
 
   /** Eén regel onder aan een kaart: waar gaat het over? */
   function themaRegel(rijen: Bericht[]): string {
@@ -217,9 +268,9 @@ export default async function OmgevingPage({
               aantal={afgehandeld.length}
               eenheid="afgerond"
               titel="Afgehandeld"
-              uitleg="Omgezet naar een taak of agendapunt. Hier voor de historie."
+              uitleg="Opgevolgd, of de termijn is verlopen. Hier voor de historie."
               stip="grijs"
-              stipTekst={afgehandeld.length > 0 ? "Opgevolgd" : "Nog niets afgehandeld"}
+              stipTekst={afgehandeld.length > 0 ? "Niets meer te doen" : "Nog niets afgehandeld"}
               voet={themaRegel(afgehandeld)}
             />
           </div>
@@ -293,7 +344,7 @@ export default async function OmgevingPage({
               {(bronnen ?? []).length > 0 && (
                 <form action={haalBerichtenOp}>
                   <input type="hidden" name="landgoed_id" value={id} />
-                  <input type="hidden" name="maanden" value="12" />
+                  <input type="hidden" name="maanden" value="1" />
                   <LangeActieKnop>Berichten ophalen</LangeActieKnop>
                 </form>
               )}
@@ -319,18 +370,28 @@ export default async function OmgevingPage({
             </div>
           )}
 
-          {/* Trechtercijfers: zonder deze getallen is niet te zien of het
-              filter te streng staat, en dan wordt de drempel op gevoel gezet. */}
+          {/* Eén regel in gewone taal. De interne trechtercijfers (hoeveel er
+              niet te plaatsen was, waar het opgehaalde werd afgekapt) horen
+              niet op het hoofdscherm: dat legt een tekortkoming uit in plaats
+              van hem op te lossen. Wie het detail wil, klikt door naar
+              "wat is er weggefilterd". */}
           {laatsteRun && (
             <p className="mt-3 text-[11.5px]" style={{ color: "var(--text-3)" }}>
-              Laatste ronde: {laatsteRun.aantal_opgehaald} publicaties beoordeeld,{" "}
-              {laatsteRun.aantal_door_poort} raakten uw invloedsgebied,{" "}
-              {laatsteRun.aantal_relevant} bewaard
-              {laatsteRun.aantal_onplaatsbaar > 0 &&
-                `, ${laatsteRun.aantal_onplaatsbaar} niet te plaatsen`}
-              .
-              {laatsteRun.fout && (
-                <span style={{ color: "var(--red)" }}> Let op: {laatsteRun.fout}</span>
+              Laatst gecontroleerd op{" "}
+              {new Date(laatsteRun.gestart_op).toLocaleDateString("nl-NL", {
+                day: "numeric",
+                month: "long",
+              })}
+              . {laatsteRun.aantal_opgehaald.toLocaleString("nl-NL")} publicaties bekeken,{" "}
+              {laatsteRun.aantal_relevant}{" "}
+              {laatsteRun.aantal_relevant === 1 ? "raakt" : "raken"} uw landgoed.
+              {weggefilterd > 0 && (
+                <>
+                  {" "}
+                  <Link href={`${basis}?spoor=weggefilterd`} className="underline">
+                    Bekijk wat er is weggefilterd ({weggefilterd})
+                  </Link>
+                </>
               )}
             </p>
           )}
@@ -370,7 +431,9 @@ export default async function OmgevingPage({
                 ? "Er loopt een termijn. Wie dit mist, verliest zijn positie definitief."
                 : huidigSpoor === "weten"
                   ? "Raakt uw omgeving, maar u hoeft nu niets te doen."
-                  : "Omgezet naar een taak of agendapunt."}
+                  : huidigSpoor === "weggefilterd"
+                    ? "Wat de radar heeft gezien maar niet heeft doorgelaten, met de reden erbij. Staat hier zodat u kunt controleren of het filter niet te streng staat — mist u hier iets, laat het weten."
+                    : "Opgevolgd, of de termijn is verlopen zonder dat er iets mee is gedaan."}
             </p>
             <Bak
               titel={spoorTitel ?? ""}
@@ -443,8 +506,19 @@ function Bak({
                           {Math.round(Number(b.afstand_m))} m
                         </span>
                       )}
-                      {b.geo_status === "onplaatsbaar" && (
+                      {b.geo_status === "onplaatsbaar" && !b.weggefilterd_reden && (
                         <span className="tag tag-gray">niet te plaatsen</span>
+                      )}
+                      {b.weggefilterd_reden && (
+                        <span className="tag tag-gray">
+                          {b.weggefilterd_reden === "te_ver"
+                            ? b.afstand_m != null
+                              ? `${Math.round(Number(b.afstand_m)).toLocaleString("nl-NL")} m — buiten bereik`
+                              : "buiten bereik"
+                            : b.weggefilterd_reden === "niet_te_plaatsen"
+                              ? "adres niet gevonden"
+                              : "geen locatie genoemd"}
+                        </span>
                       )}
                       {dagen != null && (
                         <span className={`tag ${krap ? "tag-red" : "tag-gray"}`}>
@@ -483,7 +557,7 @@ function Bak({
                     </p>
                   </div>
 
-                  {b.status !== "omgezet" && (
+                  {b.status !== "omgezet" && b.status !== "weggefilterd" && (
                     <form action={berichtNaarTaak}>
                       <input type="hidden" name="landgoed_id" value={landgoed} />
                       <input type="hidden" name="id" value={b.id} />

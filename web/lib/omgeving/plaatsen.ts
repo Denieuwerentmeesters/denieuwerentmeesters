@@ -146,20 +146,34 @@ const ECHTE_TREFFER = new Set(["adres", "postcode", "weg"]);
 // willekeurig adres op met score 4,6. Echte treffers zitten boven de 10.
 const ABSOLUTE_ONDERGRENS = 8;
 
+/** Waarbinnen mag een adres gezocht worden? */
+export type Zoekgebied = {
+  /** 'gemeentenaam' bij een gemeente, 'provincienaam' bij provincie/waterschap. */
+  veld: "gemeentenaam" | "provincienaam";
+  naam: string;
+};
+
 /**
- * Geocodeert een tekst binnen één gemeente.
- * `gemeente` is verplicht: zonder die begrenzing plaatst de Locatieserver
- * onzin ergens in Nederland en lijkt dat een geldige treffer.
+ * Geocodeert een tekst binnen een begrensd gebied.
+ *
+ * De begrenzing is verplicht: zonder filter plaatst de Locatieserver onzin
+ * ergens in Nederland en ziet dat eruit als een geldige treffer
+ * ("Bevoegdhedenbesluit 2026" wordt een dorp in Friesland).
+ *
+ * Een gemeente publiceert over adressen binnen de eigen grens, dus daar kan op
+ * gemeentenaam. Een provincie of waterschap publiceert over een veel groter
+ * gebied; die zoeken op provincienaam. Zonder dat onderscheid vielen provincie
+ * en waterschap helemaal buiten de radar.
  */
 export async function geocodeer(
   term: string,
-  gemeente: string,
+  gebied: Zoekgebied,
 ): Promise<Plaatsing | null> {
   const params = new URLSearchParams({
     q: term,
     rows: "1",
     fl: "weergavenaam,type,score,centroide_rd,gemeentenaam",
-    fq: `gemeentenaam:"${gemeente.replace(/"/g, "")}"`,
+    fq: `${gebied.veld}:"${gebied.naam.replace(/"/g, "")}"`,
   });
 
   const res = await fetch(`${LOCATIESERVER}?${params}`, {
@@ -207,12 +221,12 @@ export type PlaatsingUitkomst =
 /** De hele keten: tekst -> aanduiding -> coördinaat. */
 export async function plaatsBericht(
   titel: string,
-  gemeente: string,
+  gebied: Zoekgebied,
 ): Promise<PlaatsingUitkomst> {
   const gevonden = locatieUitTekst(titel);
   if (!gevonden) return { status: "geen_locatie" };
 
-  const plaatsing = await geocodeer(gevonden.term, gemeente);
+  const plaatsing = await geocodeer(gevonden.term, gebied);
   if (!plaatsing) return { status: "onplaatsbaar", term: gevonden.term };
 
   return { status: "geplaatst", plaatsing };

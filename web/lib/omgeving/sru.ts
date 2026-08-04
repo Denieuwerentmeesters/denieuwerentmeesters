@@ -58,7 +58,36 @@ export type SruVraag = {
   vanaf: string; // YYYY-MM-DD
   tot: string; // YYYY-MM-DD
   maximaal?: number;
+  /**
+   * Alleen deze documenttypen ophalen. Leeg = alles.
+   *
+   * Bedoeld voor provincie en waterschap. Gemeten op een jaar Waterschap
+   * Scheldestromen: 2156 publicaties, waarvan 959 "andere vergunning" en 803
+   * omgevingsvergunning. Van een steekproef van 360 lag er nul binnen 500 m
+   * van Ter Hooge en was de mediaan-afstand 22,8 km — het beheergebied beslaat
+   * heel Zeeland. Die vergunningen ophalen kost dus veel en levert niets.
+   *
+   * Wat er wél toe doet zijn de verordeningen, peilbesluiten en ruimtelijke
+   * plannen: achttien per jaar, en die werken op omvatting (lig ik in dit
+   * peilvak) in plaats van op afstand.
+   */
+  alleenRubrieken?: string[];
 };
+
+/**
+ * Besluitsoorten van een provincie of waterschap die een landgoed kunnen
+ * raken. Bewust smal: alles wat op één adres slaat valt af, want zulke
+ * besluiten liggen bij een bestuursorgaan dat een hele provincie beslaat
+ * vrijwel nooit bij jou in de buurt.
+ */
+export const GEBIEDSDEKKENDE_RUBRIEKEN = [
+  "algemeen verbindend voorschrift (verordening)",
+  "ruimtelijk plan of omgevingsdocument",
+  "ander besluit van algemene strekking",
+  "beleidsregel",
+  "peilbesluit",
+  "participatie",
+];
 
 /**
  * Haalt publicaties op voor één bestuursorgaan in een periode.
@@ -77,11 +106,19 @@ export async function haalPublicaties(v: SruVraag): Promise<{
   // onvolledigheid waar deze module aan kapot gaat. De grens blijft bestaan
   // als noodrem, maar ligt nu boven het werkelijke volume.
   const maximaal = v.maximaal ?? 5000;
+  // Het typefilter gaat mee in de CQL-query, niet achteraf: dan haalt de bron
+  // die duizenden vergunningen niet eens op. Voor Waterschap Scheldestromen
+  // scheelt dat 2156 -> 25 publicaties per jaar.
+  const typeFilter = v.alleenRubrieken?.length
+    ? ` and (${v.alleenRubrieken.map((r) => `dt.type=="${cqlWaarde(r)}"`).join(" or ")})`
+    : "";
+
   const query =
     `c.product-area==officielepublicaties` +
     ` and dt.creator=="${cqlWaarde(v.organisatie)}"` +
     ` and dt.modified>=${v.vanaf}` +
-    ` and dt.modified<=${v.tot}`;
+    ` and dt.modified<=${v.tot}` +
+    typeFilter;
 
   const publicaties: Publicatie[] = [];
   let totaal = 0;
