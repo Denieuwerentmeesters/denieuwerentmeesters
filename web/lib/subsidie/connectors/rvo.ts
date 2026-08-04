@@ -1,3 +1,4 @@
+import { fetchExtern } from "@/lib/extern";
 import type { Connector, RegelingNormaal } from "../connectors";
 
 // RVO open-data connector. Gratis, CC-0, JSON. ~47 records.
@@ -35,10 +36,11 @@ function lijst(v: unknown): string[] | null {
 export const rvoConnector: Connector = {
   bronSleutel: "rvo_opendata",
   async haalOp(): Promise<RegelingNormaal[]> {
-    const res = await fetch(FEED_URL, {
-      headers: { accept: "application/json" },
-      cache: "no-store",
-    });
+    const res = await fetchExtern(
+      FEED_URL,
+      { headers: { accept: "application/json" }, cache: "no-store" },
+      20000,
+    );
     if (!res.ok) {
       throw new Error(`RVO-feed gaf status ${res.status}`);
     }

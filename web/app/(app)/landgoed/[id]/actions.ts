@@ -1,7 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
-import { moet } from "@/lib/db";
+import { isUuid, moet } from "@/lib/db";
 import { revalidatePath } from "next/cache";
 
 function tekst(fd: FormData, k: string) {
@@ -29,18 +29,32 @@ async function uploadBijlage(
   return { pad, naam: file.name };
 }
 
-// ── Hulp: toewijzing-waarde parsen ──
-// Waarde "u:<uuid>" → profiel-UUID; "c:<naam>" → contactnaam; leeg → null
-function parseToewijzing(waarde: string | null): { toegewezen_aan: string | null; toegewezen_aan_naam: string | null } {
-  if (!waarde) return { toegewezen_aan: null, toegewezen_aan_naam: null };
-  if (waarde.startsWith("u:")) {
-    const uuid = waarde.slice(2);
-    return { toegewezen_aan: uuid, toegewezen_aan_naam: null };
-  }
+// ── Hulp: toewijzing-waarde parsen én toetsen ──
+// Waarde "u:<uuid>" → profiel-UUID, maar alléén als die persoon lid is van
+// dit landgoed (issue #9 — anders kon een aangepast formulier taken aan een
+// willekeurige gebruikers-UUID hangen); "c:<naam>" → contactnaam; leeg → null.
+async function veiligeToewijzing(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  landgoed_id: string,
+  waarde: string | null,
+): Promise<{ toegewezen_aan: string | null; toegewezen_aan_naam: string | null }> {
+  const leeg = { toegewezen_aan: null, toegewezen_aan_naam: null };
+  if (!waarde) return leeg;
   if (waarde.startsWith("c:")) {
     return { toegewezen_aan: null, toegewezen_aan_naam: waarde.slice(2) };
   }
-  return { toegewezen_aan: null, toegewezen_aan_naam: null };
+  if (waarde.startsWith("u:")) {
+    const uuid = waarde.slice(2);
+    if (!isUuid(uuid)) return leeg;
+    const { data: lid } = await supabase
+      .from("lidmaatschap")
+      .select("id")
+      .eq("landgoed_id", landgoed_id)
+      .eq("gebruiker_id", uuid)
+      .maybeSingle();
+    return lid ? { toegewezen_aan: uuid, toegewezen_aan_naam: null } : leeg;
+  }
+  return leeg;
 }
 
 // ── Taken ──
@@ -49,7 +63,7 @@ export async function nieuweTaak(fd: FormData) {
   const titel = tekst(fd, "titel");
   if (!titel) return;
   const supabase = await createClient();
-  const toewijzing = parseToewijzing(tekst(fd, "toegewezen_aan"));
+  const toewijzing = await veiligeToewijzing(supabase, landgoed_id, tekst(fd, "toegewezen_aan"));
   const bijlage = await uploadBijlage(supabase, landgoed_id, "taken", fd.get("bijlage") as File);
   await moet(supabase.from("taak").insert({
     landgoed_id,
@@ -72,7 +86,7 @@ export async function nieuwAgendaItem(fd: FormData) {
   const datum = tekst(fd, "datum");
   if (!titel || !datum) return;
   const supabase = await createClient();
-  const toewijzing = parseToewijzing(tekst(fd, "toegewezen_aan"));
+  const toewijzing = await veiligeToewijzing(supabase, landgoed_id, tekst(fd, "toegewezen_aan"));
   const bijlage = await uploadBijlage(supabase, landgoed_id, "agenda", fd.get("bijlage") as File);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   await moet((supabase as any).from("agenda_item").insert({
@@ -220,7 +234,19 @@ export async function bevestigInboundVoorstel(fd: FormData) {
   const deadline = tekst(fd, "deadline");
   const prioriteit = tekst(fd, "prioriteit");
   const omschrijving = tekst(fd, "omschrijving");
-  const toegewezen_aan = tekst(fd, "toegewezen_aan");
+  // Rauwe profiel-UUID uit het formulier: alleen accepteren als de persoon
+  // lid is van dit landgoed (issue #9).
+  const toewijzingRuw = tekst(fd, "toegewezen_aan");
+  let toegewezen_aan: string | null = null;
+  if (toewijzingRuw && isUuid(toewijzingRuw)) {
+    const { data: lid } = await supabase
+      .from("lidmaatschap")
+      .select("id")
+      .eq("landgoed_id", landgoed_id)
+      .eq("gebruiker_id", toewijzingRuw)
+      .maybeSingle();
+    if (lid) toegewezen_aan = toewijzingRuw;
+  }
   const datum = tekst(fd, "datum");
   const tijd = tekst(fd, "tijd");
   const locatie = tekst(fd, "locatie");
