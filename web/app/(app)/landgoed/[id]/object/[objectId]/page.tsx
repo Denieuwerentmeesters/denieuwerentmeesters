@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { isUuid } from "@/lib/db";
 import { createClient } from "@/lib/supabase/server";
 import BestandVeld from "@/components/BestandVeld";
 import SubmitKnop from "@/components/SubmitKnop";
@@ -82,6 +83,9 @@ export default async function ObjectDetailPage({
   searchParams: Promise<{ van?: string }>;
 }) {
   const { id, objectId } = await params;
+  // Route-parameter wordt in een PostgREST-filterstring geïnterpoleerd —
+  // dus eerst streng valideren (issue #9).
+  if (!isUuid(objectId)) notFound();
   // Waar kwam de bezoeker vandaan? Zo wijst "Terug" naar de juiste pagina
   // (de invoerpagina en de kijk-kaart zijn sinds #65 aparte plekken).
   const { van } = await searchParams;
