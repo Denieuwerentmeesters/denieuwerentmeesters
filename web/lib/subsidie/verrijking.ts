@@ -1,3 +1,4 @@
+import { fetchExtern } from "@/lib/extern";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { verrijkRegeling } from "@/lib/ai";
 
@@ -27,7 +28,7 @@ function striptHtml(html: string): string {
 
 export async function haalPaginaTekst(url: string): Promise<string | null> {
   try {
-    const res = await fetch(url, {
+    const res = await fetchExtern(url, {
       headers: { accept: "text/html" },
       cache: "no-store",
     });

@@ -1,5 +1,6 @@
 "use server";
 
+import { fetchExtern } from "@/lib/extern";
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 import { after } from "next/server";
@@ -99,7 +100,7 @@ async function zoekKandidatenBinnenOmtrek(
       `&typeNames=kadastralekaart:Perceel&outputFormat=application/json` +
       `&srsName=EPSG:3857&count=1000&startIndex=${start}` +
       `&bbox=${bbox},EPSG:3857`;
-    const res = await fetch(url, { signal: AbortSignal.timeout(20000) });
+    const res = await fetchExtern(url, undefined, 20000);
     if (!res.ok) throw new Error(`PDOK WFS: ${res.status}`);
     const gj = await res.json();
     const features = (gj?.features ?? []) as {
@@ -754,7 +755,7 @@ async function checkMonumentOpPunt(
     `${RCE_WFS}?SERVICE=WFS&VERSION=2.0.0&REQUEST=GetFeature` +
     `&TYPENAMES=${RCE_LAAG}&COUNT=1&BBOX=${bbox}&OUTPUTFORMAT=application/json`;
   try {
-    const res = await fetch(url);
+    const res = await fetchExtern(url);
     const gj = await res.json();
     const f = gj?.features?.[0];
     if (!f)
@@ -844,7 +845,7 @@ async function puntInWmsLaag(
     `${service}?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetFeatureInfo` +
     `&LAYERS=${layer}&QUERY_LAYERS=${layer}&CRS=EPSG:3857&BBOX=${bbox}` +
     "&WIDTH=256&HEIGHT=256&I=128&J=128&INFO_FORMAT=application/json&FEATURE_COUNT=1";
-  const res = await fetch(url);
+  const res = await fetchExtern(url);
   const gj = await res.json();
   const f = gj?.features?.[0];
   return {
@@ -1263,7 +1264,7 @@ async function anlbViaWms(
     FEATURE_COUNT: "10",
   });
   try {
-    const res = await fetch(`${bron.url}?${params.toString()}`);
+    const res = await fetchExtern(`${bron.url}?${params.toString()}`);
     const gj = await res.json();
     return ((gj?.features ?? []) as Array<{ properties?: Record<string, unknown> }>).map(
       (f) => naarAnlbTreffer(f.properties ?? {}),
@@ -1295,7 +1296,7 @@ async function anlbViaWfsIntersect(
     FILTER: filter,
   });
   try {
-    const res = await fetch(`${bron.url}?${params.toString()}`);
+    const res = await fetchExtern(`${bron.url}?${params.toString()}`);
     const gj = await res.json();
     return ((gj?.features ?? []) as Array<{ properties?: Record<string, unknown> }>).map(
       (f) => naarAnlbTreffer(f.properties ?? {}),
@@ -1325,7 +1326,7 @@ async function anlbViaArcgisIdentify(
     f: "json",
   });
   try {
-    const res = await fetch(`${bron.url}?${params.toString()}`);
+    const res = await fetchExtern(`${bron.url}?${params.toString()}`);
     const data = await res.json();
     return ((data?.results ?? []) as Array<{ attributes?: Record<string, unknown> }>).map(
       (r) => naarAnlbTreffer(r.attributes ?? {}),
@@ -1351,7 +1352,7 @@ async function anlbViaArcgisQuery(
     f: "json",
   });
   try {
-    const res = await fetch(`${bron.url}?${params.toString()}`);
+    const res = await fetchExtern(`${bron.url}?${params.toString()}`);
     const data = await res.json();
     return ((data?.features ?? []) as Array<{ attributes?: Record<string, unknown> }>).map(
       (f) => naarAnlbTreffer(f.attributes ?? {}),
@@ -1443,11 +1444,15 @@ export async function wisBasis(fd: FormData) {
 export async function lookupPerceel(
   lat: number,
   lon: number,
-): Promise<{
-  label: string;
-  kenmerken: Record<string, unknown>;
-  geom: unknown;
-} | null> {
+): Promise<
+  | {
+      label: string;
+      kenmerken: Record<string, unknown>;
+      geom: unknown;
+    }
+  | "onbereikbaar"
+  | null
+> {
   if (!Number.isFinite(lat) || !Number.isFinite(lon)) return null;
   const x = (lon * 20037508.342789244) / 180;
   const y =
@@ -1460,7 +1465,7 @@ export async function lookupPerceel(
     `&LAYERS=Perceel&QUERY_LAYERS=Perceel&CRS=EPSG:3857&BBOX=${bbox}` +
     "&WIDTH=256&HEIGHT=256&I=128&J=128&INFO_FORMAT=application/json&FEATURE_COUNT=1";
   try {
-    const res = await fetch(url);
+    const res = await fetchExtern(url);
     const gj = await res.json();
     const f = gj?.features?.[0];
     if (!f) return null;
@@ -1483,7 +1488,9 @@ export async function lookupPerceel(
       },
     };
   } catch {
-    return null;
+    // "Bron niet bereikbaar" is iets anders dan "geen perceel gevonden"
+    // (issue #8) — de kaart toont dan een eigen melding.
+    return "onbereikbaar";
   }
 }
 
@@ -1492,11 +1499,15 @@ export async function lookupPerceel(
 export async function lookupGebouw(
   lat: number,
   lon: number,
-): Promise<{
-  label: string;
-  kenmerken: Record<string, unknown>;
-  geom: unknown;
-} | null> {
+): Promise<
+  | {
+      label: string;
+      kenmerken: Record<string, unknown>;
+      geom: unknown;
+    }
+  | "onbereikbaar"
+  | null
+> {
   if (!Number.isFinite(lat) || !Number.isFinite(lon)) return null;
   const [x, y] = merc3857(lon, lat);
   const d = 25;
@@ -1537,7 +1548,8 @@ export async function lookupGebouw(
       },
     };
   } catch {
-    return null;
+    // Zie lookupPerceel: bron-storing expliciet onderscheiden.
+    return "onbereikbaar";
   }
 }
 

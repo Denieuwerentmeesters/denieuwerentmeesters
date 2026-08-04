@@ -1,3 +1,4 @@
+import { fetchExtern } from "@/lib/extern";
 // Lichte SRU 2.0-client voor KOOP (CVDR + officiële publicaties).
 // Dependency-vrij: het recordschema (gzd) is vast en voorspelbaar, dus we
 // extraheren de bekende velden met gerichte regex i.p.v. een XML-parser-dependency
@@ -127,10 +128,11 @@ export async function sruZoek(opts: {
     });
     if (opts.sortAflopendOpDatum) params.set("sortKeys", "dt.date,,0");
 
-    const res = await fetch(`${KOOP_BASE}?${params.toString()}`, {
-      headers: { accept: "application/xml" },
-      cache: "no-store",
-    });
+    const res = await fetchExtern(
+      `${KOOP_BASE}?${params.toString()}`,
+      { headers: { accept: "application/xml" }, cache: "no-store" },
+      20000,
+    );
     if (!res.ok) {
       throw new Error(`KOOP SRU gaf status ${res.status} (${opts.connectie}).`);
     }

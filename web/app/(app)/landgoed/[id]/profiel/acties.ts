@@ -1,5 +1,6 @@
 "use server";
 
+import { fetchExtern } from "@/lib/extern";
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
@@ -97,7 +98,7 @@ export async function haalRijksmonumenten(landgoed_id: string) {
 
   let features: Array<{ properties?: RceMonument; geometry?: unknown }> = [];
   try {
-    const res = await fetch(url);
+    const res = await fetchExtern(url);
     const gj = await res.json();
     features = Array.isArray(gj?.features) ? gj.features : [];
   } catch {
@@ -227,7 +228,7 @@ export async function hercontroleMonumentenGebouwen(fd: FormData) {
       rijksmonument_url: null,
     };
     try {
-      const res = await fetch(url);
+      const res = await fetchExtern(url);
       const gj = await res.json();
       const f = gj?.features?.[0];
       if (f) {
