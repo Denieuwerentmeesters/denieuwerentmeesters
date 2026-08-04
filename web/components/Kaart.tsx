@@ -172,8 +172,14 @@ export default function Kaart({
   lon: number | null;
   setBasisLocatie: (fd: FormData) => Promise<void>;
   plaatsOpKaart: (fd: FormData) => Promise<void>;
-  lookupPerceel: (lat: number, lon: number) => Promise<LookupResult | null>;
-  lookupGebouw: (lat: number, lon: number) => Promise<LookupResult | null>;
+  lookupPerceel: (
+    lat: number,
+    lon: number,
+  ) => Promise<LookupResult | "onbereikbaar" | null>;
+  lookupGebouw: (
+    lat: number,
+    lon: number,
+  ) => Promise<LookupResult | "onbereikbaar" | null>;
   verwijderObject: (fd: FormData) => Promise<void>;
   controleerGebiedsligging: (fd: FormData) => Promise<void>;
   bezit: BezitPerceel[];
@@ -1064,7 +1070,12 @@ export default function Kaart({
           const r = await lookupPerceel(lat, lon);
           setResultaat(null);
           setPunt(null);
-          if (r) {
+          if (r === "onbereikbaar") {
+            // Bron-storing is iets anders dan "geen resultaat" (issue #8).
+            setMelding(
+              "PDOK (Kadaster) is op dit moment niet bereikbaar — probeer het zo nog eens.",
+            );
+          } else if (r) {
             const res = await registreerBezit(landgoedId, {
               ...r.kenmerken,
               geom_3857: r.geom,
@@ -1093,8 +1104,16 @@ export default function Kaart({
           }
         } else {
           const r = await lookupGebouw(lat, lon);
-          setResultaat(r ? { ...r, soort: "gebouw" } : null);
-          tekenRand(L, map, randRef, r?.geom ? [r.geom] : []);
+          if (r === "onbereikbaar") {
+            setResultaat(null);
+            setPunt(null);
+            setMelding(
+              "PDOK (BAG) is op dit moment niet bereikbaar — probeer het zo nog eens.",
+            );
+          } else {
+            setResultaat(r ? { ...r, soort: "gebouw" } : null);
+            tekenRand(L, map, randRef, r?.geom ? [r.geom] : []);
+          }
         }
         setBezig(false);
       });
@@ -1314,7 +1333,9 @@ export default function Kaart({
               ? "Selecteer een of meer grijze percelen en maak er samen een beheerperceel van — of voeg ze toe aan een bestaand beheerperceel."
               : "Klik op een gebouw; adres, oppervlakte, pandstatus en monumentstatus (RCE) worden opgehaald."}
       </p>
-      {melding && (mode === "perceel" || mode === "indelen" || mode === "bekijk") && (
+      {/* Meldingen in alle modi — ook een bron-storing in de gebouwen-modus
+          moet ergens leesbaar landen. */}
+      {melding && (
         <p className="text-[12.5px] font-medium" style={{ color: "var(--text-2)" }}>
           {melding}
         </p>
