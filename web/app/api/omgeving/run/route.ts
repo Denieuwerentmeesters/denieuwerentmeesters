@@ -1,10 +1,10 @@
 import { createServiceClient, serviceBeschikbaar } from "@/lib/supabase/service";
 import { haalPublicatiesOp, ontdubbel, type OphaalCijfers } from "@/lib/omgeving/publicaties";
 
-// Dagelijkse ophaalronde van de omgevingsradar, voor álle landgoederen met de
-// module aan.
+// Wekelijkse ophaalronde van de omgevingsradar (woensdagochtend), voor álle
+// landgoederen met de module aan.
 //
-//   POST /api/omgeving/run              -> laatste 7 dagen (dagelijkse ronde)
+//   POST /api/omgeving/run              -> laatste 21 dagen (wekelijkse ronde)
 //   POST /api/omgeving/run?maanden=12   -> eerste vulling of inhaalslag
 //
 // Twee fasen, en die scheiding is het hele punt:
@@ -55,10 +55,19 @@ export async function POST(req: Request): Promise<Response> {
   }
 
   const { searchParams } = new URL(req.url);
-  // Standaard een week terug: ruim genoeg om een gemiste dag op te vangen. De
-  // controle op reeds bekende publicaties zorgt dat die overlap niets kost.
+  // Standaard 21 dagen terug, terwijl de cron wekelijks draait.
+  //
+  // Die ruime overlap is geen slordigheid maar een eis: Vercel garandeert de
+  // levering van een cron niet en probeert het bij een mislukking níét opnieuw.
+  // Bij een wekelijkse planning betekent één gemiste ronde dus meteen een gat
+  // van veertien dagen. Met 21 dagen haalt de eerstvolgende ronde dat vanzelf
+  // in, zonder dat iemand het hoeft te merken.
+  //
+  // De overlap kost niets: publicaties die we al kennen worden overgeslagen
+  // vóór het geocoderen, met één databasevraag in plaats van honderden
+  // HTTP-verzoeken.
   const maanden = Number(searchParams.get("maanden") ?? 0);
-  const dagen = maanden > 0 ? 0 : Number(searchParams.get("dagen") ?? 7);
+  const dagen = maanden > 0 ? 0 : Number(searchParams.get("dagen") ?? 21);
 
   const vanafDatum = new Date();
   if (maanden > 0) vanafDatum.setMonth(vanafDatum.getMonth() - Math.min(24, maanden));
