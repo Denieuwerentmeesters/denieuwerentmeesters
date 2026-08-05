@@ -393,8 +393,27 @@ async function schrijfOnderliggendeFondsen(
     ((bestaand ?? []) as { extern_id: string }[]).map((r) => r.extern_id),
   );
 
+  // Óók op naam ontdubbelen, niet alleen op extern_id. Een fonds dat wij onder
+  // een koepel aantreffen staat vaak allang zelfstandig in de catalogus: het
+  // Elise Mathilde Fonds is een eigen regel én hangt onder het KIEM-loket.
+  // Zonder deze toets krijgt zo'n fonds een tweede, lege rij, en dan is de
+  // naamkoppeling van de verrijking dubbelzinnig en landt ze nergens meer.
+  const { data: bestaandeNamen } = await db
+    .from("regeling")
+    .select("naam")
+    .in("soort_bron", ["fonds", "lening"]);
+  const namenInCatalogus = new Set(
+    ((bestaandeNamen ?? []) as { naam: string }[])
+      .map((r) => naamSleutel(r.naam))
+      .filter(Boolean),
+  );
+
   const rijen = kandidaten
     .filter((k) => !alAanwezig.has(k.extern_id))
+    .filter((k) => {
+      const sleutel = naamSleutel(k.fonds.naam);
+      return !sleutel || !namenInCatalogus.has(sleutel);
+    })
     .map((k) => ({
       bron_id: bronId,
       extern_id: k.extern_id,
