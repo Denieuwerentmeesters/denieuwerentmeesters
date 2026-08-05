@@ -85,6 +85,12 @@ export function Icon({ naam, actief }: { naam: string; actief: boolean }) {
           <path d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
         </svg>
       );
+    case "fondsen":
+      return (
+        <svg {...props}>
+          <path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-5.25v10.5m-3.75-7.5h5.25a2.25 2.25 0 010 4.5H8.25m0 0h5.25a2.25 2.25 0 010 4.5H8.25" />
+        </svg>
+      );
     case "omgeving":
       return (
         <svg {...props}>

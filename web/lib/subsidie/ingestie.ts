@@ -57,6 +57,39 @@ function bronVelden(r: RegelingNormaal): Record<string, unknown> {
   if (r.is_tijdelijk !== undefined) zet("is_tijdelijk", r.is_tijdelijk);
   zet("openstelling_van", r.openstelling_van);
   zet("openstelling_tot", r.openstelling_tot);
+
+  // Fondsenradar-velden (migratie 0050). Alleen meesturen als de connector ze
+  // vult; subsidie-connectors laten ze leeg en houden zo de kolomdefaults.
+  zet("soort_bron", r.soort_bron);
+  zet("rechtskarakter", r.rechtskarakter);
+  zet("benaderbaarheid", r.benaderbaarheid);
+  zet("benaderwijze_notitie", r.benaderwijze_notitie);
+  zet("geo_niveau", r.geo_niveau);
+  zet("geo_waarden", r.geo_waarden);
+  zet("bedrag_min", r.bedrag_min);
+  zet("bedrag_max", r.bedrag_max);
+  zet("bedrag_typisch", r.bedrag_typisch);
+  zet("bedrag_indicatie", r.bedrag_indicatie);
+  // Bewust niet via `zet`: `false` is hier betekenisvol en `null` betekent
+  // "niet gepubliceerd" — dat mag niet stil naar "nee" vallen (§2).
+  if (r.cofinanciering_vereist !== undefined) {
+    v.cofinanciering_vereist = r.cofinanciering_vereist;
+  }
+  zet("max_percentage_projectkosten", r.max_percentage_projectkosten);
+  zet("financieringsrol", r.financieringsrol);
+  zet("kostensoort", r.kostensoort);
+  zet("cooldown_maanden", r.cooldown_maanden);
+  zet("hercontrole_termijn", r.hercontrole_termijn);
+  zet("plan_triggers", r.plan_triggers);
+  zet("contact", r.contact);
+  zet("aanvrager_type", r.aanvrager_type);
+  zet("verdienmodel", r.verdienmodel);
+  zet("bron_tabblad", r.bron_tabblad);
+
+  // §1: `bestuurslaag` gaat over welke OVERHEIDSlaag verstrekt. Bij een fonds
+  // hoort dat veld leeg te blijven — "privaat" erin proppen is een
+  // categoriefout. De database bewaakt dit ook (constraint in 0050).
+  if (r.soort_bron === "fonds") delete v.bestuurslaag;
   return v;
 }
 
@@ -151,9 +184,13 @@ export async function verwerkConnector(
           db.from("regeling").insert({
             bron_id: bron.id,
             extern_id: item.extern_id,
-            herkomst: "import",
+            // Per rij, want de fondsenlijst mengt geverifieerde kennis met
+            // gissingen uit een sector-tag (§2). Feeds blijven 'import'.
+            herkomst: item.herkomst ?? "import",
             geaccordeerd: false,
             is_nieuw: true,
+            payload_hash: hash,
+            laatst_gezien: new Date().toISOString(),
             ...bronVelden(item),
           }),
           "regeling aanmaken",
@@ -161,6 +198,16 @@ export async function verwerkConnector(
         nieuw++;
       } else {
         const velden = bronVelden(item);
+        // Versheid op de regeling zelf (§2): ook als er niets wijzigde is dit
+        // het bewijs dat de bron het record nog bevestigt.
+        velden.payload_hash = hash;
+        velden.laatst_gezien = new Date().toISOString();
+        // Herkomst alleen bijstellen zolang een mens de rij niet heeft
+        // geaccordeerd — anders zou een herimport een handmatige verificatie
+        // terugzetten naar een afgeleide gissing.
+        if (item.herkomst && !bestaand.geaccordeerd) {
+          velden.herkomst = item.herkomst;
+        }
         // Inhoud gewijzigd -> opnieuw verrijken (verrijkt_op leeglaten).
         if (isGewijzigd) velden.verrijkt_op = null;
         await moet(

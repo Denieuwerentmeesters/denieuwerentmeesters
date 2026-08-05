@@ -15,9 +15,9 @@ const PUBLIEKE_PADEN = [
   "/auth",
   "/api/extractie",
   "/api/subsidie",
+  "/api/fondsen",
   "/api/inbound",
   "/api/omgeving",
-
 ];
 
 export async function updateSession(request: NextRequest) {
