@@ -60,7 +60,34 @@ export type FondsOordeel = {
   acties: string[];
   waarschuwingen: string[]; // redenen van de poorten die 'onbekend' gaven
   herkaderingen: string[];
+  // Is dit fonds ooit onderzocht? Zie `isOnderzocht` — een niet-onderzocht
+  // fonds telt niet mee in de trechter.
+  onderzocht: boolean;
 };
+
+// ---------------------------------------------------------------------------
+// Onderzocht of nog niet onderzocht
+// ---------------------------------------------------------------------------
+// TWEE SOORTEN ONWETENDHEID, EN HET VERSCHIL MOET ZICHTBAAR ZIJN. Een groot
+// deel van de catalogus bestaat uit `ai_voorstel`-rijen: fondsen die onder een
+// koepel vandaan zijn gekomen en nog nooit een verrijkingsronde kregen — geen
+// gelezen bron, geen werkgebied, geen route. Die tellen als "onbekend" zou de
+// trechter laten meten hoe groot de achterstand is, in plaats van hoe scherp
+// het filter staat. Precies waar het commentaar bij `omgeving_run` voor
+// waarschuwt: de noemer moet kloppen.
+//
+// Onderzocht = minstens één rij in `regeling_bronlezing`, óf een herkomst die
+// niet `ai_voorstel` is. Niet-onderzochte fondsen worden NIET weggefilterd —
+// ze zijn juist de werkvoorraad — maar krijgen een eigen categorie en tellen
+// niet mee alsof ze beoordeeld zijn.
+
+export function isOnderzocht(f: PoortFonds): boolean {
+  if ((f.bronlezingen ?? 0) > 0) return true;
+  const h = f.herkomst ?? null;
+  // Zonder herkomst geen aanleiding om een fonds als onvoltooid te bestempelen.
+  if (h === null) return true;
+  return h !== "ai_voorstel";
+}
 
 // De projectstatus is een parameter van de VRAAG, niet van het fonds (§6).
 export const PROJECTSTATUSSEN = [
@@ -101,6 +128,9 @@ export type PoortFonds = {
   kostensoort?: string[] | null;
   // Machine-toetsbare criteria uit `regeling_criterium` (fase 'vooraf').
   criteria?: PoortCriterium[];
+  // Voor het onderscheid onderzocht / nog niet onderzocht (zie `isOnderzocht`).
+  herkomst?: string | null;
+  bronlezingen?: number | null;
 };
 
 export type PoortCriterium = {
@@ -826,6 +856,7 @@ export function toetsPoort(
     acties: poorten.map((o) => o.actie).filter((a): a is string => Boolean(a)),
     waarschuwingen: onbekend.map((o) => o.reden),
     herkaderingen: poorten.map((o) => o.herkadering).filter((h): h is string => Boolean(h)),
+    onderzocht: isOnderzocht(f),
   };
 }
 
@@ -841,7 +872,13 @@ export function toetsPoort(
 export type PoortTelling = { door: number; af: number; onbekend: number };
 
 export type Trechter = {
+  // De noemer: alleen ONDERZOCHTE fondsen. Nog niet onderzochte voorstel-rijen
+  // staan apart in `niet_onderzocht` — anders meet je je eigen achterstand in
+  // plaats van de scherpte van je filter.
   totaal: number;
+  niet_onderzocht: number;
+  // Alles bij elkaar, zodat het verschil narekenbaar blijft.
+  totaal_in_catalogus: number;
   doorgelaten: number;
   afgevallen: number;
   onbekend: number;
@@ -851,7 +888,11 @@ export type Trechter = {
   hoofdreden: Record<PoortNaam, number>;
 };
 
-export function trechter(oordelen: FondsOordeel[]): Trechter {
+export function trechter(alleOordelen: FondsOordeel[]): Trechter {
+  // Nog niet onderzochte fondsen doen niet mee aan de telling. Ze verdwijnen
+  // niet — ze worden apart geteld en apart getoond.
+  const oordelen = alleOordelen.filter((o) => o.onderzocht);
+  const nietOnderzocht = alleOordelen.length - oordelen.length;
   const leeg = () => ({ door: 0, af: 0, onbekend: 0 });
   const per_poort = Object.fromEntries(POORTEN.map((n) => [n, leeg()])) as Record<
     PoortNaam,
@@ -874,6 +915,8 @@ export function trechter(oordelen: FondsOordeel[]): Trechter {
 
   return {
     totaal: oordelen.length,
+    niet_onderzocht: nietOnderzocht,
+    totaal_in_catalogus: alleOordelen.length,
     doorgelaten: oordelen.filter((o) => o.uitkomst === "doorgelaten").length,
     afgevallen: oordelen.filter((o) => o.uitkomst === "afgevallen").length,
     onbekend: oordelen.filter((o) => o.uitkomst === "onbekend").length,

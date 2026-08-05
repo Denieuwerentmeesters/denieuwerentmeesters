@@ -11,6 +11,7 @@ import {
   toetsKostensoort,
   toetsPoort,
   trechter,
+  isOnderzocht,
   isNswFamilieBv,
   type Landgoedprofiel,
   type PoortFonds,
@@ -617,5 +618,38 @@ describe("trechtercijfers", () => {
     expect(t.hoofdreden.benaderbaarheid).toBe(1);
     expect(t.per_poort.geografie.onbekend).toBe(1);
     expect(t.per_poort.geografie.door).toBe(2);
+  });
+
+  // Twee soorten onwetendheid. Voorstel-rijen zijn nog nooit onderzocht; die
+  // meetellen als "onbekend" meet de achterstand van de verrijking, niet de
+  // scherpte van het filter.
+  it("houdt nog niet onderzochte voorstel-rijen buiten de noemer", () => {
+    const oordelen = [
+      toetsPoort(fonds({ id: "a", herkomst: "geverifieerd_bron" }), profiel()),
+      toetsPoort(fonds({ id: "v1", herkomst: "ai_voorstel", geo_niveau: null }), profiel()),
+      toetsPoort(fonds({ id: "v2", herkomst: "ai_voorstel", geo_niveau: null }), profiel()),
+    ];
+    const t = trechter(oordelen);
+    expect(t.totaal).toBe(1);
+    expect(t.niet_onderzocht).toBe(2);
+    expect(t.totaal_in_catalogus).toBe(3);
+    expect(t.doorgelaten).toBe(1);
+    expect(t.onbekend).toBe(0);
+    // Ook per poort tellen ze niet mee.
+    expect(t.per_poort.geografie.onbekend).toBe(0);
+  });
+
+  it("rekent een voorstel-rij met een gelezen bron wél als onderzocht", () => {
+    expect(isOnderzocht(fonds({ herkomst: "ai_voorstel", bronlezingen: 1 }))).toBe(true);
+    expect(isOnderzocht(fonds({ herkomst: "ai_voorstel", bronlezingen: 0 }))).toBe(false);
+    expect(isOnderzocht(fonds({ herkomst: "geverifieerd_bron" }))).toBe(true);
+    expect(isOnderzocht(fonds({ herkomst: "afgeleid_tag" }))).toBe(true);
+    // Zonder herkomst geen aanleiding om iets als onvoltooid te bestempelen.
+    expect(isOnderzocht(fonds({}))).toBe(true);
+  });
+
+  it("markeert het oordeel zelf ook, zodat de pagina kan splitsen", () => {
+    expect(toetsPoort(fonds({ herkomst: "ai_voorstel" }), profiel()).onderzocht).toBe(false);
+    expect(toetsPoort(fonds({ herkomst: "geverifieerd_bron" }), profiel()).onderzocht).toBe(true);
   });
 });

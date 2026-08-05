@@ -138,12 +138,33 @@ export default async function FondsenPagina({
   const bedrag = Number.isFinite(bedragRuw) && bedragRuw > 0 ? bedragRuw : null;
   const vraag: Vraag = { projectstatus: status, kostensoort, bedrag };
 
+  // Is een fonds ooit onderzocht? Een `ai_voorstel`-rij zonder gelezen bron is
+  // nog nooit bekeken; die hoort niet als "onbekend" mee te tellen, want dat
+  // meet de achterstand van de verrijking in plaats van de scherpte van de
+  // poort. Zie `isOnderzocht` in lib/fondsen/poort.ts.
+  const lezingenPer = new Map<string, number>();
+  const { data: lezingen } = await supabase
+    .from("regeling_bronlezing")
+    .select("regeling_id")
+    .in(
+      "regeling_id",
+      alle.map((f) => f.id),
+    );
+  for (const l of (lezingen ?? []) as { regeling_id: string }[]) {
+    lezingenPer.set(l.regeling_id, (lezingenPer.get(l.regeling_id) ?? 0) + 1);
+  }
+
   const index = aliasIndex(aliassen);
   const oordelen = new Map<string, FondsOordeel>();
   for (const f of alle) {
     oordelen.set(
       f.id,
-      toetsPoort({ ...f, criteria: criteriaPer.get(f.id) ?? [] }, profiel, vraag, index),
+      toetsPoort(
+        { ...f, criteria: criteriaPer.get(f.id) ?? [], bronlezingen: lezingenPer.get(f.id) ?? 0 },
+        profiel,
+        vraag,
+        index,
+      ),
     );
   }
   const cijfers = trechter([...oordelen.values()]);
@@ -162,6 +183,7 @@ export default async function FondsenPagina({
     zichtbaar
       .filter((f) => {
         const o = oordelen.get(f.id)!;
+        if (!o.onderzocht) return false;
         if (o.uitkomst !== u) return false;
         if (metActie === null) return true;
         return metActie ? o.acties.length > 0 : o.acties.length === 0;
@@ -172,6 +194,11 @@ export default async function FondsenPagina({
   const anders = bak("doorgelaten", true);
   const onbekend = bak("onbekend");
   const afgevallen = bak("afgevallen");
+  // Eigen categorie: gevonden, maar nog niet onderzocht. Niet wegfilteren (dit
+  // is de werkvoorraad), maar ook niet meetellen alsof ze beoordeeld zijn.
+  const nietOnderzocht = zichtbaar
+    .filter((f) => !oordelen.get(f.id)!.onderzocht)
+    .sort((a, b) => a.naam.localeCompare(b.naam));
 
   const basis = `/landgoed/${id}/fondsen`;
   const vraagQuery = (over: Record<string, string | null>) => {
@@ -193,7 +220,8 @@ export default async function FondsenPagina({
       <div className="mb-1 flex items-baseline justify-between gap-4">
         <h1 className="text-[22px] font-bold">Fondsenradar</h1>
         <span className="text-[12.5px]" style={{ color: "var(--text-3)" }}>
-          {cijfers.totaal} fondsen getoetst
+          {cijfers.totaal} onderzochte fondsen getoetst
+          {cijfers.niet_onderzocht > 0 && ` · ${cijfers.niet_onderzocht} nog niet onderzocht`}
         </span>
       </div>
       <p className="mb-6 max-w-2xl text-[13.5px] leading-snug" style={{ color: "var(--text-2)" }}>
@@ -242,7 +270,7 @@ export default async function FondsenPagina({
           aantal={onbekend.length}
           eenheid="fondsen"
           titel="Eerst uitzoeken"
-          uitleg="Op minstens één punt weten we het niet. Dat is uitdrukkelijk geen 'nee' — het is de werkvoorraad van de verrijking."
+          uitleg="Onderzochte fondsen waarbij de bron op minstens één punt niets zegt. Uitdrukkelijk geen 'nee' — dit is navraagwerk, geen afwijzing."
           stip="amber"
           stipTekst="Onbekend is geen nee"
           voet={`${afgevallen.length} vielen wel af`}
@@ -332,6 +360,33 @@ export default async function FondsenPagina({
         oordelen={oordelen}
       />
 
+      {/* Nog niet onderzocht. Een ánder soort onwetendheid dan "onbekend":
+          daar hebben we gekeken en staat het er niet, hier is nog niet
+          gekeken. Dat verschil moet zichtbaar zijn, anders lijkt de motor het
+          niet te weten terwijl er simpelweg nog werk ligt. */}
+      {nietOnderzocht.length > 0 && (
+        <details className="mb-9">
+          <summary className="cursor-pointer text-[16px] font-semibold">
+            Nog niet onderzocht{" "}
+            <span className="font-normal" style={{ color: "var(--text-3)" }}>
+              ({nietOnderzocht.length})
+            </span>
+          </summary>
+          <p className="mb-3 mt-1 max-w-2xl text-[12.5px] leading-snug" style={{ color: "var(--text-2)" }}>
+            Dit zijn gevonden fondsen die nog een verrijkingsronde moeten krijgen: er is nog geen
+            bron gelezen, dus er is geen werkgebied, geen route en geen bedragband. Ze staan hier
+            omdat ze de werkvoorraad zijn — maar ze tellen niet mee in de cijfers hierboven, want
+            ze zijn niet beoordeeld. &quot;Onbekend&quot; hierboven betekent: we hebben gekeken en het
+            staat er niet.
+          </p>
+          <div className="flex flex-col gap-2">
+            {nietOnderzocht.map((f) => (
+              <FondsRegel key={f.id} fonds={f} oordeel={oordelen.get(f.id)!} />
+            ))}
+          </div>
+        </details>
+      )}
+
       {/* Afgevallen — uitklapbaar, want dit is de langste stapel. Maar hij
           verdwijnt niet: wat weggegooid is ziet niemand meer terug, en juist
           hier staat wat er aan het landgoed zou moeten veranderen. */}
@@ -362,8 +417,11 @@ export default async function FondsenPagina({
         <summary className="cursor-pointer text-[13px] font-semibold">Trechtercijfers</summary>
         <p className="mb-2 mt-1 max-w-2xl text-[12.5px] leading-snug" style={{ color: "var(--text-2)" }}>
           Per poort: hoeveel fondsen erdoor kwamen, hoeveel erop afvielen en bij hoeveel het onbekend
-          bleef. Let op de beperking: dit meet alleen wat er in de catalogus staat — wat er nooit in
-          kwam telt hier nergens mee.
+          bleef. De noemer is het aantal <strong>onderzochte</strong> fondsen ({cijfers.totaal} van{" "}
+          {cijfers.totaal_in_catalogus} in de catalogus); de {cijfers.niet_onderzocht} nog niet
+          onderzochte voorstel-rijen tellen niet mee, anders meet u uw eigen achterstand in plaats
+          van de scherpte van het filter. Let op dezelfde beperking als bij de omgevingsradar: dit
+          meet alleen wat er in de catalogus staat — wat er nooit in kwam telt hier nergens mee.
         </p>
         <table className="w-full text-[12.5px]">
           <thead>
@@ -390,8 +448,10 @@ export default async function FondsenPagina({
           </tbody>
         </table>
         <p className="mt-2 text-[12.5px]" style={{ color: "var(--text-3)" }}>
-          {cijfers.totaal} bekeken → {cijfers.doorgelaten} doorgelaten, {cijfers.onbekend} onbekend,{" "}
-          {cijfers.afgevallen} afgevallen ({cijfers.met_actie} met een ander handelingsperspectief).
+          {cijfers.totaal} onderzocht → {cijfers.doorgelaten} doorgelaten, {cijfers.onbekend}{" "}
+          onbekend, {cijfers.afgevallen} afgevallen ({cijfers.met_actie} met een ander
+          handelingsperspectief). Daarnaast {cijfers.niet_onderzocht} fondsen die nog een
+          verrijkingsronde moeten krijgen.
         </p>
       </details>
     </div>
