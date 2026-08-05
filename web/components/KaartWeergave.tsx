@@ -620,6 +620,12 @@ export default function KaartWeergave({
                         </span>
                       )}
                     </button>
+                    <Link
+                      href={`/landgoed/${landgoedId}/kadastraal/${p.id}`}
+                      className="btn btn-ghost btn-sm"
+                    >
+                      Details
+                    </Link>
                   </div>
                 ))}
               </div>

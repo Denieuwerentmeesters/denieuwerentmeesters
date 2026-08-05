@@ -160,11 +160,14 @@ export default async function ObjectDetailPage({
   // Kadastrale percelen waar dit beheerperceel uit bestaat (stap 1).
   const { data: kadKoppelingenData } = await supabase
     .from("beheerperceel_kadastraal")
-    .select("id, dekking, kadastraal_perceel(kadastrale_aanduiding, oppervlakte_m2)")
+    .select(
+      "id, dekking, kadastraal_perceel_id, kadastraal_perceel(kadastrale_aanduiding, oppervlakte_m2)",
+    )
     .eq("stamobject_id", objectId);
   const kadastralePercelen = (kadKoppelingenData ?? []) as unknown as {
     id: string;
     dekking: string;
+    kadastraal_perceel_id: string;
     kadastraal_perceel: { kadastrale_aanduiding: string; oppervlakte_m2: number | null } | null;
   }[];
 
@@ -283,7 +286,12 @@ export default async function ObjectDetailPage({
               {kadastralePercelen.map((k) => (
                 <div key={k.id} className="flex flex-wrap items-center gap-3 px-4 py-3">
                   <div className="flex-1 text-[14px] font-semibold">
-                    {k.kadastraal_perceel?.kadastrale_aanduiding ?? "onbekend"}
+                    <Link
+                      href={`/landgoed/${id}/kadastraal/${k.kadastraal_perceel_id}${terugNaarInvoer ? "?van=invoer" : ""}`}
+                      className="underline"
+                    >
+                      {k.kadastraal_perceel?.kadastrale_aanduiding ?? "onbekend"}
+                    </Link>
                   </div>
                   {k.kadastraal_perceel?.oppervlakte_m2 != null && (
                     <div className="text-[13px]" style={{ color: "var(--text-2)" }}>
