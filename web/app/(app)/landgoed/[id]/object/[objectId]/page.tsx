@@ -14,8 +14,17 @@ import {
   ontkoppelAfspraak,
   uploadDocumentBijObject,
   ontkoppelDocument,
+  nieuweGebruikseenheid,
+  bewerkGebruikseenheid,
+  verwijderGebruikseenheid,
+  koppelContactAanEenheid,
+  ontkoppelContactVanEenheid,
 } from "./acties";
 import { accordeerVerband, wijsAfVerband } from "../../stamgegevens/acties";
+import {
+  EENHEID_TYPE_LABEL,
+  EENHEID_STATUS_LABEL,
+} from "../../stamgegevens/constanten";
 
 const GEBOUW_CATS = new Set(["gebouw", "woning", "opstal"]);
 
@@ -171,6 +180,50 @@ export default async function ObjectDetailPage({
     kadastraal_perceel: { kadastrale_aanduiding: string; oppervlakte_m2: number | null } | null;
   }[];
 
+  // Gebruikseenheden van dit gebouw (Hugo 2.2) + de contacten die per
+  // eenheid gekoppeld zijn (huurder/bewoner — via verband, zonder FK).
+  const { data: eenhedenData } = isGebouw
+    ? await supabase
+        .from("gebruikseenheid")
+        .select("id, naam, type, status, adres, oppervlakte_m2, omschrijving")
+        .eq("stamobject_id", objectId)
+        .order("naam")
+    : { data: [] };
+  const eenheden = (eenhedenData ?? []) as {
+    id: string;
+    naam: string;
+    type: string;
+    status: string;
+    adres: string | null;
+    oppervlakte_m2: number | null;
+    omschrijving: string | null;
+  }[];
+  const { data: eenheidVerbandData } = eenheden.length
+    ? await supabase
+        .from("verband")
+        .select("id, bron_id, doel_id, rol")
+        .eq("bron_type", "relatie")
+        .eq("doel_type", "gebruikseenheid")
+        .in(
+          "doel_id",
+          eenheden.map((e) => e.id),
+        )
+        .neq("status", "afgewezen")
+    : { data: [] };
+  const eenheidContactenVan = new Map<
+    string,
+    { verbandId: string; relatieId: string; rol: string | null }[]
+  >();
+  for (const v of eenheidVerbandData ?? []) {
+    const lijst = eenheidContactenVan.get(v.doel_id as string) ?? [];
+    lijst.push({
+      verbandId: v.id as string,
+      relatieId: v.bron_id as string,
+      rol: v.rol as string | null,
+    });
+    eenheidContactenVan.set(v.doel_id as string, lijst);
+  }
+
   const relIds = verbanden.filter((v) => v.bron_type === "relatie").map((v) => v.bron_id);
   const conIds = verbanden.filter((v) => v.bron_type === "contract").map((v) => v.bron_id);
   const docIds = verbanden.filter((v) => v.bron_type === "document").map((v) => v.bron_id);
@@ -204,6 +257,9 @@ export default async function ObjectDetailPage({
   const conMap = new Map((conRes.data ?? []).map((c: any) => [c.id, c]));
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const docMap = new Map((docRes.data ?? []).map((d: any) => [d.id, d]));
+  const naamVanRelatie = new Map(
+    (alleRelRes.data ?? []).map((r) => [r.id as string, r.naam as string]),
+  );
 
   const contacten = verbanden
     .filter((v) => v.bron_type === "relatie" && relMap.has(v.bron_id))
@@ -360,6 +416,180 @@ export default async function ObjectDetailPage({
                 Bron: RCE Rijksmonumentenregister (WFS) · automatisch gedetecteerd bij plaatsing op de kaart
               </div>
             </div>
+          </section>
+        )}
+
+        {/* ── Gebruikseenheden (alleen bij gebouwen) ── */}
+        {isGebouw && (
+          <section className="mb-7">
+            <h2 className="mb-2 text-[16px] font-bold">Gebruikseenheden</h2>
+            <div className="mb-3 flex flex-col gap-3">
+              {eenheden.length === 0 && (
+                <div
+                  className="card p-4 text-[13px]"
+                  style={{ color: "var(--text-2)" }}
+                >
+                  Nog geen gebruikseenheden. Alleen nodig als dit gebouw uit
+                  meerdere zelfstandig bruikbare of verhuurbare delen bestaat —
+                  bijvoorbeeld een boerderij met twee wooneenheden.
+                </div>
+              )}
+              {eenheden.map((e) => {
+                const contacten = eenheidContactenVan.get(e.id) ?? [];
+                return (
+                  <details key={e.id} className="card p-4">
+                    <summary className="flex cursor-pointer flex-wrap items-center gap-2">
+                      <span className="text-[14px] font-semibold">{e.naam}</span>
+                      <span className="tag tag-gray">
+                        {EENHEID_TYPE_LABEL[e.type] ?? e.type}
+                      </span>
+                      {e.status === "leegstand" ? (
+                        <span
+                          className="rounded px-1.5 py-0.5 text-[11px] font-semibold"
+                          style={{ background: "#fef3c7", color: "#92400e" }}
+                        >
+                          Leegstand
+                        </span>
+                      ) : e.status !== "in_gebruik" ? (
+                        <span className="tag tag-gray">
+                          {EENHEID_STATUS_LABEL[e.status] ?? e.status}
+                        </span>
+                      ) : null}
+                      <span className="text-[12px]" style={{ color: "var(--text-2)" }}>
+                        {[
+                          e.adres,
+                          e.oppervlakte_m2 != null
+                            ? `${Number(e.oppervlakte_m2).toLocaleString("nl-NL")} m²`
+                            : null,
+                          contacten.length
+                            ? contacten
+                                .map((c) => naamVanRelatie.get(c.relatieId) ?? "onbekend")
+                                .join(", ")
+                            : null,
+                        ]
+                          .filter(Boolean)
+                          .join(" · ")}
+                      </span>
+                    </summary>
+
+                    {/* Bewerken */}
+                    <form
+                      action={bewerkGebruikseenheid}
+                      className="mt-3 grid grid-cols-2 gap-3 md:grid-cols-3"
+                    >
+                      <input type="hidden" name="landgoed_id" value={id} />
+                      <input type="hidden" name="object_id" value={objectId} />
+                      <input type="hidden" name="eenheid_id" value={e.id} />
+                      <EenheidVelden
+                        defaults={{
+                          naam: e.naam,
+                          type: e.type,
+                          status: e.status,
+                          adres: e.adres,
+                          oppervlakte_m2: e.oppervlakte_m2,
+                          omschrijving: e.omschrijving,
+                        }}
+                      />
+                      <div className="col-span-2 flex items-end md:col-span-3">
+                        <button type="submit" className="btn btn-primary">
+                          Opslaan
+                        </button>
+                      </div>
+                    </form>
+
+                    {/* Contacten van deze eenheid */}
+                    <div className="mt-4">
+                      <div className="label-up mb-1">Contacten bij deze eenheid</div>
+                      {contacten.map((c) => (
+                        <div key={c.verbandId} className="flex items-center gap-2 py-1">
+                          <span className="flex-1 text-[13px]">
+                            {naamVanRelatie.get(c.relatieId) ?? "onbekend contact"}
+                          </span>
+                          {c.rol && (
+                            <span className="tag tag-gray">
+                              {ROL_LABEL[c.rol] ?? c.rol}
+                            </span>
+                          )}
+                          <form action={ontkoppelContactVanEenheid}>
+                            <input type="hidden" name="landgoed_id" value={id} />
+                            <input type="hidden" name="object_id" value={objectId} />
+                            <input type="hidden" name="verband_id" value={c.verbandId} />
+                            <button
+                              className="btn btn-ghost btn-sm"
+                              style={{ color: "var(--red)" }}
+                            >
+                              Ontkoppel
+                            </button>
+                          </form>
+                        </div>
+                      ))}
+                      <form
+                        action={koppelContactAanEenheid}
+                        className="mt-1 flex flex-wrap items-end gap-2"
+                      >
+                        <input type="hidden" name="landgoed_id" value={id} />
+                        <input type="hidden" name="object_id" value={objectId} />
+                        <input type="hidden" name="eenheid_id" value={e.id} />
+                        <div className="min-w-[180px] flex-1">
+                          <select className="input" name="relatie_id" defaultValue="" required>
+                            <option value="">— kies contact —</option>
+                            {(alleRelRes.data ?? []).map((r) => (
+                              <option key={r.id} value={r.id}>
+                                {r.naam}
+                                {r.type ? ` (${r.type})` : ""}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                        <select className="input" name="rol" defaultValue="huurder_van">
+                          <option value="huurder_van">Huurder</option>
+                          <option value="bewoner_van">Bewoner</option>
+                          <option value="contact_van">Contact</option>
+                        </select>
+                        <button type="submit" className="btn btn-ghost btn-sm">
+                          Koppel
+                        </button>
+                      </form>
+                    </div>
+
+                    <form action={verwijderGebruikseenheid} className="mt-3">
+                      <input type="hidden" name="landgoed_id" value={id} />
+                      <input type="hidden" name="object_id" value={objectId} />
+                      <input type="hidden" name="eenheid_id" value={e.id} />
+                      <button
+                        className="btn btn-ghost btn-sm"
+                        style={{ color: "var(--red)" }}
+                      >
+                        Verwijder eenheid
+                      </button>
+                    </form>
+                  </details>
+                );
+              })}
+            </div>
+
+            <details className="card p-4">
+              <summary className="cursor-pointer text-[13px] font-semibold">
+                + Nieuwe gebruikseenheid
+              </summary>
+              <form
+                action={nieuweGebruikseenheid}
+                className="mt-3 grid grid-cols-2 gap-3 md:grid-cols-3"
+              >
+                <input type="hidden" name="landgoed_id" value={id} />
+                <input type="hidden" name="object_id" value={objectId} />
+                <EenheidVelden />
+                <div className="col-span-2 flex items-end md:col-span-3">
+                  <button type="submit" className="btn btn-primary">
+                    Eenheid toevoegen
+                  </button>
+                </div>
+              </form>
+            </details>
+            <p className="mt-1 text-[11.5px]" style={{ color: "var(--text-3)" }}>
+              Huurcontracten per eenheid volgen in de contractenmodule — hier
+              staat alleen wát er te gebruiken of verhuren valt.
+            </p>
           </section>
         )}
 
@@ -742,6 +972,88 @@ export default async function ObjectDetailPage({
         )}
       </div>
     </div>
+  );
+}
+
+// Herbruikbare gebruikseenheid-velden (nieuw + bewerken).
+function EenheidVelden({
+  defaults,
+}: {
+  defaults?: {
+    naam?: string | null;
+    type?: string | null;
+    status?: string | null;
+    adres?: string | null;
+    oppervlakte_m2?: number | null;
+    omschrijving?: string | null;
+  };
+}) {
+  const d = defaults ?? {};
+  return (
+    <>
+      <div className="col-span-2 md:col-span-1">
+        <label className="label-up mb-1 block">Naam</label>
+        <input
+          className="input"
+          name="naam"
+          placeholder="Bijv. Woning links"
+          defaultValue={d.naam ?? ""}
+          required
+        />
+      </div>
+      <div>
+        <label className="label-up mb-1 block">Type</label>
+        <select className="input" name="type" defaultValue={d.type ?? "woning"}>
+          {Object.entries(EENHEID_TYPE_LABEL).map(([waarde, label]) => (
+            <option key={waarde} value={waarde}>
+              {label}
+            </option>
+          ))}
+        </select>
+      </div>
+      <div>
+        <label className="label-up mb-1 block">Status</label>
+        <select
+          className="input"
+          name="status"
+          defaultValue={d.status ?? "in_gebruik"}
+        >
+          {Object.entries(EENHEID_STATUS_LABEL).map(([waarde, label]) => (
+            <option key={waarde} value={waarde}>
+              {label}
+            </option>
+          ))}
+        </select>
+      </div>
+      <div>
+        <label className="label-up mb-1 block">Adres (optioneel)</label>
+        <input
+          className="input"
+          name="adres"
+          placeholder="Eigen adres, indien anders"
+          defaultValue={d.adres ?? ""}
+        />
+      </div>
+      <div>
+        <label className="label-up mb-1 block">Oppervlakte (m²)</label>
+        <input
+          className="input"
+          name="oppervlakte_m2"
+          inputMode="decimal"
+          placeholder="0"
+          defaultValue={d.oppervlakte_m2 ?? ""}
+        />
+      </div>
+      <div>
+        <label className="label-up mb-1 block">Omschrijving</label>
+        <input
+          className="input"
+          name="omschrijving"
+          placeholder="Toelichting"
+          defaultValue={d.omschrijving ?? ""}
+        />
+      </div>
+    </>
   );
 }
 
