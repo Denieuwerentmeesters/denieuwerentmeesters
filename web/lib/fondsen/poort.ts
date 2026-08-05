@@ -106,6 +106,14 @@ export type Vraag = {
   projectstatus?: Projectstatus | null;
   bedrag?: number | null;
   kostensoort?: string | null;
+  // De orde van grootte uit het vraagveld (fase 3) is een BAND, geen bedrag:
+  // "€50-250k" is iets anders dan "€150.000". Een band toetsen op zijn midden
+  // zou fondsen laten afvallen op een precisie die de gebruiker nooit heeft
+  // opgegeven. Daarom een eigen paar velden, met overlap als toets: alleen als
+  // de band van de vraag en die van het fonds elkaar níét raken valt het fonds
+  // af. "Meer dan €250k" heeft geen bovengrens; dan blijft `bedrag_tot` null.
+  bedrag_van?: number | null;
+  bedrag_tot?: number | null;
 };
 
 // Het landgoedprofiel voor de poort. Bewust een SUPERSET van wat `Profiel` uit
@@ -658,12 +666,15 @@ export function toetsAanvragerRoute(f: PoortFonds): PoortOordeel {
 
 export function toetsBedragband(f: PoortFonds, v: Vraag): PoortOordeel {
   const bedrag = v.bedrag ?? null;
-  if (bedrag == null || !Number.isFinite(bedrag))
+  if (bedrag == null || !Number.isFinite(bedrag)) {
+    const band = toetsBedragbandOverlap(f, v);
+    if (band) return band;
     return {
       poort: "bedragband",
       uitkomst: "doorgelaten",
       reden: "Geen projectbedrag bekend — niet getoetst.",
     };
+  }
   const min = f.bedrag_min ?? null;
   const max = f.bedrag_max ?? null;
   if (min == null && max == null)
@@ -688,6 +699,50 @@ export function toetsBedragband(f: PoortFonds, v: Vraag): PoortOordeel {
     poort: "bedragband",
     uitkomst: "doorgelaten",
     reden: `Gevraagd bedrag (${euro(bedrag)}) valt binnen de band ${min != null ? euro(min) : "onbekend"}–${max != null ? euro(max) : "onbekend"}.`,
+  };
+}
+
+// De bandvariant: de gebruiker gaf een orde van grootte op, geen bedrag. Geeft
+// `null` terug als er geen band gevraagd is, zodat de puntvariant het overneemt.
+//
+// Alleen bij een AANTOONBAAR lege doorsnede valt een fonds af. Raakt de band van
+// de vraag die van het fonds ook maar gedeeltelijk, dan blijft het staan — bij
+// twijfel tonen met een lage score, niet weglaten.
+function toetsBedragbandOverlap(f: PoortFonds, v: Vraag): PoortOordeel | null {
+  const van = v.bedrag_van ?? null;
+  const tot = v.bedrag_tot ?? null;
+  if (van == null && tot == null) return null;
+
+  const fmin = f.bedrag_min ?? null;
+  const fmax = f.bedrag_max ?? null;
+  const band = `${van != null ? euro(van) : "0"}–${tot != null ? euro(tot) : "meer"}`;
+  if (fmin == null && fmax == null)
+    return {
+      poort: "bedragband",
+      uitkomst: "onbekend",
+      reden: `Dit fonds publiceert geen bedragband, dus of uw orde van grootte (${band}) past is niet te zeggen.`,
+    };
+
+  // Vraag ligt volledig onder wat dit fonds als minimum hanteert.
+  if (fmin != null && tot != null && tot < fmin)
+    return {
+      poort: "bedragband",
+      uitkomst: "afgevallen",
+      reden: `Uw orde van grootte (${band}) blijft onder de ondergrens van dit fonds (${euro(fmin)}).`,
+    };
+  // Vraag ligt volledig boven wat dit fonds per toekenning geeft.
+  if (fmax != null && van != null && van > fmax)
+    return {
+      poort: "bedragband",
+      uitkomst: "afgevallen",
+      reden:
+        `Uw orde van grootte (${band}) ligt boven wat dit fonds per toekenning geeft (${euro(fmax)}). ` +
+        "Als deelpost in een gestapelde begroting kan het wel.",
+    };
+  return {
+    poort: "bedragband",
+    uitkomst: "doorgelaten",
+    reden: `Uw orde van grootte (${band}) overlapt met de band van dit fonds (${fmin != null ? euro(fmin) : "onbekend"}–${fmax != null ? euro(fmax) : "onbekend"}).`,
   };
 }
 

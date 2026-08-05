@@ -120,16 +120,48 @@ export function bouwGebruikersBericht(
   ];
 }
 
+// Wat één aanroep aan tokens heeft gekost. Fase 3 (de zoekpijplijn) moet per
+// zoekopdracht kunnen laten zien wat een vraag kost — anders is de cache-winst
+// een bewering in plaats van een meting. Daarom geeft `vraagTekstMetGebruik` de
+// usage-velden onbewerkt terug; `lib/fondsen/kosten.ts` rekent ze om naar euro's.
+export type Tokengebruik = {
+  invoer: number;
+  uitvoer: number;
+  // Tokens die NIEUW in de cache zijn gezet (kosten 1,25x een gewoon invoertoken).
+  cache_geschreven: number;
+  // Tokens die uit de cache kwamen (kosten 0,1x). Dit is de besparing.
+  cache_gelezen: number;
+};
+
+export const GEEN_GEBRUIK: Tokengebruik = {
+  invoer: 0,
+  uitvoer: 0,
+  cache_geschreven: 0,
+  cache_gelezen: 0,
+};
+
+export type TekstAntwoord = { tekst: string | null; gebruik: Tokengebruik; model: string };
+
 export async function vraagTekst(
   systeem: string,
   prompt: string,
   opties?: CacheOpties,
 ): Promise<string | null> {
-  if (!aiBeschikbaar()) return null;
+  const { tekst } = await vraagTekstMetGebruik(systeem, prompt, opties);
+  return tekst;
+}
+
+export async function vraagTekstMetGebruik(
+  systeem: string,
+  prompt: string,
+  opties?: CacheOpties,
+): Promise<TekstAntwoord> {
+  const model = opties?.model ?? MODEL;
+  if (!aiBeschikbaar()) return { tekst: null, gebruik: { ...GEEN_GEBRUIK }, model };
   laatsteFout = null;
   try {
     const res = await client().messages.create({
-      model: opties?.model ?? MODEL,
+      model,
       max_tokens: opties?.maxTokens ?? 4096,
       system: opties?.cacheSysteem
         ? [{ type: "text", text: systeem, cache_control: { type: "ephemeral" } }]
@@ -149,9 +181,25 @@ export async function vraagTekst(
       .map((b) => (b as { text: string }).text)
       .join("")
       .trim();
-    return tekst.length ? tekst : null;
+    const u = res.usage as unknown as {
+      input_tokens?: number;
+      output_tokens?: number;
+      cache_creation_input_tokens?: number | null;
+      cache_read_input_tokens?: number | null;
+    };
+    return {
+      tekst: tekst.length ? tekst : null,
+      model,
+      gebruik: {
+        invoer: u?.input_tokens ?? 0,
+        uitvoer: u?.output_tokens ?? 0,
+        cache_geschreven: u?.cache_creation_input_tokens ?? 0,
+        cache_gelezen: u?.cache_read_input_tokens ?? 0,
+      },
+    };
   } catch (e) {
-    return onthoudFout(e);
+    onthoudFout(e);
+    return { tekst: null, gebruik: { ...GEEN_GEBRUIK }, model };
   }
 }
 
