@@ -1,4 +1,5 @@
 import { toetsCriterium, type Profiel } from "@/app/(app)/landgoed/[id]/subsidies/matching";
+import { leesWerkgebied, noemtProvincie } from "@/lib/fondsen/werkgebied";
 
 // Fondsenradar fase 2 — DE POORT (laag 1 van §5 van het implementatieplan).
 //
@@ -299,6 +300,9 @@ export function toetsGeografie(
         uitkomst: "afgevallen",
         reden: `Werkt alleen in ${waarden.join(", ")}; dit landgoed ligt in ${p.provincie}.`,
       };
+    // Vrije tekst in het provincieveld: dezelfde lezing als bij 'regio'.
+    const uitTekst = leesProvincieOordeel(waarden, p);
+    if (uitTekst) return uitTekst;
     return {
       poort: "geografie",
       uitkomst: "onbekend",
@@ -386,12 +390,16 @@ function toetsRegio(
           uitkomst: "doorgelaten",
           reden: `Werkgebied "${kort(w, 100)}" is in de kern landelijk; de regionale toevoeging is een voorkeur, geen begrenzing.`,
         };
-      if (prov && fr === prov)
-        return { poort: "geografie", uitkomst: "doorgelaten", reden: `Werkgebied noemt ${p.provincie}.` };
       if (gem && fr === gem)
         return { poort: "geografie", uitkomst: "doorgelaten", reden: `Werkgebied noemt ${p.gemeente}.` };
     }
   }
+
+  // De hoofdroute voor vrije tekst: leest de tekst zelf een provincie? Dit gaat
+  // vóór de alias-tegenspraak, want een tekst die "landelijk" of een voorkeur
+  // uitspreekt mag nooit alsnog op een regiovertaling stranden.
+  const uitTekst = leesProvincieOordeel(waarden, p);
+  if (uitTekst) return uitTekst;
 
   // Alleen een GEACCORDEERDE vertaling mag een fonds laten afvallen.
   if (tegenspraak.length > 0)
@@ -407,6 +415,78 @@ function toetsRegio(
     reden: ietsHerkend
       ? `Werkgebied "${kort(waarden.join("; "), 120)}" is vertaald maar de vertaling is nog niet geaccordeerd — daarom geen conclusie.`
       : `Werkgebied staat als vrije tekst ("${kort(waarden.join("; "), 120)}") en is nog niet naar gemeenten vertaald. Dit is uitdrukkelijk geen "voldoet niet".`,
+  };
+}
+
+// De provincie uit de vrije werkgebied-tekst (zie lib/fondsen/werkgebied.ts).
+// Geeft `null` terug als de tekst géén provincie noemt — dan blijft de uitkomst
+// onbekend, en dat is met opzet: raden op grond van een plaatsnaam die we
+// toevallig herkennen is precies de fout die dit project wil vermijden.
+//
+// Het oordeel staat altijd zichtbaar in de reden ("werkgebied genoemd:
+// Gelderland; uw landgoed ligt in Zeeland"), zodat op de pagina te lezen is
+// waaróp het berust.
+export function leesProvincieOordeel(
+  waarden: string[],
+  p: Landgoedprofiel,
+): PoortOordeel | null {
+  const tekst = waarden.join("; ");
+  const l = leesWerkgebied(tekst);
+  if (l.provincies.length === 0) return null;
+
+  const genoemd = `werkgebied genoemd: ${l.provincies.join(", ")}`;
+  const ambiguNotitie = l.ambigu
+    ? " De tekst zegt \"Hollands\" zonder noord of zuid; daarom tellen Noord-Holland én Zuid-Holland mee."
+    : "";
+
+  if (noemtProvincie(l, p.provincie))
+    return {
+      poort: "geografie",
+      uitkomst: "doorgelaten",
+      reden: `De tekst noemt de provincie zelf (${genoemd}); uw landgoed ligt in ${p.provincie}.${ambiguNotitie}`,
+    };
+
+  if (!p.provincie)
+    return {
+      poort: "geografie",
+      uitkomst: "onbekend",
+      reden: `De tekst noemt een provincie (${genoemd}), maar van dit landgoed is geen provincie bekend.`,
+    };
+
+  // Vanaf hier ligt het landgoed NIET in een genoemde provincie. Drie redenen
+  // om toch niet af te wijzen — onterecht afwijzen is erger dan te ruim
+  // doorlaten, want wat wegvalt ziet niemand meer.
+  if (l.landelijk)
+    return {
+      poort: "geografie",
+      uitkomst: "doorgelaten",
+      reden:
+        `De tekst noemt een regio (${genoemd}) maar heft de begrenzing zelf op ("landelijk", "overig NL" of "elders"): ` +
+        `dit fonds werkt niet uitsluitend daar. Regionale voorkeur, geen eis — uw landgoed ligt in ${p.provincie}.`,
+    };
+
+  if (l.voorkeur)
+    return {
+      poort: "geografie",
+      uitkomst: "doorgelaten",
+      reden:
+        `De tekst noemt een voorkeur, geen eis (${genoemd}: "bij voorkeur", "prioriteit" of "nadruk"). ` +
+        `Een voorkeur sluit anderen niet uit; uw landgoed ligt in ${p.provincie}.`,
+    };
+
+  if (l.buiten_provincie.length > 0)
+    return {
+      poort: "geografie",
+      uitkomst: "doorgelaten",
+      reden:
+        `De tekst noemt naast de provincie (${genoemd}) ook plaatsen daarbuiten (${l.buiten_provincie.join(", ")}), ` +
+        `dus het werkgebied is ruimer dan die provincie. Niet afgewezen; uw landgoed ligt in ${p.provincie}.`,
+    };
+
+  return {
+    poort: "geografie",
+    uitkomst: "afgevallen",
+    reden: `${genoemd.charAt(0).toUpperCase()}${genoemd.slice(1)}; uw landgoed ligt in ${p.provincie}.${ambiguNotitie}`,
   };
 }
 
