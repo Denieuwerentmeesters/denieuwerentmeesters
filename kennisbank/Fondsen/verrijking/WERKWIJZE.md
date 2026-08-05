@@ -31,6 +31,10 @@ les uit die pilot, geen theorie.
 - **Lege pagina? Probeer de WordPress-API:** `<site>/wp-json/wp/v2/pages?per_page=100`.
   Bij Ars Donandi gaf de gewone pagina een lege Vue-app terug en leverde de API de
   volledige inhoud van 52 onderliggende fondsen.
+- **Alleen een woord op de pagina? Kijk in `data-page`.** Inertia/Vue-sites zetten de
+  volledige paginatekst als JSON in het `data-page`-attribuut van de root-div; in de
+  zichtbare HTML staat vrijwel niets. Zo kwam de inhoud van TriArcus binnen. Naïeve
+  scrapers missen dit volledig.
 - **Dood domein? Wayback Machine.** Bij Bolhuisfonds was het eigen domein gekaapt door een
   casinosite; `web.archive.org` leverde de complete richtlijnen inclusief uitsluitingen.
 - **Bijlagen zijn niet altijd PDF.** Bij Stichting de Boom was het beleidsplan een DOCX —

@@ -1,0 +1,35 @@
+{
+  "naam": "Fonds Natuurinclusieve Streekboerderijen (FNS Fonds B.V.)",
+  "bronnen": [
+    {"soort": "website", "url": "https://www.streekboerderijen.nl/", "jaar": 2026, "gelezen": true},
+    {"soort": "website", "url": "https://www.streekboerderijen.nl/organisatie", "jaar": 2026, "gelezen": true},
+    {"soort": "beleidsplan", "url": "https://www.streekboerderijen.nl/visie", "jaar": 2026, "gelezen": true}
+  ],
+  "doelstelling": "Het Fonds Natuurinclusieve Streekboerderijen BV (FNS) is in 2016 opgericht door landbouweconoom Coen van Beuningen met de volgende statutaire doelen: CO2-vastlegging stimuleren en fossiel energieverbruik en CO2 emissie minimaliseren; Natuurlijke principes (incl. bodem- en biodiversiteitsontwikkeling) benutten; Streekbewoners en agrarische producenten binden middels tweezijdige afstemming binnen de mogelijkheden van het betreffende ecosysteem en binnen de overeenkomstige streekmarkt; Kringlopen sluiten met nadruk op de koolstof en stikstof kringlopen; Kennis uitwisselen. Het fonds helpt boeren bij de transitie naar natuurinclusieve agroforestry.",
+  "benaderbaarheid": "op_uitnodiging",
+  "benaderwijze_notitie": "Geen aanvraagloket. FNS is een B.V. die deelneemt in bedrijven, geen subsidiegever: \"FNS werkt aan de doelen in samenwerkingsverbanden met ondernemers op hun bedrijf, o.a. in de vorm van deelneming\" en \"Hier vind je korte profielen van bedrijven waarin FNS betrokken is als financiële en/of kennispartner.\" Het aantal deelnemingen is expliciet begrensd: \"Het aantal boerderijen uitbreiden naar 20.\" Enige ingang: \"Wil jij actief bijdragen aan de ontwikkeling van natuurinclusieve streekboerderijen of er zelf een starten? Neem dan contact met ons op.\"",
+  "aanvrager_type": "landgoedeigenaar",
+  "geo_niveau": "landelijk",
+  "geo_waarden": ["Nederland"],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": null,
+  "cofinanciering_vereist": null,
+  "uitsluitingen": [
+    "maatregelen die ten koste gaan van één van de subdoelen (\"Maatregelen die ten koste gaan van één van de subdoelen zijn uitgesloten.\")",
+    "impliciet: intensieve dierhouderij en substraatculturen, die in de visie juist worden aangewezen als versterking van de negatieve spiraal"
+  ],
+  "kostensoort": ["investering", "onderzoek"],
+  "landgoed_relevantie": {
+    "route": "zelf",
+    "onderbouwing": "Dit is geen subsidiefonds maar een investeringsvehikel dat via deelneming langjarig meedoet in het bedrijf zelf; dat past bij een landgoed met een eigen landbouwtak die naar natuurinclusieve agroforestry wil. \"Het Fonds Natuurinclusieve Streekboerderijen helpt boeren bij de transitie naar natuurinclusieve agroforestry\" en \"FNS werkt aan de doelen in samenwerkingsverbanden met ondernemers op hun bedrijf, o.a. in de vorm van deelneming.\" De statutaire doelen — CO2-vastlegging, bodem- en biodiversiteitsontwikkeling, streekmarkt, kringlopen sluiten — sluiten aan op landgoedexploitatie, en er wordt gewerkt met bos, heggenlandschap en koolstofcertificaten (via partner Scature, ONCRA-methode). Belangrijk voorbehoud: zeer kleine schaal (doel is uitbreiding naar 20 boerderijen) en het gaat om een deelneming/zeggenschap, niet om een gift.",
+    "partnertype": null
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "De in de werklijst opgegeven URL https://www.streekboerderijen.nl/over-ons/ geeft 404; de site is herbouwd (Framer). De vergelijkbare pagina is nu /organisatie.",
+    "Bedragen, financieringsvorm (lening/participatie/gift), voorwaarden of een aanvraagprocedure: nergens gepubliceerd. Gezocht op /, /organisatie, /visie.",
+    "Contactgegevens (e-mailadres of telefoonnummer): op de site staat alleen een 'Contact opnemen'-knop, geen adres in de HTML.",
+    "Jaarverslag of ANBI-publicatie: niet aanwezig; FNS is een B.V., geen ANBI."
+  ]
+}
