@@ -1,6 +1,12 @@
 #!/usr/bin/env node
 // ============================================================
-// Fondsenoverzicht.csv -> kennisbank/Fondsen/fondsen.json
+// Fondsenoverzicht_Landgoederen.xlsx -> kennisbank/Fondsen/fondsen.json
+//
+// Twee fondsentabbladen, elk als CSV-export: `Fondsenoverzicht` (205 fondsen,
+// 12 kolommen) en `Sheet1` (37 fondsen, 14 kolommen). Nul overlap tussen beide:
+// het zijn losse onderzoeksronden. Samen 242 rijen in één JSON, met per rij het
+// veld `tabblad` zodat de verschillende verificatiegraad zichtbaar blijft.
+// Het derde tabblad `Uitleg` is verantwoording en bevat geen data.
 //
 // Bron: Implementatieplan_Fondsenradar.md §1 (soort_bron/rechtskarakter),
 // §2 (kolommapping, herkomst, drie-waardige logica), §3 (benaderbaarheid als
@@ -8,7 +14,7 @@
 //
 // Draaien vanuit de repo-root:
 //   node scripts/converteer-fondsen.mjs
-//   node scripts/converteer-fondsen.mjs --in <csv> --uit <json>
+//   node scripts/converteer-fondsen.mjs --in <csv> --in2 <csv> --uit <json>
 //
 // Reproduceerbaar: de CSV is de waarheid, de JSON is afgeleid. Werkt Reinoud de
 // Google Sheet bij, dan exporteer je opnieuw naar CSV en draai je dit script.
@@ -51,20 +57,54 @@ function leesCsv(tekst) {
   return rijen.filter((r) => r.some((v) => v.trim() !== ""));
 }
 
-const KOLOMMEN = [
-  "Naam fonds",
-  "Categorie",
-  "Regio / provincie",
-  "Statutaire doelstelling (samenvatting)",
-  "Doelgroep",
-  "Relevant voor welk type landgoedplan",
-  "Orde grootte bedrag",
-  "Aanvraagprocedure / deadlines",
-  "Vereiste documenten voor aanvraag",
-  "Contact",
-  "Bron (URL)",
-  "Status / opmerking",
+// ── Kolomnormalisatie ──
+// De twee fondsentabbladen spellen hun koppen nét anders ("Regio / provincie"
+// vs. "Regio/provincie", "Vereiste documenten voor aanvraag" vs. "Vereiste
+// documenten"). Beide worden op één interne set gelegd, zodat de rest van het
+// script maar één vocabulaire kent. Nieuwe spellingvarianten voeg je hier toe.
+const INTERN = {
+  naam: ["naam fonds"],
+  categorie: ["categorie"],
+  regio: ["regio / provincie", "regio/provincie"],
+  doelstelling: ["statutaire doelstelling (samenvatting)", "statutaire doelstelling"],
+  doelgroep: ["doelgroep"],
+  landgoedplan: ["relevant voor welk type landgoedplan"],
+  bedrag: ["orde grootte bedrag"],
+  procedure: ["aanvraagprocedure / deadlines", "aanvraagprocedure/deadlines"],
+  documenten: ["vereiste documenten voor aanvraag", "vereiste documenten"],
+  contact: ["contact"],
+  bron_url: ["bron (url)"],
+  status: ["status / opmerking", "status/opmerking"],
+  // Alleen op tabblad Sheet1; op Fondsenoverzicht ontbreken ze en blijven de
+  // waarden dus ONBEKEND (§: niets gokken).
+  type_aanvrager: ["type aanvrager"],
+  verdienmodel: ["verdienmodel voor landgoed"],
+};
+
+// Zonder deze kolommen is een tabblad geen fondsentabblad.
+const VERPLICHT = [
+  "naam", "categorie", "regio", "doelstelling", "doelgroep", "landgoedplan",
+  "bedrag", "procedure", "documenten", "contact", "bron_url", "status",
 ];
+
+function normaliseerKop(kop, tabblad) {
+  const gevonden = {};
+  kop.forEach((k, i) => {
+    const l = k.trim().toLowerCase();
+    for (const [intern, varianten] of Object.entries(INTERN)) {
+      if (varianten.includes(l)) gevonden[intern] = i;
+    }
+  });
+  const mist = VERPLICHT.filter((v) => gevonden[v] === undefined);
+  if (mist.length) {
+    throw new Error(
+      `Tabblad '${tabblad}': kolommen ontbreken (${mist.join(", ")}).\n` +
+        `Gevonden koppen: ${kop.join(" | ")}\n` +
+        `Zie kennisbank/Fondsen/README.md voor de verwachte kolommen.`,
+    );
+  }
+  return gevonden;
+}
 
 // ── Hulp ──
 const LEEG = new Set([
@@ -112,10 +152,10 @@ function soortEnKarakter(categorie) {
 // ── §3: benaderbaarheid als poort ──
 // Volgorde is de prioriteit: het meest uitsluitende signaal wint.
 function benaderbaarheid(rij) {
-  const cat = rij["Categorie"] ?? "";
-  const proc = rij["Aanvraagprocedure / deadlines"] ?? "";
-  const status = rij["Status / opmerking"] ?? "";
-  const doelgroep = rij["Doelgroep"] ?? "";
+  const cat = rij.categorie ?? "";
+  const proc = rij.procedure ?? "";
+  const status = rij.status ?? "";
+  const doelgroep = rij.doelgroep ?? "";
   const alles = `${cat} ${proc} ${status} ${doelgroep}`.toLowerCase();
 
   // 1. Gesloten: financiert alleen eigen doelen, of is geen aanvraagbare pot.
@@ -375,6 +415,42 @@ function herkomstVan(status) {
   return "afgeleid_tag";
 }
 
+// ── Wie kan aanvragen, en wat levert het het landgoed op? ──
+// Alleen op tabblad Sheet1 ingevuld. Dit is een HANDELINGSPERSPECTIEF, geen
+// matchcriterium: fondsen als RCOAK, Kansfonds en FNO geven nooit aan een
+// landgoed maar aan een zorg- of jeugdorganisatie, die daarna iets op het
+// landgoed doet en de eigenaar uit háár begroting een locatievergoeding
+// betaalt. Toont de radar zo'n fonds als "kans", dan is de suggestie fout:
+// het is niet "schrijf een aanvraag" maar "zoek een partner die dit kan
+// aanvragen". Ontbreekt de kolom (de 205 van het andere tabblad), dan is de
+// waarde 'onbekend' — niet gokken.
+function aanvragerType(ruw) {
+  const t = String(ruw ?? "").trim().toLowerCase();
+  if (t === "") return "onbekend";
+  if (t.startsWith("n.v.t")) return "nvt";
+  const eigenaar = t.includes("landgoedeigenaar zelf");
+  const derde = t.includes("derde partij");
+  if (t.includes("beide mogelijk") || (eigenaar && derde)) return "beide";
+  if (derde) return "derde_partij";
+  if (eigenaar) return "landgoedeigenaar";
+  return "onbekend";
+}
+
+function verdienmodelVan(ruw) {
+  const t = String(ruw ?? "").trim().toLowerCase();
+  if (t === "") return "onbekend";
+  if (t.startsWith("n.v.t")) return "nvt";
+  if (t.includes("directe subsidie")) return "directe_subsidie";
+  if (t.includes("locatievergoeding")) return "locatievergoeding";
+  if (t.includes("bezoekersinkomsten")) return "indirecte_bezoekersinkomsten";
+  // Bronwaarde "Pacht/huur" staat niet in de opsomming van het plan. Bewust
+  // niet onder locatievergoeding geschoven: dat is een structurele
+  // huurrelatie, geen post op de projectbegroting van een derde.
+  if (t.includes("pacht") || t.includes("huur")) return "pacht_huur";
+  if (t.startsWith("geen")) return "geen";
+  return "onbekend";
+}
+
 // ── Vrije-tekstlijstjes ("Restauratie & onderhoud; natuur/milieu") ──
 function lijst(ruw) {
   const t = String(ruw ?? "").trim();
@@ -393,26 +469,61 @@ function main() {
     const i = args.indexOf(naam);
     return i >= 0 && args[i + 1] ? args[i + 1] : standaard;
   };
-  const inPad = resolve(arg("--in", resolve(REPO, "kennisbank/Fondsen/Fondsenoverzicht.csv")));
   const uitPad = resolve(arg("--uit", resolve(REPO, "kennisbank/Fondsen/fondsen.json")));
 
-  const rijen = leesCsv(readFileSync(inPad, "utf8"));
-  const kop = rijen[0].map((k) => k.trim());
-  for (const verwacht of KOLOMMEN) {
-    if (!kop.includes(verwacht)) {
-      console.error(
-        `Kolom '${verwacht}' ontbreekt in ${inPad}.\nVerwachte kolommen:\n  ${KOLOMMEN.join("\n  ")}`,
-      );
-      process.exit(1);
-    }
-  }
+  // Twee fondsentabbladen uit Fondsenoverzicht_Landgoederen.xlsx, elk als eigen
+  // CSV-export. De overlap tussen beide is nul: het zijn losse onderzoeksronden
+  // met een verschillende verificatiegraad, en dat blijft per rij zichtbaar via
+  // het veld `tabblad`. (Het derde tabblad `Uitleg` is verantwoording, geen data.)
+  const bronnen = [
+    {
+      tabblad: "Fondsenoverzicht",
+      pad: resolve(arg("--in", resolve(REPO, "kennisbank/Fondsen/Fondsenoverzicht.csv"))),
+    },
+    {
+      tabblad: "Sheet1",
+      pad: resolve(arg("--in2", resolve(REPO, "kennisbank/Fondsen/Sheet1_fondsen.csv"))),
+    },
+  ];
 
   const gezien = new Map();
   const fondsen = [];
-  for (const r of rijen.slice(1)) {
-    const rij = Object.fromEntries(kop.map((k, i) => [k, (r[i] ?? "").trim()]));
-    const naam = rij["Naam fonds"];
-    if (!naam) continue;
+  const perTabblad = {};
+
+  for (const bron of bronnen) {
+    const rijen = leesCsv(readFileSync(bron.pad, "utf8"));
+    const kop = rijen[0].map((k) => k.trim());
+    const kolom = normaliseerKop(kop, bron.tabblad);
+    perTabblad[bron.tabblad] = 0;
+
+    for (const r of rijen.slice(1)) {
+      const rij = Object.fromEntries(
+        Object.entries(kolom).map(([intern, i]) => [intern, (r[i] ?? "").trim()]),
+      );
+      const naam = rij.naam;
+      if (!naam) continue; // lege staartrijen uit de export
+      perTabblad[bron.tabblad]++;
+      fondsen.push(bouwFonds(rij, bron.tabblad, gezien));
+    }
+  }
+
+  const uit = {
+    _schema: "kennisbank/Fondsen/README.md",
+    _bron: "Fondsenoverzicht_Landgoederen.xlsx, tabbladen Fondsenoverzicht + Sheet1",
+    _gegenereerd_door: "scripts/converteer-fondsen.mjs",
+    aantal: fondsen.length,
+    per_tabblad: perTabblad,
+    fondsen,
+  };
+  writeFileSync(uitPad, `${JSON.stringify(uit, null, 2)}\n`, "utf8");
+  rapporteer(fondsen, perTabblad, uitPad);
+}
+
+// Eén genormaliseerde bronrij -> één fonds in fondsen.json.
+// `gezien` houdt de sleutels bij over BEIDE tabbladen heen, zodat een
+// naamdubbeling nooit stil twee keer dezelfde extern_id oplevert.
+function bouwFonds(rij, tabblad, gezien) {
+    const naam = rij.naam;
 
     let sleutel = slug(naam);
     if (gezien.has(sleutel)) {
@@ -421,26 +532,25 @@ function main() {
       sleutel = `${sleutel}-${n}`;
     } else gezien.set(sleutel, 1);
 
-    const { soort_bron, rechtskarakter } = soortEnKarakter(rij["Categorie"]);
-    const geo = geografie(rij["Regio / provincie"]);
-    const bedrag = bedragen(rij["Orde grootte bedrag"]);
+    const { soort_bron, rechtskarakter } = soortEnKarakter(rij.categorie);
+    const geo = geografie(rij.regio);
+    const bedrag = bedragen(rij.bedrag);
     const poort = benaderbaarheid(rij);
 
     // Het letterlijke citaat waarop de poortbeslissing berust (§3).
-    const citaat = [rij["Aanvraagprocedure / deadlines"], rij["Status / opmerking"]]
-      .filter((s) => !leeg(s))
-      .join(" — ");
+    const citaat = [rij.procedure, rij.status].filter((s) => !leeg(s)).join(" — ");
 
-    fondsen.push({
+    return {
       sleutel,
       naam,
-      categorie: tekst(rij["Categorie"]),
-      samenvatting: tekst(rij["Statutaire doelstelling (samenvatting)"]),
-      bron_url: tekst(rij["Bron (URL)"]),
-      contact: tekst(rij["Contact"]),
-      themas: lijst(rij["Relevant voor welk type landgoedplan"]),
-      plan_triggers: lijst(rij["Relevant voor welk type landgoedplan"]),
-      doelgroepen: lijst(rij["Doelgroep"]),
+      tabblad, // uit welke onderzoeksronde deze rij komt
+      categorie: tekst(rij.categorie),
+      samenvatting: tekst(rij.doelstelling),
+      bron_url: tekst(rij.bron_url),
+      contact: tekst(rij.contact),
+      themas: lijst(rij.landgoedplan),
+      plan_triggers: lijst(rij.landgoedplan),
+      doelgroepen: lijst(rij.doelgroep),
       soort_bron,
       rechtskarakter,
       benaderbaarheid: poort,
@@ -453,28 +563,27 @@ function main() {
       bedrag_max: bedrag.bedrag_max,
       // Fondsenpraktijk (§9.4), maar alleen als de bron er iets over zegt.
       cooldown_maanden: /per (?:kalender)?jaar|één aanvraag|1 aanvraag|eens per/i.test(
-        `${rij["Aanvraagprocedure / deadlines"]} ${rij["Status / opmerking"]}`,
+        `${rij.procedure} ${rij.status}`,
       )
         ? 12
         : null,
-      status_opmerking: tekst(rij["Status / opmerking"]),
-      herkomst: herkomstVan(rij["Status / opmerking"]),
-      criteria: [rechtsvormCriterium(rij["Doelgroep"])],
-      bewijs: bewijzen(rij["Vereiste documenten voor aanvraag"]),
-    });
-  }
+      // Alleen op tabblad Sheet1 gevuld; anders 'onbekend'.
+      aanvrager_type: aanvragerType(rij.type_aanvrager),
+      verdienmodel: verdienmodelVan(rij.verdienmodel),
+      status_opmerking: tekst(rij.status),
+      herkomst: herkomstVan(rij.status),
+      criteria: [rechtsvormCriterium(rij.doelgroep)],
+      bewijs: bewijzen(rij.documenten),
+    };
+}
 
-  const uit = {
-    _schema: "kennisbank/Fondsen/README.md",
-    _bron: "Fondsenoverzicht_Landgoederen.xlsx, tabblad Fondsenoverzicht",
-    _gegenereerd_door: "scripts/converteer-fondsen.mjs",
-    aantal: fondsen.length,
-    fondsen,
-  };
-  writeFileSync(uitPad, `${JSON.stringify(uit, null, 2)}\n`, "utf8");
-
+function rapporteer(fondsen, perTabblad, uitPad) {
   const tel = (f) => fondsen.reduce((n, x) => n + (f(x) ? 1 : 0), 0);
   console.log(`${fondsen.length} fondsen geschreven naar ${uitPad}`);
+  console.log(
+    "  per tabblad:",
+    Object.entries(perTabblad).map(([t, n]) => `${t}=${n}`).join(" "),
+  );
   console.log(
     "  benaderbaarheid:",
     ["open", "open_met_drempel", "via_intermediair", "op_uitnodiging", "gesloten", "onbekend"]
@@ -497,6 +606,19 @@ function main() {
   console.log(
     "  herkomst:",
     ["geverifieerd_bron", "afgeleid_tag"].map((h) => `${h}=${tel((x) => x.herkomst === h)}`).join(" "),
+  );
+  console.log(
+    "  aanvrager_type:",
+    ["landgoedeigenaar", "derde_partij", "beide", "nvt", "onbekend"]
+      .map((a) => `${a}=${tel((x) => x.aanvrager_type === a)}`)
+      .join(" "),
+  );
+  console.log(
+    "  verdienmodel:",
+    ["directe_subsidie", "locatievergoeding", "indirecte_bezoekersinkomsten",
+      "pacht_huur", "geen", "nvt", "onbekend"]
+      .map((v) => `${v}=${tel((x) => x.verdienmodel === v)}`)
+      .join(" "),
   );
 }
 

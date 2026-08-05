@@ -85,6 +85,13 @@ export type FondsRij = {
   cooldown_maanden?: number | null;
   hercontrole_termijn?: number | null;
   status_opmerking?: string | null;
+  // Uit welk tabblad van de Excel deze rij komt (Fondsenoverzicht | Sheet1).
+  // Twee losse onderzoeksronden met nul overlap en een verschillende
+  // verificatiegraad; dat blijft per rij zichtbaar.
+  tabblad?: string | null;
+  // Alleen tabblad Sheet1 vult deze twee; anders 'onbekend' (niet gokken).
+  aanvrager_type?: RegelingNormaal["aanvrager_type"];
+  verdienmodel?: RegelingNormaal["verdienmodel"];
   herkomst?: FondsHerkomst;
   criteria?: FondsCriterium[];
   bewijs?: FondsBewijs[];
@@ -212,6 +219,12 @@ export function naarRegeling(f: FondsRij): RegelingNormaal {
     kostensoort: f.kostensoort ?? null,
     cooldown_maanden: f.cooldown_maanden ?? null,
     hercontrole_termijn: f.hercontrole_termijn ?? 12,
+
+    // Handelingsperspectief (migratie 0051): een fonds dat alleen aan een derde
+    // partij geeft is geen "schrijf een aanvraag" maar een "zoek een partner".
+    aanvrager_type: f.aanvrager_type ?? "onbekend",
+    verdienmodel: f.verdienmodel ?? "onbekend",
+    bron_tabblad: f.tabblad ?? null,
 
     // §2: zonder expliciete herkomst is de rij per definitie een gissing.
     // `geaccordeerd` blijft false; dat zet de runner.

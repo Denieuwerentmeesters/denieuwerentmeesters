@@ -61,6 +61,22 @@ export type RegelingNormaal = {
   hercontrole_termijn?: number | null;
   plan_triggers?: string[] | null;
   contact?: string | null;
+  // Wie kan aanvragen en wat het het landgoed oplevert (migratie 0051).
+  aanvrager_type?:
+    | "landgoedeigenaar"
+    | "derde_partij"
+    | "beide"
+    | "nvt"
+    | "onbekend";
+  verdienmodel?:
+    | "directe_subsidie"
+    | "locatievergoeding"
+    | "indirecte_bezoekersinkomsten"
+    | "pacht_huur"
+    | "geen"
+    | "nvt"
+    | "onbekend";
+  bron_tabblad?: string | null;
   // Per rij, want de fondsenlijst mengt geverifieerde en afgeleide kennis (§2).
   herkomst?:
     | "import"

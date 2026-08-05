@@ -71,6 +71,31 @@ describe("fondsen.json", () => {
     expect(onbekend.length).toBeGreaterThan(0);
   });
 
+  it("houdt beide onderzoeksronden uit elkaar en heeft geen naamoverlap", () => {
+    const perTabblad = new Map<string, string[]>();
+    for (const f of fondsen) {
+      const t = f.tabblad ?? "(onbekend)";
+      perTabblad.set(t, [...(perTabblad.get(t) ?? []), f.naam]);
+    }
+    expect([...perTabblad.keys()].sort()).toEqual(["Fondsenoverzicht", "Sheet1"]);
+    const a = new Set(perTabblad.get("Fondsenoverzicht"));
+    const overlap = perTabblad.get("Sheet1")!.filter((n) => a.has(n));
+    expect(overlap, `Onverwachte overlap tussen de tabbladen: ${overlap.join(", ")}`).toEqual([]);
+  });
+
+  it("gokt aanvrager_type en verdienmodel niet voor het tabblad zonder die kolommen", () => {
+    for (const f of fondsen.filter((x) => x.tabblad === "Fondsenoverzicht")) {
+      const r = naarRegeling(f);
+      expect(r.aanvrager_type).toBe("onbekend");
+      expect(r.verdienmodel).toBe("onbekend");
+    }
+    // Op Sheet1 moet het onderscheid er wél zijn — anders is de mapping stuk en
+    // verdwijnt het verschil tussen "vraag aan" en "zoek een partner".
+    const sheet1 = fondsen.filter((x) => x.tabblad === "Sheet1").map(naarRegeling);
+    expect(sheet1.some((r) => r.aanvrager_type === "derde_partij")).toBe(true);
+    expect(sheet1.some((r) => r.verdienmodel === "locatievergoeding")).toBe(true);
+  });
+
   it("bewaart bij elk bewijsstuk de brontekst (§4, niets gegokt)", () => {
     for (const f of fondsen) {
       for (const b of f.bewijs ?? []) {

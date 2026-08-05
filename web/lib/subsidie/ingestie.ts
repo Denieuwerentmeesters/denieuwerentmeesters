@@ -82,6 +82,9 @@ function bronVelden(r: RegelingNormaal): Record<string, unknown> {
   zet("hercontrole_termijn", r.hercontrole_termijn);
   zet("plan_triggers", r.plan_triggers);
   zet("contact", r.contact);
+  zet("aanvrager_type", r.aanvrager_type);
+  zet("verdienmodel", r.verdienmodel);
+  zet("bron_tabblad", r.bron_tabblad);
 
   // §1: `bestuurslaag` gaat over welke OVERHEIDSlaag verstrekt. Bij een fonds
   // hoort dat veld leeg te blijven — "privaat" erin proppen is een
