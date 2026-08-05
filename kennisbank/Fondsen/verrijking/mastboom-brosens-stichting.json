@@ -1,0 +1,37 @@
+{
+  "naam": "Mastboom-Brosens Stichting (Mastboomfonds)",
+  "bronnen": [
+    {"soort": "website", "url": "https://mastboomhuis.nl/de-stichting/", "jaar": null, "gelezen": true},
+    {"soort": "aanvraagvoorwaarden", "url": "https://mastboomhuis.nl/wp-content/uploads/2026/01/MBH_SubsidieRegeling_2026_DIG.pdf", "jaar": 2026, "gelezen": true}
+  ],
+  "doelstelling": "\"De Mastboom-Brosens Stichting handelt in de geest van Henri en richt zich op: instandhouding van het roerende en onroerende bezit van de familie Mastboom, in het bijzonder het woonhuis met bijgebouwen aan de Dorpsstraat 42-44 in Oud Gastel; bevordering van de wetenschappelijke beoefening van de regionale geschiedenis, heemkunde en genealogie van West-Brabant en de Noorderkempen.\" In de subsidieregeling: \"De stichting ondersteunt kansrijke initiatieven op het gebied van de (cultuur-)historie in West-Brabant (NL) en de Noorderkempen (B).\"",
+  "benaderbaarheid": "open",
+  "benaderwijze_notitie": "\"U kunt uw subsidieverzoek sturen naar secretaris@mastboombrosens.nl. Voor overleg vooraf of vragen over uw subsidieverzoek kunt u zich richten tot de secretaris van het bestuur\" - en: \"U kunt volgens twee regelingen een subsidieverzoek indienen.\"",
+  "aanvrager_type": "beide",
+  "geo_niveau": "regio",
+  "geo_waarden": [
+    "West-Brabant (NL)",
+    "Noorderkempen (B)",
+    "\"Het werkgebied in West-Brabant volgt de gemeenten zoals vastgesteld bij de gemeentelijke herindeling van 1997, langs of ten westen van de rivier De Donge. In de Noorderkempen betreft het het grondgebied van de aangrenzende gemeenten, zoals bestaand anno 1999.\"",
+    "Kaartje in de regeling noemt o.a.: Werkendam, Drimmelen, Geertruidenberg, Moerdijk, Oosterhout, Dongen, Steenbergen, Halderberge, Etten-Leur, Breda, Gilze en Rijen, Rucphen, Bergen op Zoom, Roosendaal, Alphen-Chaam, Zundert, Woensdrecht, Baarle-Nassau, Essen, Hoogstraten, Kalmthout, Wuustwezel, Baarle-Hertog, Merksplas, Rijkevorsel, Kapellen, Brecht, Stabroek, Brasschaat"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": "Stimuleringsbijdrage: \"Een stimuleringsbijdrage bedraagt ten hoogste € 1.500,- en wordt per aanvrager slechts een keer per jaar toegekend.\" Voor de subsidieregeling zelf is geen maximum per aanvraag gepubliceerd: \"De stichting keert jaarlijks tot een tevoren vastgesteld maximum bedrag aan subsidies uit.\"",
+  "cofinanciering_vereist": null,
+  "uitsluitingen": [
+    "\"De stimuleringsbijdrage wordt niet verstrekt ter dekking van de algemene exploitatie van instellingen of ter dekking van een tekort van een reeds voltooide activiteit.\"",
+    "Buiten het werkgebied (West-Brabant ten westen van de Donge / Noorderkempen) valt niets onder de regelingen"
+  ],
+  "kostensoort": ["investering", "restauratie", "onderzoek"],
+  "landgoed_relevantie": {
+    "route": "zelf",
+    "onderbouwing": "Binnen het werkgebied kan een landgoedeigenaar zelf aanvragen: \"Voor de stimuleringsbijdrage komen in aanmerking professionele en nietprofessionele instellingen of personen die gevestigd zijn in het werkgebied van De Mastboom-Brosens Stichting en zich met (een deel van) hun activiteiten verdienstelijk maken voor het behoud, de bevordering of de verbreiding van de (cultuur-)historie van West-Brabant en/of de Noorderkempen.\" De subsidieregeling noemt expliciet: \"Initiatieven tot bevordering van de bewustwording van de (cultuur)geschiedenis van het werkgebied van de Stichting. Gedacht kan worden aan tentoonstellingen, evenementen, educatieve projecten, onderzoek, publicaties e.d.\" en \"Historisch en genealogisch onderzoek naar de (cultuur-)historie van het werkgebied en/of de publicatie van de resultaten van dat onderzoek\". Dat past op landgoedgeschiedenis, archiefonderzoek, publicaties en tentoonstellingen over een landgoed. Let op: de regeling richt zich op roerend erfgoed en kennis; restauratie van gebouwen of groen valt er niet letterlijk onder (\"Verwerving, behoud en publicatie van roerend cultuurhistorisch erfgoed uit het werkgebied, zoals de aankoop en restauratie van museumobjecten, archivalia, foto's, filmbeelden en/of geluidsdocumenten\"). De stichting is zelf gevestigd op Landgoed Anneville te Ulvenhout.",
+    "partnertype": null
+  },
+  "niet_gevonden": [
+    "Geen FIN-profiel: https://www.fondseninnederland.nl/fonds/mastboom-brosens-stichting geeft 404",
+    "Geen apart beleidsplan of jaarverslag gepubliceerd op mastboomhuis.nl (alleen de subsidieregelingen-PDF); ANBI-publicatie/RSIN niet aangetroffen op de site",
+    "Geen gepubliceerd maximumbedrag voor de reguliere subsidieregeling en geen expliciete uitspraak over cofinanciering (wel wordt een 'projectbegroting inclusief dekkingsplan' gevraagd)"
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "naam": "ANWB Fonds",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://www.anwb.nl/lidmaatschap/maatschappelijk/anwb-fonds",
+      "jaar": null,
+      "gelezen": true
+    },
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://www.anwb.nl/lidmaatschap/maatschappelijk/anwb-fonds/regulier/selectiecriteria",
+      "jaar": null,
+      "gelezen": true
+    },
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://www.anwb.nl/lidmaatschap/maatschappelijk/anwb-fonds/veelgestelde-vragen",
+      "jaar": null,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "\"De ANWB voelt, als grootste vereniging van Nederland, een sterke maatschappelijke verantwoordelijkheid om bij te dragen aan een samenleving waarin iedereen zorgeloos en met plezier onderweg kan gaan. Met het ANWB Fonds steunen we lokale initiatieven en projecten in het hele land met een donatie. Voor sociale initiatieven die aansluiten op onze thema's betaalbare mobiliteit, energie of verkeersveiligheid kun je bij ons een donatie aanvragen.\"",
+  "benaderbaarheid": "open",
+  "benaderwijze_notitie": "\"Het ANWB Fonds is er voor elk nieuw project of initiatief op het gebied van betaalbare mobiliteit, energie of verkeersveiligheid. Ben je verenigd in bijvoorbeeld een stichting, vereniging, energiecoöperatie of wijkcomité en heb je geld nodig om je project te starten of te versterken? Dan kunnen wij je misschien helpen.\" - plus: \"Voor een aanvraag kan je vanaf 1 april bij het ANWB Fonds terecht.\"",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "landelijk",
+  "geo_waarden": [
+    "Koninkrijk der Nederlanden"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": 10000,
+  "bedrag_indicatie": "\"Het ANWB Fonds doneert gemiddeld €1500 voor jouw project, een lager óf een hoger bedrag kan dus ook.\" Daarnaast een jaarlijkse winactie: \"In elke provincie belonen we het allerbeste idee op het gebied van betaalbare mobiliteit of energie met een cheque van maar liefst € 10.000!\" en voor een ANWB Verkeersplein: \"Het ANWB Fonds draagt €2000 bij.\"",
+  "cofinanciering_vereist": null,
+  "uitsluitingen": [
+    "\"Projecten in de sfeer van recreatie, zoals zitbanken, bruggetjes, wandelpaden, informatieborden, speel-, buurt- en voedseltuinen, het verbeteren van de toegankelijkheid van recreatieve voorzieningen, etc.\"",
+    "\"Projecten in de sfeer van media, zoals boeken, websites, apps etc.\"",
+    "\"Evenementen al dan niet jaarlijks terugkerend, tentoonstellingen, congressen, wedstrijden e.d.\"",
+    "\"Exploitatiekosten.\"",
+    "\"Cursussen en opleidingen.\"",
+    "\"Individuele (sponsor)acties zoals de Roparun of de Alpe d'HuZes.\"",
+    "\"Het project mag niet commercieel van aard zijn.\"",
+    "\"Het project mag geen andere fondsen ondersteunen.\"",
+    "\"Het project mag nog niet zijn gestart\"",
+    "Losse laadpalen: \"een aanvraag voor laadpalen nemen we alleen in behandeling als die onderdeel zijn van een breder verduurzamingsproject\""
+  ],
+  "kostensoort": [
+    "investering"
+  ],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "De vroegere ANWB-regeling voor toegankelijkheid van buitengebieden (bijdragen aan bruggetjes, bankjes, klaphekjes en bewegwijzering op landgoederen) bestaat niet meer - die pagina gaf op 2026-08-05 een 404 - en het huidige beleid sluit dat juist uit: \"Projecten in de sfeer van recreatie, zoals zitbanken, bruggetjes, wandelpaden, informatieborden ... het verbeteren van de toegankelijkheid van recreatieve voorzieningen\". Wat wel open blijft is het thema energie: \"Het ANWB Fonds ondersteunt bijvoorbeeld de installatie van zonnepanelen op het dak van een (sport)vereniging, het installeren van energiezuinige verlichting op scholen, de aanschaf van een thuisbatterij voor energieopslag bij een zorginstelling\". Een landgoed kan daar niet zelf aanvragen (\"Ben je verenigd in bijvoorbeeld een stichting, vereniging, energiecoöperatie of wijkcomité\"), maar een vereniging, zorg- of welzijnsorganisatie of energiecoöperatie die op of met het landgoed werkt wel - het landgoed staat dan als locatiepost in háár begroting. Ook betaalbare mobiliteit (buurtbus, duofiets naar een landgoedlocatie) is denkbaar.",
+    "partnertype": "Stichting, vereniging, energiecoöperatie of wijkcomité - bv. een energiecoöperatie die verduurzaamt op landgoedgebouwen, of een zorg-/welzijnsorganisatie met een dagbestedings- of vervoersproject op het landgoed"
+  },
+  "niet_gevonden": [
+    "FIN-pagina https://www.fondseninnederland.nl/fonds/anwb-fonds: 404 (fonds staat niet op FIN)",
+    "Beleidsplan-PDF en ANBI-publicatie: niet gevonden; ANWB Fonds publiceert alleen webcriteria",
+    "Minimumbedrag: nergens genoemd",
+    "Cofinancieringseis: niet expliciet; wel gevraagd \"een begroting en een opgave van (potentiële) medefinanciers\"",
+    "Pagina 'Toegankelijkheid buitengebieden voor wandelaars' (/lidmaatschap/maatschappelijk/fonds/toegankelijkheid-buitengebieden): op 2026-08-05 verwijderd (404)"
+  ]
+}

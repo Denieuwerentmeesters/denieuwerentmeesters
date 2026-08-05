@@ -1,0 +1,40 @@
+{
+  "naam": "Turing Foundation",
+  "bronnen": [
+    {"soort":"website","url":"https://www.turingfoundation.org/overons.html","jaar":null,"gelezen":true},
+    {"soort":"aanvraagvoorwaarden","url":"https://www.turingfoundation.org/aanvragen.html","jaar":null,"gelezen":true},
+    {"soort":"aanvraagvoorwaarden","url":"https://www.turingfoundation.org/aanvragen_natuur.html","jaar":null,"gelezen":true},
+    {"soort":"aanvraagvoorwaarden","url":"https://www.turingfoundation.org/aanvragen_musea.html","jaar":null,"gelezen":true},
+    {"soort":"aanvraagvoorwaarden","url":"https://www.turingfoundation.org/aanvragen_muziek.html","jaar":null,"gelezen":true}
+  ],
+  "doelstelling": "De Turing Foundation is een erkend ANBI-fonds dat in 2006 werd opgericht door Pieter Geelen en zijn vrouw Francoise. Tegenwoordig steunt de stichting projecten op het gebied van beeldende kunst en muziekeducatie, de bescherming van het klimaat en van de biodiversiteit in de zee, en de uitroeiing van lepra als misvormende ziekte.",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "Kunst/muziekeducatie: 'Wij gaan graag in gesprek met musea over de mogelijkheden en verzoeken u vriendelijk om eerst contact met ons op te nemen, alvorens een aanvraag in te dienen.' Natuurbescherming is juist gesloten: 'Voor het onderwerp Natuurbescherming hanteert de Turing Foundation geen open aanvraagsysteem. De directie zal zelf rechtstreeks organisaties en initiatieven benaderen en uitnodigen om een aanvraag in te dienen op de genoemde werkterreinen.'",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "internationaal",
+  "geo_waarden": ["Nederland (beeldende kunst in Nederlandse musea, muziekeducatie)", "wereldwijd (klimaat, biodiversiteit op zee en aan de kust, leprabestrijding)"],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": "Het budget van de Turing Foundation bedraagt zo'n € 3.500.000 per jaar. Sinds de oprichting doneerde de stichting aan meer dan 600 (meerjarige) projecten. (Dit is het jaarbudget van het fonds, geen bedrag per toekenning; per-toekenning-bedragen zijn niet gepubliceerd.)",
+  "cofinanciering_vereist": null,
+  "uitsluitingen": [
+    "Alles buiten de vijf terreinen: 'De Turing Foundation steunt uitsluitend aanvragen op het gebied van klimaatverandering, biodiversiteit op zee en aan de kust, beeldende kunst in Nederlandse musea, muziekeducatie, en leprabestrijding.'",
+    "Biodiversiteitsprojecten op land: 'Tot 2023 steunden wij ook biodiversiteitsprojecten op land.'",
+    "Kunst: educatieve projecten; productie van nieuwe kunstwerken; individuele kunstenaars; monumentenzorg en/of restauratie en/of verbouwing van musea of anderszins; archiverings-, digitaliseringsprojecten en/of websites; tentoonstellingen die uitsluitend over videokunst, design, mode of (stads)geschiedenis gaan; tentoonstellingen waarbij het merendeel van de werken afkomstig is uit een particuliere collectie; kunstprijzengelden",
+    "Kunst: 'Wij financieren alleen aanvragen die worden ingediend door een Nederlands museum'",
+    "Muziekeducatie: individuen; eenmalige concerten of concertseries; muziekprojecten buiten Nederland; muziekfestivals; projecten uitsluitend gericht op kinderen jonger dan 8 jaar; talentontwikkeling; productie van nieuwe muziekstukken; archivering/digitalisering; opname of publicatie van muziek; prijzengelden; popmuziek of andere commerciele muziek; verbouwing of onderhoud van muziekpodia, muziekscholen en overige gebouwen of uitvoeringslocaties",
+    "'Het project heeft geen winstoogmerk'"
+  ],
+  "kostensoort": ["investering", "onderzoek"],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Het fonds financiert geen landschap, erfgoed of gebouwen: het steunt 'geen Monumentenzorg en/of restauratie en/of verbouwing van musea of anderszins' en ook geen 'verbouwing of onderhoud van muziekpodia, muziekscholen en overige gebouwen of uitvoeringslocaties'; biodiversiteit op land is sinds 2023 gestopt ('Tot 2023 steunden wij ook biodiversiteitsprojecten op land'). De enige denkbare route naar een landgoed loopt via een derde: 'Wij financieren alleen aanvragen die worden ingediend door een Nederlands museum' - een museum op of verbonden aan een landgoed kan een tentoonstelling gefinancierd krijgen; een muziekeducatie-organisatie kan programmakosten (niet gebouwkosten) op een landgoed opvoeren.",
+    "partnertype": "Een Nederlands museum (voor een tentoonstelling beeldende kunst), of een muziekeducatie-organisatie die met scholen samenwerkt. Voor natuur is er geen route: het natuurprogramma is uitnodiging-only en beperkt tot zee/kust en klimaat."
+  },
+  "niet_gevonden": [
+    "FIN-pagina: https://www.fondseninnederland.nl/fonds/turing-foundation en /stichting-turing-foundation geven beide HTTP 404 - fonds staat niet (onder die slugs) op fondseninnederland.nl",
+    "Beleidsplan als los document: niet aangetroffen op turingfoundation.org (wel jaarverslagen 2007-2025 op /overons.html, niet ingelezen)",
+    "Minimum- en maximumbedragen per toekenning: nergens gepubliceerd op de eigen site",
+    "RSIN/KVK: niet gevonden op /overons.html of /aanvragen.html (ANBI-informatie-link in de footer niet apart uitgelezen)"
+  ]
+}

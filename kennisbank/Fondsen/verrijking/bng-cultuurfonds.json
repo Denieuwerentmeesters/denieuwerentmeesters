@@ -1,0 +1,67 @@
+{
+  "naam": "BNG Cultuurfonds (Stichting Cultuurfonds BNG Bank)",
+  "bronnen": [
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://www.bngbank.nl/bng-cultuurfonds/projectsubsidies",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "website",
+      "url": "https://www.bngbank.nl/bng-cultuurfonds/over-het-bng-cultuurfonds",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "anbi_publicatie",
+      "url": "https://www.bngbank.nl/bng-cultuurfonds/anbi",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "website",
+      "url": "https://www.fondseninnederland.nl/fonds/bng-cultuurfonds",
+      "jaar": 2025,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "Het BNG Cultuurfonds ondersteunt kunst en cultuur die van meerwaarde is voor de Nederlandse gemeenten en hun inwoners. We maken betekenisvolle culturele projecten mogelijk en dragen op die manier bij aan een betere en socialere samenleving.",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "\"Alleen stichtingen kunnen een aanvraag bij het BNG Cultuurfonds indienen. Een stichting-in-oprichting komt niet in aanmerking.\" en \"Eenmanszaken, verenigingen en particulieren komen niet in aanmerking voor subsidie van het BNG Cultuurfonds.\" Aanvragen kan doorlopend via vier rondes per jaar: \"BNG Cultuurfonds heeft vier aanvraagrondes per jaar.\"",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "landelijk",
+  "geo_waarden": [
+    "Nederland",
+    "prioriteit 2026: Limburg",
+    "Overijssel",
+    "Drenthe",
+    "Zeeland"
+  ],
+  "bedrag_min": 5000,
+  "bedrag_max": 15000,
+  "bedrag_indicatie": "Het aanvraagbedrag is minimaal EUR 5.000 en maximaal EUR 15.000. Het aanvraagbedrag bedraagt minimaal 5% en maximaal 35% van de totale dekking.",
+  "cofinanciering_vereist": true,
+  "uitsluitingen": [
+    "Amateurkunst, oftewel projecten van en voor mensen die zich in hun vrije tijd, als hobby, met kunst en cultuur bezighouden",
+    "Talentontwikkeling, oftewel projecten die zich richten op talent dat de ambitie heeft door te groeien tot professional",
+    "Educatie, oftewel projecten die zich richten op het onderwijs",
+    "Het (semi)permanent plaatsen van kunst in de openbare ruimte (tijdelijke tentoonstellingen wel)",
+    "Het maken en/of uitgeven van publicaties zoals boeken, tijdschriften en catalogi",
+    "Projecten die gericht zijn op bouw, verbouwing, (her)inrichting of restauratie",
+    "Projecten die primair gericht zijn op reguliere exploitatie, investeringen in materiele en/of personele lasten of kosten van beheer/overhead",
+    "Projecten die grotendeels buiten de Nederlandse gemeenten plaatsvinden",
+    "Projecten die al starten voordat het BNG Cultuurfonds het besluit over de aanvraag communiceert",
+    "Aanvragers die niet als stichting zijn georganiseerd (eenmanszaken, verenigingen, particulieren)"
+  ],
+  "kostensoort": [],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Een landgoedeigenaar kan zelf niet aanvragen (\"Alleen stichtingen kunnen een aanvraag bij het BNG Cultuurfonds indienen\") en bouwkundige uitgaven zijn uitgesloten (\"Projecten die gericht zijn op bouw, verbouwing, (her)inrichting of restauratie\"). Wel expliciet in beeld zijn erfgoedprojecten met een plaatsgebonden verhaal: \"Voor erfgoedprojecten geldt dat het project een duidelijke historische relatie moet hebben met de plaats of regio waar het plaatsvindt\" en \"Het project is ontwikkeld door professionele kunstenaars of (erfgoed)makers\". Een culturele/erfgoedmanifestatie OP het landgoed, aangevraagd door een stichting, is dus een geldige route; de fysieke ingreep aan het landgoed zelf niet.",
+    "partnertype": "Een stichting (culturele instelling, erfgoedstichting, festivalstichting of een landgoed-eigen stichting) die een tijdelijk, publieksgericht kunst- of erfgoedproject op of over het landgoed organiseert."
+  },
+  "niet_gevonden": [
+    "Beleidsplan als apart document: de FIN-pagina (https://www.fondseninnederland.nl/fonds/bng-cultuurfonds) bevat geen doelstellingstekst en als enige bijlage een Jaarlijkse Verklaring FIN Code Goed Bestuur (boilerplate, geen beleid). De Jaarlijkse Verklaring verwijst voor het (verkort) beleidsplan naar www.bngbank.nl/Cultuurfonds/ANBI; op https://www.bngbank.nl/bng-cultuurfonds/anbi staat alleen een Jaarrekening 2025 + Standaardformulier ANBI, geen los beleidsplan.",
+    "Expliciete uitspraak over cofinancieringspercentage anders dan de 5-35%-bandbreedte."
+  ]
+}

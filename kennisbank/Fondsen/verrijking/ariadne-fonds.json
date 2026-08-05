@@ -1,0 +1,50 @@
+{
+  "naam": "Ariadne fonds (fonds op naam bij Stichting Ars Donandi)",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://arsdonandi.nl/fonds/ariadne-fonds/",
+      "jaar": null,
+      "gelezen": true
+    },
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://arsdonandi.nl/donatie-aanvragen/",
+      "jaar": null,
+      "gelezen": true
+    },
+    {
+      "soort": "beleidsplan",
+      "url": "https://arsdonandi.nl/wp-content/uploads/2026/06/Beleidsplan-Ars-Donandi-dec-2025-2029.pdf",
+      "jaar": 2024,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "\"De doelstellingen van het fonds komen ten goede aan het welzijn van de aarde. Drie thema's komen voor schenkingen in aanmerking: Projecten die bevolkingsgroei terugdringen; Innovatieve ecologische projecten: voor vruchtbare aarde, of duurzame energie; Vluchtelingstudenten.\"",
+  "benaderbaarheid": "gesloten",
+  "benaderwijze_notitie": "\"Aanvragen: Bij dit fonds kunnen geen aanvragen worden ingediend.\" (arsdonandi.nl/fonds/ariadne-fonds/)",
+  "aanvrager_type": "nvt",
+  "geo_niveau": "landelijk",
+  "geo_waarden": [
+    "Nederland"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": null,
+  "cofinanciering_vereist": null,
+  "uitsluitingen": [
+    "Aanvragen überhaupt: \"Bij dit fonds kunnen geen aanvragen worden ingediend.\""
+  ],
+  "kostensoort": [],
+  "landgoed_relevantie": {
+    "route": "niet_relevant",
+    "onderbouwing": "Niet omdat het thema niet past - \"Innovatieve ecologische projecten: voor vruchtbare aarde, of duurzame energie\" zou een landgoed inhoudelijk kunnen raken - maar omdat er geen enkele aanvraagroute bestaat: \"Bij dit fonds kunnen geen aanvragen worden ingediend.\" Het fonds werkt uitsluitend op initiatief van de (anonieme) oprichtster en houdt bovendien op te bestaan: \"Het fonds zal na 12 jaar ophouden te bestaan\" (opgericht 2017). Er is dus geen denkbare route voor een landgoed of een partner. Zie wel ars-donandi.json: binnen dezelfde koepel zijn er wél open fondsen die op landgoederen zijn gericht.",
+    "partnertype": null
+  },
+  "niet_gevonden": [
+    "Eigen website: bestaat niet, fonds op naam zonder eigen site",
+    "FIN-pagina https://www.fondseninnederland.nl/fonds/ariadne-fonds: 404",
+    "Eigen beleidsplan/jaarverslag per fonds op naam: Ars Donandi publiceert alleen op koepelniveau",
+    "Bedragen, giftenbudget, begunstigden van dit specifieke fonds: niet gepubliceerd"
+  ]
+}

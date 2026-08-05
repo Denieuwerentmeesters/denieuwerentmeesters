@@ -1,0 +1,40 @@
+{
+  "naam": "Stichting Fonds 1819",
+  "bronnen": [
+    {"soort":"website","url":"https://www.fondseninnederland.nl/fonds/stichting-fonds-1819","jaar":null,"gelezen":true},
+    {"soort":"beleidsplan","url":"https://www.fonds1819.nl/wp-content/uploads/2025/05/Beleidsplan-2025-2030.pdf","jaar":2025,"gelezen":true},
+    {"soort":"aanvraagvoorwaarden","url":"https://www.fonds1819.nl/voorwaarden/","jaar":null,"gelezen":true},
+    {"soort":"website","url":"https://www.fonds1819.nl/","jaar":null,"gelezen":true}
+  ],
+  "doelstelling": "De stichting heeft ten doel een bijdrage te leveren in haar werkgebied, te weten de voormalige gemeentes Borculo, Goor, Lochem en Ruurlo, aan het behoud en verbeteren van een leefbare samenleving met het oog op een duurzame toekomst, alles in de ruimste zin des woords. De stichting tracht haar doel te bereiken door onder meer het verlenen van financiele en/of operationele steun aan rechtspersonen zonder winstoogmerk bij het uitvoeren of tot stand brengen van projecten van algemeen maatschappelijk belang. Hieronder vallen projecten op sociaal-maatschappelijk gebied en ook die op het gebied van educatie, gezondheid, kunst en cultuur, natuur en milieu, sport en recreatie.",
+  "benaderbaarheid": "open",
+  "benaderwijze_notitie": "'De ontvangst van een aanvraag wordt altijd schriftelijk bevestigd. De besluitvorming over de ondersteuning van een project neemt in beginsel niet meer dan een maand in beslag.' Er is een open aanvraagformulier op de website; wel geldt: 'Een aanvrager kan maar eens in de twee jaar een aanvraag indienen.'",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "regio",
+  "geo_waarden": ["voormalige gemeente Borculo", "voormalige gemeente Goor", "voormalige gemeente Lochem", "voormalige gemeente Ruurlo", "Diepenheim", "Neede", "Markelo"],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": null,
+  "cofinanciering_vereist": null,
+  "uitsluitingen": [
+    "'Er mag geen sprake zijn van een commercieel, politiek of religieus doel.'",
+    "'Projecten met een internationaal karakter komen doorgaans niet in aanmerking.'",
+    "'Projecten van de overheid of van overheidsinstellingen komen niet in aanmerking.'",
+    "'Projecten van instellingen die beschikken over vermogens of andere fondsen komen in principe niet in aanmerking.'",
+    "'Aanvragers zijn uitsluitend rechtspersonen zonder winstoogmerk.' (dus geen particulieren en geen commerciele partijen)",
+    "'Projecten moeten aantoonbaar niet uit eigen middelen kunnen worden gefinancierd.'",
+    "'Een aanvraag is projectgebonden en de ondersteuning van de stichting betreft een bepaalde periode en is nooit permanent van karakter.' (dus geen structurele exploitatie)",
+    "'Projecten dienen in de voorbereidende fase te zijn.' (dus geen reeds gestarte of afgeronde projecten)"
+  ],
+  "kostensoort": ["investering", "restauratie"],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Het fonds noemt erfgoed en landschap expliciet als thema: 'In aanmerking komen projecten met een sociaal-maatschappelijk karakter op het terrein van kunst, cultuur (inclusief behoud van nationaal erfgoed), gezondheid, sport en recreatie, educatie, natuur en milieu.' Een landgoed in de Achterhoek/Twente-driehoek Borculo-Goor-Lochem-Ruurlo past daar inhoudelijk in. De aanvraag kan echter niet door een gewoon (commercieel of particulier) landgoed worden gedaan: 'Aanvragers zijn uitsluitend rechtspersonen zonder winstoogmerk' en 'Er mag geen sprake zijn van een commercieel, politiek of religieus doel.' Een landgoedstichting zonder winstoogmerk kan wel zelf aanvragen.",
+    "partnertype": "Een rechtspersoon zonder winstoogmerk (stichting of vereniging) - bijvoorbeeld een landgoedstichting, een erfgoed- of natuurvereniging, of een lokale stichting die een project op het landgoed uitvoert. Let op: 'Projecten van instellingen die beschikken over vermogens of andere fondsen komen in principe niet in aanmerking.'"
+  },
+  "niet_gevonden": [
+    "Slug 'fonds-1819' op fondseninnederland.nl geeft 404; de werkende slug is 'stichting-fonds-1819'. Die FIN-pagina bevat alleen RSIN 804029726, KVK 41042183, sectoren Cultuur en Welzijn, contactgegevens en een Jaarlijkse Verklaring-PDF - geen doelstelling, strategie of aanvraagprocedure.",
+    "Bedragen per toekenning: staan niet in het beleidsplan 2025-2030 en niet op /voorwaarden/",
+    "Expliciete eis tot cofinanciering: niet aangetroffen; wel wordt gevraagd om 'een overzicht van andere aangeschreven fondsen en instellingen' en 'een overzicht van reeds toegezegde financiele ondersteuning'"
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "naam": "A.W. Hofmanfonds",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://www.fondsenwerving-nederland.nl/vermogensfondsen/regionale-en-lokale-vermogensfondsen/vermogensfondsen-in-gelderland/",
+      "jaar": null,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "Geen eigen publicatie gevonden. Enige (aggregator-)tekst, letterlijk: \"Het A.W. Hofmanfonds is een vermogensfonds dat zich richt op de ondersteuning van projecten en organisaties in de regio Nijmegen. Het fonds ondersteunt initiatieven op het gebied van cultuur, natuurbehoud, welzijn en sport. Het fonds heeft als doel om bij te dragen aan de verbetering van de leefbaarheid.\"",
+  "benaderbaarheid": "onbekend",
+  "benaderwijze_notitie": "Geen enkele uitspraak van het fonds zelf gevonden over hoe of of er aangevraagd kan worden. De aggregatortekst zegt daar niets over.",
+  "aanvrager_type": "onbekend",
+  "geo_niveau": "regio",
+  "geo_waarden": [
+    "regio Nijmegen"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": null,
+  "cofinanciering_vereist": null,
+  "uitsluitingen": [],
+  "kostensoort": [],
+  "landgoed_relevantie": {
+    "route": "onbekend",
+    "onderbouwing": "De enige beschikbare tekst noemt \"cultuur, natuurbehoud, welzijn en sport\" en \"verbetering van de leefbaarheid\" in de regio Nijmegen - thema's die een landgoed in principe kunnen raken (natuurbehoud, cultuurhistorie). Maar deze tekst is niet van het fonds zelf en er is geen aanvraagprocedure bekend, dus de route is niet vast te stellen. Nadrukkelijk niet 'niet_relevant': natuurbehoud staat er letterlijk in.",
+    "partnertype": null
+  },
+  "niet_gevonden": [
+    "Eigen website: niet gevonden",
+    "FIN-pagina https://www.fondseninnederland.nl/fonds/a-w-hofmanfonds: 404; ook niet in het FIN-fondsenoverzicht bij zoekterm 'Hofman'",
+    "ANBI-publicatie / RSIN / KVK: niet gevonden (o.a. kenniscentrumfilantropie.nl/anbi -> 404)",
+    "Beleidsplan: niet gevonden",
+    "Aanvraagvoorwaarden, bedragen, deadlines: niet gevonden",
+    "Websearches op '\"A.W. Hofmanfonds\" ANBI doelstelling', '\"Hofmanfonds\" Gelderland vermogensfonds aanvraag', '\"Hofmanfonds\" ANBI RSIN stichting beleidsplan', '\"Hofmanfonds\" donatie aanvragen website' leverden geen eigen vindplaats op"
+  ]
+}
