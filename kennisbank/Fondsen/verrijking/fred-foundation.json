@@ -1,0 +1,73 @@
+{
+  "naam": "Fred Foundation",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://fredfoundation.org/",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "website",
+      "url": "https://fredfoundation.org/donaties/",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "anbi_publicatie",
+      "url": "https://fredfoundation.org/wp-content/uploads/2026/06/ANBI-publicatieplicht-2025-Stichting-Fred-Foundation.pdf",
+      "jaar": 2025,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "“De stichting heeft ten doel, zelfstandig of in samenwerking met andere organisaties of instellingen die hetzelfde of een aanverwant doel nastreven, het bevorderen en helpen bevorderen van het behoud en onderhoud van onze natuurlijke omgeving en de ontwikkeling van het zelfzorgend vermogen van de mens, vanuit het perspectief van de eigen verantwoordelijkheid, in de ruimste zin van het woord.” Publiekstekst: “Fred Foundation ondersteunt maatschappelijke initiatieven die zich inzetten voor een leven in harmonie: met onszelf, elkaar en de natuur.” Vier thema's: natuur & klimaat, medemenselijkheid, gevluchte mensen, publiek belang.",
+  "benaderbaarheid": "op_uitnodiging",
+  "benaderwijze_notitie": "“We kiezen zelf de initiatieven die we ondersteunen, dus je kunt geen aanvraag bij ons indienen.” En in de ANBI-publicatie 2025: “Mede in het licht daarvan stelt Fred Foundation zich in principe niet open voor aanvragen van derden. Medewerkers en bestuursleden ‘ontdekken’ projecten, krijgen impulsen van derden of uit ‘het nieuws’, en vervolgens kan een organisatie worden uitgenodigd om een aanvraag in te dienen.”",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "internationaal",
+  "geo_waarden": [
+    "Nederland",
+    "Over de gehele wereld (ANBI-formulier: “In welke landen is uw fonds actief? Over de gehele wereld”)"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": "Geen bedrag per gift gepubliceerd. Wel de totale omvang: “Doelbesteding/giften/donaties € 4.748.905” (2025), “€ 4.773.637” (2024), begroot “€ 4.500.000” (2026).",
+  "cofinanciering_vereist": null,
+  "uitsluitingen": [
+    "Ongevraagde aanvragen: “je kunt geen aanvraag bij ons indienen”"
+  ],
+  "kostensoort": [
+    "investering",
+    "exploitatie",
+    "personeel",
+    "onderzoek"
+  ],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Twee dingen maken dit niet-irrelevant ondanks het gesloten loket. Ten eerste staat er een landgoed/buitenplaats in de donatielijst onder ‘Natuur en klimaat’: **Buitenplaats De Hoorneboeg** — precedent dat dit type object binnen hun blikveld valt. Ten tweede sluit het thema aan: “Met initiatieven herstellen en beschermen we de natuur”, en de lijst bevat Stichting Hoopheggen, Stichting Natuurvolgend Bosbeheer, Land van Ons Coöperatie en Stichting Bosnodig — allemaal partijen die op en met particuliere gronden werken. Route loopt dus niet via een aanvraag maar via zo'n partnerorganisatie die het landgoed als projectlocatie opneemt, of via het opvallen van een initiatief (“Medewerkers en bestuursleden ‘ontdekken’ projecten, krijgen impulsen van derden of uit ‘het nieuws’”).",
+    "partnertype": "Een landelijk opererende natuur-/klimaatstichting die al door Fred Foundation gesteund wordt en het landgoed als uitvoeringslocatie of casus opneemt (bijv. Hoopheggen, Natuurvolgend Bosbeheer, Bosnodig, IVN)."
+  },
+  "onderliggende_fondsen": [
+    {
+      "naam": "Stichting Flowfund",
+      "relevant": true,
+      "reden": "De enige donateur van Fred Foundation (“Fred Foundation heeft feitelijk één (1) donateur: Stichting Flowfund”) en tevens de investeringsarm: “Via Stichting Flowfund investeren we in impactfondsen en sociale ondernemingen.” Doelstelling gericht op “de harmonie tussen mensen en omgeving”. Stond niet in de werklijst."
+    },
+    {
+      "naam": "ForestPeace Foundation",
+      "relevant": true,
+      "reden": "Als gelieerde stichting op de site vermeld; naam duidt op bos/natuur — mogelijk relevant voor bosprojecten. Niet apart onderzocht."
+    },
+    {
+      "naam": "Essentia Foundation",
+      "relevant": false,
+      "reden": "Gelieerde stichting; blijkens naam en positionering gericht op filosofie/bewustzijn, geen natuur- of erfgoeddoel gevonden."
+    }
+  ],
+  "niet_gevonden": [
+    "Geen aanvraagcriteria — het fonds stelt expliciet dat die niet zijn op te stellen (“niet eenduidig valt op te stellen”).",
+    "Geen bedragen per donatie; het donatie-overzicht noemt alleen namen van organisaties, geen bedragen of projectomschrijvingen.",
+    "Geen aparte projectbeschrijving van de donatie aan Buitenplaats De Hoorneboeg gevonden.",
+    "Geen apart beleidsplan-document; het beleidsplan is opgenomen in het ANBI-standaardformulier."
+  ]
+}

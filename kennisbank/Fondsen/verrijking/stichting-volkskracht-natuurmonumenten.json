@@ -1,0 +1,48 @@
+{
+  "naam": "Stichting Volkskracht Natuurmonumenten",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://www.volkskracht.nl/de-volkskracht-stichtingen/aangesloten-stichtingen/stichting-volkskracht-natuurmonumenten/",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://www.volkskracht.nl/aanvraag-indienen/",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "Het 'aankopen, beheren en restaureren van landelijke eigendommen, zoals landgoederen, tuinen, polders en waters in Rotterdam en in de agglomeratie van Rotterdam'.",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "'Via onze QuickScan kun je snel zien of je plan voldoet aan de basisvoorwaarden om steun te krijgen'; de QuickScan 'zegt niets over het al dan niet toekennen van een donatie'. Je mag maar bij een aangesloten stichting tegelijk indienen.",
+  "aanvrager_type": "beide",
+  "geo_niveau": "regio",
+  "geo_waarden": [
+    "Rotterdam",
+    "agglomeratie Rotterdam"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": null,
+  "cofinanciering_vereist": false,
+  "uitsluitingen": [
+    "gelijktijdig indienen bij meer dan een van de aangesloten Volkskracht-stichtingen"
+  ],
+  "kostensoort": [
+    "investering",
+    "restauratie",
+    "regulier_onderhoud"
+  ],
+  "landgoed_relevantie": {
+    "route": "zelf",
+    "onderbouwing": "Dit is een van de weinige fondsen die landgoederen letterlijk in de doelstelling noemt: 'het aankopen, beheren en restaureren van landelijke eigendommen, zoals landgoederen, tuinen, polders en waters in Rotterdam en in de agglomeratie van Rotterdam'. Opvallend is dat naast restauratie ook beheer expliciet genoemd wordt - een uitzondering op de gebruikelijke uitsluiting van regulier onderhoud. Uitsluitend voor de Rotterdamse regio.",
+    "partnertype": null
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "bedragen, uitsluitingen en inhoudelijke criteria - Volkskracht publiceert die niet; de QuickScan is het enige toetsinstrument",
+    "of aanvragen door particuliere eigenaren zijn toegestaan"
+  ]
+}

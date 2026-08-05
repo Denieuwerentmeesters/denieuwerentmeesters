@@ -1,0 +1,39 @@
+{
+  "naam": "ForestPeace Foundation",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://fredfoundation.org/en/forestpeacefoundation/",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "Het bevorderen van het voortbestaan van het ecologische systeem en het behoud en herstel van de natuur; steun aan ecologische landbouw en bosaanplant, natuureducatie, en toegang tot natuur voor kwetsbare groepen.",
+  "benaderbaarheid": "op_uitnodiging",
+  "benaderwijze_notitie": "'We decide which initiatives we are going to back, so you cannot submit applications to us.'",
+  "aanvrager_type": "nvt",
+  "geo_niveau": "internationaal",
+  "geo_waarden": [
+    "Nederland",
+    "internationaal"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": null,
+  "cofinanciering_vereist": false,
+  "uitsluitingen": [
+    "ongevraagde aanvragen worden niet in behandeling genomen"
+  ],
+  "kostensoort": [
+    "investering"
+  ],
+  "landgoed_relevantie": {
+    "route": "onbekend",
+    "onderbouwing": "Inhoudelijk zeer passend ('ecologische landbouw en bosaanplant', 'natuureducatie', 'toegang tot natuur voor kwetsbare groepen' - alle drie klassieke landgoedactiviteiten), maar er is geen aanvraagroute: het fonds selecteert zelf. Zichtbaarheid en netwerkcontact zijn de enige denkbare weg.",
+    "partnertype": null
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "bedragen, uitsluitingen, en of het fonds ooit ongevraagde voorstellen honoreert"
+  ]
+}

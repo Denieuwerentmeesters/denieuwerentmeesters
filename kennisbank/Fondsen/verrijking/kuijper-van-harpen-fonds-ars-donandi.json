@@ -1,0 +1,54 @@
+{
+  "naam": "Kuijper van Harpen Fonds (Ars Donandi)",
+  "bronnen": [
+    {
+      "soort": "jaarverslag",
+      "url": "https://arsdonandi.nl/wp-content/uploads/2020/06/ArsDonandi_JB_2019.pdf",
+      "jaar": 2019,
+      "gelezen": true
+    },
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://www.arsdonandi.nl/donatie-aanvragen/",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "website",
+      "url": "https://www.arsdonandi.nl/de-fondsen/",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "\"Eén van de doelstellingen van dit fonds is namelijk: het mogelijk maken van restauraties van oude huizen of gebouwen die in particulier bezit zijn.\"",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "\"Om te voorkomen dat u onnodig werk verricht vragen wij u om eerst de quickscan te doen. U komt na een positieve quickscan in ons vooraanvragen portaal. Indien de vooraanvraag past bij het beleid van één van de fondsen ontvangt u een uitnodiging voor een volledige aanvraag. Deze uitnodiging is geen garantie voor een toekenning van uw aanvraag.\" en \"Ars Donandi beheert verschillende fondsen. Wij zorgen ervoor dat uw aanvraag bij het juiste fonds terecht komt!\" — er is dus geen aparte ingang voor dit fonds; alles loopt via de quickscan van Ars Donandi.",
+  "aanvrager_type": "beide",
+  "geo_niveau": "landelijk",
+  "geo_waarden": [
+    "Nederland"
+  ],
+  "bedrag_min": 1000,
+  "bedrag_max": 15000,
+  "bedrag_indicatie": "\"Donaties bedragen tussen €1.000 en €15.000\" (Ars Donandi-breed). De in 2019 uit dit fonds beschikbaar gestelde donatie was € 10.000 (uitgekeerd als 'Monumentenpremie' via Erfgoedvereniging Heemschut).",
+  "cofinanciering_vereist": null,
+  "uitsluitingen": [
+    "financiering achteraf: \"Ars Donandi financiert niet achteraf\" — aanvragen tenminste vier maanden voor aanvang van het project indienen, en het project mag nog niet begonnen zijn",
+    "aanvragers die binnen twee jaar al eerder een aanvraag indienden: \"Aanvragers mogen eens in de twee jaar een aanvraag indienen\""
+  ],
+  "kostensoort": [
+    "restauratie"
+  ],
+  "landgoed_relevantie": {
+    "route": "zelf",
+    "onderbouwing": "Uitzonderlijk direct: \"het mogelijk maken van restauraties van oude huizen of gebouwen die in particulier bezit zijn\". Waar vrijwel alle erfgoedfondsen particuliere eigenaren uitsluiten (zie bijvoorbeeld Stichting TBI Fundatie: \"Aanvragen van particuliere eigenaren worden (...) niet gehonoreerd\"), is particulier bezit hier juist de kern van de doelstelling. Dat maakt dit fonds relevant voor een landgoedeigenaar met een restauratieopgave aan het huis, koetshuis, oranjerie, tuinmuur of bijgebouw. In de praktijk werd de donatie in 2019 via Erfgoedvereniging Heemschut uitgezet als 'Monumentenpremie', met nadruk op gemeentelijke monumenten waarvoor \"geen enkele tegemoetkoming\" bestaat. Bedragen zijn bescheiden (€ 1.000–€ 15.000) en de ingang loopt via de quickscan van Ars Donandi, niet via het fonds zelf.",
+    "partnertype": null
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "een eigen fondspagina met de volledige statutaire doelstelling van het Kuijper van Harpen Fonds — de fondsenlijst op arsdonandi.nl/de-fondsen/ wordt dynamisch geladen en bevat via de WordPress-API geen fondsteksten; de doelstelling is alleen gevonden als citaat in de Jaarbrochure 2019",
+    "de overige doelstellingen van het fonds (de brochure zegt uitdrukkelijk 'Eén van de doelstellingen')",
+    "of het fonds nog actief is en wat het jaarlijkse budget is",
+    "de actuele deadlines: de opgehaalde pagina noemt vergaderingen op 30 maart, 1 juni, 21 september en 7 december met sluiting vooraanvraag t/m 26 juni — jaartal staat er niet bij"
+  ]
+}

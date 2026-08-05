@@ -1,0 +1,40 @@
+{
+  "naam": "Omgevingsfonds Midden-Delfland",
+  "bronnen": [
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://www.staatsbosbeheer.nl/-/media/midden-delfland/midden-delfland-omgevingsfonds-vragen.pdf",
+      "jaar": 2018,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "Bijdragen aan projecten binnen het werkgebied van het Recreatieschap Midden-Delfland (landschap, recreatie, leefomgeving). Regeling beeindigd per 31 december 2018.",
+  "benaderbaarheid": "gesloten",
+  "benaderwijze_notitie": "'De subsidieverordening van het recreatieschap is per 31 december 2018 geeindigd en daarmee is de subsidieregeling Omgevingsfonds Midden-Delfland beeindigd: er worden geen nieuwe Omgevingsfonds-subsidies verleend.'",
+  "aanvrager_type": "beide",
+  "geo_niveau": "regio",
+  "geo_waarden": [
+    "werkgebied Recreatieschap Midden-Delfland"
+  ],
+  "bedrag_min": 1000,
+  "bedrag_max": 100000,
+  "bedrag_indicatie": "historisch: minimaal EUR 1.000, maximaal EUR 100.000, maximaal 33% van de subsidiabele kosten",
+  "cofinanciering_vereist": true,
+  "uitsluitingen": [
+    "activiteiten buiten het werkgebied van het Recreatieschap Midden-Delfland",
+    "nieuwe aanvragen sinds 1 januari 2019"
+  ],
+  "kostensoort": [
+    "investering"
+  ],
+  "landgoed_relevantie": {
+    "route": "niet_relevant",
+    "onderbouwing": "De regeling is formeel beeindigd: 'er worden geen nieuwe Omgevingsfonds-subsidies verleend' sinds 31 december 2018. Inhoudelijk zou een landgoed in Midden-Delfland wel gepast hebben (maximaal 33% van de kosten, particulieren mochten aanvragen), maar er is geen loket meer. Vervolgvraag voor het recreatieschap/de gemeente: is er een opvolgerregeling?",
+    "partnertype": null
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "een eventuele opvolgerregeling na 2018 - niet gevonden bij Recreatie Zuid-Holland, Staatsbosbeheer of gemeente Midden-Delfland",
+    "de in de werklijst genoemde bron skbl.nl/erfgoedfondsen bevat geen eigen beleidstekst (aggregator)"
+  ]
+}

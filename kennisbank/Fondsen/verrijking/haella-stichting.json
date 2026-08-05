@@ -1,0 +1,59 @@
+{
+  "naam": "Haella Stichting",
+  "bronnen": [
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://haella.nl/stichting/aanvragen/",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "Projecten steunen die bijdragen aan een betere wereld waarin iedereen kansen heeft op een goed leven, een vreedzame wereld met wederzijds respect, en zorg voor kwetsbare mensen.",
+  "benaderbaarheid": "open",
+  "benaderwijze_notitie": "Digitaal aanvraagloket met gepubliceerde criteria; \"You can receive money from us only 1 time per year\" en \"Volunteers play a major role in the project\".",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "internationaal",
+  "geo_waarden": [
+    "Nederland",
+    "Afrika",
+    "Midden-Oosten"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": 4000,
+  "bedrag_indicatie": "Maximaal EUR 4.000 per aanvrager; projectbegroting maximaal EUR 100.000; organisatiebegroting maximaal EUR 500.000.",
+  "cofinanciering_vereist": null,
+  "uitsluitingen": [
+    "bouwactiviteiten, verbouwingen en grondaankoop",
+    "sport en recreatie",
+    "individuele steun",
+    "scholieren- en culturele uitwisselingen",
+    "filmprojecten",
+    "reguliere onderwijsinstellingen",
+    "boek- en tijdschriftpublicaties",
+    "evangelisatie",
+    "noodhulp bij rampen",
+    "zorg- en gehandicaptenvoorzieningen",
+    "dierenbeschermingsprojecten",
+    "woningcorporaties",
+    "infrastructuurprojecten (internationaal)",
+    "arbeidstoeleiding zonder vervolgplan"
+  ],
+  "kostensoort": [
+    "investering"
+  ],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Fysieke landgoedingrepen zijn hard uitgesloten: \"Building activities, renovations, land purchases\" en \"Sports and recreation\" staan op de uitsluitingslijst. Wel kan een vrijwilligersinitiatief rond samenleven, vluchtelingen of ongedocumenteerden een activiteit op een landgoedlocatie draaien met maximaal EUR 4.000. Kleine bedragen, smalle route.",
+    "partnertype": "vrijwilligersinitiatief (minimaal 5 personen) of kleine stichting rond samenleven, vrede of mensenrechten"
+  },
+  "onderliggende_fondsen": [
+    {
+      "naam": "Nel Voltelen Fonds",
+      "relevant": false,
+      "reden": "beurzen voor individuen; geen landgoedroute"
+    }
+  ],
+  "niet_gevonden": [
+    "cofinancieringseis"
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "naam": "Stichting Huis te Warmond",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://www.hendrickdekeyser.nl/fondsen",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "website",
+      "url": "https://www.hendrickdekeyser.nl/de-huizen/huis-te-warmond",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "Niet gevonden. Uit de context blijkt alleen dat de stichting vanaf 1960 eigenaar was van het huis van buitenplaats Huis te Warmond (het park ging naar Het Zuid-Hollands Landschap), het huis later overdroeg aan Vereniging Hendrick de Keyser en daarna als fonds heeft bijgedragen aan projecten van Hendrick de Keyser.",
+  "benaderbaarheid": "onbekend",
+  "benaderwijze_notitie": "Geen eigen website, aanvraagpagina of contactgegevens gevonden. De enige vindplaats is de fondsenlijst van Hendrick de Keyser: \"Recent hebben ook de volgende fondsen belangrijke projecten door hun genereuze steun mogelijk gemaakt: (...) Stichting Huis te Warmond\". Dat is een dankbetuiging, geen beleid.",
+  "aanvrager_type": "onbekend",
+  "geo_niveau": "regio",
+  "geo_waarden": [
+    "Warmond / Teylingen, Zuid-Holland"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": null,
+  "cofinanciering_vereist": null,
+  "uitsluitingen": [],
+  "kostensoort": [
+    "restauratie"
+  ],
+  "landgoed_relevantie": {
+    "route": "onbekend",
+    "onderbouwing": "De stichting is ontstaan rond één specifieke buitenplaats: \"De gemeente Warmond kocht de buitenplaats dat jaar en verkocht vervolgens het park aan de Stichting Het Zuid-Hollands Landschap en het huis aan Stichting Huis te Warmond\", en \"De overdracht van het huis door Stichting Huis te Warmond aan Vereniging Hendrick de Keyser maakt restauratie en renovatie van het gebouw mogelijk.\" Het gaat dus onmiskenbaar om een buitenplaats-stichting die daarna als geldgever optrad. Of zij ook buiten Huis te Warmond geeft, en langs welke weg, is nergens gepubliceerd. Bij twijfel niet als niet_relevant gemarkeerd: de thematiek (buitenplaats, rijksmonument, restauratie) is exact het domein van dit platform.",
+    "partnertype": null
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "een eigen website — gezocht via zoekmachine op 'Stichting Huis te Warmond fonds doelstelling aanvraag monumenten'; alleen vermeldingen bij Hendrick de Keyser, Burgy Bouwbedrijf en de Oegstgeester Courant",
+    "doelstelling, statuten, beleidsplan of ANBI-publicatie",
+    "aanvraagprocedure, bedragen, criteria, deadlines",
+    "of de stichting na de overdracht aan Hendrick de Keyser nog actief is"
+  ]
+}

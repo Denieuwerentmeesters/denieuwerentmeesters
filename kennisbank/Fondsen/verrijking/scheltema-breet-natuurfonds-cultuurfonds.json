@@ -1,0 +1,37 @@
+{
+  "naam": "Scheltema-Breet Natuurfonds (Cultuurfonds)",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://www.cultuurfonds.nl/fondsen/scheltema-breet-natuurfonds",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "Het stimuleren van natuurbehoud in Nederland.",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "Aanvragen loopt via het gezamenlijke Aanvraagportaal van het Cultuurfonds (aanvragen.cultuurfonds.nl); de fondspagina zelf noemt geen eigen voorwaarden.",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "landelijk",
+  "geo_waarden": [
+    "Nederland"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": null,
+  "cofinanciering_vereist": false,
+  "uitsluitingen": [],
+  "kostensoort": [
+    "investering",
+    "onderzoek"
+  ],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "'Het stimuleren van natuurbehoud in Nederland' met projecttypen als habitatherstel, aankoop en inrichting van natuurgebied en natuureducatie sluit direct aan bij landgoedbeheer. De algemene Cultuurfonds-voorwaarden vragen doorgaans een rechtspersoon zonder winstoogmerk, dus een landgoedstichting of samenwerkende natuurorganisatie is de veiligste route.",
+    "partnertype": "natuurbeschermings- of landgoedstichting zonder winstoogmerk"
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "bedragen, deadlines en eigen criteria van dit fonds op naam - het Cultuurfonds publiceert die per fonds niet; alleen de algemene portaalvoorwaarden gelden"
+  ]
+}

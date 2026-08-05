@@ -1,0 +1,58 @@
+{
+  "naam": "MonumentenFonds 1818",
+  "bronnen": [
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://www.restauratiefonds.nl/monumenteigenaren/financieringen/monumentenfonds-1818",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "\"Bent u eigenaar van een gemeentelijk monument of monumentale kerk die (deels) een nieuwe bestemming krijgt? Dan kunt u vanuit het MonumentenFonds 1818 een laagrentende lening aanvragen voor verduurzaming, verbouwingen, renovatie en/of restauratie. Het MonumentenFonds 1818 is een samenwerking tussen Fonds 1818, Nationaal Restauratiefonds en Cultuurfonds.\"",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "\"Financiele vragen en vragen over het aanvraagproces kunt u stellen aan onze accountmanager\" - aanvraag loopt via het Restauratiefonds; \"Dan kunt u mogelijk de Fonds 1818-hypotheek aanvragen.\"",
+  "aanvrager_type": "beide",
+  "geo_niveau": "regio",
+  "geo_waarden": [
+    "Delft",
+    "Den Haag",
+    "Hillegom",
+    "Katwijk",
+    "Leiden",
+    "Leiderdorp",
+    "Leidschendam-Voorburg",
+    "Lisse",
+    "Midden-Delfland",
+    "Noordwijk",
+    "Noordwijkerhout",
+    "Oegstgeest",
+    "Pijnacker-Nootdorp",
+    "Rijswijk",
+    "Teylingen",
+    "Voorschoten",
+    "Wassenaar",
+    "Zoetermeer",
+    "Zoeterwoude"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": null,
+  "cofinanciering_vereist": false,
+  "uitsluitingen": [
+    "rijksmonumenten (fonds richt zich op gemeentelijke monumenten en monumentale kerken)"
+  ],
+  "kostensoort": [
+    "investering",
+    "restauratie"
+  ],
+  "landgoed_relevantie": {
+    "route": "zelf",
+    "onderbouwing": "Werkgebied omvat Wassenaar, Voorschoten, Oegstgeest en Teylingen - het buitenplaatsenlandschap van de Duin- en Bollenstreek. Voorwaarde is wel herbestemming: \"eigenaar van een gemeentelijk monument of een monumentale kerk die (deels) een nieuwe bestemming krijgt\". Voor een landgoed met een gemeentelijk-monumentaal bijgebouw dat herbestemd wordt, een directe route.",
+    "partnertype": null
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "Bedragen (min/max lening) staan niet op de productpagina",
+    "Volledig voorwaardenboek MonumentenFonds 1818"
+  ]
+}

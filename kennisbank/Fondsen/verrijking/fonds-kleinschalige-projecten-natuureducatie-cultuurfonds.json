@@ -1,0 +1,37 @@
+{
+  "naam": "Fonds Kleinschalige Projecten Natuureducatie (Cultuurfonds)",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://www.cultuurfonds.nl/fondsen/fonds-kleinschalige-projecten-natuureducatie",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "'Het financieel ondersteunen van educatieve projecten op het gebied van natuurbehoud.'",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "Aanvragen via het Aanvraagportaal van het Cultuurfonds; de fondspagina publiceert geen eigen criteria of deadlines.",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "landelijk",
+  "geo_waarden": [
+    "Nederland"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": "niet gepubliceerd; de naam duidt op kleinschalige projecten",
+  "cofinanciering_vereist": false,
+  "uitsluitingen": [],
+  "kostensoort": [
+    "investering",
+    "onderzoek"
+  ],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "'Educatieve projecten op het gebied van natuurbehoud' past bij een landgoed dat schoolklassen, excursies of een natuurleerpad organiseert; de toekenningen gaan naar non-profitorganisaties, zodat een landgoed het beste via een educatie- of natuurstichting aanvraagt. Financiering betreft het educatieve programma, niet het beheer zelf.",
+    "partnertype": "natuur- of milieueducatie-organisatie (IVN-afdeling, natuurstichting, schoolbestuur)"
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "bedragen, deadlines en criteria - niet gepubliceerd op de fondspagina"
+  ]
+}

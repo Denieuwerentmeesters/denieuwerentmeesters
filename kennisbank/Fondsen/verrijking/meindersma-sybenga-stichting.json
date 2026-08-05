@@ -1,0 +1,49 @@
+{
+  "naam": "Meindersma-Sybenga Stichting",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://stichting.moment.online/meindersma-sybenga-stichting",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "De opbrengsten van het vermogen na aftrek van kosten beschikbaar stellen ter ondersteuning van instellingen voor: (1) restauratie en verduurzaming van monumentale kerken en orgels; (2) restauratie en verduurzaming van monumenten; (3) behoud van natuurwaarden en cultuurlandschappen; (4) initiatieven die cultuur en samenleving in Friesland versterken met provinciaal of regionaal belang.",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "Uitsluitend rechtspersonen mogen aanvragen, met voorkeur voor organisaties met ANBI-status; \"particulieren en semi-commerciele instellingen komen in de regel niet in aanmerking\". Aanvraag als schriftelijk verzoek aan de secretaris met projectbeschrijving, begroting met dekkingsplan en documentatie van de financiele positie. Meerdere financieringspartners zijn vereist, inclusief een eigen bijdrage.",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "provincie",
+  "geo_waarden": [
+    "Friesland (prioriteit 1)",
+    "Noordoost-Nederland (prioriteit 2)",
+    "overig Nederland (prioriteit 3)"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": null,
+  "cofinanciering_vereist": true,
+  "uitsluitingen": [
+    "exploitatiesubsidies",
+    "reeds gestarte of afgeronde projecten",
+    "aanvragen van particulieren",
+    "semi-commerciele instellingen",
+    "projecten zonder meerdere financieringsbronnen",
+    "aanvragers zonder gezonde financiele positie"
+  ],
+  "kostensoort": [
+    "restauratie",
+    "investering"
+  ],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Twee van de vier statutaire doelen raken de landgoedopgave frontaal: \"restauratie en verduurzaming van monumenten\" en \"behoud van natuurwaarden en cultuurlandschappen\". Dat laatste is een van de weinige formuleringen in deze werklijst die het cultuurlandschap als zodanig noemt - precies waar een landgoed als ensemble onder valt (lanen, houtwallen, parkbos, historische verkaveling). Bovendien reikt het werkgebied verder dan Friesland: prioriteit 2 is heel Noordoost-Nederland en prioriteit 3 de rest van Nederland, dus een landgoed buiten Friesland is niet uitgesloten, alleen lager geprioriteerd. Route via_partner: \"uitsluitend rechtspersonen\", voorkeur ANBI, en \"particulieren en semi-commerciele instellingen komen in de regel niet in aanmerking\" - een landgoed-BV valt daar waarschijnlijk onder.",
+    "partnertype": "Rechtspersoon met ANBI-status: landgoedstichting, kerkelijke stichting (bij een kerk of kapel op het landgoed), natuurbeschermingsorganisatie, monumentenstichting."
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "Bedragrange of maximale bijdrage: nergens genoemd.",
+    "Deadlines of vergaderfrequentie van het bestuur.",
+    "Jaarverslag of ANBI-publicatie met bestedingsoverzicht: de pagina op stichting.moment.online is de enige gevonden vindplaats; een eigen domein is niet aangetroffen.",
+    "Of een landgoed-BV onder 'semi-commerciele instellingen' valt: niet gedefinieerd."
+  ]
+}

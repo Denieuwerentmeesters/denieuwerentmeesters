@@ -1,0 +1,49 @@
+{
+  "naam": "Stichting Mens en zijn Natuur",
+  "bronnen": [
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://www.mensenzijnnatuur.nl/aanvragen/",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "website",
+      "url": "https://www.mensenzijnnatuur.nl/doelstelling/",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "\"Het statutaire doel van de Stichting Mens en zijn Natuur is: Het financieel steunen van kleinschalige projecten die het welzijn en de leefbaarheid van de samenleving (of groepen daarbinnen) in de gemeente De Bilt ten goede komen; Het verlenen van startsubsidies voor vernieuwende initiatieven binnen de gemeente De Bilt; Het financieel steunen van projecten op het gebied van natuurbehoud, natuurontwikkeling en in het bijzonder natuureducatie binnen Nederland (bij hoge uitzondering binnen Europa).\"",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "\"Een aanvraag kan alleen worden ingediend door een stichting of een vereniging.\" en \"Aanvragen kunnen uitsluitend worden ingediend via ons digitale aanvragensysteem.\" Deadlines: \"Uw aanvragen dienen voor 1 maart, 1 juni of 1 november ingediend te zijn.\"",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "gemeente",
+  "geo_waarden": [
+    "De Bilt (welzijn/leefbaarheid)",
+    "Nederland (natuurbehoud, natuurontwikkeling, natuureducatie)"
+  ],
+  "bedrag_min": 1500,
+  "bedrag_max": 6000,
+  "bedrag_indicatie": "\"Het bedrag van de donatie ligt in de orde van EUR 1.500 - EUR 6.000.\"",
+  "cofinanciering_vereist": false,
+  "uitsluitingen": [
+    "periodieke subsidies (\"zij levert geen periodieke subsidies\")",
+    "donaties bestemd om exploitatietekorten te dekken",
+    "aanvragers die geen stichting of vereniging zijn (dus geen particuliere eigenaar, geen BV)",
+    "meer dan een aanvraag per twee jaar (\"Verzoeken om financiele steun kunnen een keer per twee jaar worden ingediend\")"
+  ],
+  "kostensoort": [
+    "investering",
+    "onderzoek"
+  ],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "De derde statutaire doelstelling is landelijk en landgoed-relevant: \"Het financieel steunen van projecten op het gebied van natuurbehoud, natuurontwikkeling en in het bijzonder natuureducatie binnen Nederland\". Een landgoed kan dit alleen benutten als het over een stichting of vereniging beschikt (bv. een landgoedstichting of vriendenvereniging), want \"Een aanvraag kan alleen worden ingediend door een stichting of een vereniging\". Voor landgoederen in de gemeente De Bilt (Vollenhoven, Beerschoten, Houdringe e.o.) telt daarnaast de leefbaarheidsdoelstelling.",
+    "partnertype": "stichting of vereniging - een landgoedstichting, natuur- of educatieorganisatie"
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "Beleidsplan/jaarverslag: niet als los document op de site aangetroffen"
+  ]
+}

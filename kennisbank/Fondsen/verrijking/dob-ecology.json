@@ -1,0 +1,65 @@
+{
+  "naam": "DOB Ecology",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://dobecology.nl/",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "website",
+      "url": "https://dobecology.nl/faq/",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "\"Supporting ecosystems and communities with restoration, conservation and science.\" Drie thema's: bosherstel en bosbehoud, behoud en herstel van wetlands, en kennisontwikkeling en wetenschappelijk onderzoek.",
+  "benaderbaarheid": "gesloten",
+  "benaderwijze_notitie": "\"We do not work with open calls and do not consider unsolicited proposals.\" De aanpak is selectief en gericht op vooraf gekozen partners en programma's.",
+  "aanvrager_type": "nvt",
+  "geo_niveau": "internationaal",
+  "geo_waarden": [
+    "Ghana",
+    "Nigeria",
+    "Zambia",
+    "Kenia",
+    "Tanzania",
+    "Senegal",
+    "Guinee",
+    "Oeganda",
+    "Zuid-Afrika",
+    "Democratische Republiek Congo",
+    "Brazilie",
+    "Chili",
+    "Argentinie",
+    "Ecuador",
+    "Peru",
+    "Paraguay",
+    "Suriname"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": null,
+  "cofinanciering_vereist": false,
+  "uitsluitingen": [
+    "ongevraagde voorstellen ('do not consider unsolicited proposals')",
+    "open calls (die bestaan niet)",
+    "projecten buiten de genoemde landen in Afrika en Zuid-Amerika"
+  ],
+  "kostensoort": [
+    "investering",
+    "onderzoek"
+  ],
+  "landgoed_relevantie": {
+    "route": "niet_relevant",
+    "onderbouwing": "Twee onafhankelijke blokkades die samen geen enkele denkbare route overlaten voor een Nederlands landgoed. (1) Geografie: alle gesteunde landen liggen in Afrika en Zuid-Amerika; Nederland komt in het hele overzicht niet voor. Het fonds is weliswaar een Nederlandse ANBI, maar besteedt uitsluitend internationaal. (2) Toegang: \"We do not work with open calls and do not consider unsolicited proposals.\" Inhoudelijk (bosherstel, wetlandherstel) zou het passen bij een landgoed, maar de bestemming sluit Nederland volledig uit.",
+    "partnertype": null
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "Financieringscriteria en bedragen: noch homepage noch FAQ noemt die; mogelijk in het jaarverslag 2025, niet uitgelezen.",
+    "Of er ooit Nederlandse projecten zijn gefinancierd: geen aanwijzing gevonden, ook geen expliciete uitsluiting van Nederland.",
+    "De wijze waarop partners worden geselecteerd."
+  ]
+}

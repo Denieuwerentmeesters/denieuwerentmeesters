@@ -1,0 +1,46 @@
+{
+  "naam": "Brabants Erfgoedfonds (via Nationaal Restauratiefonds)",
+  "bronnen": [
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://www.restauratiefonds.nl/zakelijk/financieren/alle-zakelijke-financieringen/brabants-erfgoedfonds",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "Hypotheekregeling gefinancierd door de provincie Noord-Brabant. De middelen ondersteunen het behoud van erfgoed terwijl maatschappelijke doelen worden nagestreefd zoals energietransitie, klimaatbestendigheid, woningbouw en bescherming van provinciaal erfgoed.",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "\"Eigenaren (individueel of als VvE)\" van rijksmonumenten, gemeentelijke monumenten of panden in aangewezen cultuurhistorisch waardevolle gebieden in Noord-Brabant kunnen aanvragen. \"Werkzaamheden mogen nog niet zijn gestart; een omgevingsvergunning is vereist.\" Positieve kredietbeoordeling en voldoende budget in het fonds zijn voorwaarden.",
+  "aanvrager_type": "landgoedeigenaar",
+  "geo_niveau": "provincie",
+  "geo_waarden": [
+    "Noord-Brabant"
+  ],
+  "bedrag_min": 10000,
+  "bedrag_max": 1000000,
+  "bedrag_indicatie": "Minimum EUR 10.000; maximum per aanvraag EUR 1.000.000; maximum per persoon/organisatie EUR 2.500.000; VvE per appartementsrecht EUR 30.000. Rente 1,9% bij 10 jaar rentevast (\"2,5% onder de marktrente met een minimum van 1,5%\"). Looptijd max 30 jaar, minimale maandtermijn EUR 100.",
+  "cofinanciering_vereist": false,
+  "uitsluitingen": [
+    "panden in overheidseigendom",
+    "werkzaamheden die al zijn gestart",
+    "projecten zonder omgevingsvergunning",
+    "panden buiten Noord-Brabant",
+    "aanvragers zonder positieve kredietbeoordeling"
+  ],
+  "kostensoort": [
+    "restauratie",
+    "regulier_onderhoud",
+    "investering"
+  ],
+  "landgoed_relevantie": {
+    "route": "zelf",
+    "onderbouwing": "Dit is een van de weinige instrumenten die REGULIER ONDERHOUD wel financiert: de lening dekt \"onderhoud (behoud van bestaande staat en materialen)\" naast restauratie, verduurzaming, herbestemming en klimaatadaptatie. Voor een Brabants landgoed met rijks- of gemeentelijke monumenten is dat een brede dekking, tot EUR 1.000.000 per aanvraag. Bovendien komen ook panden binnen \"aangewezen cultuurhistorisch waardevolle gebieden (Cultuurhistorische Waardenkaart versie 2024)\" in aanmerking - veel landgoedensembles staan op die kaart, ook als individuele opstallen geen monumentenstatus hebben. Klimaatadaptatie (\"maatregelen tegen wateroverlast, verdroging, erosie\") is direct bruikbaar voor waterhuishouding op landgoedgronden. Het blijft wel een hypothecaire lening, geen gift.",
+    "partnertype": null
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "Of de klimaatadaptatiemaatregelen ook op onbebouwde landgoedgronden (buiten een monumentaal pand) kunnen worden toegepast: de pagina koppelt de lening aan een pand met hypotheekvestiging.",
+    "Of groen erfgoed (parkaanleg, lanen) onder 'restauratie' valt.",
+    "Het actuele resterende fondsbudget."
+  ]
+}

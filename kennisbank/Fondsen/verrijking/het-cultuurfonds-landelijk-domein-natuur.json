@@ -1,0 +1,75 @@
+{
+  "naam": "Het Cultuurfonds - landelijk domein Natuur",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://www.cultuurfonds.nl/natuur",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://www.cultuurfonds.nl/aanvragen/voorwaarden",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://www.cultuurfonds.nl/samen-vergroenen",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "“Het Cultuurfonds en haar donateurs ondersteunen natuurbehoud en -versterking in Nederland. Dat doen wij door het ondersteunen van projecten op het gebied van landschap, biodiversiteit en educatie. Denk bijvoorbeeld aan grondaankopen, natuurontwikkeling, beheersondersteunend onderzoek, tentoonstellingen in natuurmusea of de ontwikkeling van lespakketten. Het gaat daarbij altijd om projecten in of over de natuur in Nederland.”",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "Open aanvraagportaal, maar met harde drempels: “Je organisatie staat ingeschreven bij de Kamer van Koophandel”, “Je organisatie heeft cultuur of natuur in de statutaire doelstelling”, “Je totale projectbegroting is minimaal € 15.000” en “Het project start over minimaal 4 maanden”. Voor Samen vergroenen: “Je kunt doorlopend aanvragen. Elk kwartaal besluiten we over de aanvragen.”",
+  "aanvrager_type": "beide",
+  "geo_niveau": "landelijk",
+  "geo_waarden": [
+    "Nederland"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": 10000,
+  "bedrag_indicatie": "Alleen voor de route Samen vergroenen is een bedrag gepubliceerd: “Je kunt een bijdrage aanvragen tot maximaal 25% van de kosten, met een maximum van € 10.000.” Voor de landelijke natuurroutes (grondaankoop, natuuraanleg, onderzoek) is geen maximum gepubliceerd. Ondergrens aan de projectkant: “Je totale projectbegroting is minimaal € 15.000.”",
+  "cofinanciering_vereist": true,
+  "uitsluitingen": [
+    "“Het project gaat niet om de aanleg van recreatieve infrastructuur (zoals bruggen en paden)” (Natuuraanleg)",
+    "Grondaankoop: “De grond is niet in handen van een andere natuurorganisatie of van een overheidsorgaan.”",
+    "“Het project betreft niet groot of regulier onderhoud” (Restauratie)",
+    "“Je project is geen reguliere activiteit”",
+    "“Je project heeft geen polariserend effect en is niet primair religieus, sociaal-maatschappelijk of politiek.”",
+    "“Je organisatie heeft dit jaar nog geen toekenning ontvangen van het Cultuurfonds”",
+    "Samen vergroenen: niet-openbare plekken (“Het gaat om een voor publiek toegankelijke plek”)"
+  ],
+  "kostensoort": [
+    "investering",
+    "onderzoek"
+  ],
+  "landgoed_relevantie": {
+    "route": "zelf",
+    "onderbouwing": "Twee expliciet bruikbare landelijke routes voor een landgoed. Natuuraanleg: “De aanleg vindt plaats op het terrein van de aanvragende partij” en “Het te ontwikkelen natuurgebied bevindt zich binnen of grenst aan het Natuurnetwerk Nederland” — dat is precies de situatie van veel landgoederen. Grondaankoop voor uitbreiding is eveneens een genoemde route (“Denk bijvoorbeeld aan grondaankopen, natuurontwikkeling, beheersondersteunend onderzoek”). Beperking is de rechtsvorm: de organisatie moet bij de KvK staan en “cultuur of natuur in de statutaire doelstelling” hebben; bij restauratie geldt aanvullend “Het erfgoed is in bezit van een stichting, vereniging of religieus genootschap. Uitzondering: in het geval van historische buitenplaatsen mag het erfgoed ook in bezit zijn van een familie-B.V. die verbonden is aan de Natuurschoonwet.” Die NSW-uitzondering staat alleen bij restauratie, niet bij natuuraanleg/grondaankoop — dat verschil is niet toegelicht en is een vraag voor het fonds.",
+    "partnertype": "Bij een landgoed zonder passende rechtsvorm: aanvragen via een eigen stichting, of via een provinciale landschapsorganisatie (Landschap Overijssel, Het Utrechts Landschap e.d. staan veelvuldig in de toekenningenlijsten)."
+  },
+  "onderliggende_fondsen": [
+    {
+      "naam": "CultuurFondsen op Naam (536 actieve fondsen)",
+      "relevant": true,
+      "reden": "Het Cultuurfonds beheert 536 actieve fondsen op naam met eigen doelstellingen; een deel daarvan is expliciet natuur-/monumenten-/bomen-gericht (o.a. Pfältzer-Birnie Fonds, Par Terra Fonds, Popp-Snijders Bomenfonds, Natuurlijk Limburg Fonds). Aanvragen lopen via één portaal; het Cultuurfonds wijst zelf toe aan een fonds op naam."
+    },
+    {
+      "naam": "Samen vergroenen (provinciale afdelingen)",
+      "relevant": true,
+      "reden": "Aparte route via de provinciale afdelingen voor het samen aanleggen en onderhouden van groen op een publiek toegankelijke plek; max. 25% van de kosten tot € 10.000. Voor een publiek toegankelijk deel van een landgoed met vrijwilligers bruikbaar."
+    },
+    {
+      "naam": "KIEM (natuuraanvraagloket provincie Utrecht)",
+      "relevant": true,
+      "reden": "Samenwerkingsregeling waar het Cultuurfonds in deelneemt; apart verrijkt."
+    }
+  ],
+  "niet_gevonden": [
+    "Geen totaalbudget of jaarlijks bestedingsplafond voor het domein Natuur gepubliceerd op cultuurfonds.nl/natuur.",
+    "Geen expliciet maximumbedrag voor landelijke natuuraanvragen (grondaankoop/natuuraanleg) — alleen Samen vergroenen noemt € 10.000.",
+    "Niet vermeld of de NSW-familie-B.V.-uitzondering ook geldt bij Natuuraanleg en Grondaankoop; die staat alleen onder Restauratie."
+  ]
+}

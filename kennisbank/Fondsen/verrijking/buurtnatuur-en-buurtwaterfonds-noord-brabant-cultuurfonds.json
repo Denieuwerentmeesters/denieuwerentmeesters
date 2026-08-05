@@ -1,0 +1,48 @@
+{
+  "naam": "Buurtnatuur- en Buurtwaterfonds Noord-Brabant (Cultuurfonds)",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://www.cultuurfonds.nl/fondsen/buurtnatuur-en-buurtwaterfonds-noord-brabant",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://www.cultuurfonds.nl/aanvragen/voorwaarden",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "Het Buurtnatuur- en waterfonds stimuleert buurtparticipatie bij natuur- en waterprojecten. Met subsidie helpen we inwoners hun omgeving groener, mooier en beter bestand tegen extreem weer te maken.",
+  "benaderbaarheid": "open",
+  "benaderwijze_notitie": "\"Aanvragen worden behandeld door het Cultuurfonds Noord-Brabant. Verenigingen, stichtingen en zzp'ers kunnen subsidie aanvragen.\" en \"Vanaf 7 januari tot en met 2 november 2026 is de regeling opengesteld. (...) Stuur het ingevulde formulier vanaf 7 januari 2026 naar noordbrabant@cultuurfonds.nl\"",
+  "aanvrager_type": "beide",
+  "geo_niveau": "provincie",
+  "geo_waarden": [
+    "Noord-Brabant"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": 10000,
+  "bedrag_indicatie": "\"Op jaarbasis is er € 250.000 voor buurtnatuur- en buurtwaterprojecten beschikbaar. De hoogte van de subsidie is 60% van de subsidiabele kosten, tot een maximum van € 10.000.\"",
+  "cofinanciering_vereist": true,
+  "uitsluitingen": [
+    "projecten die grotendeels bestaan uit recreatieve infrastructuur (banken, bruggen, paden)",
+    "plekken die niet voor publiek toegankelijk zijn",
+    "projecten zonder onderhoudsplan voor minimaal vijf jaar"
+  ],
+  "kostensoort": [
+    "investering",
+    "regulier_onderhoud"
+  ],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Het fonds richt zich op \"buurtparticipatie bij natuur- en waterprojecten\" in \"de bebouwde omgeving\" en \"in buurten\": buurtmoestuinen, voedselbossen, wadi's, groene daken, geveltuinen. \"Het gaat om een voor publiek toegankelijke plek, bijvoorbeeld een buurttuin of een kleinschalig park\" en \"Het project wordt uitgevoerd met/door vrijwilligers.\" Een Brabants landgoed met een publiek toegankelijk parkdeel aan een dorps- of stadsrand kan hier via een buurt- of vrijwilligersstichting op aansluiten (bijvoorbeeld voedselbos, poel/wadi, waterberging), maar het buurtkarakter en de publieke toegankelijkheid zijn harde eisen. Cofinanciering van 40% is vereist.",
+    "partnertype": "buurt-, natuur- of vrijwilligersvereniging/stichting in Noord-Brabant die het project samen met bewoners uitvoert; ook een zzp'er kan aanvragen"
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "de integrale regelingstekst op de website van de Provincie Noord-Brabant (op de fondspagina alleen als doorverwijzing genoemd, niet opgehaald)",
+    "een expliciete uitsluitingslijst specifiek voor dit fonds"
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "naam": "Kansfonds (voorheen Skanfonds)",
+  "bronnen": [
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://www.kansfonds.nl/aanvragen/richtlijnen/",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "Vernieuwende oplossingen voor dak- en thuisloosheid, armoede en schulden en sociale uitsluiting; kernmissie \"iedereen een thuis\".",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "Open aanvraagloket met richtlijnen en vooroverleg, maar met harde toegangseisen: non-profit met onafhankelijk bestuur van minimaal drie leden; \"particulieren\" en \"B.V.'s\" zijn uitgesloten.",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "landelijk",
+  "geo_waarden": [
+    "Nederland (lokale projecten)"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": "Geen bedragen gepubliceerd; steun loopt doorgaans maximaal 4 tot 5 jaar.",
+  "cofinanciering_vereist": null,
+  "uitsluitingen": [
+    "kortlopende of eendaagse activiteiten",
+    "jubilea, onderzoek, publicaties, studiekosten, congressen",
+    "documentaires en films voor algemeen publiek",
+    "projecten primair gericht op cultuur, milieu, sport, gezondheidszorg of onderwijs",
+    "evangelisatieprojecten",
+    "politieke partijen en gelieerde organisaties",
+    "structurele exploitatiekosten en niet-toegewezen salarissen",
+    "nieuwbouw, uitbreiding, verbouwing",
+    "door de overheid gesubsidieerde activiteiten",
+    "vriendenstichtingen en fondsenwervende organisaties",
+    "financiering achteraf van reeds gemaakte kosten",
+    "particulieren",
+    "B.V.'s",
+    "koepelorganisaties",
+    "professionele zorg- en welzijnsinstellingen binnen reguliere financiering"
+  ],
+  "kostensoort": [
+    "investering",
+    "exploitatie"
+  ],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Een landgoed kan nooit zelf aanvragen (\"particulieren\" en \"B.V.'s\" uitgesloten, en \"nieuwbouw, uitbreiding, verbouwing\" is uitgesloten). Wel kan een sociale stichting die met dak- en thuislozen, mensen in armoede of vluchtelingen werkt een programma op een landgoed draaien (dagbesteding, opvang, buddyproject); de landgoedkosten zijn dan een locatiepost in haar begroting.",
+    "partnertype": "non-profit stichting of vereniging in de opvang, armoedebestrijding of vluchtelingenhulp, met onafhankelijk bestuur van minimaal drie leden"
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "bedragmaxima",
+    "cofinancieringseis"
+  ]
+}

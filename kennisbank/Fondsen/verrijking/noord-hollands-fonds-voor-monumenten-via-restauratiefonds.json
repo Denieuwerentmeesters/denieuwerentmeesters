@@ -1,0 +1,46 @@
+{
+  "naam": "Noord-Hollands Fonds voor Monumenten (via Nationaal Restauratiefonds)",
+  "bronnen": [
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://www.restauratiefonds.nl/particulier/financieren/alle-financieringen/noord-hollands-fonds-voor-monumenten",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "Laagrentende annuitaire lening (\"een lening met een lage rente\") voor eigenaren van beschermde panden in Noord-Holland, voor restauratie, verduurzaming of herbestemming.",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "Aanvragers kunnen zijn \"natuurlijke personen, stichtingen of andere private rechtspersonen\" en kerkgenootschappen, die eigenaar zijn van het pand, nog niet met de werkzaamheden zijn begonnen en een positieve kredietbeoordeling krijgen. Panden in overheidseigendom zijn uitgesloten. Aanvraagperiode 2026: 16 maart tot 1 oktober.",
+  "aanvrager_type": "landgoedeigenaar",
+  "geo_niveau": "provincie",
+  "geo_waarden": [
+    "Noord-Holland"
+  ],
+  "bedrag_min": 10000,
+  "bedrag_max": 350000,
+  "bedrag_indicatie": "Minimaal EUR 10.000, maximaal EUR 350.000, tot 100% van de door de provincie vastgestelde subsidiabele kosten. Rente 1,5% (5% onder marktrente met bodem 1,5%), 10 jaar rentevast, looptijd max 30 jaar, minimale maandtermijn EUR 100.",
+  "cofinanciering_vereist": false,
+  "uitsluitingen": [
+    "panden in overheidseigendom",
+    "werkzaamheden die al zijn gestart",
+    "aanvragen achteraf",
+    "voor rijksmonumenten: alle kosten behalve herbestemmingskosten",
+    "panden buiten Noord-Holland",
+    "aanvragers zonder positieve kredietbeoordeling"
+  ],
+  "kostensoort": [
+    "restauratie",
+    "investering"
+  ],
+  "landgoed_relevantie": {
+    "route": "zelf",
+    "onderbouwing": "De eigenaar vraagt zelf aan; \"natuurlijke personen, stichtingen of andere private rechtspersonen\" komen in aanmerking, wat particuliere landgoedeigenaren expliciet insluit. Relevant is met name de categorie \"cultuurhistorisch erkende agrarische bebouwing aangewezen als beeldbepalend\" en \"gemeentelijke monumenten met oorspronkelijk industrieel, religieus of agrarisch erfgoed\": daaronder vallen boerderijen, schuren en bijgebouwen op een landgoed. Belangrijke breuklijn: voor rijksmonumenten financiert dit fonds UITSLUITEND herbestemmingskosten, niet de restauratie zelf - een landgoed met een rijksmonumentaal hoofdhuis moet daarvoor naar een andere regeling.",
+    "partnertype": null
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "Of groen erfgoed (historische tuin, parkbos, lanen) financierbaar is: de pagina spreekt alleen over panden/gebouwd erfgoed.",
+    "Het jaarlijkse fondsvolume voor 2026.",
+    "De precieze definitie die de provincie hanteert voor 'beeldbepalend'."
+  ]
+}

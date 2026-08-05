@@ -1,0 +1,55 @@
+{
+  "naam": "Stichting Zadelhoff Cultuur Fonds",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://zadelhoff-cultuurfonds.nl/doel/",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "website",
+      "url": "https://zadelhoff-cultuurfonds.nl/werkwijze/",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "website",
+      "url": "https://zadelhoff-cultuurfonds.nl/subsidies-aanvragen/",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "Het fonds heeft ten doel bijdragen te leveren, zowel in materiële als in immateriële zin, op het gebied van kunst en cultuur in de meest ruime zin van het woord. Filosofie: bijdragen geven aan culturele projecten die een sociaal-maatschappelijk karakter hebben. Ook zal aandacht worden besteed aan projecten gelokaliseerd in de gemeente Stichtse Vecht en regio.",
+  "benaderbaarheid": "op_uitnodiging",
+  "benaderwijze_notitie": "\"De stichting zoekt zelf projecten en treedt in contact met de desbetreffende organisatie. Daaruit kan een invitatie voortvloeien om een aanvraag voor een subsidie te doen. (...) Derhalve worden in principe enkel aanvragen op uitnodiging in behandeling genomen. Mocht u als organisatie echter menen te vallen onder de doelstellingen van de stichting, dan kunt u een verzoek tot contact indienen. Het verzoek mag niet meer dan een A4tje bevatten. Indien u binnen 14 dagen geen reactie heeft ontvangen dan kunt u ervan uitgaan dat uw aanvraag niet wordt behandeld.\" — én, tegenstrijdig, op de aanvraagpagina: \"Aangezien men alleen op uitnodiging een verzoek om een subsidie kan aanvragen, zullen andere vragen niet in behandeling worden genomen en zal er geen correspondentie gevoerd worden.\"",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "landelijk",
+  "geo_waarden": [
+    "Nederland",
+    "gemeente Stichtse Vecht en regio (bijzondere aandacht)"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": null,
+  "cofinanciering_vereist": null,
+  "uitsluitingen": [
+    "ongevraagde subsidieaanvragen (alleen op uitnodiging)",
+    "aanvragen van individuen — de werkwijze spreekt uitsluitend over 'u als organisatie'"
+  ],
+  "kostensoort": [
+    "investering",
+    "restauratie"
+  ],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "De doelstelling is breed — \"kunst en cultuur in de meest ruime zin van het woord\" — met als filosofie \"culturele projecten die een sociaal-maatschappelijk karakter hebben\", en \"Ook zal aandacht worden besteed aan projecten gelokaliseerd in de gemeente Stichtse Vecht en regio\". Die regio (Vecht-buitenplaatsen: Breukelen, Loenen, Maarssen, Nieuwersluis) is bij uitstek buitenplaatsengebied, wat dit fonds voor een Vecht-landgoed met een publiek cultureel-maatschappelijk programma relevant maakt. Maar het fonds is gesloten voor eigen initiatief: het zoekt zelf projecten. De praktische route is dat een culturele stichting met een programma op de buitenplaats zichtbaar genoeg wordt om benaderd te worden, of een verzoek tot contact van maximaal één A4 indient.",
+    "partnertype": "culturele stichting of vereniging met een sociaal-maatschappelijk cultureel programma, bij voorkeur in de gemeente Stichtse Vecht en omgeving"
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "bedragen, maxima, cofinancieringseis, deadlines of gehonoreerde projecten — de website bestaat uit slechts zeven zeer korte pagina's zonder cijfers",
+    "een beleidsplan- of jaarverslag-PDF; er is wel een ANBI-pagina op de site, niet apart opgehaald",
+    "het in de werklijst genoemde domein www.zadelhoffcultuurfonds.nl bestaat niet (DNS-fout)"
+  ]
+}

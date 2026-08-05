@@ -1,0 +1,43 @@
+{
+  "naam": "Nationaal Restauratiefonds - Restauratiefonds-hypotheek",
+  "bronnen": [
+    {"soort": "aanvraagvoorwaarden", "url": "https://www.restauratiefonds.nl/particulier/financieren/alle-financieringen/restauratiefonds-hypotheek", "jaar": 2026, "gelezen": true},
+    {"soort": "aanvraagvoorwaarden", "url": "https://www.restauratiefonds.nl/files/docs/2026-01/Voorwaarden%20Financiering%20Nationaal%20Restauratiefonds%20januari%202026_0.pdf", "jaar": 2026, "gelezen": false}
+  ],
+  "doelstelling": "\"Bent u eigenaar van een rijksmonument en gaat u uw monument restaureren of onderhouden? Dan kunt u mogelijk een Restauratiefonds-hypotheek aanvragen.\" Een laagrentende, annuïtair af te lossen lening voor de instandhoudingskosten (restauratie en/of onderhoud) van rijksmonumenten, verstrekt \"met de middelen die de rijksoverheid aan ons beschikbaar stelt\".",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "Open online aanvraag (\"U kunt bij ons online een aanvraag doen voor een financiering\"), maar met een reeks harde drempels: instandhoudingskosten moeten eerst kosteloos zijn bepaald door een door het Restauratiefonds geselecteerd bouwkundig bureau, er moet een onherroepelijke omgevingsvergunning zijn, en \"Uw kredietbeoordeling is positief\" — een volledige krediettoets (identiteit, integriteit, inkomenstoets, dekkingswaarde, BKR) \"vergelijkbaar met die van een reguliere bank\". Bovendien in 2026: \"Op dit moment is de vraag groter dan de beschikbare middelen. Daarom bekijken we per opgave wat binnen de huidige mogelijkheden past. [...] Neem eerst contact op met ons. Samen kijken we welke stappen verstandig zijn, voordat u een nieuwe aanvraag indient.\" en \"Projecten behandelen we op volgorde van binnenkomst.\"",
+  "aanvrager_type": "landgoedeigenaar",
+  "geo_niveau": "landelijk",
+  "geo_waarden": ["Nederland"],
+  "bedrag_min": 10000,
+  "bedrag_max": 300000,
+  "bedrag_indicatie": "\"Uw lening bedraagt minimaal 10.000 euro en maximaal 300.000 euro per monument.\" \"De hoogte van de Restauratiefonds-hypotheek is maximaal 100% van de instandhoudingskosten (voor restauratie en/of onderhoud), zoals bepaald door het bouwkundig bureau.\" \"Daarnaast gelden maximaal uitstaande bedragen per organisatie en/of natuurlijk persoon.\" Rente: 3% onder marktrente met minimum 1,0% (eigen bewoning, 10 jaar) resp. 1,5% (overig gebruik of 20 jaar). Actueel: 1,4% / 1,5% / 1,9%.",
+  "cofinanciering_vereist": false,
+  "uitsluitingen": [
+    "Gebouwen zonder rijksmonumentstatus (\"U bent eigenaar van een rijksmonument\")",
+    "Werkzaamheden die al gestart zijn: \"Nee, als u een financiering aan wilt vragen, dan mag u nog niet zijn gestart met de restauratie en/of verduurzaming.\"",
+    "Werkzaamheden waarvoor al subsidie is aangevraagd: \"U heeft voor de werkzaamheden waarop uw aanvraag betrekking heeft geen subsidie aangevraagd.\"",
+    "Kosten buiten de Leidraad subsidiabele instandhoudingskosten (de instandhoudingskosten worden door een aangewezen bouwkundig bureau conform die Leidraad bepaald)",
+    "Aanvragers met een negatieve kredietbeoordeling of BKR-registratie",
+    "Bedragen onder € 10.000 (minimum maandlast € 100)",
+    "Overdracht aan een nieuwe eigenaar: \"De lening is niet overdraagbaar aan een nieuwe eigenaar.\""
+  ],
+  "kostensoort": ["restauratie", "regulier_onderhoud", "investering"],
+  "landgoed_relevantie": {
+    "route": "zelf",
+    "onderbouwing": "De landgoedeigenaar vraagt zelf aan, mits het object rijksmonument is. Dit is een van de weinige instrumenten die naast restauratie expliciet ook onderhoud dekt: \"De hoogte van de lening is afhankelijk van de instandhoudingskosten die u maakt (voor restauratie en/of onderhoud)\" en \"Als u een Restauratiefonds-hypotheek afsluit, bent u verplicht deze financiering te gebruiken om het monument te onderhouden.\" Belangrijk voor landgoederen: verhuurd of zakelijk gebruikt vastgoed kan óók, alleen tegen een ander tarief — \"Als u het monument op een andere wijze in gebruik (zakelijk/particulier voor verhuur) heeft, dan is de rentevaste periode 10 jaar en het minimum rentepercentage 1,5%.\" Let op: het is een LENING met hypotheekrecht en kredietbeoordeling, geen gift; het maximum van € 300.000 per monument is bij grotere landgoedopgaven beperkend, en er geldt bovendien een maximaal uitstaand bedrag per organisatie/persoon.",
+    "partnertype": null
+  },
+  "onderliggende_fondsen": [
+    {"naam": "Monumentenhypotheek", "relevant": true, "reden": "Marktconform alternatief dat het Restauratiefonds zelf noemt: \"Wanneer een laagrentende lening geen of onvoldoende ondersteuning biedt, kunt u gebruikmaken van onze Monumentenhypotheek met een marktconform rentetarief.\" Relevant als terugvaloptie nu de vraag groter is dan de middelen."},
+    {"naam": "Restauratiefondsplus-hypotheek", "relevant": true, "reden": "Genoemd als het product waarbij de maximaal uitstaande bedragen per organisatie/natuurlijk persoon beschreven staan, en waarvan de basisrente na afloop van de rentevaste periode geldt. Zakelijke/grotere variant, apart te verrijken."},
+    {"naam": "Zakelijke financieringen Restauratiefonds", "relevant": true, "reden": "Het Restauratiefonds heeft een aparte zakelijke tak (/zakelijk/financieren/alle-zakelijke-financieringen) met o.a. VvE-financiering en ondernemen-in-een-monument; voor landgoederen in een BV of stichting waarschijnlijk de juiste ingang."}
+  ],
+  "niet_gevonden": [
+    "Of groene/landschappelijke onderdelen van een rijksmonument (historische tuin- en parkaanleg als zelfstandig rijksmonument, lanen, tuinmuren, waterwerken) onder de instandhoudingskosten vallen — de pagina spreekt alleen in algemene zin over 'het monument'. Dat staat mogelijk in de Leidraad subsidiabele instandhoudingskosten (niet geraadpleegd).",
+    "De Voorwaarden Financiering (PDF januari 2026) is niet uitgelezen; daarin staan naar verwachting de maximaal uitstaande bedragen per persoon/organisatie.",
+    "De hoogte van de behandelingskosten (doorverwezen naar aparte pagina, niet opgehaald).",
+    "Of gemeentelijke of provinciale monumenten of beschermde-stadsgezicht-panden in aanmerking komen bij dit specifieke product — de pagina noemt uitsluitend rijksmonumenten."
+  ]
+}

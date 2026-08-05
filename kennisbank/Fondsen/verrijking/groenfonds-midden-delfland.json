@@ -1,0 +1,43 @@
+{
+  "naam": "Groenfonds Midden-Delfland",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://www.groenfondsmiddendelfland.nl/",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "website",
+      "url": "https://www.groenfondsmiddendelfland.nl/wat-we-doen",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "\"Groenfonds Midden-Delfland helpt het bijzondere landschap van Midden-Delfland te behouden en sterker te maken. En zorgt daarbij voor een goede balans tussen mensen, natuur en landbouw. We richten ons vooral op: De cultuurhistorie van het gebied; Het landschap en de natuur; De verbinding tussen stad en platteland.\"",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "\"We ontvangen aanvragen van boeren, natuurverenigingen en ondernemers en beoordelen deze zorgvuldig.\" Er staat geen aanvraagformulier of procedure op de site; de weg loopt via de partners of via het bestuur.",
+  "aanvrager_type": "beide",
+  "geo_niveau": "regio",
+  "geo_waarden": [
+    "Midden-Delfland"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": null,
+  "cofinanciering_vereist": false,
+  "uitsluitingen": [],
+  "kostensoort": [
+    "investering",
+    "regulier_onderhoud"
+  ],
+  "landgoed_relevantie": {
+    "route": "zelf",
+    "onderbouwing": "Financiert precies het soort werk dat een landgoed doet, inclusief regulier onderhoud (zeldzaam): \"Denk aan het beheer van sloten, boomgaarden, erfbeplanting of het aanbieden van streekproducten\" en \"Een goed voorbeeld is de regeling Groenblauwe Diensten. Boeren krijgen een vergoeding voor het onderhoud van hun erf en landschapselementen, zoals knotwilgen en hoogstamfruitbomen.\" De Groenblauwe Diensten lopen via Agrarische Natuurvereniging Vockestaert - daar loopt de praktische route.",
+    "partnertype": "Agrarische Natuurvereniging Vockestaert (voor Groenblauwe Diensten); Heerlijk van Dichtbij (voor streekproducten)"
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "Aanvraagprocedure, indieningstermijnen en bedragen: staan niet op de website; jaarverslagen (PDF) niet uitgelezen"
+  ]
+}

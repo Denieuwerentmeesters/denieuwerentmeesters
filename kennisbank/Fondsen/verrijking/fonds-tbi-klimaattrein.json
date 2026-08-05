@@ -1,0 +1,50 @@
+{
+  "naam": "Fonds TBI Klimaattrein",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://www.tbi-klimaattrein.nl/fondsaanvraag",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://www.tbi-klimaattrein.nl/sites/tbi-nl/files/usercontent/document/2024-08/spelregels-van-het-fonds-van-de-tbi-klimaattrein_final.pdf",
+      "jaar": 2024,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "Het fonds van de TBI Klimaattrein is bedoeld voor initiatieven die bijdragen aan CO2-reductie in de bebouwde omgeving. \"We zoeken vernieuwende initiatieven die een link hebben met de gebouwde omgeving; hoe directer hoe beter.\"",
+  "benaderbaarheid": "open",
+  "benaderwijze_notitie": "\"De volledige aanvraag kun je sturen naar: klimaattrein@tbi.nl. Let hierbij op de uiterste inzenddatum van de betreffende fondsronde.\" en \"Vier keer per jaar is er een inzending- en beoordelingsronde voor fondsaanvragen.\"",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "landelijk",
+  "geo_waarden": [
+    "Nederland"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": 200000,
+  "bedrag_indicatie": "\"non-profit organisaties en/of initiatieven zonder winstoogmerk (...) >>> max 50.000 euro; initiatieven en/of projecten van TBI-ondernemingen >>> max 200.000 euro; ketenpartners van TBI-ondernemingen (...) >>> max 200.000 euro\". Verder: \"max 30% subsidie voor incrementele innovaties en max 50% subsidie voor een radicale vernieuwing\". Giften zijn exclusief BTW; betaling op basis van factuur.",
+  "cofinanciering_vereist": true,
+  "uitsluitingen": [
+    "initiatieven zonder link met de gebouwde omgeving",
+    "initiatieven zonder potentie voor CO2-reductie en/of regeneratie in de gebouwde omgeving",
+    "niet-vernieuwende initiatieven",
+    "organisaties met winstoogmerk die geen TBI-onderneming of ketenpartner van een TBI-onderneming zijn (de non-profit-categorie is expliciet 'zonder winstoogmerk')"
+  ],
+  "kostensoort": [
+    "investering",
+    "onderzoek"
+  ],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Het fonds richt zich uitsluitend op \"CO2-reductie in de bebouwde omgeving\" en op \"vernieuwende initiatieven die een link hebben met de gebouwde omgeving; hoe directer hoe beter\" — dus op innovatie in bouwen en techniek, niet op het in stand houden van een landgoed. Toch is er een reële route: een landgoed kan als demonstratie- of pilotlocatie fungeren voor een innovatietraject (biobased bouwmateriaal uit eigen hout, CO2-arme of circulaire verduurzaming van monumentaal vastgoed, hergebruik van sloopmateriaal), met een impact-startup, onderzoeker, lokaal burgerinitiatief of TBI-ketenpartner als aanvrager. De landgoedeigenaar zelf kan alleen aanvragen als non-profit zonder winstoogmerk (max € 50.000) en moet minimaal 50-70% zelf investeren. Een gewone restauratie- of onderhoudsvraag past hier niet.",
+    "partnertype": "impact startup, onderzoeker/kennisinstelling, lokaal (burger)initiatief of non-profit zonder winstoogmerk; of een TBI-onderneming/ketenpartner die met het landgoed als locatie een innovatietraject uitvoert"
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "de inhoud van de zes 'tracks' waarop je kunt meedoen (op de website alleen als stroomschema/graphic weergegeven, niet als tekst)",
+    "het aanvraagcanvas (DOCX) en het referentiedocument met voorbeeldbeoordelingen (PDF) — wel gevonden als link, niet doorgenomen",
+    "het jaarlijkse fondsbudget"
+  ]
+}

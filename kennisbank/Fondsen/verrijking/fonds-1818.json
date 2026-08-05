@@ -1,0 +1,45 @@
+{
+  "naam": "Fonds 1818",
+  "bronnen": [
+    {"soort": "website", "url": "https://www.fonds1818.nl/over-fonds-1818/regiokaart", "jaar": 2026, "gelezen": true},
+    {"soort": "website", "url": "https://www.fonds1818.nl/over-fonds-1818/aandachtsgebieden", "jaar": 2026, "gelezen": true},
+    {"soort": "aanvraagvoorwaarden", "url": "https://www.fonds1818.nl/aanvragen/voor-organisaties/voorwaarden-voor-organisaties", "jaar": 2026, "gelezen": true},
+    {"soort": "aanvraagvoorwaarden", "url": "https://www.fonds1818.nl/aanvragen/voor-organisaties/procedure-voor-organisaties", "jaar": 2026, "gelezen": true}
+  ],
+  "doelstelling": "\"Fonds 1818 is er voor maatschappelijke organisaties en groepjes buurtbewoners in negentien gemeenten in Zuid-Holland.\" \"De projecten die Fonds 1818 steunt delen we onder in tien aandachtsgebieden. Binnen elk aandachtsgebied staat voorop dat de projecten bijdragen aan een betere samenleving en grotendeels worden uitgevoerd door vrijwilligers.\" Aandachtsgebieden: Welzijn, Maatschappelijke opvang, Financiële zelfredzaamheid, Armoede, Vrijwilligerswerk, Zorg, Sport Spel & Bewegen, Educatie, Natuur & Milieu, Amateurkunst.",
+  "benaderbaarheid": "open",
+  "benaderwijze_notitie": "\"Een aanvraag indienen kan op twee manieren: via het formulier op deze website en via het platform FindNFund waarop aanvragers kosteloos een account kunnen aanmaken. Aanvragen die op een andere manier worden ingediend, sturen wij retour met het verzoek het online aanvraagformulier te gebruiken.\" Doorlopend, geen deadlines; behandeltermijn maximaal zes weken. Er is bovendien een online spreekuur: \"Leg je plan voor aan een adviseur.\"",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "regio",
+  "geo_waarden": ["Delft", "Den Haag", "Hillegom", "Katwijk", "Leiden", "Leiderdorp", "Leidschendam-Voorburg", "Lisse", "Midden-Delfland", "Noordwijk", "Oegstgeest", "Pijnacker-Nootdorp", "Rijswijk", "Teylingen", "Voorschoten", "Wassenaar", "Westland", "Zoetermeer", "Zoeterwoude"],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": "Geen minimum of maximum gepubliceerd. Wel: \"Bij bedragen boven de 100.000 euro is de behandeltermijn langer\" — bedragen boven een ton zijn dus mogelijk.",
+  "cofinanciering_vereist": true,
+  "uitsluitingen": [
+    "Aanvragen van andere rechtsvormen dan een stichting of vereniging zonder winstoogmerk (dus geen particuliere landgoedeigenaar, BV of maatschap)",
+    "Organisaties met een bestuur van minder dan drie onafhankelijke leden",
+    "Aanvragers die niet in de regio gevestigd zijn (uitzondering: landelijke organisaties met een uniek plan met samenwerkingspartners in de regio)",
+    "Projecten buiten de regio of niet gericht op inwoners van dit gebied",
+    "Projecten die binnen zes weken na indiening al van start gaan",
+    "Projecten met een politiek of religieus doel",
+    "Individuele steun aan één specifiek persoon of gezin",
+    "Organisaties waarin beloningen hoger zijn dan de WNT-norm",
+    "Eerstelijnszorg (\"een taak van de overheid en hiervoor verleent Fonds 1818 geen steun\")",
+    "Waardering van vrijwilligers (cadeautjes, feestelijke bijeenkomsten)",
+    "(Vervanging van) instrumenten en materialen zoals kleding bij amateurkunst, behoudens HaFaBra-verenigingen"
+  ],
+  "kostensoort": ["investering", "onderzoek", "personeel"],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Het fonds financiert geen erfgoed of monumenten als zodanig; het beleid is sociaal-maatschappelijk. De aanvrager moet bovendien \"een organisatie zonder winstoogmerk: een stichting of vereniging\" zijn, wat de landgoedeigenaar zelf vrijwel altijd uitsluit. Er zijn wél twee concrete partnerroutes. (1) Aandachtsgebied Natuur & Milieu: \"Een gemeenschappelijke moestuin, natuurlijke speelplekken in een wijk, een park dat door bewoners wordt beheerd. [...] Je kunt bij ons aankloppen met groenprojecten op plekken waar dat nodig is, met name in natuurarme wijken, buurten en straten\" en \"stadslandbouwprojecten op natuurarme locaties, speelnatuur voor kinderen in achterstandswijken\". Een landgoed aan de rand van Den Haag, Leiden of Westland dat samen met een bewoners-, natuur- of welzijnsstichting een moestuin, speelnatuur of beheerproject opzet, past daarbinnen. (2) Aandachtsgebied Zorg: \"We ondersteunen zowel activiteiten binnen als buiten zorginstellingen, als deze maar bijdragen aan het welbevinden van de deelnemers\" — dagbesteding of een zorgprogramma op een landgoed kan door de zorg- of welzijnsorganisatie worden aangevraagd, met het landgoed als locatiepost. Let op: \"Bij projecten van zorginstellingen vragen we een eigen bijdrage die minimaal een kwart van de kosten dekt.\" Geografisch alleen bruikbaar voor landgoederen in de negentien genoemde gemeenten (o.a. Wassenaar, Voorschoten, Oegstgeest, Teylingen, Midden-Delfland — juist landgoedrijke gemeenten).",
+    "partnertype": "Stichting of vereniging zonder winstoogmerk, gevestigd in de regio: een bewoners-/buurtstichting, natuur- of groenstichting, welzijns- of zorgorganisatie. Zij vraagt aan; het landgoed levert de locatie."
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "Maximale donatiebedragen: niet gepubliceerd; alleen het signaal dat boven €100.000 de behandeltermijn langer is.",
+    "Een expliciete uitsluitingslijst voor gebouwen/monumenten/vastgoed: staat niet als zodanig op de voorwaardenpagina; erfgoed komt in geen enkel aandachtsgebied voor.",
+    "Bewonersinitiatieven-spoor (kleine bedragen voor buurtbewoners) is niet uitgediept; er staat wel een 'Sluitingsdatum bewonersinitiatief' in de agenda, dus daar gelden wél deadlines.",
+    "Het percentage cofinanciering in het algemeen: alleen bij zorginstellingen expliciet (minimaal een kwart eigen bijdrage)."
+  ]
+}

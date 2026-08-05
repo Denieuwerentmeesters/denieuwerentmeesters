@@ -1,0 +1,55 @@
+{
+  "naam": "Interieurfonds voor kasteeleigenaren (St. Limburgse Kastelen + Monumentenwacht Limburg)",
+  "bronnen": [
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://www.limburgsekastelen.nl/site/nwsid,194/nieuwsitem.html",
+      "jaar": 2024,
+      "gelezen": true
+    },
+    {
+      "soort": "website",
+      "url": "https://www.limburgsekastelen.nl/kasteelinterieurs.html",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "website",
+      "url": "https://www.limburgsekastelen.nl/doelstelling.html",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "“Het project heeft als doel om kasteeleigenaren te ondersteunen bij het maken van plannen voor interieurbehoud of -herstel (ter voorbereiding op restauratie- of instandhoudingswerkzaamheden).” En specifieker: “Het genoemde fonds is gericht op het (mede) bekostigen van professioneel, wetenschappelijk onderzoek naar de kwaliteit / waarde / fysieke staat van waardevolle kasteelinterieurs in de provincie Limburg”. Moederdoelstelling: “De Stichting Limburgse Kastelen heeft als hoofddoelstelling het behoud van de Limburgse kastelen in hun historische context. Tevens draagt de stichting zorg voor de behartiging van de belangen van de Limburgse kastelen binnen hun landschappelijke omgeving.”",
+  "benaderbaarheid": "gesloten",
+  "benaderwijze_notitie": "De regeling zelf was open en laagdrempelig — “Indien u belangstelling heeft voor deelname aan dit eenmalige fonds, dan verzoeken wij u dit vóór 1 juli a.s. kenbaar te maken via info@limburgsekastelen.nl” — maar is inmiddels afgelopen: “De looptijd van deze regeling is voorzien tot 1 april 2025.” en “Zodra de beschikbare middelen volledig zijn toegekend, sluiten wij de regeling.” Voor een eventuele opvolger is het contactadres info@limburgsekastelen.nl / 0475-399299.",
+  "aanvrager_type": "landgoedeigenaar",
+  "geo_niveau": "provincie",
+  "geo_waarden": [
+    "Limburg"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": 5000,
+  "bedrag_indicatie": "“een tijdelijk fonds van € 50.000,--” waaruit “een eenmalige bijdrage van maximaal € 5.000,-- in de kosten van interieurzorg”. “De maximale bijdrage per kasteel bedraagt € 5.000,--.” Verwachte omvang: “Wij verwachten met dit fonds tussen de 10 en 15 eigenaren te kunnen ondersteunen.” Uitbetaling: “een voorschot van [75%] op de toegekende bijdrage (…). Na de toezending van een gereed melding, inclusief rapport en rekening- en betaalbewijzen, betalen wij het resterende deel.”",
+  "cofinanciering_vereist": true,
+  "uitsluitingen": [
+    "Kastelen zonder eerdere Monumentenwacht-interieurinspectie: “De eerder gemaakte nulmetingen / inspectierapporten van de Monumentenwacht Limburg (interieurproject) vormen de basis voor dit verdiepingsonderzoek en bevatten de motivering voor het opnemen van een kasteel(eigenaar) in deze regeling”",
+    "Onderzoek door niet-erkende partijen: “Onderzoekers / uitvoerders van een dergelijk onderzoek dienen ‘erkende’ restauratoren-onderzoekers van historische binnenruimten te zijn”",
+    "Onderzoek dat niet leidt tot een vervolgaanvraag: “Het verdiepingsonderzoek moet in beginsel de onderlegger vormen van een aanvraag om SIM-subsidie (meerjarig onderhoudsplan) bij de rijksoverheid of van een goedgekeurd restauratieplan”",
+    "De uitvoering van de restauratie zelf (het fonds bekostigt alleen het voorbereidende onderzoek)"
+  ],
+  "kostensoort": [
+    "onderzoek"
+  ],
+  "landgoed_relevantie": {
+    "route": "zelf",
+    "onderbouwing": "De doelgroep is letterlijk de particuliere eigenaar, en die krijgt zelfs voorrang: “een particuliere eigenaar heeft de voorkeur, omdat het zogenoemde Mathias Soironfonds niet toegankelijk is voor particulieren.” Verdere prioriteringscriteria belonen goed rentmeesterschap: “de betreffende kasteeleigenaar doet regelmatig onderhoud (blijkend uit de data van de Monumentenwacht-inspecties)” en “de urgentie van het onderhoud wordt onderbouwd door het interieurrapport”. Inhoudelijk gaat het om de binnenschil: “vloeren, wanden en wandafwerkingen, plafonds, schouwen en trappenhuizen”. Het fonds is een typisch *voorbereidingsfonds*: het financiert het onderzoek dat nodig is om vervolgens een SIM-aanvraag of restauratieplan te kunnen indienen — een schakel die in de meeste financieringsoverzichten ontbreekt. Belangrijke kanttekening: de regeling zelf is per 1 april 2025 afgelopen; benader de Stichting Limburgse Kastelen voor een eventueel vervolg (het project Kasteelinterieurs eindigde ook al eens, en “we zijn nu met partners in gesprek over een mogelijk vervolg”).",
+    "partnertype": null
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "Geen bericht over verlenging, opvolging of sluiting van de regeling na 1 april 2025 — de nieuwspagina eindigt bij Kastelendag 2024.",
+    "Geen ANBI-publicatie of jaarverslag van de Stichting Limburgse Kastelen uitgelezen (de pagina /anbi.html en /statuten.html bestaan wel, niet geopend binnen het tijdsbudget).",
+    "Geen lijst met toegekende bijdragen of deelnemende kastelen gepubliceerd."
+  ]
+}

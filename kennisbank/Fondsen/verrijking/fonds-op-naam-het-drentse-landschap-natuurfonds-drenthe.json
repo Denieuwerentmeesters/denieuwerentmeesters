@@ -1,0 +1,41 @@
+{
+  "naam": "Fonds op Naam - Het Drentse Landschap / Natuurfonds Drenthe",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://www.drentslandschap.nl/steun-ons/fonds-op-naam",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "Geefinstrument van Het Drentse Landschap waarbij de schenker zelf het bestedingsdoel bepaalt: \"voor een natuurgebied waar je graag komt, de aankoop van nieuwe natuur\". Het Drentse Landschap beheert de gelden volgens de gemaakte afspraken.",
+  "benaderbaarheid": "gesloten",
+  "benaderwijze_notitie": "Geen aanvraagroute voor derden. \"Een eigen Fonds op Naam is mogelijk vanaf EUR 50.000\"; het gaat om een schenking waarover persoonlijk overleg plaatsvindt, niet om een regeling waarop ingediend kan worden.",
+  "aanvrager_type": "nvt",
+  "geo_niveau": "provincie",
+  "geo_waarden": [
+    "Drenthe"
+  ],
+  "bedrag_min": 50000,
+  "bedrag_max": null,
+  "bedrag_indicatie": "Vanaf EUR 50.000 inleg, in termijnen te voldoen (bijvoorbeeld vijf jaarlijkse schenkingen). Dit is de inleg, geen uitkering.",
+  "cofinanciering_vereist": false,
+  "uitsluitingen": [
+    "doelen buiten het werkgebied en de doelstelling van Het Drentse Landschap"
+  ],
+  "kostensoort": [
+    "investering",
+    "regulier_onderhoud"
+  ],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Het Drentse Landschap beheert natuurterreinen en historische buitenplaatsen/havezaten in Drenthe. De schenker bepaalt zelf het doel, \"dat kan van alles zijn; voor een natuurgebied waar je graag komt, de aankoop van nieuwe natuur\". Een landgoed in beheer bij of in samenwerking met Het Drentse Landschap kan daarmee begunstigde worden; ook kan een landgoedeigenaar zelf een fonds vestigen om het eigen gebied duurzaam geborgd te houden. Er bestaat geen route waarlangs een derde hier een aanvraag indient.",
+    "partnertype": "Stichting Het Drentse Landschap; het landgoed moet in eigendom, beheer of samenwerking bij Het Drentse Landschap zitten."
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "Een aparte pagina of regeling 'Natuurfonds Drenthe' onder deze URL: de pagina beschrijft alleen het Fonds op Naam. Het in de werklijst genoemde 'Natuurfonds Drenthe' is op deze bron niet als zelfstandige regeling terug te vinden.",
+    "Overzicht van bestaande Fondsen op Naam en hun doelen.",
+    "Enige aanvraagprocedure voor derden."
+  ]
+}

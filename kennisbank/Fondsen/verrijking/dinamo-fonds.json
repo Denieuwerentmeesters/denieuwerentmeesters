@@ -1,0 +1,38 @@
+{
+  "naam": "Dinamo Fonds",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://dinamofonds.nl/wat-we-doen",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "'Het Dinamo Fonds zet zich daadkrachtig in voor herstel van de biodiversiteit van onze leefomgeving' - behoud van dieren, planten, monumenten en cultuurlandschappen.",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "De site nodigt uit tot aanvragen voor initiatieven met een 'natuurinclusieve benadering' die bijdragen aan herstel van biodiversiteit, maar publiceert de voorwaarden niet op deze pagina; verwijst naar info@dinamofonds.nl.",
+  "aanvrager_type": "onbekend",
+  "geo_niveau": "landelijk",
+  "geo_waarden": [
+    "Nederland"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": null,
+  "cofinanciering_vereist": false,
+  "uitsluitingen": [],
+  "kostensoort": [
+    "investering",
+    "restauratie",
+    "onderzoek"
+  ],
+  "landgoed_relevantie": {
+    "route": "zelf",
+    "onderbouwing": "Dit fonds combineert precies de twee kanten van een landgoed: het richt zich op 'behoud van dieren, planten, monumenten en cultuurlandschappen' en op 'natuurinclusieve benaderingen die het herstel van biodiversiteit versterken'. Monumentenbehoud en cultuurlandschap staan expliciet in de doelstelling.",
+    "partnertype": null
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "bedragen, uitsluitingen, eisen aan de rechtsvorm van de aanvrager en de procedure - niet gepubliceerd op /wat-we-doen"
+  ]
+}

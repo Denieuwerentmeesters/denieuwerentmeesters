@@ -1,0 +1,55 @@
+{
+  "naam": "Van Tellingen-Pul Stichting",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://www.vantellingen-pul.nl/",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://vantellingen-pul.nl/criteria/",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://vantellingen-pul.nl/bijdrage-aanvragen/",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "\"De Van Tellingen-Pul Stichting is een vermogensfonds dat speciaal is bedoeld voor de sponsoring van initiatieven die te maken hebben met cultuur, maatschappelijk welzijn en onderwijs in de gemeente Zeist. Onze financiele ondersteuning geeft glans aan het werk van vrijwilligers en maakt sociale ontmoetingen mogelijk.\"",
+  "benaderbaarheid": "open",
+  "benaderwijze_notitie": "\"Wanneer u in aanmerking wilt komen voor een financiele bijdrage van de Van Tellingen-Pul Stichting, dan verzoeken wij u gebruik te maken van het aanvraagformulier.\" Sluitingstermijnen: \"1 april of 1 oktober.\"",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "gemeente",
+  "geo_waarden": [
+    "Zeist"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": null,
+  "cofinanciering_vereist": false,
+  "uitsluitingen": [
+    "commerciele activiteiten",
+    "viering van een jubileum",
+    "concerten en eenmalige events en uitvoeringen",
+    "structurele steun (\"na een eventuele bijdrage moet men zonder de hulp van de Van Tellingen-Pul Stichting zelf verder kunnen\")",
+    "kosten die al zijn gemaakt (\"U kunt alleen financiering vooraf aanvragen\")"
+  ],
+  "kostensoort": [
+    "investering"
+  ],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Het fonds financiert geen eigenaren maar vrijwilligersorganisaties: \"Bij de initiatieven die wij sponsoren spelen vrijwilligers de hoofdrol. De activiteit moet van belang zijn voor (delen van) de Zeister gemeenschap.\" Voor een landgoed in de gemeente Zeist (o.a. de Stichtse Lustwarande) is een route denkbaar via een vrijwilligers- of vriendenstichting die op het landgoed een publieks-, natuur- of educatieactiviteit organiseert; het landgoed komt dan als locatie/kostenpost in haar begroting. Aanvragen voor commerciele exploitatie zijn uitgesloten.",
+    "partnertype": "vrijwilligersorganisatie, vriendenstichting, vereniging of maatschappelijke organisatie in de gemeente Zeist"
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "Bedragen: nergens een minimum, maximum of indicatie genoemd op de site",
+    "Beleidsplan/jaarverslag/ANBI-publicatie: niet aangetroffen op de site"
+  ]
+}

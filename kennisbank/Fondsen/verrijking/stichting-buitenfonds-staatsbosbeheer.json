@@ -1,0 +1,38 @@
+{
+  "naam": "Stichting Buitenfonds (Staatsbosbeheer)",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://www.buitenfonds.nl/",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "\"GEEF OM NATUUR DICHTBIJ\" - donaties werven voor natuur-, erfgoed- en recreatieprojecten in Nederlandse natuurgebieden.",
+  "benaderbaarheid": "gesloten",
+  "benaderwijze_notitie": "De site bevat uitsluitend de oproep \"Doe mee en doneer aan een project bij jou in de buurt\" en geen enkele aanvraagprocedure of voorwaarden; projecten worden intern aangedragen.",
+  "aanvrager_type": "nvt",
+  "geo_niveau": "landelijk",
+  "geo_waarden": [
+    "Nederland"
+  ],
+  "bedrag_min": 9000,
+  "bedrag_max": 50000,
+  "bedrag_indicatie": "Doelbedragen per crowdfundingproject circa EUR 9.000 tot EUR 50.000.",
+  "cofinanciering_vereist": null,
+  "uitsluitingen": [],
+  "kostensoort": [
+    "investering",
+    "restauratie"
+  ],
+  "landgoed_relevantie": {
+    "route": "onbekend",
+    "onderbouwing": "Het platform financiert wel landgoed-achtige zaken (padonderhoud, torenrestauratie, restauratie van historische gebouwen), maar er is geen gepubliceerde route waarlangs een particulier landgoed een project kan aandragen; de projecten lijken uit het Staatsbosbeheer-netwerk te komen.",
+    "partnertype": "Staatsbosbeheer-eenheid of terreinbeherende organisatie"
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "aanvraagprocedure/voorwaarden - /over-ons gaf 404, geen aanvraagpagina gevonden op buitenfonds.nl",
+    "beleidsplan/ANBI-publicatie"
+  ]
+}

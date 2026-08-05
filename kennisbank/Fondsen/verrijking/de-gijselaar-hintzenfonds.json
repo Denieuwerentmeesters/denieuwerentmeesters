@@ -1,0 +1,43 @@
+{
+  "naam": "De Gijselaar-Hintzenfonds",
+  "bronnen": [
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://www.degijselaarhintzenfonds.nl/procedure/",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "Niet letterlijk aangetroffen op de procedurepagina; de pagina verwijst naar \"de doelstellingen van Stichting 'De Gijselaar-Hintzenfonds'\" zonder die uit te schrijven.",
+  "benaderbaarheid": "open",
+  "benaderwijze_notitie": "Openbare procedure met drie vergaderrondes per jaar en gepubliceerde deadlines; \"Besluit binnen vier weken na vergadering\" en \"Geen beroepsmogelijkheid\".",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "landelijk",
+  "geo_waarden": [
+    "Nederland"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": "\"Gezien de omvang van het fonds zijn er beperkingen aan de hoogte van de bijdrage.\"",
+  "cofinanciering_vereist": null,
+  "uitsluitingen": [
+    "per post ingediende aanvragen",
+    "projectvoorstellen langer dan 2000 woorden of vier pagina's",
+    "onvolledige aanvragen",
+    "losse Word- of Excel-bestanden"
+  ],
+  "kostensoort": [
+    "onderzoek"
+  ],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Het fonds richt zich op publicaties en kunsteducatie rond beeldende kunst. Een publicatie over de kunstcollectie of de bouw- en tuingeschiedenis van een landgoed zou passen, maar de doelstellingstekst zelf is niet aangetroffen, dus de route blijft onzeker. Bij twijfel via_partner, niet niet_relevant.",
+    "partnertype": "uitgever, museum of kunsthistorische stichting"
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "de doelstellingstekst zelf - staat niet op /procedure/; de pagina 'Beleid' is niet binnen het budget geopend",
+    "bedragen",
+    "geografisch bereik"
+  ]
+}

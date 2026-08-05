@@ -1,0 +1,43 @@
+{
+  "naam": "Nederlandse Kastelenstichting - NKS Publicatiefonds",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://www.kastelen.nl/",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://www.kastelen.nl/k/n317/news/view/9702/1590/publicatiefonds-nederlandse-kastelenstichting.html",
+      "jaar": 2022,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "Het financieren van initiatieven die bijdragen aan het behoud en de bevordering van kennis over kastelen, buitenplaatsen, historische interieurs en de omringende historische tuinen - zoals tentoonstellingen, educatieve publicaties en (inter)nationale symposia.",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "'Aanvragers dienen een verzoek per e-mail te sturen naar info@kastelen.nl, waarna het aanvraagformulier wordt toegezonden'; beoordeling twee keer per jaar, op 1 september en 1 april.",
+  "aanvrager_type": "beide",
+  "geo_niveau": "landelijk",
+  "geo_waarden": [
+    "Nederland"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": "niet gepubliceerd; het fonds is gevoed uit een erfstelling met een looptijd van twintig jaar vanaf 2022",
+  "cofinanciering_vereist": false,
+  "uitsluitingen": [],
+  "kostensoort": [
+    "onderzoek"
+  ],
+  "landgoed_relevantie": {
+    "route": "zelf",
+    "onderbouwing": "Het fonds richt zich letterlijk op 'kastelen, buitenplaatsen, historische interieurs en de omringende historische tuinen'. Het financiert echter kennis en publicaties, niet steen: 'tentoonstellingen, educatieve publicaties en nationale of internationale symposia'. Voor een landgoed is dit de route voor een monografie, bouwhistorisch of tuinhistorisch onderzoek en de publicatie daarvan - niet voor restauratie.",
+    "partnertype": null
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "bedragen, uitsluitingen en inhoudelijke beoordelingscriteria - het aanvraagformulier is alleen op verzoek beschikbaar",
+    "of restauratiekosten ooit onder 'instandhouding' vallen; de projectvormen wijzen uitsluitend op kennis en publicaties"
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "naam": "Trees for All (incl. GroenDoen Fonds)",
+  "bronnen": [
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://treesforall.nl/onze-uitgangspunten/",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://treesforall.nl/groendoen-fonds/",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "Duurzame boom- en bosprojecten in Nederland financieren - nieuwe bossen, bosherstel, voedselbossen, landschapselementen en stedelijk groen - door bij te dragen aan 'de aankoop van bomen en struiken, de aanplant en het duurzame beheer van de projectlocatie'.",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "'We are not an investment fund, but a fundraising organization' - ook bij het voldoen aan de criteria is financiering niet gegarandeerd; aanvraag via formulier naar projectenNL@treesforall.nl.",
+  "aanvrager_type": "beide",
+  "geo_niveau": "landelijk",
+  "geo_waarden": [
+    "Nederland"
+  ],
+  "bedrag_min": 500,
+  "bedrag_max": 5000,
+  "bedrag_indicatie": "GroenDoen Fonds: EUR 500-5.000 per project. Voor de reguliere NL-projecten (nieuw bos, bosherstel, voedselbos, landschapselementen) worden geen bedragen gepubliceerd; de bijdrage is in natura/gericht op plantmateriaal, aanplant en duurzaam beheer.",
+  "cofinanciering_vereist": false,
+  "uitsluitingen": [
+    "Trees for All is 'geen boseigenaar, bosbeheerder, aannemer, kwekerij of adviesbureau' - alleen plantmateriaal, aanplant en beheer worden bekostigd",
+    "GroenDoen Fonds: prive, niet openbaar toegankelijke locaties",
+    "GroenDoen Fonds: niet-inheemse soorten",
+    "GroenDoen Fonds: initiatieven met minder dan tien betrokkenen"
+  ],
+  "kostensoort": [
+    "investering",
+    "regulier_onderhoud"
+  ],
+  "landgoed_relevantie": {
+    "route": "zelf",
+    "onderbouwing": "Een landgoed is een typische projectlocatie voor 'nieuwe bossen, bosherstel, voedselbossen, landschapselementen'; de bijdrage betreft 'de aankoop van bomen en struiken, de aanplant en het duurzame beheer van de projectlocatie'. Voor het GroenDoen Fonds geldt de extra eis dat de plek openbaar toegankelijk is en minimaal tien mensen meedoen - een opengesteld landgoeddeel met een buurtinitiatief voldoet daaraan.",
+    "partnertype": null
+  },
+  "onderliggende_fondsen": [
+    {
+      "naam": "GroenDoen Fonds",
+      "relevant": true,
+      "reden": "kleinschalige aanplant van inheemse bomen en struiken, EUR 500-5.000, mits openbaar toegankelijk en met minimaal tien betrokkenen - past op een opengesteld landgoeddeel"
+    }
+  ],
+  "niet_gevonden": [
+    "bedragen en maximale projectomvang voor de reguliere Nederlandse projecten",
+    "of langjarige beheervergoedingen worden vastgelegd in een overeenkomst en voor hoeveel jaar"
+  ]
+}

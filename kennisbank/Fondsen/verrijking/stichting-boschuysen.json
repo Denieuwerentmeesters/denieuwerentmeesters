@@ -1,0 +1,53 @@
+{
+  "naam": "Stichting Boschuysen",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://boschuysen.nl/doelstelling/",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://boschuysen.nl/voorwaarden/",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "Het bevorderen van de ontwikkeling, opvang, verzorging, opvoeding en scholing van jeugdige personen in Nederland, niet ouder dan dertig jaar, die maatschappelijk gezien hulp van derden nodig hebben.",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "Open aanvraagformulier, maar alleen voor \"instellingen, verenigingen, of stichtingen zonder winstoogmerk met tenminste 3 bestuurders\" en met de eis dat \"De verleende steun moet voor tenminste 75% aan jongeren tot 30 jaar ten goede komen\".",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "landelijk",
+  "geo_waarden": [
+    "Nederland"
+  ],
+  "bedrag_min": 1000,
+  "bedrag_max": 10000,
+  "bedrag_indicatie": "Gebruikelijke donatie EUR 1.000 tot EUR 10.000.",
+  "cofinanciering_vereist": null,
+  "uitsluitingen": [
+    "internationale projecten",
+    "initiatieven gericht op een individu in plaats van een groep",
+    "exploitatie- en organisatiekosten",
+    "organisaties met voldoende eigen reserves",
+    "peuterspeelzalen en kinderopvang",
+    "sportclubs, scouting en studentenorganisaties",
+    "jongerencentra en culturele podia",
+    "algemene preventie- en voorlichtingscampagnes",
+    "reeds gestarte projecten"
+  ],
+  "kostensoort": [
+    "investering"
+  ],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Het fonds financiert projecten voor jongeren tot 30 jaar in een achterstandssituatie; \"De verleende steun moet voor tenminste 75% aan jongeren tot 30 jaar ten goede komen\". Een jeugdzorg- of jongerenorganisatie die een natuur-, werk- of dagbestedingsprogramma op een landgoed opzet kan aanvragen; het landgoed levert de locatie. Het landgoed zelf kan niet aanvragen (geen non-profit met 3 bestuurders) en exploitatiekosten zijn uitgesloten.",
+    "partnertype": "jeugdzorg-, jongerenwerk- of onderwijsstichting zonder winstoogmerk met minimaal 3 bestuurders"
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "cofinancieringseis",
+    "expliciet beleid over locatie-/huurkosten"
+  ]
+}

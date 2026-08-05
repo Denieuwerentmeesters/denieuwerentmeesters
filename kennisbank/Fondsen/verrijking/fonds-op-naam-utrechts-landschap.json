@@ -1,0 +1,42 @@
+{
+  "naam": "Fonds op Naam - Utrechts Landschap",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://www.utrechtslandschap.nl/help-mee/grote-giften/fonds-op-naam",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "Geefinstrument waarmee een schenker een eigen fonds binnen Utrechts Landschap vestigt en zelf een natuur- of erfgoeddoel binnen de provincie Utrecht aanwijst; Utrechts Landschap onttrekt daar jaarlijks een bedrag aan, bijvoorbeeld voor \"het aanplanten van zeldzame flora op historische landgoederen\".",
+  "benaderbaarheid": "gesloten",
+  "benaderwijze_notitie": "Er is geen aanvraagroute. De pagina beschrijft uitsluitend het vestigen van een fonds: \"Een eigen Fonds op Naam is mogelijk vanaf EUR 50.000\" en verwijst voor een gesprek naar de relatiebeheerders. Het is een grote-giftenmogelijkheid, geen subsidieregeling waarop derden kunnen indienen.",
+  "aanvrager_type": "nvt",
+  "geo_niveau": "provincie",
+  "geo_waarden": [
+    "Utrecht"
+  ],
+  "bedrag_min": 50000,
+  "bedrag_max": null,
+  "bedrag_indicatie": "EUR 50.000 minimum om een Fonds op Naam te vestigen (dit is de inleg van de schenker, geen uit te keren bijdrage).",
+  "cofinanciering_vereist": false,
+  "uitsluitingen": [
+    "doelen buiten natuur of erfgoed in de provincie Utrecht",
+    "doelen die niet via Utrechts Landschap zelf worden uitgevoerd"
+  ],
+  "kostensoort": [
+    "investering",
+    "regulier_onderhoud"
+  ],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Niet aanvraagbaar, maar wel relevant langs twee routes. (1) Utrechts Landschap beheert zelf historische landgoederen; de pagina noemt als voorbeeld van besteding \"het aanplanten van zeldzame flora op historische landgoederen\". Een landgoed dat eigendom is van of samenwerkt met Utrechts Landschap kan langs deze weg middelen krijgen. (2) Een landgoedeigenaar met vermogen kan zelf een Fonds op Naam vestigen om het eigen landgoed-doel na overdracht geborgd te houden. Beide lopen via Utrechts Landschap als partij, nooit als directe aanvraag.",
+    "partnertype": "Stichting Het Utrechts Landschap zelf; het landgoed moet in eigendom of beheer van, dan wel in een samenwerkingsproject met, Utrechts Landschap zitten."
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "Een overzicht van bestaande Fondsen op Naam bij Utrechts Landschap en hun doelen: niet op de pagina gevonden.",
+    "Enige aanvraag- of toekenningsprocedure voor derden: bestaat blijkens de pagina niet.",
+    "Jaarlijkse onttrekkingspercentage: niet gespecificeerd."
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "naam": "Maatschappij van Welstand",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://mvw.nl/",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "Vanuit het christelijk geloof actief bijdragen aan de levensbloei van mens en aarde in kerk en maatschappij.",
+  "benaderbaarheid": "open",
+  "benaderwijze_notitie": "De site heeft een openbaar aanvraagportaal (https://mvw.nl/mijn-aanvragen/) en een pagina met aanvraagvereisten (https://mvw.nl/donatie-aanvragen/) voor vier donatiecategorieen.",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "landelijk",
+  "geo_waarden": [
+    "Nederland"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": null,
+  "cofinanciering_vereist": null,
+  "uitsluitingen": [],
+  "kostensoort": [
+    "investering"
+  ],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Het fonds steunt \"kerkelijke, diaconale, maatschappelijke en onderwijsprojecten waarbij duurzaamheid voor ons belangrijk is\". Een diaconale of maatschappelijke organisatie die een duurzaamheids- of ontmoetingsproject op een landgoed uitvoert past daarbinnen; het landgoed zelf is geen kerkelijke of maatschappelijke instelling.",
+    "partnertype": "kerkelijke, diaconale, maatschappelijke of onderwijsorganisatie"
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "bedragen, uitsluitingen en cofinancieringseis (niet op homepage; /donatie-aanvragen niet binnen budget geopend)",
+    "beleid over eigen landerijen/pachtboerderijen"
+  ]
+}

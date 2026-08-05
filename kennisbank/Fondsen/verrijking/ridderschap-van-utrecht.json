@@ -1,0 +1,45 @@
+{
+  "naam": "Ridderschap van Utrecht (Utrechtsche Ridderschapstichting)",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://www.ridderschap-utrecht.nl/ridderschap/",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "beleidsplan",
+      "url": "https://www.ridderschap-utrecht.nl/financieel/",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "\"Conform de statuten heeft de stichting ten doel het verlenen van geldelijke bijstand of geldelijke bijdragen om redenen van maatschappelijke, culturele of economische aard aan: 1. instellingen en projecten die bij voorkeur zijn gericht op en ter instandhouding van cultuurhistorische waarden met betrekking tot de provincie Utrecht en 2. leden van de Ridderschap van Utrecht, hun (gewezen) echtgenoten en kinderen jonger dan 30 jaar.\" Beleidsplan: \"De stichting ondersteunt historische, culturele en natuurhistorische initiatieven en versterkt de waarden die hier mee in verband staan.\"",
+  "benaderbaarheid": "onbekend",
+  "benaderwijze_notitie": "De site heeft geen aanvraagpagina en geen aanvraagprocedure; wel: \"Bij aanvragen tot ondersteuning maakt de stichting steeds de afweging of de initiatiefnemers zelf voldoende in staat zijn ook andere middelen te genereren.\" Er wordt dus wel aangevraagd, maar de route staat niet gepubliceerd (alleen een algemene contactpagina en een besloten ledenextranet). Ook: \"De Stichting is geen Algemeen Nut Beogende Instelling (ANBI)\".",
+  "aanvrager_type": "beide",
+  "geo_niveau": "provincie",
+  "geo_waarden": [
+    "Utrecht"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": "\"De ondersteuning door de Ridderschap bestaat uit bescheiden bijdragen.\" (concrete giftenoverzichten per jaar staan als PDF op /financieel/)",
+  "cofinanciering_vereist": false,
+  "uitsluitingen": [],
+  "kostensoort": [
+    "investering",
+    "restauratie"
+  ],
+  "landgoed_relevantie": {
+    "route": "zelf",
+    "onderbouwing": "Zeer sterk passend. Het fonds beeldt op zijn eigen pagina een landgoedproject af: \"Foto: ingebruikname gerestaureerd hek Landgoed Gunterstein, 2006\", en stelt: \"Cultuur- en natuurhistorische projecten in de provincie worden mede met geldelijke steun van de Ridderschap gerealiseerd.\" De combinatie cultuurhistorie + natuurhistorie + provincie Utrecht is precies het profiel van een Utrechtse buitenplaats of ridderhofstad. Wel: bijdragen zijn bescheiden en de aanvraagroute is niet gepubliceerd - waarschijnlijk via persoonlijk contact.",
+    "partnertype": null
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "Aanvraagprocedure en -termijnen: niet op de site",
+    "Bedragen per gift: alleen in jaarlijkse giften-PDF's, niet als beleidsregel",
+    "Beleidsplan als los document: alleen de samenvatting op /financieel/"
+  ]
+}

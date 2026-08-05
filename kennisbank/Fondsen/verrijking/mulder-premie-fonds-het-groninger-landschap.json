@@ -1,0 +1,84 @@
+{
+  "naam": "Mulder Premie Fonds (Het Groninger Landschap)",
+  "bronnen": [
+    {
+      "soort": "jaarverslag",
+      "url": "https://www.groningerlandschap.nl/custom/uploads/2025/06/jaarverslag-2024-web.pdf",
+      "jaar": 2024,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "“Het Mulder Premie Fonds is bestemd voor het herstel en het behoud van cultuurhistorische waarden en landschapselementen in het landelijk Gorecht-gebied.”",
+  "benaderbaarheid": "onbekend",
+  "benaderwijze_notitie": "Geen aanvraagprocedure gepubliceerd. Het fonds bestaat alleen als bestemmingsfonds binnen de jaarrekening van Het Groninger Landschap; de enige uitspraak over de gebondenheid is: “De beperkte bestedingsmogelijkheid van de fondsen is aangegeven door derden.” De naam (“Premie Fonds”) suggereert een premie-uitkering aan derden, maar dat is nergens onderbouwd. Navragen bij Het Groninger Landschap.",
+  "aanvrager_type": "onbekend",
+  "geo_niveau": "regio",
+  "geo_waarden": [
+    "landelijk Gorecht-gebied (Groningen: o.a. Haren, Hoogezand, Zuidlaren e.o.)"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": "Geen bedrag per toekenning gepubliceerd. Wel de fondsomvang: stand 31-12-2023 € 241.000, toegevoegd € 245.000, onttrokken € 52.000, stand 31-12-2024 € 434.000. De onttrekking van 2024 betrof blijkens de toelichting geen uitkeringen aan derden: “In 2024 is 52 besteed aan beheerkosten.”",
+  "cofinanciering_vereist": null,
+  "uitsluitingen": [
+    "Projecten buiten het landelijk Gorecht-gebied (volgt uit de bestemming); verder geen uitsluitingen gepubliceerd."
+  ],
+  "kostensoort": [
+    "restauratie",
+    "investering",
+    "regulier_onderhoud"
+  ],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "De bestemming raakt landgoedwerk recht in de kern: “het herstel en het behoud van cultuurhistorische waarden en landschapselementen in het landelijk Gorecht-gebied” — houtwallen, lanen, essen, borgterreinen, singels. Het is echter geen extern loket maar een bestemmingsfonds binnen Het Groninger Landschap, en de enige geboekte besteding in 2024 was intern (“beheerkosten”). Voor een landgoed in het Gorecht loopt de route daarom via Het Groninger Landschap zelf: als samenwerkingspartner in een gebiedsproject, of door de organisatie te wijzen op een herstelopgave op eigen terrein die binnen de fondsbestemming valt. Ik markeer dit uitdrukkelijk niet als niet_relevant: het bedrag (€ 434.000) en de bestemming zijn precies passend, alleen de toegangsweg is onbekend.",
+    "partnertype": "Het Groninger Landschap zelf, of een gebiedspartij (gemeente, Landschapsbeheer Groningen, agrarische natuurvereniging) die met Het Groninger Landschap een herstelproject in het Gorecht opzet."
+  },
+  "onderliggende_fondsen": [
+    {
+      "naam": "C.P. Sikkemafonds",
+      "relevant": false,
+      "reden": "“bestemd voor niet gesubsidieerde aankopen van kwelders” — kwelders, geen landgoedcontext."
+    },
+    {
+      "naam": "Fonds Wintervoeding",
+      "relevant": false,
+      "reden": "“bestemd voor het bijvoeren van vogels in strenge winters”."
+    },
+    {
+      "naam": "Waterconvenantsfonds",
+      "relevant": true,
+      "reden": "“bestemd voor verwerving, inrichting en beheer van de bezittingen in het Hunzedal”, € 454.000 per jaar structureel — relevant voor gronden in het Hunzedal, zij het voor bezittingen van Het Groninger Landschap zelf."
+    },
+    {
+      "naam": "Het Blauwe Kleifonds",
+      "relevant": true,
+      "reden": "“bestemd voor de aankoop van natuurterreinen en voor projecten voor natuurherstel” — brede bestemming, stand € 140.000."
+    },
+    {
+      "naam": "Thies Dijkhuis Fonds",
+      "relevant": true,
+      "reden": "“bestemd voor het herstel van de boerderij van de voormalig eigenaar (…). Ook kunnen de inkomsten worden aangewend worden voor aankopen en kleinschalige inrichting in de Hunzezone.” Erfgoedherstel + inrichting; stand € 225.000."
+    },
+    {
+      "naam": "Groninger Natuurfonds",
+      "relevant": true,
+      "reden": "“bedoeld voor het aankopen en omvorming van grond in de provincie Groningen om er natuur van te maken (…) buiten het Natuur Netwerk Nederland waardoor de aankoop niet subsidiabel is”. Let op: “De verworven grond komt in eigendom en beheer van Het Groninger Landschap” — dus geen route voor particulier grondbezit."
+    },
+    {
+      "naam": "Paradijsfonds",
+      "relevant": true,
+      "reden": "Genoemd in de fondsentabel (stand € 73.000) maar zonder toelichting in de jaarrekening; bestemming onbekend."
+    },
+    {
+      "naam": "Jeugdeducatiefonds",
+      "relevant": false,
+      "reden": "Educatiefonds, stand € 43.000; geen toelichting op bestemming."
+    }
+  ],
+  "niet_gevonden": [
+    "Geen eigen webpagina over het Mulder Premie Fonds op groningerlandschap.nl; het fonds komt alleen in de jaarrekening voor.",
+    "Geen aanvraagprocedure, aanvraagformulier, criteria, deadlines of contactpersoon gevonden — niet op de site en niet via websearch op “Mulder Premie Fonds”.",
+    "Niet vastgesteld of derden (particuliere eigenaren) überhaupt uit dit fonds kunnen putten, of dat het uitsluitend intern wordt besteed; de naam “Premie Fonds” suggereert het eerste maar niets bevestigt dat.",
+    "Geen toelichting op de bestemming van het Paradijsfonds en het Jeugdeducatiefonds in de jaarrekening."
+  ]
+}

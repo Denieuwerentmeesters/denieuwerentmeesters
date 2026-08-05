@@ -1,0 +1,44 @@
+{
+  "naam": "Stichting Geert Ruben Fonds",
+  "bronnen": [
+    {
+      "soort": "anbi_publicatie",
+      "url": "https://anbi.nl/publicatieverplichting/stichting-geert-ruben-fonds/",
+      "jaar": 2024,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "\"Herstel en behoud van cultuurhistorische waarden en landschappelijke elementen, inbegrepen historische bouwwerken (zoals borgen en monumenten)\" in de zeven zanddorpen van de voormalige gemeente Slochteren en in Zuidlaren.",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "\"De stichting verdeelt jaarlijks middelen onder instellingen in het werkgebied. De aanvraagmogelijkheid wordt in januari publiekelijk bekendgemaakt via streekbladen; daarna beoordeelt het bestuur de aanvragen en vinden de uitkeringen rond 21 juni plaats.\" De aankondiging loopt dus via lokale streekbladen, niet via een permanent open loket - je moet weten wanneer je moet kijken.",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "plaats",
+  "geo_waarden": [
+    "de zeven zanddorpen ('Zeven Wolden') van de voormalige gemeente Slochteren",
+    "Zuidlaren"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": null,
+  "cofinanciering_vereist": false,
+  "uitsluitingen": [
+    "projecten buiten de zeven zanddorpen van de voormalige gemeente Slochteren en Zuidlaren",
+    "aanvragen buiten de jaarlijkse ronde (bekendmaking januari, uitkering rond 21 juni)"
+  ],
+  "kostensoort": [
+    "restauratie",
+    "investering"
+  ],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Een van de scherpst passende doelstellingen in deze werklijst: \"Herstel en behoud van cultuurhistorische waarden en landschappelijke elementen, inbegrepen historische bouwwerken (zoals borgen en monumenten)\". Het noemt borgen letterlijk - de Groningse landgoedvorm - en koppelt gebouwd erfgoed aan landschappelijke elementen, wat exact de ensemble-benadering van een landgoed is (lanen, singels, grachten, borgterrein). Zeer klein werkgebied. Route via_partner omdat de stichting \"middelen onder instellingen in het werkgebied\" verdeelt.",
+    "partnertype": "Instelling in het werkgebied: dorpsbelangenvereniging, historische vereniging, borgstichting of landschapsorganisatie in de Slochterse zanddorpen of Zuidlaren."
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "Bedragen en jaarlijks te verdelen budget: niet in de ANBI-publicatietekst; mogelijk in het downloadbare beleidsplan 2024, dat niet is uitgelezen.",
+    "Een eigen website: niet gevonden; anbi.nl is de enige vindplaats.",
+    "Contactgegevens voor aanvragen.",
+    "De precieze aanvraagdeadline binnen het jaar."
+  ]
+}

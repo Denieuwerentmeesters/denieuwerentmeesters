@@ -1,0 +1,67 @@
+{
+  "naam": "Fonds Sluyterman van Loo",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://www.fondssluytermanvanloo.nl/",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://www.fondssluytermanvanloo.nl/aanvragen/richtlijnen/",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "beleidsplan",
+      "url": "https://www.fondssluytermanvanloo.nl/over-ons/beleid/",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://www.fondssluytermanvanloo.nl/aanvragen/veelgestelde-vragen/",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "Ons doel is het stimuleren van levensplezier bij ouderen. Wij geloven in de kracht van verbinding. Verbinding is de basis voor een zinvol en vitaal leven. Meedoen aan kunst, cultuur en andere sociale activiteiten geeft ouderen betekenis, plezier en energie. Dat doen we door mee te betalen aan verbindende (kunst)activiteiten in groepen, zoals samen kunst maken, koken of bewegen.",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "\"Iedereen met een idee of initiatief dat hier op aansluit, kan een aanvraag bij ons doen. Wij behandelen deze aanvragen op volgorde van binnenkomst.\" Drempel: \"Nee, alleen rechtspersonen (stichtingen of verenigingen) kunnen een aanvraag doen\" en \"Kan ik ook zonder de quickscan een aanvraag indienen? Nee, je doet bij elke nieuwe aanvraag eerst opnieuw de quickscan.\"",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "landelijk",
+  "geo_waarden": [
+    "Nederland",
+    "Caribisch deel van het Koninkrijk"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": "Geen maximum gepubliceerd: \"Wij adviseren je om aan te vragen wat je nodig hebt.\" Wel bandbreedtes in de behandeltermijnen: \"Tot en met EUR 3.000: binnen 6 weken / Tussen EUR 3.001 en EUR 20.000: binnen 8 tot 10 weken / Meer dan EUR 25.000: binnen vier maanden.\" Projectplan verplicht boven EUR 3.000.",
+  "cofinanciering_vereist": true,
+  "uitsluitingen": [
+    "activiteiten die religieuze of politieke beinvloeding als (neven)doel hebben",
+    "publicaties, symposia/congressen, jubilea, openingsactiviteiten, mediaproducties of wetenschappelijk onderzoek als belangrijkste resultaat",
+    "investeringen (bijv. in onroerend goed of vervoersmiddelen)",
+    "fondsenwerving of fondsvorming",
+    "ledenwerving en deskundigheidsbevordering van professionals",
+    "particulieren en individuele steun",
+    "initiatieven die al gestart zijn",
+    "initiatieven buiten Nederland en het Caribisch deel van het Koninkrijk"
+  ],
+  "kostensoort": [
+    "exploitatie",
+    "personeel"
+  ],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Het fonds financiert nooit vastgoed of terrein: \"investeringen (bijv. in onroerend goed of vervoersmiddelen)\" staan expliciet op de uitsluitingslijst en \"alleen stichtingen of verenigingen kunnen aanvragen\". Wel financiert het \"verbindende (kunst)activiteiten in groepen, zoals samen kunst maken, koken of bewegen\" voor ouderen vanaf 70 jaar. Een landgoed kan locatie en programmapartner zijn van een zorg-, welzijns- of culturele stichting die aanvraagt; het fonds noemt zelf: \"Samenwerking tussen zorg-/welzijnsorganisaties en culturele organisaties is meestal een must\". De landgoedkosten (locatiehuur, begeleiding) komen dan in de begroting van die stichting.",
+    "partnertype": "stichting of vereniging zonder winstoogmerk in zorg, welzijn of kunst/cultuur die een meerdaags programma voor 70-plussers op het landgoed organiseert"
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "Maximaal toekenningsbedrag - niet gepubliceerd; gezocht in richtlijnen, FAQ en beleidspagina",
+    "Vaste deadlines voor reguliere aanvragen - aanvragen worden doorlopend behandeld op volgorde van binnenkomst; alleen de open calls hebben deadlines",
+    "Toekomstplan 2022-2026 (PDF) en bestuursverslag 2025 niet apart uitgelezen; de beleidspagina verwijst ernaar"
+  ]
+}

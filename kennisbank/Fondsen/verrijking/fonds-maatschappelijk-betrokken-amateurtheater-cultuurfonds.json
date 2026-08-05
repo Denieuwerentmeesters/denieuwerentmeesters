@@ -1,0 +1,46 @@
+{
+  "doelstelling": "Projecten die bijdragen aan vernieuwing van amateurtheater in Nederland, waarbij actuele maatschappelijke discussies of problemen worden vertaald in een voorstelling voor een breed publiek.",
+  "benaderbaarheid": "onbekend",
+  "benaderwijze_notitie": "\"De verwachting is dat deze schenking in 2022 in zijn geheel kan worden besteed\" - de pagina laat open of er nog aangevraagd kan worden.",
+  "kostensoort": [
+    "investering"
+  ],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Amateurtheatergezelschappen spelen regelmatig openluchtvoorstellingen op landgoederen en buitenplaatsen. Het criterium is de maatschappelijke inhoud van de voorstelling, niet de locatie; het landgoed kan hooguit als speelplek in de begroting van het gezelschap staan.",
+    "partnertype": "amateurtheatergezelschap of openluchttheaterstichting"
+  },
+  "niet_gevonden": [
+    "of het fonds na 2022 nog aanvragen aanneemt",
+    "bedragen en deadlines"
+  ],
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://www.cultuurfonds.nl/fondsen/fonds-maatschappelijk-betrokken-amateurtheater",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://www.cultuurfonds.nl/aanvragen",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "naam": "Fonds Maatschappelijk betrokken amateurtheater (Cultuurfonds)",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "landelijk",
+  "geo_waarden": [
+    "Nederland"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": "Geen eigen bedragen gepubliceerd; algemene Cultuurfonds-maxima lopen van EUR 1.500 tot EUR 50.000 per route, met 25-50% dekking.",
+  "cofinanciering_vereist": true,
+  "uitsluitingen": [
+    "projecten die binnen 4-6 weken na aanvraag starten",
+    "publicaties met een oplage onder 1.000 (landelijk) of 750 (regionaal) exemplaren"
+  ],
+  "onderliggende_fondsen": []
+}

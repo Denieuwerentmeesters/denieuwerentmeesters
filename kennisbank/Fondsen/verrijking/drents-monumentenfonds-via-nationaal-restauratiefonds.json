@@ -1,0 +1,44 @@
+{
+  "naam": "Drents Monumentenfonds (via Nationaal Restauratiefonds)",
+  "bronnen": [
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://restauratiefonds.nl/monumenteigenaren/financieringen/drents-monumentenfonds",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "Laagrentende lening voor eigenaren van monumenten in Drenthe: \"voor gebouwd erfgoed kunnen restauratiekosten, verduurzamingskosten (inclusief energieopwekking) en herbestemmingskosten gefinancierd worden.\"",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "Eigenaren van rijks-, provinciale, gemeentelijke monumenten en beeldbepalende panden in Drenthe kunnen aanvragen, mits \"nog niet met de werkzaamheden begonnen\" en in het bezit van de benodigde vergunningen. De procedure begint met \"contact met de provincie Drenthe voor de vaststelling van het leenbedrag\"; daarna volgt de reguliere Restauratiefonds-hypotheekprocedure met hypotheekvestiging.",
+  "aanvrager_type": "landgoedeigenaar",
+  "geo_niveau": "provincie",
+  "geo_waarden": [
+    "Drenthe"
+  ],
+  "bedrag_min": 10000,
+  "bedrag_max": 450000,
+  "bedrag_indicatie": "Minimaal EUR 10.000; maximaal EUR 200.000 tot EUR 450.000 afhankelijk van type pand en categorie werkzaamheden. Rente 1,5% bij 10 jaar rentevast; annuitair, maximaal 30 jaar looptijd; minimale maandtermijn EUR 100.",
+  "cofinanciering_vereist": false,
+  "uitsluitingen": [
+    "werkzaamheden die al zijn gestart",
+    "panden zonder monumentenstatus of beeldbepalende status",
+    "panden buiten Drenthe",
+    "projecten zonder de benodigde vergunningen"
+  ],
+  "kostensoort": [
+    "restauratie",
+    "investering"
+  ],
+  "landgoed_relevantie": {
+    "route": "zelf",
+    "onderbouwing": "Dit is geen gift maar een lening, en de eigenaar vraagt zelf aan. De regeling dekt precies de gebouwde landgoedopgave: \"restauratiekosten, verduurzamingskosten (inclusief energieopwekking) en herbestemmingskosten\" voor rijks-, provinciale en gemeentelijke monumenten en beeldbepalende panden. Een Drents landgoed met een monumentaal hoofdhuis, koetshuis, schuur of boerderij valt hier direct onder. Let op: het instrument is een hypothecaire lening met vestiging van hypotheekrecht op het pand, niet-overdraagbaar; dat is een andere afweging dan een subsidie.",
+    "partnertype": null
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "Of groen erfgoed (lanen, parkbos, tuinaanleg) financierbaar is: de pagina spreekt uitsluitend over 'gebouwd erfgoed'; een expliciete uitsluiting van groen erfgoed staat er niet, maar ook geen bevestiging.",
+    "De exacte staffel welke categorie werkzaamheden bij welk maximum (EUR 200.000 vs EUR 450.000) hoort.",
+    "Het beschikbare fondsvolume en of het fonds op dit moment open is."
+  ]
+}

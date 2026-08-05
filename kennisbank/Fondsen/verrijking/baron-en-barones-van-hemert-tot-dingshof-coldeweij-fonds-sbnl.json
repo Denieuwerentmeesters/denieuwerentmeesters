@@ -1,0 +1,68 @@
+{
+  "naam": "Baron en Barones Van Hemert tot Dingshof-Coldeweij Fonds (SBNL)",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://www.sbnlnatuurfonds.nl/van-hemert-tot-dingshof-coldeweij-fonds",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://www.sbnlnatuurfonds.nl/aanvraagpagina-landschaps-en-natuurbeheer",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://www.sbnlnatuurfonds.nl/l/library/download/urn:uuid:a82ecb92-fa9f-4e32-aa92-93b1bb2ac9e9/20260630+aanvragen+projecten+en+voorwaarden.pdf",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "website",
+      "url": "https://www.sbnlnatuurfonds.nl/fondsen-overzicht",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "“Financiële ondersteuning voor landschaps- en natuurprojecten in Gelderland en Overijssel (…) op het gebied van biodiversiteit, landschaps- of natuurbeheer. Wij helpen particuliere eigenaren van landgoederen en natuurterreinen, Agrarische Natuurverenigingen en andere organisaties op het gebied van natuur- en landschapsbeheer om hun ambities waar te maken in het veld.”",
+  "benaderbaarheid": "open",
+  "benaderwijze_notitie": "“Op de website van SBNL Natuurfonds staat een aanvraagformulier. Alleen goed ingevulde formulieren worden in behandeling genomen.” Met een jaarvenster: “Aanvraagperiode voor 2026-27: 1 juli - 1 september 2026”. Aanvragers kunnen particulieren zijn: “Particulieren en rechtspersonen (o.a. vennootschappen, stichtingen, coöperaties en verenigingen) kunnen een aanvraag indienen. Nieuwe aanvragers krijgen de voorkeur.”",
+  "aanvrager_type": "landgoedeigenaar",
+  "geo_niveau": "provincie",
+  "geo_waarden": [
+    "Overijssel",
+    "Gelderland ten oosten van de IJssel"
+  ],
+  "bedrag_min": 3000,
+  "bedrag_max": 20000,
+  "bedrag_indicatie": "“Met een financiële bijdrage tussen de €3.000 – €20.000”",
+  "cofinanciering_vereist": true,
+  "uitsluitingen": [
+    "“Initiatieven met louter commerciële doelstellingen”",
+    "“Initiatieven van overheden, overheidsinstellingen en Initiatieven van de terrein beherende organisaties (TBO's)”",
+    "“Projecten die ook volledig gerealiseerd kunnen worden met bestaande subsidieregelingen zoals agrarische natuurbeheer, groene en blauwe diensten en BRIM”",
+    "“Regulier onderwijs”",
+    "“Financiering van een exploitatietekort”",
+    "“Op zichzelf staande seminars, workshops, symposia, conferenties en excursies”",
+    "“Initiatieven waarbij de financiële inbreng van SBNL Natuurfonds maar een zeer beperkt onderdeel is van de totale financiering.”",
+    "“Audiovisueel materiaal, waaronder drones en camera's”"
+  ],
+  "kostensoort": [
+    "investering",
+    "restauratie",
+    "regulier_onderhoud"
+  ],
+  "landgoed_relevantie": {
+    "route": "zelf",
+    "onderbouwing": "Dit is een van de weinigen die de doelgroep letterlijk noemt: “Wij helpen particuliere eigenaren van landgoederen en natuurterreinen (…) om hun ambities waar te maken in het veld.” En SBNL als geheel: “de enige landelijke natuurorganisatie die haar fondsen ten goede laat komen aan natuur, landschap en erfgoed beheerd door particulieren en/of agrariërs.” De toekenningenlijst bevat “Landgoed De Oldenhof herstelt oude laanstructuur” en “Behoud van solitaire erf- en landschapsbomen”. Wel twee kanttekeningen: “Projecten die ook volledig gerealiseerd kunnen worden met bestaande subsidieregelingen zoals agrarische natuurbeheer, groene en blauwe diensten en BRIM” zijn uitgesloten, en er wordt openstelling gevraagd (“Laat anderen van het resultaat van het project genieten. Zorg voor openstelling.”).",
+    "partnertype": null
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "Geen apart beleidsplan of jaarverslag per fonds op naam gevonden; SBNL publiceert één gedeeld reglement voor alle beheerde fondsen.",
+    "Geen fondsspecifiek jaarbudget gepubliceerd (het reglement zegt alleen: “De keuze is mede afhankelijk van het beschikbare bedrag, dat het fonds jaarlijks kan uitkeren.”)",
+    "De in de werklijst genoemde regio 'Achterhoek en Liemers' is niet als zodanig op de site terug te vinden; de site zegt “Overijssel en Gelderland ten oosten van de IJssel”."
+  ]
+}

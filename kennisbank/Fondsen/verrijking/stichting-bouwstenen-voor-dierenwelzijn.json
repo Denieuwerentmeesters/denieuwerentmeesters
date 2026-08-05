@@ -1,0 +1,53 @@
+{
+  "naam": "Stichting Bouwstenen voor Dierenwelzijn",
+  "bronnen": [
+    {
+      "soort": "beleidsplan",
+      "url": "https://fondseninnederland.nl/storage/Fondsbestanden/WGmDCGSGCos1YINIbdjSIqmJrN2qcnHtGMHM4mqg.pdf",
+      "jaar": 2025,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "'a. het ondersteunen van organisaties en personen, werkzaam op het gebied van dierbescherming en dierwelzijn, in de breedste zin van het woord (...); b. financieel ondersteunen van en stimuleren van wetenschappelijk onderzoek ter verbetering van het welzijn van dieren, het voorkomen van dierproeven en het ontwikkelen van alternatieven voor dierproeven; c. het ondersteunen van initiatieven om het welzijn van dieren te verhogen in de breedste zin van het woord.'",
+  "benaderbaarheid": "open",
+  "benaderwijze_notitie": "'Non-profit organisaties en personen, werkzaam op het gebied van dierbescherming en dierwelzijn, in de breedste zin van het woord kunnen via de website (...) aanvragen indienen voor ondersteuning. De aanvraag dient in ieder geval te bestaan uit een beknopte projectomschrijving, een begroting en dekkingsplan.'",
+  "aanvrager_type": "beide",
+  "geo_niveau": "landelijk",
+  "geo_waarden": [
+    "Nederland",
+    "in het buitenland actieve Nederlandse organisaties en personen",
+    "Curacao",
+    "Aruba",
+    "Sint Maarten"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": "'Het bestuur streeft ernaar jaarlijks 3 % van het vermogen van het voorgaande jaar aan te wenden voor de eerder genoemde doelstelling.' Per aanvraag zijn geen bedragen gepubliceerd. Steun aan een aanvrager duurt 'in beginsel maximaal gedurende drie jaar'.",
+  "cofinanciering_vereist": false,
+  "uitsluitingen": [
+    "aanvragen buiten het domein dierbescherming en dierwelzijn",
+    "steun aan dezelfde aanvrager langer dan in beginsel drie jaar",
+    "bezwaar tegen een besluit: 'Op bezwaren tegen genomen besluiten zal het bestuur niet ingaan.'"
+  ],
+  "kostensoort": [
+    "investering",
+    "onderzoek",
+    "exploitatie"
+  ],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "De doelstelling is uitsluitend dierbescherming en dierwelzijn, 'in de breedste zin van het woord'. Een landgoed komt in beeld als locatie of houder bij een dierwelzijnsinitiatief - opvang van in het wild levende dieren, faunavoorzieningen, een wildopvang of een dierenweide - waarbij een dierwelzijnsorganisatie de aanvrager is. Aanvragen door 'personen' is toegestaan, dus een landgoedeigenaar met een concreet dierwelzijnsproject kan in beginsel ook zelf indienen.",
+    "partnertype": "dierenbeschermings- of dierenwelzijnsorganisatie (bijv. wildopvang, dierenambulance, faunabeheer-gerelateerde stichting)"
+  },
+  "onderliggende_fondsen": [
+    {
+      "naam": "Fonds op naam 'Dames van den Uithoorn'",
+      "relevant": false,
+      "reden": "in 2020 krachtens erfstelling ondergebracht bij de Stichting; 'het uitkeringsbeleid van het Fonds is gelijk aan het beleid van de Stichting' - geen apart landgoedspoor"
+    }
+  ],
+  "niet_gevonden": [
+    "bedragen per aanvraag en aanvraagdeadlines - het beleidsplan noemt alleen twee bestuursvergaderingen per jaar (voorjaar en najaar)",
+    "de eigen website bouwstenenvoordierenwelzijn.nl is niet apart uitgelezen"
+  ]
+}

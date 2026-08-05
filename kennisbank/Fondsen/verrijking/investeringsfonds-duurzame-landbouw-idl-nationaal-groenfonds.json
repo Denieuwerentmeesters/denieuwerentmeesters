@@ -1,0 +1,41 @@
+{
+  "naam": "Investeringsfonds Duurzame Landbouw (IDL, Nationaal Groenfonds)",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://www.nationaalgroenfonds.nl/investeringsfonds-duurzame-landbouw/",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "\"Boeren en tuinders met plannen om minder stikstof uit te stoten en een integrale omschakeling naar een duurzamere bedrijfsvoering op het bedrijf te laten plaatsvinden, kunnen terecht bij het Investeringsfonds Duurzame Landbouw (IDL).\" \"Het IDL is onderdeel van het Omschakelprogramma Duurzame Landbouw van het ministerie van LVVN.\"",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "\"Een onafhankelijke commissie, met mensen uit praktijk en wetenschap, zal de aanvragen op duurzaamheid beoordelen.\" en \"Doe je de aanvraag als een primaire agrarische ondernemer? Ben je zelf de agrarische ondernemer die de aanvraag doet of ga je dat als samenwerkingsverband van primaire agrarische ondernemers doen?\"",
+  "aanvrager_type": "landgoedeigenaar",
+  "geo_niveau": "landelijk",
+  "geo_waarden": [
+    "Nederland"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": 500000,
+  "bedrag_indicatie": "\"Per bedrijf is onder voorwaarde maximaal 500.000 euro beschikbaar. De financiele condities zijn soepel: ondernemers betalen een lage rente (1%) en hoeven de eerste jaren niet af te lossen.\"",
+  "cofinanciering_vereist": true,
+  "uitsluitingen": [
+    "aanvragers die geen primair agrarisch ondernemer zijn",
+    "plannen zonder significante reductie van stikstofemissie (\"dit is een harde voorwaarde\")",
+    "plannen die op minder dan vier van de zeven overige duurzaamheidsdoelen vooruitgang boeken",
+    "plannen waarbij op enig duurzaamheidsdoel achteruitgang plaatsvindt"
+  ],
+  "kostensoort": [
+    "investering"
+  ],
+  "landgoed_relevantie": {
+    "route": "zelf",
+    "onderbouwing": "Landgoederen met een eigen agrarische tak (of een pachter) vallen onder \"alle agrarische bedrijven die (verder) willen omschakelen. Of het nou reguliere, biologische, natuurinclusieve, regeneratieve of welke andere vorm van agrarische bedrijven zijn.\" De doelenlijst (toename biodiversiteit, betere bodem, minder gewasbeschermingsmiddelen) sluit aan bij natuurinclusieve landgoedlandbouw. Let op: aanvrager moet primair agrarisch ondernemer zijn - bij verpachting loopt de route via de pachter.",
+    "partnertype": "pachter/agrarische ondernemer op het landgoed, indien het landgoed zelf geen primair agrarisch bedrijf voert"
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "Volledig aanvraagformulier/voorwaardendocument (achter formulierlink) niet uitgelezen"
+  ]
+}

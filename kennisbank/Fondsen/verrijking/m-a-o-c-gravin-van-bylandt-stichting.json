@@ -1,0 +1,50 @@
+{
+  "naam": "M.A.O.C. Gravin van Bylandt Stichting",
+  "bronnen": [
+    {"soort": "website", "url": "https://www.bylandtstichting.nl/over-de-stichting/", "jaar": 2026, "gelezen": true},
+    {"soort": "beleidsplan", "url": "https://www.bylandtstichting.nl/jaarlijks-beleid/", "jaar": 2026, "gelezen": true},
+    {"soort": "aanvraagvoorwaarden", "url": "https://www.bylandtstichting.nl/aanvraag-indienen/", "jaar": 2026, "gelezen": true},
+    {"soort": "aanvraagvoorwaarden", "url": "https://www.bylandtstichting.nl/categorie/restauraties-onderhoud/", "jaar": 2026, "gelezen": true},
+    {"soort": "aanvraagvoorwaarden", "url": "https://www.bylandtstichting.nl/categorie/dier-natuur-milieu/", "jaar": 2026, "gelezen": true},
+    {"soort": "anbi_publicatie", "url": "https://www.bylandtstichting.nl/wp-content/uploads/2026/06/standaardform-publicatieplicht-fondsen-BylandtStichting-2025-v26-06.pdf", "jaar": 2025, "gelezen": false}
+  ],
+  "doelstelling": "De Gravin van Bylandt Stichting is een steunverlenend vermogensfonds en biedt financiële steun aan initiatieven van organisaties die in Nederland actief zijn op cultureel en/of maatschappelijk gebied. Vermogensfonds dat financiële steun biedt aan stichtingen en verenigingen die projecten tot stand willen brengen in het algemeen belang van mens en/of dier in Nederland, via de categorieën Mens & Welzijn, Kunst & Cultuur, Publicatie & Educatie, Restauraties & Onderhoud en Dieren, Natuur & Milieu.",
+  "benaderbaarheid": "open",
+  "benaderwijze_notitie": "\"Via ons online systeem kunt u digitaal een aanvraag indienen. Na het aanmaken van een account wordt u zo goed mogelijk door alle stappen geleid.\" Doorlopende open indiening; wel een drempel in de rechtsvorm: \"Projecten van andere rechtspersonen dan stichtingen en verenigingen\" maken geen kans.",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "landelijk",
+  "geo_waarden": ["Nederland"],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": "\"Dit grote aantal aanvragen enerzijds en het beschikbare budget anderzijds brengen met zich mee dat het grootste deel van de giften bescheiden (± € 2.500,-) van omvang is en alleen aanvullend van karakter kan zijn.\" Donatiebudget 2026: € 1.070.000,-.",
+  "cofinanciering_vereist": true,
+  "uitsluitingen": [
+    "Gebouwen en monumenten zonder rijksmonumentale status",
+    "Rijksmonumenten die niet toegankelijk zijn voor publiek",
+    "Organisaties en initiatieven die zich buiten Nederland bevinden",
+    "Projecten van andere rechtspersonen dan stichtingen en verenigingen (dus geen particulieren, BV's of maatschappen)",
+    "Leningen",
+    "Organisaties die zelf fondsen werven voor een andere organisatie of goed doel",
+    "Inrichting, renovatie of bouw van buurthuizen, speeltuinen en multifunctionele centra",
+    "Niet bouwkundige duurzaamheidsprojecten (warmtepompen en zonnepanelen)",
+    "Individuele financiële hulp en aanschaf van rolstoelbussen (sinds 1 januari 2022)",
+    "Dier/Natuur/Milieu: acties en/of campagnes; besloten congressen, masterclasses of workshops; studiebeurzen en afstudeerprojecten; projecten die op één dag plaatsvinden"
+  ],
+  "kostensoort": ["restauratie", "investering", "regulier_onderhoud"],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Zeer relevant qua inhoud: \"Restauraties van rijksmonumenten kunnen in aanmerking komen voor een bijdrage van de Gravin van Bylandt Stichting als gedeeltelijke aanvulling op de overheidssubsidie. Behalve de restauratie van onderdelen van de monumenten, is het ook mogelijk om aanvragen in te dienen ten behoeve van bouwkundige onderhoudswerkzaamheden of veranderingen ter bevordering van de bestaanszekerheid.\" Ook expliciet bouwkundig ONDERHOUD, wat bij erfgoedfondsen ongebruikelijk is. Maar de rechtsvorm is de beperking: \"Projecten van andere rechtspersonen dan stichtingen en verenigingen\" worden uitgesloten, en het rijksmonument moet toegankelijk zijn voor publiek. Een landgoed dat in een BV, maatschap of privébezit zit moet dus via een stichting (bv. een eigen stichting tot behoud, een monumentenstichting of een vriendenstichting) aanvragen. Het fonds beheert zelf sinds 30 april 2026 landgoed Oostduin-Arendsdorp, wat de affiniteit met landgoederen onderstreept.",
+    "partnertype": "Stichting of vereniging — bijvoorbeeld een eigen stichting tot behoud van het landgoed, een monumenten- of vriendenstichting; het rijksmonument moet publiek toegankelijk zijn"
+  },
+  "onderliggende_fondsen": [
+    {"naam": "Heshuijsen Fonds", "relevant": true, "reden": "\"De Gravin van Bylandt Stichting beheert ook het Heshuijsen Fonds met een vergelijkbare doelstelling. Wanneer u een aanvraag indient, komt deze automatisch bij de Gravin van Bylandt Stichting binnen. Wij bepalen aan de hand van uw aanvraag uit welk fonds een gift beschikbaar kan worden gesteld.\" Geen aparte aanvraagroute nodig; vergelijkbare doelstelling dus zelfde relevantie."},
+    {"naam": "Stichting Dorodarte (eenmalige schenking)", "relevant": false, "reden": "Eenmalige schenking van € 350.000 in 2023 \"ter ondersteuning van organisaties en instellingen die zich met name bezighouden met kinderen en/of kunst\" — geen zelfstandig aanvraagbaar fonds en niet landgoedgericht."}
+  ],
+  "niet_gevonden": [
+    "Harde bedragmaxima per categorie: niet gepubliceerd op de site; alleen de indicatie '± € 2.500,-' gemiddeld.",
+    "Expliciete regel over cofinanciering: alleen impliciet af te leiden uit 'als gedeeltelijke aanvulling op de overheidssubsidie', 'aanvullend van karakter' en het verplichte financieringsplan; geen genoemd percentage.",
+    "Behandeltermijn/deadlines: geen indieningsdeadlines gepubliceerd; alleen 'beoogde behandeltermijn' per aanvraag.",
+    "Groen/landschappelijk erfgoed (parken, lanen, tuinen) apart benoemd: niet gevonden op de categoriepagina Restauraties & Onderhoud, die spreekt alleen over rijksmonumenten/gebouwen.",
+    "ANBI-standaardformulier 2025 (PDF) niet uitgelezen."
+  ]
+}

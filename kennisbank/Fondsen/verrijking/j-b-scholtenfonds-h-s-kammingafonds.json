@@ -1,0 +1,76 @@
+{
+  "naam": "J.B. Scholtenfonds & H.S. Kammingafonds (SK&Lfonds, incl. Fonds voor de Landbouw Groningen)",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "http://jbs-hsk.nl/introductie-geschiedenis",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "website",
+      "url": "http://jbs-hsk.nl/doelstellingen",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "http://jbs-hsk.nl/indienen-aanvraag",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "\"Het SK&Lfonds is een echt Gronings fonds, van Groningers, voor Groningers. Het ondersteunt eenmalige projecten die een verrijking zijn voor de bewoners van Groningen en onze prachtige provincie. Dat kan zijn op het gebied van cultuur, historie en sociaal maatschappelijke ontwikkeling: een verbetering van het welzijn van Groningers en hun leefomgeving. Maar ook een impuls aan de Groningse landbouw met het oog op de toekomst.\"",
+  "benaderbaarheid": "open",
+  "benaderwijze_notitie": "\"Alleen rechtspersonen (bijv. stichting, vereniging, cooperatie) kunnen een beroep doen op het SK&Lfonds.\" \"Het fonds kent geen indieningstermijnen. Het is verstandig om tijdig (ruim zes weken van tevoren) een bijdrage aan te vragen.\" En uitdrukkelijk laagdrempelig geformuleerd: \"we werken niet zozeer met richtlijnen. Geen hokjes waar uw project wel of niet in past.\"",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "provincie",
+  "geo_waarden": [
+    "Groningen"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": null,
+  "cofinanciering_vereist": false,
+  "uitsluitingen": [
+    "aanvragen van natuurlijke personen (alleen rechtspersonen)",
+    "activiteiten buiten de provincie Groningen",
+    "activiteiten die niet openbaar toegankelijk zijn",
+    "publieksactiviteiten met een onredelijke entreeprijs",
+    "meer dan een bijdrage per instelling per drie jaar",
+    "onvolledige aanvragen",
+    "structurele in plaats van eenmalige projecten"
+  ],
+  "kostensoort": [
+    "investering",
+    "restauratie"
+  ],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Drie ingangen tegelijk, wat zeldzaam is: cultuur en historie, \"een verbetering van het welzijn van Groningers en hun leefomgeving\", en \"een impuls aan de Groningse landbouw met het oog op de toekomst\" (dat laatste via het meebestuurde Fonds voor de Landbouw Groningen, historisch voortgekomen uit de \"Maatschappij van landeigenaren en vastbeklemde meijers\" - een letterlijke landgoed-/landeigenarenlijn). Voor een Gronings landgoed of borg zijn dus zowel een erfgoed-/historieproject als een landbouwtransitieproject op de eigen gronden denkbaar. Het fonds zegt zelf expliciet geen richtlijnen te hanteren, wat de kans op een gesprek vergroot. Route via_partner: alleen rechtspersonen, en de activiteit moet \"openbaar toegankelijk\" zijn.",
+    "partnertype": "Rechtspersoon (stichting, vereniging of cooperatie): landgoedstichting, historische vereniging, agrarische cooperatie of gebiedscooperatie in Groningen."
+  },
+  "onderliggende_fondsen": [
+    {
+      "naam": "J.B. Scholtenfonds",
+      "relevant": true,
+      "reden": "\"het lenigen van sociale en culturele noden en het stimuleren van sociale en culturele activiteiten in de provincie Groningen\" - brede culturele ingang"
+    },
+    {
+      "naam": "H.S. Kammingafonds",
+      "relevant": true,
+      "reden": "\"de bevordering van geestelijke en stoffelijke verheffing van de bevolking van de provincie Groningen\" - zeer ruim geformuleerd, biedt ruimte voor landschaps- en erfgoedprojecten met publieke betekenis"
+    },
+    {
+      "naam": "Fonds voor de Landbouw Groningen",
+      "relevant": true,
+      "reden": "opgericht 1878 als voortzetting van de 'Maatschappij van landeigenaren en vastbeklemde meijers'; verlegde het werkterrein 'van het verlenen van hypotheken naar het toekennen van bijdragen aan projecten'. Direct relevant voor landbouwtransitie, pacht en grondgebruik op een Gronings landgoed. Dit fonds staat als zodanig niet apart in de werklijst."
+    }
+  ],
+  "niet_gevonden": [
+    "Bedragen: nergens op de site gepubliceerd (ook niet onder 'vaststelling uitbetaling', niet apart uitgelezen).",
+    "De pagina 'voorbeeldprojecten' met concrete toekenningen: niet uitgelezen.",
+    "Of cofinanciering verplicht is: er wordt een dekkingsplan gevraagd, maar geen percentage genoemd.",
+    "De oorspronkelijke werklijst-URL /oprichting-doelstellingen bestaat niet meer."
+  ]
+}

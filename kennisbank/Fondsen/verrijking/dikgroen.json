@@ -1,0 +1,49 @@
+{
+  "naam": "DikGroen",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://www.dikgroen.nl/",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://www.dikgroen.nl/voor-jou/aanvraag-indienen/",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "Het doel van DikGroen is om kinderen op praktische wijze te betrekken bij de natuur in Nederland; natuurbehoud bevorderen door natuurbeleving voor jongeren te stimuleren.",
+  "benaderbaarheid": "open",
+  "benaderwijze_notitie": "Open aanvraagformulier op de site; \"DikGroen sponsort in principe geen overheids, professionele of commerciele partijen\" en aanvragers zijn minimaal 16 jaar en handelen vanuit vrijwilligersperspectief.",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "landelijk",
+  "geo_waarden": [
+    "Nederland"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": 2500,
+  "bedrag_indicatie": "Maximale projectbegroting EUR 2.500; DikGroen richt zich op projecten rond EUR 750. Bijdrage wordt achteraf uitgekeerd.",
+  "cofinanciering_vereist": false,
+  "uitsluitingen": [
+    "vergroening van schoolpleinen",
+    "jubilea en verjaardagsvieringen",
+    "projecten zonder verband met de Nederlandse natuur",
+    "overheids-, professionele of commerciele partijen",
+    "herhaalaanvraag binnen 14 maanden"
+  ],
+  "kostensoort": [
+    "investering"
+  ],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Het fonds financiert geen commerciele of professionele partijen, maar wel vrijwilligersinitiatieven die kinderen bij de Nederlandse natuur betrekken (\"kinderen op praktische wijze te betrekken bij de natuur in Nederland\"). Een natuur-/kindereducatieactiviteit op een landgoed kan door een vrijwilligersgroep worden aangevraagd; het landgoed is dan locatie, niet aanvrager.",
+    "partnertype": "vrijwilligersgroep, IVN-afdeling, natuurwerkgroep of schoolouderinitiatief"
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "cofinancieringseis (niet vermeld op aanvraagpagina)",
+    "beleidsplan/jaarverslag: pagina Bestuurlijke Documenten niet geopend binnen budget"
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "naam": "Adessium Foundation",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://www.adessium.org/",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "website",
+      "url": "https://www.adessium.org/nl/over-ons/",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "Streeft naar \"een open samenleving waarin iedereen kan meedoen en rechten en vrijheden beschermd zijn\" en een \"rechtvaardige en leefbare wereld\" voor toekomstige generaties. Drie programma's: Geinformeerde Samenleving, Natuur en Leefomgeving (\"ondersteuning van floreerende ecosystemen\") en Solidaire en Rechtvaardige Samenleving.",
+  "benaderbaarheid": "op_uitnodiging",
+  "benaderwijze_notitie": "\"We hebben geen open aanvraagprocedure en benaderen zelf potentiele samenwerkingspartners.\" Het steunmodel loopt via donaties, adviserende ondersteuning en toegang tot netwerken, met 83% meerjarige toezeggingen (2025).",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "internationaal",
+  "geo_waarden": [
+    "Nederland",
+    "Europa"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": "In 2025 EUR 18,7 miljoen aan 95 organisaties, waarvan 83% meerjarige toezeggingen (gemiddeld circa EUR 197.000 per organisatie per jaar).",
+  "cofinanciering_vereist": false,
+  "uitsluitingen": [
+    "ongevraagde aanvragen (er is geen open aanvraagprocedure)",
+    "onderwerpen buiten de drie programma's"
+  ],
+  "kostensoort": [
+    "personeel",
+    "onderzoek",
+    "exploitatie"
+  ],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Het programma Natuur en Leefomgeving richt zich op \"floreerende ecosystemen\" en Adessium financiert doorgaans structureel en meerjarig - het steunt organisaties, niet objecten. Voor een landgoed betekent dat: geen route via een restauratie- of terreinvraag, wel als het landgoed onderdeel is van een programma van een maatschappelijke organisatie die Adessium al steunt (bijvoorbeeld een natuurorganisatie of een beweging rond landgebruik en biodiversiteit). Niet als niet_relevant gemarkeerd: het thema is inhoudelijk verwant en het fonds is groot; de blokkade zit in de toegang, niet in de inhoud. Er is geen enkele zin in benaderen zonder bestaande relatie.",
+    "partnertype": "Een maatschappelijke organisatie die al partner van Adessium is of tot het profiel behoort: een landelijke natuur- of milieuorganisatie met een meerjarig ecosysteemprogramma waarin het landgoed als praktijklocatie functioneert."
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "De inhoudelijke criteria van het programma Natuur en Leefomgeving: de pagina noemt alleen de programmanaam en 'floreerende ecosystemen'.",
+    "Een partnerlijst waaruit blijkt welk type organisaties gesteund wordt: niet uitgelezen.",
+    "Enige route om als niet-partner in beeld te komen: bestaat blijkens de site niet.",
+    "Jaarverslag 2025: bestaat, niet apart uitgelezen."
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "naam": "Stichting Vrienden van Beeckestijn",
+  "bronnen": [
+    {
+      "soort": "beleidsplan",
+      "url": "https://vriendenvanbeeckestijn.nl/wp-content/uploads/2024/12/Beleidsplan-Stichting-Vrienden-van-Beeckestijn-2024-2030.pdf",
+      "jaar": 2024,
+      "gelezen": true
+    },
+    {
+      "soort": "anbi_publicatie",
+      "url": "https://vriendenvanbeeckestijn.nl/word-vriend/anbi-erkende-instelling/",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "website",
+      "url": "https://www.hendrickdekeyser.nl/fondsen",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "De stichting Vrienden van Beeckestijn is een ANBI die zich richt op het ondersteunen van het behoud, duurzaam beheer en de ontwikkeling van Buitenplaats Beeckestijn. Doelstellingen: het bewaken dat het cultureel erfgoed behouden blijft voor het nageslacht; de restauratie en het onderhoud van de tuinen waarbij de kaart van Michaël als uitgangspunt geldt; de openbare toegankelijkheid van het hoofdhuis en de tuinen; waar mogelijk de eigenaren van de opstallen (Vereniging Hendrick de Keyser) en van de tuinen (Vereniging Natuurmonumenten) met raad en daad ondersteunen; bij structurele plannen van de eigenaren, indien mogelijk, met een financiële bijdrage de realisatie van die plannen dichterbij brengen; het streven naar samenhang tussen al de partijen die actief zijn op Beeckestijn.",
+  "benaderbaarheid": "gesloten",
+  "benaderwijze_notitie": "\"Bij structurele plannen van de eigenaren, indien mogelijk, met een financiële bijdrage de realisatie van die plannen dichterbij brengen.\" — geld gaat uitsluitend naar de eigenaren/beheerders van Buitenplaats Beeckestijn zelf (Hendrick de Keyser en Natuurmonumenten). Er is geen aanvraagpagina, geen aanvraagformulier en geen aanvraagprocedure op de website; de site is volledig ingericht op het werven van donateurs, niet op het uitkeren aan derden.",
+  "aanvrager_type": "nvt",
+  "geo_niveau": "plaats",
+  "geo_waarden": [
+    "Buitenplaats Beeckestijn, Velsen (Noord-Holland)"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": "Geen bedragen per project gepubliceerd. Uit de jaarcijfers 2024: \"Wij hebben geïnvesteerd met Hendrick de Keijser in de Kapelwoning waar wij een groot deel van de nieuwe toren hebben gefinancierd. Ook is de vijverpomp vervangen en hebben we wederom een bankje betaald.\" De stichting is klein: \"De baten in 2024 komen volledig uit de donaties van onze Vrienden.\"",
+  "cofinanciering_vereist": null,
+  "uitsluitingen": [
+    "alles buiten Buitenplaats Beeckestijn — de stichting is statutair en feitelijk aan één buitenplaats gebonden"
+  ],
+  "kostensoort": [
+    "restauratie",
+    "regulier_onderhoud",
+    "investering"
+  ],
+  "landgoed_relevantie": {
+    "route": "niet_relevant",
+    "onderbouwing": "Deze stichting is inhoudelijk volledig landgoed-/buitenplaatsgericht — \"De restauratie en het onderhoud van de tuinen waarbij de kaart van Michaël als uitgangspunt geldt\" — maar uitsluitend voor één object: \"het ondersteunen van het behoud, duurzaam beheer en de ontwikkeling van Buitenplaats Beeckestijn\". Er is geen enkele denkbare route naar een ander landgoed: de begunstigden zijn per beleidsplan de twee eigenaren van Beeckestijn (Hendrick de Keyser en Natuurmonumenten) en de baten komen volledig uit donaties van circa 300-400 Vrienden. Wél waardevol als **model**: het beleidsplan is een compacte, navolgbare blauwdruk voor een eigen vriendenstichting rond een landgoed, inclusief de rol van toezichthouder op afspraken met eigenaren en gemeente.",
+    "partnertype": null
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "een aanvraagprocedure of criteria voor derden — die bestaan niet; de site kent geen aanvraagpagina",
+    "harde bedragen per bijdrage; het jaaroverzicht 2021-2024 (PDF) is als link gevonden maar niet doorgenomen"
+  ]
+}

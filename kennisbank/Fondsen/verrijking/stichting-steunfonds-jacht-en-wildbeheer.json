@@ -1,0 +1,40 @@
+{
+  "naam": "Stichting Steunfonds Jacht en Wildbeheer",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "http://www.stichtingsteunfondsjachtenwildbeheer.nl/",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "'Het bijeen brengen van financien voor promotie en voorlichting op het gebied van natuurzorg, Wildbeheer en Jacht en voorts al hetgeen met een en ander rechtstreeks of zijdelings verband houdt of daartoe bevorderlijk kan zijn, alles in de ruimste zin van des woord.'",
+  "benaderbaarheid": "gesloten",
+  "benaderwijze_notitie": "'De Stichting financiert met ingang van 1-1-2017 haar eigen 2 educatie projecten' - de site kent geen aanvraagprocedure of aanvraagformulier; de stichting werft juist zelf middelen ('sponsoring, donaties, schenkingen en legaten').",
+  "aanvrager_type": "nvt",
+  "geo_niveau": "regio",
+  "geo_waarden": [
+    "werkgebieden van WBE West Twente, WBE Vriezenveen e.o., WBE Tubbergen, WBE Tussen Vecht en Grens 'De Akkerlanden' en WBE Ommen/Den Ham (Overijssel)"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": null,
+  "cofinanciering_vereist": false,
+  "uitsluitingen": [
+    "alles buiten de twee eigen educatieprojecten 'De Scholendagen' en 'Gastlessen natuurzorg op locatie'"
+  ],
+  "kostensoort": [
+    "exploitatie"
+  ],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Dit is geen uitkerend fonds: de stichting financiert alleen haar eigen twee educatieprojecten voor groep 7/8. De enige denkbare route voor een landgoed in Twente/Salland is als locatie voor 'GASTLESSEN NATUURZORG OP LOCATIE' - dan komt het landgoed in de begroting van de stichting terecht, niet als aanvrager.",
+    "partnertype": "de stichting zelf, via de Educatiecommissie Jacht en Natuurzorg; het landgoed levert de locatie"
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "een aanvraagprocedure of aanvraagformulier - die bestaan niet op de site",
+    "bedragen",
+    "het ANBI-tabblad is niet apart uitgelezen"
+  ]
+}

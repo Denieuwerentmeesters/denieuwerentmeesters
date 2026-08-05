@@ -1,0 +1,53 @@
+{
+  "naam": "Gieskes-Strijbis Fonds",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://www.gieskesstrijbisfonds.nl/over-het-fonds/",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://www.gieskesstrijbisfonds.nl/projectsuggestie/",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "Stimuleert \"positieve verandering in de samenleving door vernieuwende en impactvolle projecten aan te jagen\", binnen vier thema's: Natuur & Milieu (gezond voedselsysteem, internationale Noordzee), Kunst & Cultuur (loopbaanontwikkeling kunstenaars, behoud van ambachten), Democratie & Rechtsstaat, en Medisch Onderzoek.",
+  "benaderbaarheid": "via_intermediair",
+  "benaderwijze_notitie": "Het fonds \"werkt proactief\" en zoekt zelf projecten; daarnaast \"bieden wij de mogelijkheid om je project bij ons onder de aandacht te brengen\" via een projectsuggestie op het online platform. Dat is geen open aanvraagloket: \"Uitsluitend kwalitatief hoogwaardige aanvragen worden behandeld.\" Harde drempels: looptijd 2 tot 5 jaar en \"minimaal circa EUR 75.000 jaarlijkse donatie\".",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "landelijk",
+  "geo_waarden": [
+    "Koninkrijk der Nederlanden"
+  ],
+  "bedrag_min": 75000,
+  "bedrag_max": null,
+  "bedrag_indicatie": "Minimaal circa EUR 75.000 jaarlijkse donatie, looptijd 2 tot 5 jaar. In 2025: 35 projecten voor EUR 9.611.233 (gemiddeld circa EUR 275.000 per project). Sinds oprichting 258 projecten voor EUR 88.717.251.",
+  "cofinanciering_vereist": false,
+  "uitsluitingen": [
+    "projecten buiten de vier thema's",
+    "projecten met een looptijd korter dan 2 of langer dan 5 jaar",
+    "projecten met een jaarlijkse donatiebehoefte onder circa EUR 75.000",
+    "projecten buiten het Koninkrijk der Nederlanden",
+    "projecten zonder katalyserend vliegwieleffect"
+  ],
+  "kostensoort": [
+    "investering",
+    "onderzoek",
+    "personeel"
+  ],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Twee ingangen. Het thema Natuur & Milieu is toegespitst op een \"gezond voedselsysteem\" - een landgoed dat met pachters overschakelt op natuurinclusieve of regeneratieve landbouw, opgeschaald tot een meerjarig programma, past daarbinnen. En binnen Kunst & Cultuur noemt het fonds expliciet \"behoud van ambachten\": restauratieambachten (rietdekken, smeden, historisch metselwerk, tuinambacht) zijn daarmee een denkbare route, zij het als vakmanschapsprogramma, niet als restauratie van een specifiek pand. De schaal is de beperkende factor: minimaal EUR 75.000 per jaar over 2 tot 5 jaar en een aantoonbaar vliegwieleffect - een enkel landgoed haalt dat zelden alleen; een samenwerkingsverband van landgoederen of een landelijke koepel wel. Daarom via_partner.",
+    "partnertype": "Een landelijke of regionale koepel- of programmaorganisatie die meerdere landgoederen bundelt: bijvoorbeeld een vereniging van particuliere grondeigenaren, een gebiedscooperatie, een erfgoed- of ambachtsopleidingsinstituut, of een natuurorganisatie met een meerjarig voedselsysteemprogramma."
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "Een expliciete uitsluitingenlijst: het fonds publiceert die niet.",
+    "De verhouding tussen proactief geselecteerde projecten en gehonoreerde projectsuggesties.",
+    "Of restauratie van gebouwd erfgoed ooit is gefinancierd: de thema-omschrijving noemt alleen ambachten, geen objecten.",
+    "Beleidsplan of jaarverslag: niet apart uitgelezen."
+  ]
+}

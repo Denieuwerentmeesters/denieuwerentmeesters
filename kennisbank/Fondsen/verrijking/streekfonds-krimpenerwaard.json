@@ -1,0 +1,43 @@
+{
+  "naam": "StreekFonds Krimpenerwaard",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://www.streekfondskrimpenerwaard.nl/streekfonds/missie",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://www.streekfondskrimpenerwaard.nl/doe-mee",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "\"Het StreekFonds wil de cultuurhistorische en landschappelijke waarde van de Krimpenerwaard versterken en het landschap beleefbaar maken. Speciale aandacht is er voor projecten die een relatie leggen tussen het landelijk gebied en de aangrenzende stedelijke omgeving. Hiervoor geeft het fonds financiele ondersteuning aan kleinschalige en particuliere initiatieven die aan dit doel bijdragen.\" Het fonds zet zich in voor: \"behoud, herstel en toename van de biodiversiteit; behoud en herstel van cultuurhistorische waarden; behoud en herstel van landschappelijke waarden; bevorderen van betrokkenheid van bewoners bij de Krimpenerwaard.\"",
+  "benaderbaarheid": "open",
+  "benaderwijze_notitie": "\"Het Streekfonds Krimpenerwaard steunt initiatieven die goed zijn voor de streek. Als uw project zo'n initiatief is, kunt u een projectaanvraag doen bij het StreekFonds Krimpenerwaard.\" \"Het bestuur van het Streekfonds Krimpenerwaard houdt 4x per jaar een subsidieronde. De data waarop uw aanvraag in 2026 binnen moet zijn is: 1 februari, 1 mei, 1 augustus of 1 november.\"",
+  "aanvrager_type": "beide",
+  "geo_niveau": "regio",
+  "geo_waarden": [
+    "Krimpenerwaard"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": null,
+  "cofinanciering_vereist": false,
+  "uitsluitingen": [],
+  "kostensoort": [
+    "investering"
+  ],
+  "landgoed_relevantie": {
+    "route": "zelf",
+    "onderbouwing": "Het fonds richt zich expliciet op particulieren: \"financiele ondersteuning aan kleinschalige en particuliere initiatieven\". De doelen (cultuurhistorie, landschappelijke waarden, biodiversiteit, beleefbaarheid) dekken vrijwel het hele landgoedpalet in dit veenweidegebied - denk aan boerderijen, molens en gemalen die het fonds zelf noemt.",
+    "partnertype": null
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "Bedragen: geen minimum, maximum of indicatie op de site",
+    "Uitsluitingen: geen expliciete uitsluitingenlijst gepubliceerd; het aanvraagformulier (Word/PDF uit 2021) is niet uitgelezen"
+  ]
+}

@@ -1,0 +1,119 @@
+{
+  "naam": "Fundatie Van den Santheuvel, Sobbe",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://www.fundatiesobbe.nl/",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "website",
+      "url": "https://www.fundatiesobbe.nl/fondsen",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "Ondersteunt organisaties die zich inzetten voor mensen die het moeilijk hebben in onze maatschappij, met focus op participatie, integratie en zelfredzaamheid.",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "Open aanvraagprocedure, maar beperkt tot \"rechtspersonen (doorgaans een Stichting), waarvan de doelstellingen aansluiten bij die van de Fundatie\"; per organisatie maximaal een aanvraag per jaar.",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "landelijk",
+  "geo_waarden": [
+    "Nederland tot 1-1-2027",
+    "Amsterdam vanaf 1-1-2027"
+  ],
+  "bedrag_min": 1000,
+  "bedrag_max": null,
+  "bedrag_indicatie": "Giften \"meestal varierend van duizend tot enkele tienduizenden euro's\".",
+  "cofinanciering_vereist": null,
+  "uitsluitingen": [
+    "inrichting, inventaris en gebouwen",
+    "bouw-, verbouw- en restauratiewerkzaamheden",
+    "vervoersmiddelen",
+    "evenementen, festivals en festiviteiten",
+    "individuele hulpvragen",
+    "buitenlandse projecten",
+    "films, documentaires en omroepen",
+    "wetenschappelijk onderzoek",
+    "politieke doelen",
+    "kinderopvang en scouting",
+    "verenigingen tenzij open voor derden",
+    "eenmanszaken, B.V.'s, N.V.'s en individuen"
+  ],
+  "kostensoort": [
+    "investering",
+    "exploitatie"
+  ],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Voor het landgoed zelf gesloten: \"bouw-, verbouw- en restauratiewerkzaamheden\" en \"inrichting/inventaris, gebouwen\" worden \"op voorhand afgewezen\", en B.V.'s en individuen kunnen niet aanvragen. Wel kan een zorg- of welzijnsstichting (jeugdzorg, ouderenzorg, opvang, groepsvakanties) een programma op een landgoed financieren; \"groepsvakanties\" en dagbestedingstrajecten staan expliciet in het werkveld. Let op de werkgebiedskrimp naar Amsterdam per 1-1-2027.",
+    "partnertype": "zorg-, welzijns- of opvangstichting; vanaf 2027 met Amsterdamse doelgroep"
+  },
+  "onderliggende_fondsen": [
+    {
+      "naam": "Stichting Pruikenburg Fonds",
+      "relevant": true,
+      "reden": "restauratie van culturele monumenten en historisch/kunsthistorisch onderzoek - direct landgoedrelevant (zie apart bestand pruikenburg-fonds-fundatie-van-den-santheuvel-sobbe)"
+    },
+    {
+      "naam": "Olga Heldring Fonds",
+      "relevant": true,
+      "reden": "sociale projecten en kunstprojecten met sociaal doel; een cultureel programma op een landgoedlocatie is denkbaar"
+    },
+    {
+      "naam": "Fonds Marie Louise",
+      "relevant": false,
+      "reden": "zelfredzaamheid van kwetsbare groepen, bij voorkeur Groot-Amsterdam; geen groen/erfgoed"
+    },
+    {
+      "naam": "Stichting Het Looijers Hofje",
+      "relevant": false,
+      "reden": "hofjes en ouderenhuisvesting voor mensen in financiele nood"
+    },
+    {
+      "naam": "De Brauw Van Lynden Fonds",
+      "relevant": false,
+      "reden": "kinderen met beperking tot 21 jaar"
+    },
+    {
+      "naam": "George Hendrik Breitner Fonds",
+      "relevant": false,
+      "reden": "beurzen Rijksakademie"
+    },
+    {
+      "naam": "Dorodarte Kinderfonds",
+      "relevant": false,
+      "reden": "jeugd tot 30 jaar en culturele kinderinitiatieven"
+    },
+    {
+      "naam": "Stichting Regina van Geunsfonds",
+      "relevant": false,
+      "reden": "mensen met lichamelijke beperking"
+    },
+    {
+      "naam": "Helene de Montigny Stichting",
+      "relevant": false,
+      "reden": "humanitair/zorg"
+    },
+    {
+      "naam": "Fonds Wiggers van Kerchem",
+      "relevant": false,
+      "reden": "zorg en welzijn"
+    },
+    {
+      "naam": "Fundatie Luden van Stoutenburg Stichting",
+      "relevant": false,
+      "reden": "zorg en welzijn"
+    },
+    {
+      "naam": "Stichting M.C.d.H. Fonds",
+      "relevant": false,
+      "reden": "maatschappelijke projecten van protestants christelijke organisaties"
+    }
+  ],
+  "niet_gevonden": [
+    "cofinancieringseis",
+    "of de uitsluiting van restauratie ook geldt voor het Pruikenburg Fonds, dat juist restauratie van culturele monumenten noemt - tegenstrijdigheid, navragen"
+  ]
+}

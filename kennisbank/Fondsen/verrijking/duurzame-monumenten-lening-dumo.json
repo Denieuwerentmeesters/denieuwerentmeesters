@@ -1,0 +1,40 @@
+{
+  "naam": "Duurzame Monumenten-Lening (DUMO)",
+  "bronnen": [
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://www.restauratiefonds.nl/zakelijk/financieren/alle-zakelijke-financieringen/duurzame-monumenten-lening",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "\"Een Duurzame Monumenten-Lening is een laagrentende lening die wordt verstrekt aan een eigenaar van een rijksmonument die het pand wil verduurzamen.\"",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "\"Op dit moment is de vraag groter dan de beschikbare middelen. Daarom bekijken we per opgave wat binnen de huidige mogelijkheden past.\" Aanvraag verloopt via een eigen account en een Verklaring Energiebesparing Rijksmonument, ondertekend door de aannemer/installateur.",
+  "aanvrager_type": "landgoedeigenaar",
+  "geo_niveau": "landelijk",
+  "geo_waarden": [
+    "Nederland"
+  ],
+  "bedrag_min": 2500,
+  "bedrag_max": 100000,
+  "bedrag_indicatie": "\"Eigenaar: minimaal EUR 2.500 en maximaal EUR 100.000. VvE: minimaal EUR 25.000 en maximaal EUR 300.000. Maximaal EUR 30.000 per appartementsrecht.\"",
+  "cofinanciering_vereist": false,
+  "uitsluitingen": [
+    "gemeentelijke en provinciale monumenten (alleen rijksmonumenten)",
+    "werkzaamheden die al gestart zijn",
+    "maatregelen die niet op de maatregelenlijst energiebesparing staan"
+  ],
+  "kostensoort": [
+    "investering"
+  ],
+  "landgoed_relevantie": {
+    "route": "zelf",
+    "onderbouwing": "Rechtstreeks voor eigenaren van rijksmonumenten: \"U bent eigenaar van een rijksmonument\". Voor landgoederen met rijksmonumentale bebouwing bruikbaar voor isolatie, vensters, kap, vloeren en duurzame installaties.",
+    "partnertype": null
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "De maatregelenlijst zelf (PDF achter link) is niet uitgelezen"
+  ]
+}

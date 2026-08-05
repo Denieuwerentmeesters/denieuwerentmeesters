@@ -1,0 +1,45 @@
+{
+  "naam": "Janivo Stichting",
+  "bronnen": [
+    {"soort": "aanvraagvoorwaarden", "url": "https://www.janivostichting.nl/aanvragen/", "jaar": 2026, "gelezen": true},
+    {"soort": "website", "url": "https://www.janivostichting.nl/donaties/", "jaar": 2026, "gelezen": true},
+    {"soort": "aanvraagvoorwaarden", "url": "https://www.janivostichting.nl/maatschappij/", "jaar": 2026, "gelezen": true},
+    {"soort": "aanvraagvoorwaarden", "url": "https://www.janivostichting.nl/kunst/", "jaar": 2026, "gelezen": true}
+  ],
+  "doelstelling": "\"De Janivo Stichting biedt financiële steun aan projecten op het gebied van [maatschappij, kunst, medisch onderzoek]. De Janivo Stichting heeft bewust een open aanvraag-loket, hanteert een breed donatiekader en steunt nadrukkelijk ook nieuwe initiatieven. [...] Maar het basisidee van de Janivo Stichting is: kansen bieden. [...] Projecten waarin kinderen, jongeren en jongvolwassenen een actieve rol spelen hebben daarbij een streepje voor.\" Maatschappij: \"sociale projecten in Nederland voor en/of door kinderen, jongeren en jongvolwassenen tot 25 jaar. Er is een voorkeur voor projecten die zich richten op kinderen en jonge mensen in een achterstandspositie of kwetsbare situatie.\"",
+  "benaderbaarheid": "open",
+  "benaderwijze_notitie": "\"De Janivo Stichting heeft bewust een open aanvraag-loket.\" \"Wilt u een aanvraag indienen? Beantwoord dan eerst de vragen uit het vooronderzoek om te checken of u in aanmerking komt voor een donatie. Blijkt uit het vooronderzoek dat u een aanvraag kunt indienen, dan wordt u vanzelf verwezen naar ons aanvraagportal.\" Wel met frequentiegrenzen: \"Per organisatie kan slechts éénmaal per jaar een aanvraag worden gehonoreerd. [...] Organisaties worden, behoudens enkele uitzonderingen, maximaal drie keer ondersteund.\"",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "landelijk",
+  "geo_waarden": ["Nederland"],
+  "bedrag_min": 1000,
+  "bedrag_max": 6000,
+  "bedrag_indicatie": "\"Per project kan een donatie worden aangevraagd tussen de €1.000 en €6.000. Soms is een hogere donatie mogelijk op basis van het vernieuwende karakter, het maatschappelijke belang of de verwachte impact van een project. Neem daarvoor altijd eerst contact met ons op.\" (Snelloket Jonge Makers: tussen €2.000 en €4.000.)",
+  "cofinanciering_vereist": true,
+  "uitsluitingen": [
+    "Bouw, renovatie, inrichting of exploitatie van gebouwen en terreinen",
+    "Aanschaf of onderhoud van voer-, vaar- en vliegtuigen",
+    "Congressen, ééndaagse activiteiten, jubilea en vakantiekampen",
+    "Publicaties, videoproducties, films, etc, anders dan als onderdeel van een impact-programma",
+    "Individuele ondersteuning, studiebeurzen, stages en reizen",
+    "Projecten die vallen onder de verantwoordelijkheid van zorgverzekeraars of overheden",
+    "Projecten met een religieus of partijpolitiek karakter",
+    "Reeds lopende projecten",
+    "Kunst: eendaagse evenementen, reprises en afstudeervoorstellingen, concoursen en masterclasses, kunst- en cultuureducatie, amateurkunst, tentoonstellingen/film/televisie/documentaires"
+  ],
+  "kostensoort": ["personeel", "onderzoek"],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Fysieke landgoedkosten zijn categorisch uitgesloten: \"De Janivo Stichting verstrekt geen donaties voor: Bouw, renovatie, inrichting of exploitatie van gebouwen en terreinen\" — dat sluit restauratie, herbestemming, terreininrichting én exploitatie in één zin uit. De enige route is programmatisch: een jeugd-, zorg- of welzijnsstichting die een sociaal project uitvoert \"voor en/of door kinderen, jongeren en jongvolwassenen tot 25 jaar\", met voorkeur voor \"kinderen en jonge mensen in een achterstandspositie of kwetsbare situatie\", binnen de domeinen bescherming en zorg, sociale participatie, economische participatie of educatie. Een landgoed kan daarin de locatie zijn voor bijvoorbeeld een natuur- of werkleerprogramma voor kwetsbare jongeren; de programmakosten (begeleiding, activiteiten) zijn subsidiabel bij de partnerorganisatie, de fysieke voorzieningen op het terrein niet. Bedragen zijn klein (€1.000–€6.000), dus dit is een aanvullend, geen dragend fonds. Het Snelloket Jonge Makers biedt een tweede, smallere route: een pas afgestudeerde theater- of dansmaker met \"minimaal één bevestigde speelplek en speeldatum\" kan het landgoed als locatie gebruiken.",
+    "partnertype": "Stichting of vereniging die met kinderen/jongeren tot 25 jaar werkt (jeugdzorg, welzijn, educatie, natuur-educatie), of een jonge theater-/dansmaker via het Snelloket"
+  },
+  "onderliggende_fondsen": [
+    {"naam": "Snelloket Jonge Makers", "relevant": true, "reden": "Aparte procedure binnen Janivo waarbij pas afgestudeerde theater- en dansmakers (< 5 jaar na afstuderen, jonger dan 30) zonder stichting kunnen aanvragen, €2.000-€4.000, mits er \"minimaal één bevestigde speelplek en speeldatum\" is. Een landgoed dat locatietheater programmeert kan die speelplek zijn."}
+  ],
+  "niet_gevonden": [
+    "Deadlines: niet gepubliceerd behalve voor medisch onderzoek (\"Donaties voor wetenschappelijk medisch onderzoek worden echter alleen toegekend in december\").",
+    "Jaarbudget of totale donatieomvang: niet op de site; alleen \"Elk jaar overschrijden de aanvragen ruimschoots het beschikbare budget.\"",
+    "Welke rechtsvormen precies mogen aanvragen in het maatschappelijke domein: bij Kunst staat expliciet \"projecten van stichtingen en verenigingen\", bij Maatschappij niet.",
+    "De pagina Wetenschappelijk medisch onderzoek is niet opgehaald (niet landgoedrelevant)."
+  ]
+}

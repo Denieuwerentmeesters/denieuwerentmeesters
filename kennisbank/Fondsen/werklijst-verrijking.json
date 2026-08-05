@@ -1,0 +1,1577 @@
+[
+ {
+  "naam": "M.A.O.C. Gravin van Bylandt Stichting",
+  "slug": "m-a-o-c-gravin-van-bylandt-stichting",
+  "url": "https://www.bylandtstichting.nl/over-de-stichting/",
+  "categorie": "Landelijk vermogensfonds",
+  "regio": ""
+ },
+ {
+  "naam": "Nationaal Restauratiefonds - Restauratiefonds-hypotheek",
+  "slug": "nationaal-restauratiefonds-restauratiefonds-hypotheek",
+  "url": "https://www.restauratiefonds.nl/particulier/financieren/alle-financieringen/restauratiefonds-hypotheek",
+  "categorie": "Landelijk vermogensfonds (revolverend)",
+  "regio": ""
+ },
+ {
+  "naam": "Fonds 1818",
+  "slug": "fonds-1818",
+  "url": "https://www.fonds1818.nl/over-fonds-1818/regiokaart",
+  "categorie": "Landelijk/regionaal vermogensfonds",
+  "regio": "19 gemeenten Zuid-Holland (Den Haag, Leiden, Wassenaar, Voorschoten e.o.)"
+ },
+ {
+  "naam": "Nationaal Groenfonds",
+  "slug": "nationaal-groenfonds",
+  "url": "https://www.nationaalgroenfonds.nl/financieringen-soorten-financieringen/",
+  "categorie": "Landelijk vermogensfonds (revolverend)",
+  "regio": ""
+ },
+ {
+  "naam": "VSBfonds",
+  "slug": "vsbfonds",
+  "url": "https://vsbfonds.nl/over-vsbfonds/aanvragen/veelgestelde-vragen-over-beleid",
+  "categorie": "Landelijk vermogensfonds",
+  "regio": ""
+ },
+ {
+  "naam": "Van Bijleveltstichting",
+  "slug": "van-bijleveltstichting",
+  "url": "https://vanbijleveltstichting.nl/doelstelling/",
+  "categorie": "Landelijk vermogensfonds (familiefonds)",
+  "regio": ""
+ },
+ {
+  "naam": "Janivo Stichting",
+  "slug": "janivo-stichting",
+  "url": "https://www.janivostichting.nl/aanvragen/",
+  "categorie": "Landelijk vermogensfonds",
+  "regio": ""
+ },
+ {
+  "naam": "K.F. Hein Fonds",
+  "slug": "k-f-hein-fonds",
+  "url": "https://kfhein.nl/wat-doen-wij/monumenten",
+  "categorie": "Regionaal vermogensfonds (familiefonds)",
+  "regio": "Provincie Utrecht (nadruk stad Utrecht)"
+ },
+ {
+  "naam": "Elise Mathilde Fonds",
+  "slug": "elise-mathilde-fonds",
+  "url": "https://elisemathilde.nl/aanvragen/richtlijnen/",
+  "categorie": "Landelijk vermogensfonds",
+  "regio": ""
+ },
+ {
+  "naam": "Oranje Fonds",
+  "slug": "oranje-fonds",
+  "url": "https://www.oranjefonds.nl/algemene-richtlijnen-en-voorwaarden",
+  "categorie": "Landelijk vermogensfonds",
+  "regio": ""
+ },
+ {
+  "naam": "Stichting DOEN",
+  "slug": "stichting-doen",
+  "url": "https://www.doen.nl/aanvraag-doen/",
+  "categorie": "Landelijk vermogensfonds",
+  "regio": ""
+ },
+ {
+  "naam": "Stichting Dioraphte",
+  "slug": "stichting-dioraphte",
+  "url": "https://dioraphte.nl/cultureel-erfgoed/",
+  "categorie": "Landelijk vermogensfonds",
+  "regio": ""
+ },
+ {
+  "naam": "Stichting Dr. Hendrik Muller's Vaderlandsch Fonds",
+  "slug": "stichting-dr-hendrik-muller-s-vaderlandsch-fonds",
+  "url": "https://www.mullerfonds.nl/",
+  "categorie": "Landelijk vermogensfonds",
+  "regio": ""
+ },
+ {
+  "naam": "SBNL Natuurfonds",
+  "slug": "sbnl-natuurfonds",
+  "url": "https://www.sbnlnatuurfonds.nl/nieuws-detailpagina/2026/07/01/van-idee-naar-impact-dien-nu-uw-aanvraag-in-voor-natuur-landschap-of-weidevogels",
+  "categorie": "Regionaal/thematisch fonds",
+  "regio": "Overijssel"
+ },
+ {
+  "naam": "Themafonds Kastelen en Historische Buitenplaatsen (Cultuurfonds + sKBL)",
+  "slug": "themafonds-kastelen-en-historische-buitenplaatsen-cultuurfonds-skbl",
+  "url": "https://www.cultuurfonds.nl/fondsen/themafonds-kastelen-en-historische-buitenplaatsen",
+  "categorie": "Landelijk themafonds (Cultuurfonds)",
+  "regio": ""
+ },
+ {
+  "naam": "Arcadië Fonds (Cultuurfonds)",
+  "slug": "arcadi-fonds-cultuurfonds",
+  "url": "https://www.cultuurfonds.nl/fondsen/arcadi%C3%AB-fonds",
+  "categorie": "Landelijk themafonds (Cultuurfonds)",
+  "regio": "Overijssel"
+ },
+ {
+  "naam": "Oldenaller Fonds (Cultuurfonds)",
+  "slug": "oldenaller-fonds-cultuurfonds",
+  "url": "https://www.cultuurfonds.nl/fondsen/oldenaller-fonds",
+  "categorie": "Landelijk themafonds (Cultuurfonds)",
+  "regio": ""
+ },
+ {
+  "naam": "Gertrudis Offenberg Fonds (Cultuurfonds)",
+  "slug": "gertrudis-offenberg-fonds-cultuurfonds",
+  "url": "https://www.cultuurfonds.nl/fondsen/gertrudis-offenberg-fonds",
+  "categorie": "Landelijk themafonds (Cultuurfonds)",
+  "regio": ""
+ },
+ {
+  "naam": "Osieck-Winkelman Fonds (Cultuurfonds)",
+  "slug": "osieck-winkelman-fonds-cultuurfonds",
+  "url": "https://www.cultuurfonds.nl/fonds/osieck-winkelman-fonds",
+  "categorie": "Landelijk themafonds (Cultuurfonds)",
+  "regio": ""
+ },
+ {
+  "naam": "Staargaard-Van Oostrom Meyjes Fonds (Cultuurfonds)",
+  "slug": "staargaard-van-oostrom-meyjes-fonds-cultuurfonds",
+  "url": "https://www.cultuurfonds.nl/fondsen/staargaard-van-oostrom-meyjes-fonds",
+  "categorie": "Landelijk themafonds (Cultuurfonds)",
+  "regio": "Landelijk (buiten de Randstad)"
+ },
+ {
+  "naam": "Renée Pigeaud Fonds / Leestekens van het Landschap (Cultuurfonds)",
+  "slug": "ren-e-pigeaud-fonds-leestekens-van-het-landschap-cultuurfonds",
+  "url": "https://www.cultuurfonds.nl/fondsen/leestekens-van-het-landschap-fonds",
+  "categorie": "Landelijk themafonds (Cultuurfonds)",
+  "regio": ""
+ },
+ {
+  "naam": "Gansoord Fonds",
+  "slug": "gansoord-fonds",
+  "url": "https://www.gansoord.nl/doelstelling/",
+  "categorie": "Landelijk vermogensfonds / fonds op naam",
+  "regio": ""
+ },
+ {
+  "naam": "Stichting Kennisontwikkeling Groen Erfgoed - 'Doen in Historisch Groen'",
+  "slug": "stichting-kennisontwikkeling-groen-erfgoed-doen-in-historisch-groen",
+  "url": "https://kennisontwikkelinggroenerfgoed.nl/doen-in-historisch-groen/",
+  "categorie": "Landelijk themafonds",
+  "regio": ""
+ },
+ {
+  "naam": "Cultuurfonds Gelderland",
+  "slug": "cultuurfonds-gelderland",
+  "url": "https://www.cultuurfonds.nl/provinciale-afdelingen/gelderland",
+  "categorie": "Provinciale Cultuurfonds-afdeling",
+  "regio": "Gelderland"
+ },
+ {
+  "naam": "Eleonora van Heusden Fonds (Cultuurfonds Gelderland)",
+  "slug": "eleonora-van-heusden-fonds-cultuurfonds-gelderland",
+  "url": "https://www.cultuurfonds.nl/fondsen/eleonora-van-heusden-fonds",
+  "categorie": "Regionaal fonds op naam",
+  "regio": "Gelderland (Wageningen, Arnhem, Nijmegen, Zutphen, Deventer)"
+ },
+ {
+  "naam": "Oene Fonds (Cultuurfonds Gelderland)",
+  "slug": "oene-fonds-cultuurfonds-gelderland",
+  "url": "https://www.cultuurfonds.nl/fondsen/oene-fonds",
+  "categorie": "Regionaal fonds op naam",
+  "regio": "Noord-Oost Veluwe (Epe, Heerde, Vaassen, Emst)"
+ },
+ {
+  "naam": "Dina Altena Fonds (Cultuurfonds Gelderland)",
+  "slug": "dina-altena-fonds-cultuurfonds-gelderland",
+  "url": "https://www.cultuurfonds.nl/fondsen/dina-altena-fonds",
+  "categorie": "Regionaal fonds op naam",
+  "regio": "Gelderse Achterhoek en Veluwe"
+ },
+ {
+  "naam": "Fonds op Naam - Geldersch Landschap & Kasteelen (GLK)",
+  "slug": "fonds-op-naam-geldersch-landschap-kasteelen-glk",
+  "url": "https://www.glk.nl/fonds-op-naam",
+  "categorie": "Donatie-instrument (niet aanvraagbaar)",
+  "regio": "Gelderland"
+ },
+ {
+  "naam": "Cultuurfonds Overijssel",
+  "slug": "cultuurfonds-overijssel",
+  "url": "https://www.cultuurfonds.nl/provinciale-afdelingen/overijssel",
+  "categorie": "Provinciale Cultuurfonds-afdeling",
+  "regio": "Overijssel"
+ },
+ {
+  "naam": "Marke van Streukel / Marke van Berkum Fonds (Cultuurfonds Overijssel)",
+  "slug": "marke-van-streukel-marke-van-berkum-fonds-cultuurfonds-overijssel",
+  "url": "https://www.cultuurfonds.nl/fondsen/marke-van-streukel-marke-van-berkum-fonds",
+  "categorie": "Regionaal fonds op naam",
+  "regio": "Overijssel"
+ },
+ {
+  "naam": "Cultuurfonds Utrecht",
+  "slug": "cultuurfonds-utrecht",
+  "url": "https://www.cultuurfonds.nl/provinciale-afdelingen/utrecht",
+  "categorie": "Provinciale Cultuurfonds-afdeling",
+  "regio": "Utrecht"
+ },
+ {
+  "naam": "Madzy van Nagell-Martini Buys Fonds (Cultuurfonds Utrecht)",
+  "slug": "madzy-van-nagell-martini-buys-fonds-cultuurfonds-utrecht",
+  "url": "https://www.cultuurfonds.nl/fondsen/madzy-van-nagell-martini-buys-fonds",
+  "categorie": "Regionaal fonds op naam",
+  "regio": "Loenersloot e.o. (Utrecht)"
+ },
+ {
+  "naam": "Fonds op Naam - Utrechts Landschap",
+  "slug": "fonds-op-naam-utrechts-landschap",
+  "url": "https://www.utrechtslandschap.nl/help-mee/grote-giften/fonds-op-naam",
+  "categorie": "Donatie-instrument (niet aanvraagbaar)",
+  "regio": "Utrecht"
+ },
+ {
+  "naam": "Cultuurfonds Drenthe",
+  "slug": "cultuurfonds-drenthe",
+  "url": "https://www.cultuurfonds.nl/provinciale-afdelingen/drenthe",
+  "categorie": "Provinciale Cultuurfonds-afdeling",
+  "regio": "Drenthe"
+ },
+ {
+  "naam": "Fonds op Naam - Het Drentse Landschap / Natuurfonds Drenthe",
+  "slug": "fonds-op-naam-het-drentse-landschap-natuurfonds-drenthe",
+  "url": "https://www.drentslandschap.nl/steun-ons/fonds-op-naam",
+  "categorie": "Donatie-instrument (niet aanvraagbaar)",
+  "regio": "Drenthe"
+ },
+ {
+  "naam": "Drents Monumentenfonds (via Nationaal Restauratiefonds)",
+  "slug": "drents-monumentenfonds-via-nationaal-restauratiefonds",
+  "url": "https://restauratiefonds.nl/monumenteigenaren/financieringen/drents-monumentenfonds",
+  "categorie": "Publiek/hybride (buiten scope fondsen)",
+  "regio": "Drenthe"
+ },
+ {
+  "naam": "Cultuurfonds Noord-Holland",
+  "slug": "cultuurfonds-noord-holland",
+  "url": "https://www.cultuurfonds.nl/provinciale-afdelingen/noord-holland",
+  "categorie": "Provinciale Cultuurfonds-afdeling",
+  "regio": "Noord-Holland"
+ },
+ {
+  "naam": "Noord-Hollands Fonds voor Monumenten (via Restauratiefonds)",
+  "slug": "noord-hollands-fonds-voor-monumenten-via-restauratiefonds",
+  "url": "https://www.restauratiefonds.nl/particulier/financieren/alle-financieringen/noord-hollands-fonds-voor-monumenten",
+  "categorie": "Publiek/hybride (buiten scope fondsen)",
+  "regio": "Noord-Holland"
+ },
+ {
+  "naam": "Cultuurfonds Zuid-Holland",
+  "slug": "cultuurfonds-zuid-holland",
+  "url": "https://www.cultuurfonds.nl/provinciale-afdelingen/zuid-holland",
+  "categorie": "Provinciale Cultuurfonds-afdeling",
+  "regio": "Zuid-Holland"
+ },
+ {
+  "naam": "J.E. Jurriaanse Stichting",
+  "slug": "j-e-jurriaanse-stichting",
+  "url": "https://www.volkskracht.nl/de-volkskracht-stichtingen/aangesloten-stichtingen/j-e-jurriaanse-stichting/",
+  "categorie": "Regionaal vermogensfonds",
+  "regio": "Groot-Rijnmond (13 gemeenten rond Rotterdam)"
+ },
+ {
+  "naam": "Cultuurfonds Zeeland",
+  "slug": "cultuurfonds-zeeland",
+  "url": "https://www.cultuurfonds.nl/provinciale-afdelingen/zeeland",
+  "categorie": "Provinciale Cultuurfonds-afdeling",
+  "regio": "Zeeland"
+ },
+ {
+  "naam": "Cultuurfonds Noord-Brabant",
+  "slug": "cultuurfonds-noord-brabant",
+  "url": "https://www.cultuurfonds.nl/provinciale-afdelingen/noord-brabant",
+  "categorie": "Provinciale Cultuurfonds-afdeling",
+  "regio": "Noord-Brabant"
+ },
+ {
+  "naam": "Brabants Erfgoedfonds (via Restauratiefonds)",
+  "slug": "brabants-erfgoedfonds-via-restauratiefonds",
+  "url": "https://www.restauratiefonds.nl/zakelijk/financieren/alle-zakelijke-financieringen/brabants-erfgoedfonds",
+  "categorie": "Publiek/hybride (buiten scope fondsen)",
+  "regio": "Noord-Brabant"
+ },
+ {
+  "naam": "Cultuurfonds Limburg",
+  "slug": "cultuurfonds-limburg",
+  "url": "https://www.cultuurfonds.nl/provinciale-afdelingen/limburg",
+  "categorie": "Provinciale Cultuurfonds-afdeling",
+  "regio": "Limburg"
+ },
+ {
+  "naam": "Beusmans-Jeurissen Fonds (bij Stichting Limburgs Landschap)",
+  "slug": "beusmans-jeurissen-fonds-bij-stichting-limburgs-landschap",
+  "url": "https://beusmans-jeurissenfonds.nl/project/stichting-limburgs-landschap/",
+  "categorie": "Regionaal fonds op naam",
+  "regio": "Limburg (regio Sittard)"
+ },
+ {
+  "naam": "Elisabeth Strouven Fonds",
+  "slug": "elisabeth-strouven-fonds",
+  "url": "https://www.elisabethstrouvenfonds.nl/natuur/",
+  "categorie": "Regionaal vermogensfonds",
+  "regio": "Zuid-Limburg (Maastricht, Meerssen, Valkenburg a/d Geul, Eijsden-Margraten, Gulpen-Wittem, Vaals)"
+ },
+ {
+  "naam": "Cultuurfonds Fryslân",
+  "slug": "cultuurfonds-frysl-n",
+  "url": "https://www.cultuurfonds.nl/provinciale-afdelingen/friesland",
+  "categorie": "Provinciale Cultuurfonds-afdeling",
+  "regio": "Friesland"
+ },
+ {
+  "naam": "Van Heloma Stichting",
+  "slug": "van-heloma-stichting",
+  "url": "https://vanhelomastichting.nl/aanvragen/",
+  "categorie": "Regionaal vermogensfonds (familiefonds)",
+  "regio": "Friesland (nadruk Heerenveen e.o.)"
+ },
+ {
+  "naam": "Stichting Bouwcultuurfonds Friesland",
+  "slug": "stichting-bouwcultuurfonds-friesland",
+  "url": "https://www.bouwcultuurfondsfriesland.nl/aanvragen",
+  "categorie": "Regionaal vermogensfonds",
+  "regio": "Friesland"
+ },
+ {
+  "naam": "Meindersma-Sybenga Stichting",
+  "slug": "meindersma-sybenga-stichting",
+  "url": "https://stichting.moment.online/meindersma-sybenga-stichting",
+  "categorie": "Regionaal vermogensfonds",
+  "regio": "Friesland (prioriteit), dan Noordoost-Nederland, dan overig NL"
+ },
+ {
+  "naam": "P.W. Janssen's Friesche Stichting",
+  "slug": "p-w-janssen-s-friesche-stichting",
+  "url": "https://pwjanssen.nl/stichting/",
+  "categorie": "Regionaal vermogensfonds",
+  "regio": "Friesland en Amsterdam"
+ },
+ {
+  "naam": "Hedwig Carolina Stichting",
+  "slug": "hedwig-carolina-stichting",
+  "url": "https://www.itfryskegea.nl/organisatie/steun-ons/fondsen-en-stichtingen/",
+  "categorie": "Regionaal donatie-instrument",
+  "regio": "Friesland / Overijssel (via It Fryske Gea)"
+ },
+ {
+  "naam": "Cultuurfonds Groningen",
+  "slug": "cultuurfonds-groningen",
+  "url": "https://www.cultuurfonds.nl/provinciale-afdelingen/groningen",
+  "categorie": "Provinciale Cultuurfonds-afdeling",
+  "regio": "Groningen"
+ },
+ {
+  "naam": "Monumentenfonds - Vereniging Stad en Lande",
+  "slug": "monumentenfonds-vereniging-stad-en-lande",
+  "url": "https://www.verenigingstadenlande.nl/monumentenfonds/",
+  "categorie": "Regionaal vermogensfonds",
+  "regio": "Groningen"
+ },
+ {
+  "naam": "J.B. Scholtenfonds & H.S. Kammingafonds",
+  "slug": "j-b-scholtenfonds-h-s-kammingafonds",
+  "url": "http://jbs-hsk.nl/oprichting-doelstellingen",
+  "categorie": "Regionaal vermogensfonds",
+  "regio": "Groningen"
+ },
+ {
+  "naam": "Stichting Geert Ruben Fonds",
+  "slug": "stichting-geert-ruben-fonds",
+  "url": "https://anbi.nl/publicatieverplichting/stichting-geert-ruben-fonds/",
+  "categorie": "Regionaal fonds op naam",
+  "regio": "Slochteren e.o. / Zeven Zanddorpen en Zuidlaren (Groningen)"
+ },
+ {
+  "naam": "Han Lammers Fonds / Lelyprijs (Commissaris van de Koning Flevoland)",
+  "slug": "han-lammers-fonds-lelyprijs-commissaris-van-de-koning-flevoland",
+  "url": "https://www.flevoland.nl/wie-zijn-we/commissaris-van-de-koning/fondsen",
+  "categorie": "Regionale prijs (geen restauratiefonds)",
+  "regio": "Flevoland"
+ },
+ {
+  "naam": "Gieskes Strijbis Fonds",
+  "slug": "gieskes-strijbis-fonds",
+  "url": "https://www.gieskesstrijbisfonds.nl/over-het-fonds/",
+  "categorie": "Landelijk vermogensfonds (familiefonds)",
+  "regio": "Landelijk (Koninkrijk der Nederlanden)"
+ },
+ {
+  "naam": "Adessium Foundation",
+  "slug": "adessium-foundation",
+  "url": "https://www.adessium.org/",
+  "categorie": "Landelijk vermogensfonds (familiefonds)",
+  "regio": "Landelijk / internationaal"
+ },
+ {
+  "naam": "DOB Ecology",
+  "slug": "dob-ecology",
+  "url": "https://dobecology.nl/",
+  "categorie": "Landelijk vermogensfonds (familiefonds)",
+  "regio": "Landelijk / internationaal"
+ },
+ {
+  "naam": "Triodos Foundation",
+  "slug": "triodos-foundation",
+  "url": "https://www.triodosfoundation.nl/themaschenken/natuur-en-biodiversiteit",
+  "categorie": "Landelijk vermogensfonds",
+  "regio": ""
+ },
+ {
+  "naam": "ASN Foundation",
+  "slug": "asn-foundation",
+  "url": "https://www.asnbank.nl/over-asn-bank/asn-foundation.html",
+  "categorie": "Landelijk vermogensfonds",
+  "regio": ""
+ },
+ {
+  "naam": "Rabo Foundation / lokaal Rabobank Coöperatiefonds",
+  "slug": "rabo-foundation-lokaal-rabobank-co-peratiefonds",
+  "url": "https://www.rabobank.nl/lokale-bank/cooperatiefonds",
+  "categorie": "Landelijk + lokaal vermogensfonds",
+  "regio": "Landelijk (Rabo Foundation) / lokaal per Rabobank-vestiging"
+ },
+ {
+  "naam": "Contribute Foundation",
+  "slug": "contribute-foundation",
+  "url": "https://www.contribute.nl/portal-contribute/aanvraag-doen",
+  "categorie": "Landelijk vermogensfonds",
+  "regio": ""
+ },
+ {
+  "naam": "Veenweidefonds (bij Wij.land)",
+  "slug": "veenweidefonds-bij-wij-land",
+  "url": "https://wij.land/doe-mee-met-regeneratieve-landbouw/veenweidefonds/",
+  "categorie": "Regionaal innovatiefonds",
+  "regio": "Westelijk veenweidegebied (Noord-Holland, Utrecht, Zuid-Holland)"
+ },
+ {
+  "naam": "Dinamo Fonds",
+  "slug": "dinamo-fonds",
+  "url": "https://dinamofonds.nl/wat-we-doen",
+  "categorie": "Landelijk vermogensfonds",
+  "regio": ""
+ },
+ {
+  "naam": "COmON Foundation",
+  "slug": "comon-foundation",
+  "url": "https://commonland.com/partner/comon-foundation/",
+  "categorie": "Landelijk vermogensfonds",
+  "regio": "Internationaal (mogelijk ook NL-projecten)"
+ },
+ {
+  "naam": "ForestPeace Foundation",
+  "slug": "forestpeace-foundation",
+  "url": "https://fredfoundation.org/en/forestpeacefoundation/",
+  "categorie": "Klein vermogensfonds (onderdeel Fred Foundation)",
+  "regio": "Landelijk / internationaal"
+ },
+ {
+  "naam": "Trees for All (incl. GroenDoen Fonds)",
+  "slug": "trees-for-all-incl-groendoen-fonds",
+  "url": "https://treesforall.nl/onze-uitgangspunten/",
+  "categorie": "Landelijke stichting/fonds",
+  "regio": ""
+ },
+ {
+  "naam": "Bomenfonds (Bomenstichting)",
+  "slug": "bomenfonds-bomenstichting",
+  "url": "https://www.bomenstichting.nl/monumentalebomen/bomenfonds.html",
+  "categorie": "Landelijk themafonds",
+  "regio": ""
+ },
+ {
+  "naam": "Scheltema-Breet Natuurfonds (Cultuurfonds)",
+  "slug": "scheltema-breet-natuurfonds-cultuurfonds",
+  "url": "https://www.cultuurfonds.nl/fondsen/scheltema-breet-natuurfonds",
+  "categorie": "Landelijk themafonds (Cultuurfonds)",
+  "regio": ""
+ },
+ {
+  "naam": "Jacob van Zijverden Fonds (Cultuurfonds)",
+  "slug": "jacob-van-zijverden-fonds-cultuurfonds",
+  "url": "https://www.cultuurfonds.nl/fondsen/jacob-van-zijverden-fonds",
+  "categorie": "Landelijk themafonds (Cultuurfonds)",
+  "regio": ""
+ },
+ {
+  "naam": "Hinderrust Fonds (Cultuurfonds)",
+  "slug": "hinderrust-fonds-cultuurfonds",
+  "url": "https://fondseninnederland.nl/fonds/hinderrust-fonds",
+  "categorie": "Landelijk/regionaal themafonds (Cultuurfonds)",
+  "regio": "Tussen Amsterdam en Utrecht"
+ },
+ {
+  "naam": "Fonds Kleinschalige Projecten Natuureducatie (Cultuurfonds)",
+  "slug": "fonds-kleinschalige-projecten-natuureducatie-cultuurfonds",
+  "url": "https://www.cultuurfonds.nl/fondsen/fonds-kleinschalige-projecten-natuureducatie",
+  "categorie": "Landelijk themafonds (Cultuurfonds)",
+  "regio": ""
+ },
+ {
+  "naam": "Fonds NME (Natuur- en Milieueducatie)",
+  "slug": "fonds-nme-natuur-en-milieueducatie",
+  "url": "https://fondsnme.nl/aanvragen/",
+  "categorie": "Landelijk vermogensfonds",
+  "regio": ""
+ },
+ {
+  "naam": "Carel Nengerman Fonds",
+  "slug": "carel-nengerman-fonds",
+  "url": "https://carelnengermanfonds.nl/Het-fonds",
+  "categorie": "Regionaal vermogensfonds",
+  "regio": "Utrecht (opgericht 1981 door AMEV)"
+ },
+ {
+  "naam": "Omgevingsfonds Midden-Delfland",
+  "slug": "omgevingsfonds-midden-delfland",
+  "url": "https://www.skbl.nl/erfgoedfondsen/",
+  "categorie": "Regionaal fonds",
+  "regio": "Midden-Delfland"
+ },
+ {
+  "naam": "Stichting Volkskracht Natuurmonumenten",
+  "slug": "stichting-volkskracht-natuurmonumenten",
+  "url": "https://www.volkskracht.nl/de-volkskracht-stichtingen/aangesloten-stichtingen/stichting-volkskracht-natuurmonumenten/",
+  "categorie": "Regionale/lokale stichting",
+  "regio": "Rotterdam en omstreken"
+ },
+ {
+  "naam": "Ars Donandi (koepelstichting fondsen op naam)",
+  "slug": "ars-donandi-koepelstichting-fondsen-op-naam",
+  "url": "https://www.arsdonandi.nl/de-fondsen/",
+  "categorie": "Landelijke koepelstichting",
+  "regio": ""
+ },
+ {
+  "naam": "Nederlandse Kastelenstichting - Publicatiefonds",
+  "slug": "nederlandse-kastelenstichting-publicatiefonds",
+  "url": "https://www.kastelen.nl/",
+  "categorie": "Landelijke kennis-/belangenorganisatie",
+  "regio": ""
+ },
+ {
+  "naam": "Ridderlijke Duitsche Orde Balije van Utrecht (RDO)",
+  "slug": "ridderlijke-duitsche-orde-balije-van-utrecht-rdo",
+  "url": "https://rdo.nl/nl/cultuurhistorische-projecten/",
+  "categorie": "Landelijk vermogensfonds (van oorsprong kloosterorde)",
+  "regio": ""
+ },
+ {
+  "naam": "Ottema-Kingma Stichting",
+  "slug": "ottema-kingma-stichting",
+  "url": "https://www.oks.nl/subsidie/subsidiecriteria/",
+  "categorie": "Regionaal vermogensfonds/cultuurfonds",
+  "regio": "Friesland"
+ },
+ {
+  "naam": "Stichting De Versterking",
+  "slug": "stichting-de-versterking",
+  "url": "https://www.de-versterking.nl/",
+  "categorie": "Landelijk vermogensfonds",
+  "regio": "Landelijk (via LandschappenNL)"
+ },
+ {
+  "naam": "Stichting Fonds A.H. Martens van Sevenhoven",
+  "slug": "stichting-fonds-a-h-martens-van-sevenhoven",
+  "url": "https://fondseninnederland.nl/fonds/stichting-fonds-ah-martens-van-sevenhoven",
+  "categorie": "Regionaal vermogensfonds/steunfonds",
+  "regio": "Gelderland"
+ },
+ {
+  "naam": "Weidevogelfonds Vanellus Vanellus (SBNL Natuurfonds)",
+  "slug": "weidevogelfonds-vanellus-vanellus-sbnl-natuurfonds",
+  "url": "https://www.sbnlnatuurfonds.nl/weidevogelbeheer",
+  "categorie": "Landelijk sub-fonds (SBNL)",
+  "regio": ""
+ },
+ {
+  "naam": "Stichting Steunfonds Jacht en Wildbeheer",
+  "slug": "stichting-steunfonds-jacht-en-wildbeheer",
+  "url": "http://www.stichtingsteunfondsjachtenwildbeheer.nl/",
+  "categorie": "Regionaal/landelijk vermogensfonds (niet volledig geverifieerd)",
+  "regio": ""
+ },
+ {
+  "naam": "Jantje Beton - Geld voor Speelplek",
+  "slug": "jantje-beton-geld-voor-speelplek",
+  "url": "https://jantjebeton.nl/ik-wil-spelen/geld-om-te-spelen/een-speelplek",
+  "categorie": "Landelijk fonds",
+  "regio": ""
+ },
+ {
+  "naam": "Stichting Bouwstenen voor Dierenwelzijn",
+  "slug": "stichting-bouwstenen-voor-dierenwelzijn",
+  "url": "https://fondseninnederland.nl/fonds/stichting-bouwstenen-voor-dierenwelzijn (beleidsplan: https://fondseninnederland.nl/storage/Fondsbestanden/WGmDCGSGCos1YINIbdjSIqmJrN2qcnHtGMHM4mqg.pdf)",
+  "categorie": "Landelijk vermogensfonds",
+  "regio": ""
+ },
+ {
+  "naam": "JC Ruigrok Stichting",
+  "slug": "jc-ruigrok-stichting",
+  "url": "https://fondseninnederland.nl/fonds/jc-ruigrok-stichting ; eigen website: jcruigrokfonds.nl",
+  "categorie": "Regionaal vermogensfonds",
+  "regio": "Noord-Holland (Kennemerland: Haarlem, Bloemendaal, Heemstede)"
+ },
+ {
+  "naam": "Stichting Vrienden van de Leidse Hortus",
+  "slug": "stichting-vrienden-van-de-leidse-hortus",
+  "url": "https://fondseninnederland.nl/fonds/stichting-vrienden-van-de-leidse-hortus",
+  "categorie": "Regionaal fonds op naam",
+  "regio": "Zuid-Holland (Leiden)"
+ },
+ {
+  "naam": "Iona Stichting",
+  "slug": "iona-stichting",
+  "url": "https://fondseninnederland.nl/fonds/iona-stichting",
+  "categorie": "Landelijk vermogensfonds",
+  "regio": ""
+ },
+ {
+  "naam": "Gestichten van Weldadigheid te Doesburg",
+  "slug": "gestichten-van-weldadigheid-te-doesburg",
+  "url": "https://fondseninnederland.nl/fonds/gestichten-van-weldadigheid-te-doesburg",
+  "categorie": "Regionaal vermogensfonds",
+  "regio": "Doesburg (Gelderland)"
+ },
+ {
+  "naam": "Fonds Alphen en Omstreken",
+  "slug": "fonds-alphen-en-omstreken",
+  "url": "https://fondseninnederland.nl/fonds/fonds-alphen-en-omstreken (beleidsplan: https://fondseninnederland.nl/storage/Fondsbestanden/SLWbdMurhCfj59EUI8A6xNwvYKmJDtZ2uqOImFCh.pdf)",
+  "categorie": "Regionaal vermogensfonds",
+  "regio": "Alphen aan den Rijn e.o. (Zuid-Holland)"
+ },
+ {
+  "naam": "Stichting Zabawas",
+  "slug": "stichting-zabawas",
+  "url": "https://fondseninnederland.nl/fonds/stichting-zabawas",
+  "categorie": "Regionaal vermogensfonds",
+  "regio": "Zaanstreek (Noord-Holland)"
+ },
+ {
+  "naam": "Stichting VSB Fonds Woerden",
+  "slug": "stichting-vsb-fonds-woerden",
+  "url": "https://fondseninnederland.nl/fonds/stichting-vsb-fonds-woerden (beleidsplan: https://fondseninnederland.nl/storage/Fondsbestanden/WNtlbCE5kYiw1wsRZlytDSJRVugnXx3vFjJjRTcg.pdf)",
+  "categorie": "Regionaal vermogensfonds",
+  "regio": "Woerden (Utrecht)"
+ },
+ {
+  "naam": "Stichting Aurelia",
+  "slug": "stichting-aurelia",
+  "url": "https://fondseninnederland.nl/fonds/stichting-aurelia (beleidsplan: https://fondseninnederland.nl/storage/Fondsbestanden/ITLJibMww58sslCgSUKC5SOTpPUpbREHgPR601Sv.pdf)",
+  "categorie": "Landelijk vermogensfonds",
+  "regio": ""
+ },
+ {
+  "naam": "Springpact",
+  "slug": "springpact",
+  "url": "https://fondseninnederland.nl/fonds/springpact ; eigen website springpact.org",
+  "categorie": "Landelijk vermogensfonds/steunfonds",
+  "regio": "Rotterdam (landelijk actief)"
+ },
+ {
+  "naam": "Het Cultuurfonds - landelijk domein Natuur",
+  "slug": "het-cultuurfonds-landelijk-domein-natuur",
+  "url": "https://www.cultuurfonds.nl/natuur ; https://www.cultuurfonds.nl/aanvragen/voorwaarden ; https://www.cultuurfonds.nl/samen-vergroenen",
+  "categorie": "Landelijk cultuur-/natuurfonds (Cultuurfonds)",
+  "regio": "Landelijk (project moet natuur in/over Nederland betreffen)"
+ },
+ {
+  "naam": "Van der Hucht De Beukelaar Stichting",
+  "slug": "van-der-hucht-de-beukelaar-stichting",
+  "url": "https://vdhdb.nl/ ; https://vdhdb.nl/richtlijnen/ ; https://vdhdb.nl/beleidsplan/",
+  "categorie": "Landelijk vermogensfonds",
+  "regio": "Landelijk Nederland (statutair gevestigd Alkmaar; dat is de vestigingsplaats, geen werkgebiedbeperking)"
+ },
+ {
+  "naam": "Russell-ter Brugge Fonds (Ars Donandi)",
+  "slug": "russell-ter-brugge-fonds-ars-donandi",
+  "url": "https://arsdonandi.nl/fonds/russell-ter-brugge-fonds/ ; precedent: https://www.nederlandscultuurlandschap.nl/vnc-ontvangt-schenking-van-het-russell-ter-brugge-fonds-van-ars-donandi/",
+  "categorie": "Landelijk vermogensfonds / fonds op naam",
+  "regio": ""
+ },
+ {
+  "naam": "KIEM - natuuraanvraagloket provincie Utrecht",
+  "slug": "kiem-natuuraanvraagloket-provincie-utrecht",
+  "url": "https://kiemutrecht.nl/ ; https://www.cultuurfonds.nl/kiem-regeling ; https://kfhein.nl/wat-doen-wij/initiatieven",
+  "categorie": "Regionale samenwerkingsregeling (3 fondsen)",
+  "regio": "Uitsluitend provincie Utrecht"
+ },
+ {
+  "naam": "Fred Foundation",
+  "slug": "fred-foundation",
+  "url": "https://fredfoundation.org/ ; https://fredfoundation.org/donaties/ ; https://fredfoundation.org/anbi/",
+  "categorie": "Landelijk vermogensfonds (familiefonds)",
+  "regio": "Landelijk Nederland en internationaal (kantoor Driebergen-Rijsenburg)"
+ },
+ {
+  "naam": "Stichting Pharus",
+  "slug": "stichting-pharus",
+  "url": "https://www.stichtingpharus.nl/ ; https://www.stichtingpharus.nl/portal-pharus/beleid",
+  "categorie": "Landelijk vermogensfonds (familiefonds)",
+  "regio": "Geen geografische beperking gepubliceerd; kantoor Amersfoort. Feitelijk portfolio sterk internationaal (circa 80 projecten in 26 landen)."
+ },
+ {
+  "naam": "De Bijll Nachenius Fonds (Cultuurfonds)",
+  "slug": "de-bijll-nachenius-fonds-cultuurfonds",
+  "url": "https://www.cultuurfonds.nl/fondsen/de-bijll-nachenius-fonds",
+  "categorie": "Regionaal fonds op naam",
+  "regio": "Voorkeur voor Amsterdam en omstreken"
+ },
+ {
+  "naam": "Stichting OPNB - Ondersteuning Particulier Natuurbeheer",
+  "slug": "stichting-opnb-ondersteuning-particulier-natuurbeheer",
+  "url": "https://opnb.org/ ; aankondiging FPG: https://www.grondbezit.nl/en/nieuws-detail/2026/04/20/nieuw-financiele-ondersteuning-particulier-natuurbeheer-stichting-opnb",
+  "categorie": "Landelijk vermogensfonds",
+  "regio": ""
+ },
+ {
+  "naam": "Baron en Barones Van Hemert tot Dingshof-Coldeweij Fonds (SBNL)",
+  "slug": "baron-en-barones-van-hemert-tot-dingshof-coldeweij-fonds-sbnl",
+  "url": "https://www.sbnlnatuurfonds.nl/baron-en-barones-van-hemert-tot-dingshof-coldeweij-fonds",
+  "categorie": "Landelijk sub-fonds (SBNL)",
+  "regio": "Overijssel, Achterhoek en Liemers (Gelderland)"
+ },
+ {
+  "naam": "SBNL Fonds Groene Landschapselementen",
+  "slug": "sbnl-fonds-groene-landschapselementen",
+  "url": "https://www.sbnlnatuurfonds.nl/aanvraagpagina-landschaps-en-natuurbeheer",
+  "categorie": "Landelijk sub-fonds (SBNL)",
+  "regio": "Overijssel"
+ },
+ {
+  "naam": "SBNL Fonds Wetenschappelijk Onderzoek",
+  "slug": "sbnl-fonds-wetenschappelijk-onderzoek",
+  "url": "https://www.sbnlnatuurfonds.nl/fondsen-overzicht",
+  "categorie": "Landelijk sub-fonds (SBNL)",
+  "regio": ""
+ },
+ {
+  "naam": "Stichting Vrienden Particuliere Historische Buitenplaatsen (PHB)",
+  "slug": "stichting-vrienden-particuliere-historische-buitenplaatsen-phb",
+  "url": "https://www.zelfdoeninzh.nl/groen-erfgoed/thematische-onderwerpen/landgoederen-buitenplaatsen/",
+  "categorie": "Landelijk vermogensfonds",
+  "regio": ""
+ },
+ {
+  "naam": "Overijsselse Kastelenstichting (OKS)",
+  "slug": "overijsselse-kastelenstichting-oks",
+  "url": "https://overijsselsekastelenstichting.nl/organisatie",
+  "categorie": "Regionaal vermogensfonds",
+  "regio": "Overijssel (662 landgoederen)"
+ },
+ {
+  "naam": "Interieurfonds voor kasteeleigenaren (St. Limburgse Kastelen + Monumentenwacht Limburg)",
+  "slug": "interieurfonds-voor-kasteeleigenaren-st-limburgse-kastelen-monumentenwacht-limburg",
+  "url": "https://www.limburgsekastelen.nl/",
+  "categorie": "Regionaal/thematisch fonds",
+  "regio": "Limburg"
+ },
+ {
+  "naam": "Mulder Premie Fonds (Het Groninger Landschap)",
+  "slug": "mulder-premie-fonds-het-groninger-landschap",
+  "url": "https://www.groningerlandschap.nl/custom/uploads/2025/06/jaarverslag-2024-web.pdf",
+  "categorie": "Regionaal fonds op naam",
+  "regio": "Gorecht (Haren, Hoogezand, Zuidlaren e.o., Groningen)"
+ },
+ {
+  "naam": "Pfältzer-Birnie Fonds (Cultuurfonds)",
+  "slug": "pf-ltzer-birnie-fonds-cultuurfonds",
+  "url": "https://www.cultuurfonds.nl/fondsen/pfaltzer-birnie-fonds",
+  "categorie": "Landelijk themafonds (Cultuurfonds)",
+  "regio": ""
+ },
+ {
+  "naam": "Zanen-Bakker Fonds (Cultuurfonds)",
+  "slug": "zanen-bakker-fonds-cultuurfonds",
+  "url": "https://www.cultuurfonds.nl/fondsen/zanen-bakker-fonds",
+  "categorie": "Landelijk themafonds (Cultuurfonds)",
+  "regio": ""
+ },
+ {
+  "naam": "Par Terra Fonds (Cultuurfonds)",
+  "slug": "par-terra-fonds-cultuurfonds",
+  "url": "https://www.cultuurfonds.nl/fondsen/par-terra-fonds",
+  "categorie": "Landelijk themafonds (Cultuurfonds)",
+  "regio": ""
+ },
+ {
+  "naam": "Van Lange Fonds (Cultuurfonds)",
+  "slug": "van-lange-fonds-cultuurfonds",
+  "url": "https://www.cultuurfonds.nl/fondsen/van-lange-fonds",
+  "categorie": "Landelijk themafonds (Cultuurfonds)",
+  "regio": ""
+ },
+ {
+  "naam": "A. en M. Verhoeven Fonds (Cultuurfonds)",
+  "slug": "a-en-m-verhoeven-fonds-cultuurfonds",
+  "url": "https://www.cultuurfonds.nl/fondsen/a-en-m-verhoeven-fonds",
+  "categorie": "Regionaal fonds op naam",
+  "regio": "Hoeksche Waard + Veluwe (tot Arnhem, Rhenen, Wageningen)"
+ },
+ {
+  "naam": "Popp-Snijders Bomenfonds (Cultuurfonds)",
+  "slug": "popp-snijders-bomenfonds-cultuurfonds",
+  "url": "https://www.cultuurfonds.nl/fondsen/popp-snijders-bomenfonds",
+  "categorie": "Regionaal fonds op naam",
+  "regio": "Bij voorkeur Leiden en Zuid-Holland"
+ },
+ {
+  "naam": "Natuurlijk Limburg Fonds (Cultuurfonds)",
+  "slug": "natuurlijk-limburg-fonds-cultuurfonds",
+  "url": "https://www.cultuurfonds.nl/fondsen/natuurlijk-limburg-fonds",
+  "categorie": "Regionaal fonds op naam",
+  "regio": "Limburg"
+ },
+ {
+  "naam": "Goessche Diep Fonds (Cultuurfonds)",
+  "slug": "goessche-diep-fonds-cultuurfonds",
+  "url": "https://www.cultuurfonds.nl/fondsen/goessche-diep-fonds",
+  "categorie": "Regionaal fonds op naam",
+  "regio": "Zeeland"
+ },
+ {
+  "naam": "Themafonds Erfgoedvrijwilligers (Cultuurfonds)",
+  "slug": "themafonds-erfgoedvrijwilligers-cultuurfonds",
+  "url": "https://www.cultuurfonds.nl/fondsen/themafonds-erfgoedvrijwilligers",
+  "categorie": "Landelijk themafonds (Cultuurfonds)",
+  "regio": ""
+ },
+ {
+  "naam": "Buurtnatuur- en Buurtwaterfonds Noord-Brabant (Cultuurfonds)",
+  "slug": "buurtnatuur-en-buurtwaterfonds-noord-brabant-cultuurfonds",
+  "url": "https://www.cultuurfonds.nl/fondsen/buurtnatuur-en-buurtwaterfonds-noord-brabant",
+  "categorie": "Regionaal fonds op naam",
+  "regio": "Noord-Brabant"
+ },
+ {
+  "naam": "Stichting Volkskracht Historische Monumenten",
+  "slug": "stichting-volkskracht-historische-monumenten",
+  "url": "https://www.skbl.nl/erfgoedfondsen/",
+  "categorie": "Regionaal vermogensfonds",
+  "regio": "Rotterdam en agglomeratie"
+ },
+ {
+  "naam": "K.F. Hein Fonds Monumenten",
+  "slug": "k-f-hein-fonds-monumenten",
+  "url": "https://www.skbl.nl/erfgoedfondsen/",
+  "categorie": "Regionaal vermogensfonds",
+  "regio": "Utrecht"
+ },
+ {
+  "naam": "Stichting TBI Fundatie",
+  "slug": "stichting-tbi-fundatie",
+  "url": "https://www.stichtingtbifundatie.nl/",
+  "categorie": "Landelijk vermogensfonds",
+  "regio": ""
+ },
+ {
+  "naam": "Fonds TBI Klimaattrein",
+  "slug": "fonds-tbi-klimaattrein",
+  "url": "https://www.tbi-klimaattrein.nl/",
+  "categorie": "Landelijk themafonds",
+  "regio": ""
+ },
+ {
+  "naam": "Stichting Zadelhoff Cultuur Fonds",
+  "slug": "stichting-zadelhoff-cultuur-fonds",
+  "url": "https://www.zadelhoffcultuurfonds.nl/",
+  "categorie": "Landelijk vermogensfonds",
+  "regio": ""
+ },
+ {
+  "naam": "Kuijper van Harpen Fonds (Ars Donandi)",
+  "slug": "kuijper-van-harpen-fonds-ars-donandi",
+  "url": "https://www.arsdonandi.nl/de-fondsen/",
+  "categorie": "Landelijk vermogensfonds / fonds op naam",
+  "regio": ""
+ },
+ {
+  "naam": "Nederlandse Kastelenstichting - Publicatiefonds (deadlines)",
+  "slug": "nederlandse-kastelenstichting-publicatiefonds-deadlines",
+  "url": "https://www.kastelen.nl/",
+  "categorie": "Landelijk themafonds",
+  "regio": ""
+ },
+ {
+  "naam": "Stichting Huis te Warmond",
+  "slug": "stichting-huis-te-warmond",
+  "url": "https://www.hendrickdekeyser.nl/fondsen",
+  "categorie": "Regionaal vermogensfonds",
+  "regio": "Zuid-Holland"
+ },
+ {
+  "naam": "Stichting Vrienden van Beeckestijn",
+  "slug": "stichting-vrienden-van-beeckestijn",
+  "url": "https://www.hendrickdekeyser.nl/fondsen",
+  "categorie": "Regionaal fonds op naam",
+  "regio": "Noord-Holland (buitenplaats Beeckestijn)"
+ },
+ {
+  "naam": "Bouwman Boerema Fonds",
+  "slug": "bouwman-boerema-fonds",
+  "url": "https://www.groningerlandschap.nl/projecten/euvelgunnerheem/",
+  "categorie": "Regionaal vermogensfonds",
+  "regio": "Groningen"
+ },
+ {
+  "naam": "Stichting van Well - van der Snoek",
+  "slug": "stichting-van-well-van-der-snoek",
+  "url": "https://wellvandersnoek.nl/",
+  "categorie": "Landelijk vermogensfonds",
+  "regio": ""
+ },
+ {
+  "naam": "Van der Wijck - de Kempenaer Stichting",
+  "slug": "van-der-wijck-de-kempenaer-stichting",
+  "url": "https://www.skbl.nl/erfgoedfondsen/",
+  "categorie": "Landelijk vermogensfonds",
+  "regio": "Groningen / landelijk"
+ },
+ {
+  "naam": "Van den Hazel Fonds (via Geldersch Landschap & Kasteelen)",
+  "slug": "van-den-hazel-fonds-via-geldersch-landschap-kasteelen",
+  "url": "https://static.cbf.nl/documents/Geldersch%20Landschap%20&%20Kasteelen/2024/jaarverslag.pdf",
+  "categorie": "Regionaal fonds op naam",
+  "regio": "Gelderland"
+ },
+ {
+  "naam": "Spiering Fonds (via Geldersch Landschap & Kasteelen)",
+  "slug": "spiering-fonds-via-geldersch-landschap-kasteelen",
+  "url": "https://static.cbf.nl/documents/Geldersch%20Landschap%20&%20Kasteelen/2024/jaarverslag.pdf",
+  "categorie": "Regionaal fonds op naam",
+  "regio": "Gelderland"
+ },
+ {
+  "naam": "Stichting A.A.M. Bijleveld",
+  "slug": "stichting-a-a-m-bijleveld",
+  "url": "https://storage.googleapis.com/landschapoverijssel_assets/04/jaarrekening-landschap-overijssel-2024.pdf",
+  "categorie": "Landelijk vermogensfonds",
+  "regio": ""
+ },
+ {
+  "naam": "Stichting Jaap van Duijn Vogelfonds",
+  "slug": "stichting-jaap-van-duijn-vogelfonds",
+  "url": "https://www.landschapnoordholland.nl/doe-mee/fondsen-en-stichtingen",
+  "categorie": "Landelijk vermogensfonds",
+  "regio": "Landelijk (veel in Noord-Holland)"
+ },
+ {
+  "naam": "Stichting Don't Give Up",
+  "slug": "stichting-don-t-give-up",
+  "url": "https://www.landschapnoordholland.nl/doe-mee/fondsen-en-stichtingen",
+  "categorie": "Landelijk vermogensfonds",
+  "regio": ""
+ },
+ {
+  "naam": "Stichting TriArcus",
+  "slug": "stichting-triarcus",
+  "url": "https://www.landschapnoordholland.nl/doe-mee/fondsen-en-stichtingen",
+  "categorie": "Landelijk vermogensfonds",
+  "regio": "Landelijk (actief in Noord-Holland)"
+ },
+ {
+  "naam": "Stichting de Lange Brug",
+  "slug": "stichting-de-lange-brug",
+  "url": "https://www.landschapnoordholland.nl/doe-mee/fondsen-en-stichtingen",
+  "categorie": "Landelijk vermogensfonds",
+  "regio": "Noord-Holland"
+ },
+ {
+  "naam": "VSB Fonds Beemster",
+  "slug": "vsb-fonds-beemster",
+  "url": "https://www.landschapnoordholland.nl/doe-mee/fondsen-en-stichtingen",
+  "categorie": "Regionaal vermogensfonds",
+  "regio": "Beemster (Noord-Holland)"
+ },
+ {
+  "naam": "Weide Weelde Fonds",
+  "slug": "weide-weelde-fonds",
+  "url": "https://www.weideweeldefonds.nl/",
+  "categorie": "Regionaal/thematisch fonds",
+  "regio": "Noord-Nederland (Groningen, Friesland, Drenthe)"
+ },
+ {
+  "naam": "'Samen voor Biodiversiteit' Innovatiefonds",
+  "slug": "samen-voor-biodiversiteit-innovatiefonds",
+  "url": "https://www.samenvoorbiodiversiteit.nl/innovatiefonds/aanvraag",
+  "categorie": "Landelijk themafonds",
+  "regio": ""
+ },
+ {
+  "naam": "VriendenLoterij - culturele partners / eenmalige schenking",
+  "slug": "vriendenloterij-culturele-partners-eenmalige-schenking",
+  "url": "https://www.vriendenloterij.nl/goede-doelen/culturele-partners/aanvraagprocedure/",
+  "categorie": "Loterij (privaat)",
+  "regio": ""
+ },
+ {
+  "naam": "VriendenLoterij - clubs, verenigingen en stichtingen",
+  "slug": "vriendenloterij-clubs-verenigingen-en-stichtingen",
+  "url": "https://www.vriendenloterij.nl/goede-doelen/clubs-verenigingen/meld-uw-club-aan",
+  "categorie": "Loterij (privaat)",
+  "regio": ""
+ },
+ {
+  "naam": "VriendenLoterij - Clubs van de Week",
+  "slug": "vriendenloterij-clubs-van-de-week",
+  "url": "https://www.vriendenloterij.nl/goede-doelen/clubs-verenigingen/club-van-de-week",
+  "categorie": "Loterij (privaat)",
+  "regio": ""
+ },
+ {
+  "naam": "Postcode Loterij Buurtfonds (uitvoering Stichting DOEN)",
+  "slug": "postcode-loterij-buurtfonds-uitvoering-stichting-doen",
+  "url": "https://www.doen.nl/postcode-loterij-buurtfonds/",
+  "categorie": "Loterij (privaat)",
+  "regio": ""
+ },
+ {
+  "naam": "Nationale Postcode Loterij - beneficiantschap",
+  "slug": "nationale-postcode-loterij-beneficiantschap",
+  "url": "https://www.postcodeloterij.nl/goede-doelen/aanvraag-indienen/toekenningscriteria",
+  "categorie": "Loterij (privaat)",
+  "regio": ""
+ },
+ {
+  "naam": "Cultuurfonds voor Monumenten / Cultuurfonds-Hypotheek",
+  "slug": "cultuurfonds-voor-monumenten-cultuurfonds-hypotheek",
+  "url": "https://www.cultuurfonds.nl/cultuurfonds-voor-monumenten",
+  "categorie": "Publiek/hybride (buiten scope fondsen)",
+  "regio": "9 provincies (Groningen, Friesland, Overijssel, Gelderland, Utrecht, Zuid-Holland, Noord-Brabant, Noord-Holland, Zeeland)"
+ },
+ {
+  "naam": "Restauratiefondsplus-hypotheek",
+  "slug": "restauratiefondsplus-hypotheek",
+  "url": "https://www.restauratiefonds.nl/zakelijk/financieren/alle-zakelijke-financieringen",
+  "categorie": "Publiek/hybride (buiten scope fondsen)",
+  "regio": ""
+ },
+ {
+  "naam": "Duurzame Monumenten-Lening (DUMO)",
+  "slug": "duurzame-monumenten-lening-dumo",
+  "url": "https://www.restauratiefonds.nl/zakelijk/financieren/alle-zakelijke-financieringen",
+  "categorie": "Publiek/hybride (buiten scope fondsen)",
+  "regio": ""
+ },
+ {
+  "naam": "Investeringsfonds Duurzame Landbouw (IDL, Nationaal Groenfonds)",
+  "slug": "investeringsfonds-duurzame-landbouw-idl-nationaal-groenfonds",
+  "url": "https://www.nationaalgroenfonds.nl/investeringsfonds-duurzame-landbouw/",
+  "categorie": "Publiek/hybride (buiten scope fondsen)",
+  "regio": ""
+ },
+ {
+  "naam": "Monumentenfonds 1818",
+  "slug": "monumentenfonds-1818",
+  "url": "https://www.restauratiefonds.nl/monumenteigenaren/financieringen/monumentenfonds-1818",
+  "categorie": "Regionaal vermogensfonds (revolverend)",
+  "regio": "Haaglanden (Den Haag, Delft, Leiden e.o.)"
+ },
+ {
+  "naam": "Gelders Monumentenfonds",
+  "slug": "gelders-monumentenfonds",
+  "url": "https://www.restauratiefonds.nl/partners/samenwerkingen-en-fondsen",
+  "categorie": "Regionaal vermogensfonds (revolverend)",
+  "regio": "Gelderland"
+ },
+ {
+  "naam": "Maassteden Monumentenfonds",
+  "slug": "maassteden-monumentenfonds",
+  "url": "https://www.restauratiefonds.nl/partners/samenwerkingen-en-fondsen",
+  "categorie": "Regionaal vermogensfonds (revolverend)",
+  "regio": "Schiedam, Vlaardingen, Maassluis"
+ },
+ {
+  "naam": "Van Tellingen-Pul Stichting",
+  "slug": "van-tellingen-pul-stichting",
+  "url": "https://www.vantellingen-pul.nl/",
+  "categorie": "Regionaal vermogensfonds",
+  "regio": "Gemeente Zeist"
+ },
+ {
+  "naam": "Ridderschap van Utrecht",
+  "slug": "ridderschap-van-utrecht",
+  "url": "https://www.ridderschap-utrecht.nl/",
+  "categorie": "Regionaal vermogensfonds",
+  "regio": "Utrecht"
+ },
+ {
+  "naam": "Fentener van Vlissingen Fonds",
+  "slug": "fentener-van-vlissingen-fonds",
+  "url": "https://www.fentenervanvlissingenfonds.nl/",
+  "categorie": "Regionaal vermogensfonds",
+  "regio": "Utrecht"
+ },
+ {
+  "naam": "Stichting Mens en zijn Natuur",
+  "slug": "stichting-mens-en-zijn-natuur",
+  "url": "https://www.mensenzijnnatuur.nl/aanvragen/",
+  "categorie": "Regionaal vermogensfonds",
+  "regio": "Gemeente De Bilt (Utrecht)"
+ },
+ {
+  "naam": "Van Baaren Stichting",
+  "slug": "van-baaren-stichting",
+  "url": "https://www.vanbaarenstichting.nl/",
+  "categorie": "Regionaal vermogensfonds",
+  "regio": "Stad Utrecht"
+ },
+ {
+  "naam": "Fonds 1845",
+  "slug": "fonds-1845",
+  "url": "https://www.fondsenwerving-nederland.nl/vermogensfondsen/regionale-en-lokale-vermogensfondsen/vermogensfondsen-in-gelderland/",
+  "categorie": "Regionaal vermogensfonds",
+  "regio": "Noord- en Oost-Veluwe"
+ },
+ {
+  "naam": "De Dullertstichting",
+  "slug": "de-dullertstichting",
+  "url": "https://www.fondsenwerving-nederland.nl/vermogensfondsen/regionale-en-lokale-vermogensfondsen/vermogensfondsen-in-gelderland/",
+  "categorie": "Regionaal vermogensfonds",
+  "regio": "Regio Arnhem"
+ },
+ {
+  "naam": "Landschapsfonds Holland Rijnland",
+  "slug": "landschapsfonds-holland-rijnland",
+  "url": "https://www.fonds1818.nl/aanvragen/voor-organisaties/andere-fondsen",
+  "categorie": "Regionaal/thematisch fonds",
+  "regio": "Holland Rijnland (Leidse regio)"
+ },
+ {
+  "naam": "Groenfonds Midden-Delfland",
+  "slug": "groenfonds-midden-delfland",
+  "url": "https://www.groenfondsmiddendelfland.nl/",
+  "categorie": "Regionaal/thematisch fonds",
+  "regio": "Midden-Delfland"
+ },
+ {
+  "naam": "Streekfonds Krimpenerwaard",
+  "slug": "streekfonds-krimpenerwaard",
+  "url": "https://www.streekfondskrimpenerwaard.nl/",
+  "categorie": "Regionaal/thematisch fonds",
+  "regio": "Krimpenerwaard"
+ },
+ {
+  "naam": "Waddenfonds",
+  "slug": "waddenfonds",
+  "url": "https://waddenfonds.nl/",
+  "categorie": "Publiek/hybride (buiten scope fondsen)",
+  "regio": "Waddengebied (Groningen, Friesland, kop van Noord-Holland)"
+ },
+ {
+  "naam": "Herbert Duintjer Fonds",
+  "slug": "herbert-duintjer-fonds",
+  "url": "https://www.erfgoedplatformoverijssel.nl/kennisbank/financiering-en-subsidiemogelijkheden/",
+  "categorie": "Regionaal vermogensfonds",
+  "regio": "Friesland (voorkeur)"
+ },
+ {
+  "naam": "Stichting Siebolt Foundation",
+  "slug": "stichting-siebolt-foundation",
+  "url": "https://www.erfgoedplatformoverijssel.nl/kennisbank/financiering-en-subsidiemogelijkheden/",
+  "categorie": "Regionaal vermogensfonds",
+  "regio": "Friesland"
+ },
+ {
+  "naam": "Fiks Omgevingsfonds",
+  "slug": "fiks-omgevingsfonds",
+  "url": "https://www.erfgoedplatformoverijssel.nl/kennisbank/financiering-en-subsidiemogelijkheden/",
+  "categorie": "Regionaal/thematisch fonds",
+  "regio": "Friese IJsselmeerkust"
+ },
+ {
+  "naam": "Erfgoed Fundaasje",
+  "slug": "erfgoed-fundaasje",
+  "url": "https://www.erfgoedfundaasje.nl/",
+  "categorie": "Regionaal/thematisch fonds",
+  "regio": "Friesland"
+ },
+ {
+  "naam": "Emmaplein Foundation",
+  "slug": "emmaplein-foundation",
+  "url": "https://www.emmapleinfoundation.nl/",
+  "categorie": "Regionaal vermogensfonds",
+  "regio": "Groningen"
+ },
+ {
+  "naam": "Brabants Heemfonds",
+  "slug": "brabants-heemfonds",
+  "url": "https://www.brabantsheem.nl/brabants-heemfonds/",
+  "categorie": "Regionaal/thematisch fonds",
+  "regio": "Noord-Brabant"
+ },
+ {
+  "naam": "Stichting Tilmanshof",
+  "slug": "stichting-tilmanshof",
+  "url": "https://tilmanshof.nl/",
+  "categorie": "Regionaal vermogensfonds",
+  "regio": "'s-Hertogenbosch e.o."
+ },
+ {
+  "naam": "Stichting Instandhouding Kleine Landschapselementen Limburg (IKL)",
+  "slug": "stichting-instandhouding-kleine-landschapselementen-limburg-ikl",
+  "url": "https://www.ikl-limburg.nl/",
+  "categorie": "Regionaal/thematisch fonds",
+  "regio": "Limburg"
+ },
+ {
+  "naam": "Nutsfonds Zierikzee",
+  "slug": "nutsfonds-zierikzee",
+  "url": "https://nutsfondszierikzee.nl/",
+  "categorie": "Regionaal vermogensfonds",
+  "regio": "Schouwen-Duiveland (Zeeland)"
+ },
+ {
+  "naam": "Stichting Renesse",
+  "slug": "stichting-renesse",
+  "url": "https://stichtingrenesse.nl/financiele-steun",
+  "categorie": "Regionaal vermogensfonds",
+  "regio": "Schouwen-Duiveland / Renesse (Zeeland)"
+ },
+ {
+  "naam": "Molenfonds",
+  "slug": "molenfonds",
+  "url": "https://www.molenfonds.nl/",
+  "categorie": "Landelijk themafonds",
+  "regio": ""
+ },
+ {
+  "naam": "Koninklijke Nederlandse Heidemaatschappij (KNHM) / Kern met Pit",
+  "slug": "koninklijke-nederlandse-heidemaatschappij-knhm-kern-met-pit",
+  "url": "https://www.knhm.nl/",
+  "categorie": "Landelijke stichting/fonds",
+  "regio": ""
+ },
+ {
+  "naam": "Stimuleringsfonds Samen voor onze Leefomgeving",
+  "slug": "stimuleringsfonds-samen-voor-onze-leefomgeving",
+  "url": "https://www.samenvooronzeleefomgeving.nl/9627/stimuleringsfonds",
+  "categorie": "Landelijk themafonds",
+  "regio": ""
+ },
+ {
+  "naam": "DikGroen",
+  "slug": "dikgroen",
+  "url": "https://www.dikgroen.nl/",
+  "categorie": "Landelijk themafonds",
+  "regio": ""
+ },
+ {
+  "naam": "Gerrit Jeurissen Fonds (voorheen Love & Light)",
+  "slug": "gerrit-jeurissen-fonds-voorheen-love-light",
+  "url": "https://www.gerritjeurissenfonds.nl/",
+  "categorie": "Landelijk vermogensfonds",
+  "regio": ""
+ },
+ {
+  "naam": "Haella Stichting",
+  "slug": "haella-stichting",
+  "url": "https://www.haella.nl/",
+  "categorie": "Landelijk vermogensfonds",
+  "regio": ""
+ },
+ {
+  "naam": "Bouwfonds Cultuurfonds (BPD)",
+  "slug": "bouwfonds-cultuurfonds-bpd",
+  "url": "https://www.skbl.nl/erfgoedfondsen/",
+  "categorie": "Landelijk themafonds",
+  "regio": ""
+ },
+ {
+  "naam": "Maatschappij van Welstand",
+  "slug": "maatschappij-van-welstand",
+  "url": "https://www.welstand.nl/",
+  "categorie": "Landelijk vermogensfonds",
+  "regio": ""
+ },
+ {
+  "naam": "Katalys",
+  "slug": "katalys",
+  "url": "https://katalys.nl/",
+  "categorie": "Landelijke kennis-/belangenorganisatie",
+  "regio": ""
+ },
+ {
+  "naam": "Stichting Buitenfonds (Staatsbosbeheer)",
+  "slug": "stichting-buitenfonds-staatsbosbeheer",
+  "url": "https://www.buitenfonds.nl/",
+  "categorie": "Donatie-instrument (niet aanvraagbaar)",
+  "regio": ""
+ },
+ {
+  "naam": "Groen Ontwikkelfonds Brabant",
+  "slug": "groen-ontwikkelfonds-brabant",
+  "url": "https://www.groenontwikkelfondsbrabant.nl/",
+  "categorie": "Publiek/hybride (buiten scope fondsen)",
+  "regio": "Noord-Brabant"
+ },
+ {
+  "naam": "RCOAK",
+  "slug": "rcoak",
+  "url": "https://rcoak.nl/",
+  "categorie": "Landelijk vermogensfonds",
+  "regio": "Landelijk (nadruk Amsterdam voor armoededoel)"
+ },
+ {
+  "naam": "Fonds Sluyterman van Loo",
+  "slug": "fonds-sluyterman-van-loo",
+  "url": "https://www.fondssluytermanvanloo.nl/",
+  "categorie": "Landelijk vermogensfonds",
+  "regio": ""
+ },
+ {
+  "naam": "Kansfonds (voorheen Skanfonds)",
+  "slug": "kansfonds-voorheen-skanfonds",
+  "url": "https://www.kansfonds.nl/aanvragen/richtlijnen/",
+  "categorie": "Landelijk vermogensfonds",
+  "regio": ""
+ },
+ {
+  "naam": "FNO (Fonds NutsOhra)",
+  "slug": "fno-fonds-nutsohra",
+  "url": "https://www.fondsenwerving-nederland.nl/vermogensfondsen/landelijke-vermogensfondsen/fno-fonds-nutsohra/",
+  "categorie": "Landelijk vermogensfonds",
+  "regio": ""
+ },
+ {
+  "naam": "Fundatie Van den Santheuvel, Sobbe",
+  "slug": "fundatie-van-den-santheuvel-sobbe",
+  "url": "https://www.fundatiesobbe.nl/",
+  "categorie": "Regionaal vermogensfonds (koepel van dertien fondsen)",
+  "regio": "Amsterdam e.o. (vanaf 1-1-2027 uitsluitend Amsterdam)"
+ },
+ {
+  "naam": "Van der Mandele Stichting",
+  "slug": "van-der-mandele-stichting",
+  "url": "https://vandermandele.org/richtlijnen-giften.html",
+  "categorie": "Regionaal vermogensfonds",
+  "regio": "Zuid-Holland (voorkeur Delft, Dordrecht, Leiden, Rotterdam)"
+ },
+ {
+  "naam": "Stichting Boschuysen",
+  "slug": "stichting-boschuysen",
+  "url": "https://boschuysen.nl/doelstelling/",
+  "categorie": "Landelijk vermogensfonds",
+  "regio": "Landelijk (kantoor Den Haag)"
+ },
+ {
+  "naam": "Univé Buurtfonds",
+  "slug": "univ-buurtfonds",
+  "url": "https://buurtfonds.unive.nl/voorwaarden",
+  "categorie": "Coöperatief/regionaal donatie-instrument",
+  "regio": "Regionaal, per Univé-kring (versnipperd over NL)"
+ },
+ {
+  "naam": "Jantjes Scouting Fonds",
+  "slug": "jantjes-scouting-fonds",
+  "url": "https://www.scouting.nl/nieuws/jantje-beton-en-scouting-nederland-lanceren-jantjes-scouting-fonds",
+  "categorie": "Landelijk donatie-instrument (Jantje Beton + Scouting Nederland)",
+  "regio": ""
+ },
+ {
+  "naam": "Stichting Kinderpostzegels Nederland (subsidieprogramma)",
+  "slug": "stichting-kinderpostzegels-nederland-subsidieprogramma",
+  "url": "https://www.kinderpostzegels.nl/subsidieaanvraag/aanvraag",
+  "categorie": "Landelijk vermogensfonds",
+  "regio": ""
+ },
+ {
+  "naam": "Stichting Fondsenbeheer Landbouw en Zorg (SFLZ)",
+  "slug": "stichting-fondsenbeheer-landbouw-en-zorg-sflz",
+  "url": "https://www.fondslandbouwenzorg.nl/aanvragen/",
+  "categorie": "Landelijk sectorfonds",
+  "regio": ""
+ },
+ {
+  "naam": "Jeugdfonds Sport & Cultuur",
+  "slug": "jeugdfonds-sport-cultuur",
+  "url": "https://www.allekinderendoenmee.nl/",
+  "categorie": "Landelijk donatie-instrument",
+  "regio": "Landelijk (regionale afdelingen)"
+ },
+ {
+  "naam": "Charema Fonds voor geschiedenis en kunst (Cultuurfonds)",
+  "slug": "charema-fonds-voor-geschiedenis-en-kunst-cultuurfonds",
+  "url": "https://www.cultuurfonds.nl/fondsen/charema-fonds-voor-geschiedenis-en-kunst",
+  "categorie": "Publicaties/kunsthistorisch onderzoek",
+  "regio": ""
+ },
+ {
+  "naam": "De Gijselaar-Hintzenfonds",
+  "slug": "de-gijselaar-hintzenfonds",
+  "url": "https://www.degijselaarhintzenfonds.nl/procedure/",
+  "categorie": "Publicaties/kunsteducatie beeldende kunst",
+  "regio": ""
+ },
+ {
+  "naam": "Molenambacht Fonds (Cultuurfonds)",
+  "slug": "molenambacht-fonds-cultuurfonds",
+  "url": "https://www.cultuurfonds.nl/fondsen/molenambacht-fonds",
+  "categorie": "Ambachten/vakmanschap",
+  "regio": ""
+ },
+ {
+  "naam": "Cultuurfondsbeurzen (incl. MBO-beurzen meubelrestauratoren, dansers, musici) (Cultuurfonds)",
+  "slug": "cultuurfondsbeurzen-incl-mbo-beurzen-meubelrestauratoren-dansers-musici-cultuurfonds",
+  "url": "https://www.cultuurfonds.nl/cultuurfondsbeurzen-voor-studenten",
+  "categorie": "Ambachten & podiumkunsten (individuele beurzen)",
+  "regio": ""
+ },
+ {
+  "naam": "VandenEnde Foundation (VDEF)",
+  "slug": "vandenende-foundation-vdef",
+  "url": "https://vdef.nl/aanvragen/",
+  "categorie": "Podiumkunsten/talentontwikkeling",
+  "regio": ""
+ },
+ {
+  "naam": "Fonds 21",
+  "slug": "fonds-21",
+  "url": "https://www.fonds21.nl/voorwaarden/1/podiumkunsten",
+  "categorie": "Podiumkunsten/kunst & cultuur",
+  "regio": ""
+ },
+ {
+  "naam": "Fonds Maatschappelijk betrokken amateurtheater (Cultuurfonds)",
+  "slug": "fonds-maatschappelijk-betrokken-amateurtheater-cultuurfonds",
+  "url": "https://www.cultuurfonds.nl/fondsen/fonds-maatschappelijk-betrokken-amateurtheater",
+  "categorie": "Podiumkunsten (amateurtheater)",
+  "regio": ""
+ },
+ {
+  "naam": "Cultuurfonds Conservatoren Stipendium (Cultuurfonds)",
+  "slug": "cultuurfonds-conservatoren-stipendium-cultuurfonds",
+  "url": "https://www.cultuurfonds.nl/conservatoren-stipendium",
+  "categorie": "Kunsthistorisch onderzoek",
+  "regio": ""
+ },
+ {
+  "naam": "Pruijt Prins Beeld en Dansfonds (Cultuurfonds)",
+  "slug": "pruijt-prins-beeld-en-dansfonds-cultuurfonds",
+  "url": "https://www.cultuurfonds.nl/fondsen/pruijt-prins-beeld-en-dansfonds",
+  "categorie": "Podiumkunsten (dans/beeldhouwkunst)",
+  "regio": ""
+ },
+ {
+  "naam": "Fonds Eindbestemming (het Cultuurfonds)",
+  "slug": "fonds-eindbestemming-het-cultuurfonds",
+  "url": "https://www.cultuurfonds.nl/fondsen/fonds-eindbestemming",
+  "categorie": "Funerair erfgoed",
+  "regio": ""
+ },
+ {
+  "naam": "Fonds Perzik van Onsterfelijkheid (het Cultuurfonds)",
+  "slug": "fonds-perzik-van-onsterfelijkheid-het-cultuurfonds",
+  "url": "https://www.cultuurfonds.nl/fonds-perzik-van-onsterfelijkheid",
+  "categorie": "Funerair erfgoed",
+  "regio": ""
+ },
+ {
+  "naam": "Welcker Fonds (het Cultuurfonds)",
+  "slug": "welcker-fonds-het-cultuurfonds",
+  "url": "https://www.cultuurfonds.nl/fondsen/welcker-fonds",
+  "categorie": "Funerair en religieus erfgoed",
+  "regio": ""
+ },
+ {
+  "naam": "Fonds voor Archeologie en Publiek (het Cultuurfonds)",
+  "slug": "fonds-voor-archeologie-en-publiek-het-cultuurfonds",
+  "url": "https://www.cultuurfonds.nl/fondsen/fonds-voor-archeologie-en-publiek",
+  "categorie": "Archeologie en cultuurlandschap",
+  "regio": ""
+ },
+ {
+  "naam": "Regeling voor Publieksarcheologie (het Cultuurfonds)",
+  "slug": "regeling-voor-publieksarcheologie-het-cultuurfonds",
+  "url": "https://www.cultuurfonds.nl/monumentenzorg-erfgoed/regeling-voor-publieksarcheologie",
+  "categorie": "Archeologie en cultuurlandschap",
+  "regio": "Landelijk (voorkeur ondervertegenwoordigde regio's)"
+ },
+ {
+  "naam": "Reuvensfonds (Stichting Reuvens)",
+  "slug": "reuvensfonds-stichting-reuvens",
+  "url": "https://www.reuvensdagen.nl/reuvensfonds/",
+  "categorie": "Archeologie en cultuurlandschap",
+  "regio": ""
+ },
+ {
+  "naam": "Carolijn Jongsma Fonds (het Cultuurfonds)",
+  "slug": "carolijn-jongsma-fonds-het-cultuurfonds",
+  "url": "https://www.cultuurfonds.nl/fondsen/carolijn-jongsma-fonds",
+  "categorie": "Historische tuinen en parken / ambachten",
+  "regio": ""
+ },
+ {
+  "naam": "Streekfonds Achterhoek",
+  "slug": "streekfonds-achterhoek",
+  "url": "https://streekfondsachterhoek.nl/",
+  "categorie": "Water en klimaatadaptatie / Voedsel en korte ketens",
+  "regio": "Achterhoek, Gelderland"
+ },
+ {
+  "naam": "Streekfonds Waterland",
+  "slug": "streekfonds-waterland",
+  "url": "http://streekfondswaterland.nl/",
+  "categorie": "Water en klimaatadaptatie / Voedsel en korte ketens",
+  "regio": "Waterland, Noord-Holland"
+ },
+ {
+  "naam": "Lopikerwaarden Streekfonds",
+  "slug": "lopikerwaarden-streekfonds",
+  "url": "https://www.lopikerwaarden.nl/",
+  "categorie": "Water en klimaatadaptatie / Recreatie en routes",
+  "regio": "Lopikerwaard, provincie Utrecht"
+ },
+ {
+  "naam": "Landschapsfonds Het Groene Woud",
+  "slug": "landschapsfonds-het-groene-woud",
+  "url": "https://www.hetgroenewoud.com/organisatie/streekfonds/bijdrage-aanvragen/",
+  "categorie": "Recreatie en routes / Water en klimaatadaptatie",
+  "regio": "Nationaal Landschap Het Groene Woud, Noord-Brabant"
+ },
+ {
+  "naam": "Fonds Natuurinclusieve Streekboerderijen (FNS Fonds B.V.)",
+  "slug": "fonds-natuurinclusieve-streekboerderijen-fns-fonds-b-v",
+  "url": "https://www.streekboerderijen.nl/over-ons/",
+  "categorie": "Voedsel en korte ketens",
+  "regio": ""
+ },
+ {
+  "naam": "Voedselbosfonds (werktitel; coalitie Stichting Voedselbosbouw Nederland, Rabobank, Triodos Bank, Greenchoice, Perspectieffonds Gelderland, WWF-NL)",
+  "slug": "voedselbosfonds-werktitel-coalitie-stichting-voedselbosbouw-nederland-rabobank-triodos-bank-greenchoice-perspectieffonds-gelderland-wwf-nl",
+  "url": "https://www.nieuweoogst.nl/nieuws/2025/06/24/nieuw-fonds-neemt-drempel-weg-in-opstartfase-voedselbos",
+  "categorie": "Voedsel en korte ketens",
+  "regio": ""
+ },
+ {
+  "naam": "Fiets en Wandelfonds (Vrienden op de Fiets)",
+  "slug": "fiets-en-wandelfonds-vrienden-op-de-fiets",
+  "url": "https://www.vriendenopdefiets.nl/nl/page/help-sportievelingen-vooruit-doe-een-aanvraag-bij-het-fiets-en-wandelfonds",
+  "categorie": "Recreatie en routes",
+  "regio": ""
+ },
+ {
+  "naam": "HandicapNL (fusie Fonds Verstandelijk Gehandicapten & Revalidatiefonds)",
+  "slug": "handicapnl-fusie-fonds-verstandelijk-gehandicapten-revalidatiefonds",
+  "url": "https://handicap.nl/projectaanvraag/aanvraag-indienen/aanvraag-indienen-kleine-lokale-projecten/",
+  "categorie": "Gezondheid en groen / Recreatie en routes",
+  "regio": ""
+ },
+ {
+  "naam": "Pruikenburg Fonds (Fundatie Van den Santheuvel, Sobbe)",
+  "slug": "pruikenburg-fonds-fundatie-van-den-santheuvel-sobbe",
+  "url": "https://www.fundatiesobbe.nl/fondsen",
+  "categorie": "Kunsthistorisch onderzoek/publicaties/restauratie",
+  "regio": "Landelijk (vestiging Amsterdam)"
+ }
+]

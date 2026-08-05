@@ -1,0 +1,44 @@
+{
+  "naam": "Hinderrust Fonds",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://hinderrustfonds.nl/",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "anbi_publicatie",
+      "url": "https://fondseninnederland.nl/fonds/hinderrust-fonds",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "'Bijdragen aan de zorg voor cultuur en (cultuur)landschap, bij voorkeur - maar niet uitsluitend - in het gebied tussen Amsterdam en Utrecht.'",
+  "benaderbaarheid": "onbekend",
+  "benaderwijze_notitie": "De site heeft een sectie 'Aanvragen', maar publiceert daar geen criteria, bedragen of procedure; geen letterlijke uitspraak gevonden over of ongevraagde aanvragen welkom zijn.",
+  "aanvrager_type": "onbekend",
+  "geo_niveau": "regio",
+  "geo_waarden": [
+    "gebied tussen Amsterdam en Utrecht (voorkeur, niet uitsluitend)"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": null,
+  "cofinanciering_vereist": false,
+  "uitsluitingen": [],
+  "kostensoort": [
+    "investering",
+    "restauratie"
+  ],
+  "landgoed_relevantie": {
+    "route": "zelf",
+    "onderbouwing": "De doelstelling noemt letterlijk '(cultuur)landschap' naast cultuur, met een geografische voorkeur voor het gebied tussen Amsterdam en Utrecht - het Vecht- en Gooigebied, dicht bezet met buitenplaatsen en landgoederen. Dat is een directe treffer voor landschappelijk herstel op een landgoed in die zone.",
+    "partnertype": null
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "criteria, bedragen, uitsluitingen en aanvraagprocedure - de eigen site verwijst naar een sectie 'Aanvragen' zonder inhoud; de FIN-pagina bevat geen doelstellingstekst",
+    "bevestiging van de in de werklijst genoemde relatie met het Cultuurfonds - niet aangetroffen; het fonds heeft een eigen KvK-inschrijving"
+  ]
+}

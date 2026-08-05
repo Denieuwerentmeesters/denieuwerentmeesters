@@ -1,0 +1,50 @@
+{
+  "naam": "Stichting van Well - van der Snoek",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://wellvandersnoek.nl/",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "anbi_publicatie",
+      "url": "https://wellvandersnoek.nl/#anbi",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "Een bijdrage leveren aan de ontwikkeling van cultuur en gezondheid & welzijn en aan een beter leven voor vluchtelingen en oorlogsslachtoffers. Statutair: \"Met behulp van het daartoe bestemd vermogen het (op jaarbasis) schenken van het rendement van het vermogen aan landelijk erkende goede doelen, waarbij het maken van winst niet wordt beoogd.\"",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "\"Bent u betrokken bij een stichting, vereniging of ander initiatief? En heeft u een project met een geldige ANBI-status op het gebied (minimaal 2) van cultuur, gezondheid & welzijn, vluchtelingen en/of oorlogsslachtoffers? Dan kunt u een aanvraag doen voor financiële ondersteuning. Daarbij dient een motivatie met onderbouwing toegevoegd te worden waarom de aanvraag voldoet aan minimaal 2 van de genoemde criteria.\"",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "landelijk",
+  "geo_waarden": [
+    "Nederland"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": "\"De stichting steunt kleine en grotere initiatieven en doet dit in principe slechts eenmalig.\" Geen bedragen gepubliceerd. \"Het jaarlijkse rendement op dat vermogen is vrij beschikbaar voor de sponsoring van projecten.\"",
+  "cofinanciering_vereist": null,
+  "uitsluitingen": [
+    "projecten die aan minder dan twee van de vier aandachtsgebieden voldoen (cultuur, gezondheid & welzijn, vluchtelingen, oorlogsslachtoffers)",
+    "projecten zonder geldige ANBI-status",
+    "structurele/meerjarige steun: \"doet dit in principe slechts eenmalig\""
+  ],
+  "kostensoort": [
+    "investering",
+    "exploitatie",
+    "personeel"
+  ],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Het fonds financiert geen erfgoed of landschap, maar de partnerroute is hier expliciet en werkbaar: \"Stichting van Well van der Snoek sponsort bij voorkeur projecten die cultuur combineren met de zorg, vluchtelingen en oorlogsslachtoffers. Denk bijvoorbeeld aan creatieve- of muziektherapie voor oorlogsslachtoffers.\" en \"Vrijwilligersprojecten waarbij het verschil gemaakt kan worden spreken de stichting het meeste aan.\" Een landgoed kan als locatie fungeren in de begroting van een zorg-, welzijns- of vluchtelingenorganisatie die daar dagbesteding, groene zorg, natuur- of kunsttherapie of een cultureel programma voor oorlogsslachtoffers organiseert — dat raakt in één project twee van de vier vereiste aandachtsgebieden. De aanvrager moet een ANBI zijn; de landgoedeigenaar kan dat zelf niet zomaar zijn.",
+    "partnertype": "zorg-, welzijns- of vluchtelingenorganisatie met ANBI-status die een cultureel programma of therapie-aanbod op het landgoed organiseert; het landgoed komt als locatiepost in haar begroting"
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "bedragen, maxima of cofinancieringseis — nergens gepubliceerd",
+    "het beleidsplan 2022-2026 en het standaardformulier publicatieplicht (als download op de site genoemd, niet opgehaald)",
+    "of het fonds ook natuur- of erfgoedprojecten heeft gesteund — de getoonde projecten zijn uitsluitend sociaal-cultureel"
+  ]
+}

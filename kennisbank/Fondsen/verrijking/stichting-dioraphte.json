@@ -1,0 +1,47 @@
+{
+  "naam": "Stichting Dioraphte",
+  "bronnen": [
+    {"soort": "website", "url": "https://dioraphte.nl/cultureel-erfgoed/", "jaar": 2026, "gelezen": true},
+    {"soort": "aanvraagvoorwaarden", "url": "https://dioraphte.nl/vooraanvraag/", "jaar": 2026, "gelezen": true}
+  ],
+  "doelstelling": "Werkterrein Cultureel Erfgoed: \"Dioraphte geeft financiële ondersteuning aan projecten die het behoud en beheer beogen van materieel roerend en onroerend cultureel erfgoed in Nederland. Denk hierbij aan monumenten, archeologie, archieven en musea. Wij zoeken projecten die van blijvende waarde zijn.\" \"De voorkeur gaat uit naar projecten die als kwetsbaar bestempeld kunnen worden: projecten die zonder financiële steun van derden niet van de grond zouden komen, die niet altijd een groot publiek genereren maar wel belangrijk zijn om te realiseren.\" Vijf werkterreinen: Sociale Initiatieven in Afrika, Sociale Initiatieven in Nederland, Wetenschap en Onderzoek, Podiumkunsten, Cultureel erfgoed.",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "Tweetraps: \"Uw aanvraagproces bij Dioraphte begint met een vooraanvraag. Deze kan worden ingediend voor de werkterreinen Sociale Initiatieven in Nederland, Podiumkunsten en Cultureel Erfgoed.\" En: \"Een volledige aanvraag behandelen we alleen als één van onze adviseurs u heeft uitgenodigd die in te dienen in reactie op een ingediende vooraanvraag. De volledige aanvraag moet dan uiterlijk binnen 6 maanden worden ingediend, anders vervalt de uitnodiging.\" Verder: \"Vooraanvragen kunnen uitsluitend via het online portaal worden ingediend\" en \"Dioraphte wil graag alleen contact met de aanvragende partij en niet met een extern ingeschakelde fondsenwerver of fondsenwervingsbureau.\"",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "landelijk",
+  "geo_waarden": ["Nederland"],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": "Geen bedragen genoemd, wel een expliciete omvangsvoorkeur: \"Van belang zijn ook de omvang van de projectbegroting, de financiële omvang van de aanvragende organisatie, én de verhouding tussen die twee. Dioraphte zoekt naar projecten die qua omvang in de middenmoot zitten. Bij een te groot project is een financiële bijdrage van Dioraphte te klein ten opzichte van het totaal. Bij een te klein project is veelal sprake van een meer regionaal dan landelijk belang.\" Voor concrete bedragen verwijst het fonds naar het jaarbericht.",
+  "cofinanciering_vereist": true,
+  "uitsluitingen": [
+    "Commerciële instellingen en aanvragen ten behoeve van een individu (alleen door de Belastingdienst erkende ANBI's komen in aanmerking)",
+    "Overheden, overheidsinstellingen of structureel geheel of vrijwel geheel door een overheid gesubsidieerde instellingen",
+    "Rijksmonumenten die in eigendom zijn van de rijksoverheid of een lagere overheid",
+    "Monumenten zonder nadrukkelijke publieksfunctie",
+    "Restauratie van molens en orgels",
+    "Tijdelijke projecten, zoals tentoonstellingen en symposia",
+    "Aankopen van roerende objecten ten behoeve van bijvoorbeeld musea",
+    "Documentaires en films",
+    "Projecten van individuen, waaronder aanvragen van en voor kunstenaars",
+    "Publicaties, behalve in uitzonderlijke gevallen met hoog wetenschappelijk karakter (bestandscatalogi, complete briefuitgaven) — geen tentoonstellingscatalogi",
+    "Activiteiten of projecten met een overwegend politiek of religieus karakter",
+    "Ondersteuning met terugwerkende kracht",
+    "Permanente/structurele steun: \"Projecten met een looptijd van enkele (in de regel 2 tot 4) jaren kunnen ondersteuning krijgen, maar die steun heeft nooit een permanent karakter.\"",
+    "Organisaties die zelf over voldoende middelen beschikken om het project te financieren"
+  ],
+  "kostensoort": ["restauratie", "investering", "exploitatie", "personeel"],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Dit is een van de best passende erfgoedfondsen in deze lijst, mits het landgoed in een ANBI-stichting zit. De erfgoedtekst noemt letterlijk de landgoedcategorie: \"Bij projecten ten aanzien van onroerend erfgoed komen rijksmonumenten alleen in aanmerking wanneer ze niet in eigendom zijn van de rijksoverheid of een lagere overheid. Deze monumenten dienen nadrukkelijk een publieksfunctie te hebben, zoals het geval is bij kerken, structureel opengestelde kastelen en musea.\" Een structureel opengesteld kasteel of huis op een landgoed is dus expliciet in beeld; particulier eigendom is hier juist een pré in plaats van een obstakel. Bovendien staat bij de voorbeeldprojecten Stichting Brabantse Aa — \"Historisch bewust wandelen door een eeuwenoud cultuurlandschap\" — wat laat zien dat ook cultuurlandschap binnen het beleid valt. Twee dingen bepalen de route. (1) De aanvrager moet een door de Belastingdienst erkende ANBI zijn: \"Commerciële instellingen komen niet in aanmerking voor ondersteuning\" — dus een landgoed-BV of privé-eigenaar moet via een ANBI-stichting. (2) De schaal moet in de middenmoot liggen: niet zo groot dat Dioraphte's bijdrage verdwijnt, niet zo klein dat het regionaal wordt. Uitzonderlijk gunstig ten opzichte van andere erfgoedfondsen: \"Exploitatietekorten, niet-projectgebonden salariskosten, kosten van levensonderhoud en kosten verbonden aan de normale activiteiten van een organisatie behoren ook tot de dekkingsmogelijkheden\" — Dioraphte sluit exploitatie dus juist NIET uit, waar de meeste erfgoedfondsen dat wel doen. Wel altijd tijdelijk (2 tot 4 jaar).",
+    "partnertype": "Door de Belastingdienst erkende ANBI, niet-commercieel en niet (vrijwel geheel) overheidsgefinancierd: een stichting tot behoud van het landgoed/huis, een kasteel- of museumstichting, of een landschapsstichting. Het monument moet een nadrukkelijke publieksfunctie hebben (structureel opengesteld)."
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "Bedragen: geen minimum/maximum of gemiddelde donatie op de website; het fonds verwijst naar het jaarbericht (niet opgehaald).",
+    "Of historische groenaanleg (parkbos, lanen, tuinaanleg, waterpartijen) onder 'onroerend cultureel erfgoed' valt — de tekst noemt monumenten, archeologie, archieven en musea; het voorbeeldproject Brabantse Aa (cultuurlandschap) suggereert van wel, maar dat is niet expliciet beleid.",
+    "Deadlines: niet gepubliceerd; vooraanvragen kunnen kennelijk doorlopend.",
+    "Of gemeentelijke monumenten (niet-rijksmonumenten) in aanmerking komen: de tekst regelt alleen rijksmonumenten expliciet.",
+    "De aparte pagina 'Selectiecriteria' per werkterrein ('Aanvullend gelden er per werkterrein specifieke selectiecriteria') is niet als losse pagina opgehaald."
+  ]
+}

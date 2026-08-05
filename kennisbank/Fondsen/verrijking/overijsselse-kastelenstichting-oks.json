@@ -1,0 +1,61 @@
+{
+  "naam": "Overijsselse Kastelenstichting (OKS)",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://overijsselsekastelenstichting.nl/organisatie",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "beleidsplan",
+      "url": "https://overijsselsekastelenstichting.nl/wp-content/uploads/2025/10/Beleidsplan-2025-1.pdf",
+      "jaar": 2025,
+      "gelezen": true
+    },
+    {
+      "soort": "website",
+      "url": "https://overijsselsekastelenstichting.nl/projecten",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "jaarverslag",
+      "url": "https://overijsselsekastelenstichting.nl/wp-content/uploads/2025/07/Jaarrekening-OKS-2024.pdf",
+      "jaar": 2024,
+      "gelezen": false
+    }
+  ],
+  "doelstelling": "“Het doel van de stichting is, om waar nodig en zo mogelijk, pogingen aan te wenden om de in Overijssel aanwezige kastelen, havezathen en andere monumentale behuizingen in de ruimste zin des woords en de daarbij behorende landgoederen te behoeden voor verval, ondergang of het verkrijgen van een bestemming, waardoor zij te veel van hun karakter zouden inboeten. Er worden daartoe bijdragen geleverd (in geld maar ook in kennis, kunde of netwerken) aan projecten die de doelstelling aantoonbaar ondersteunen.”",
+  "benaderbaarheid": "open",
+  "benaderwijze_notitie": "“Aanvragen kunnen jaarlijks voor 1 februari en 1 september schriftelijk worden ingediend bij Het Oversticht. De aanvraag dient te zijn voorzien van twee kostenramingen. Voor ultimo maart en ultimo oktober krijgen de aanvragers bericht of hun verzoek wordt ingewilligd.” En: “De Overijsselse Kastelen Stichting is verantwoordelijk voor het selecteren van projecten die het meest in aanmerking komen. Genomen besluiten zijn niet vatbaar voor discussie.”",
+  "aanvrager_type": "beide",
+  "geo_niveau": "provincie",
+  "geo_waarden": [
+    "Overijssel"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": 20000,
+  "bedrag_indicatie": "“Jaarlijks worden tot maximaal vijf projecten ondersteund met bijdragen van maximaal € 20.000,00 per project.” Het budget is bescheiden: “De OKS bekostigt de ondersteuning van aanvragen uit het rendement van het bescheiden vermogen van de stichting.”",
+  "cofinanciering_vereist": null,
+  "uitsluitingen": [
+    "Geen expliciete uitsluitingenlijst gepubliceerd. Impliciet: projecten buiten Overijssel, en projecten die niet raken aan kastelen, havezathen, monumentale behuizingen of de daarbij behorende landgoederen."
+  ],
+  "kostensoort": [
+    "investering",
+    "restauratie",
+    "onderzoek"
+  ],
+  "landgoed_relevantie": {
+    "route": "zelf",
+    "onderbouwing": "Dit fonds is voor landgoederen gemaakt. De statutaire doelstelling noemt ze letterlijk: “de in Overijssel aanwezige kastelen, havezathen en andere monumentale behuizingen in de ruimste zin des woords **en de daarbij behorende landgoederen** te behoeden voor verval, ondergang of het verkrijgen van een bestemming, waardoor zij te veel van hun karakter zouden inboeten.” De site voegt toe: “De OKS (…) ondersteunt kleinschalige projecten die zich richten op het behoud van het unieke karakter van monumentale gebouwen en de bijbehorende landgoederen.” Behalve geld biedt de OKS ook “kennis, kunde of netwerken”, en werkt zij graag mee als medefinancier: “Waar mogelijk treedt de OKS ook op als cofinancier van breder financieel ondersteunde projecten.” Naast projectsteun zijn er twee andere ingangen: studies en publicaties (“Studies en publicaties over landgoederen en kastelen in Overijssel worden gestimuleerd en financieel ondersteund”, precedent: het boek *Ridders van Ramelo*) en de jaarlijkse OKS-prijs voor “personen of organisaties die een bijzondere bijdrage hebben geleverd aan de instandhouding van Overijsselse buitenplaatsen”, uitgereikt op de Dag van het Kasteel (tweede pinksterdag). Uitzonderlijk: de OKS kan zelf een pand verwerven om verval te voorkomen — “Het verwerven van een monumentaal gebouw om verval te voorkomen is wel denkbaar. (…) Na deze werkzaamheden wordt het monumentale gebouw weer verkocht.”",
+    "partnertype": null
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "Geen inhoudelijke beoordelingscriteria of uitsluitingenlijst gepubliceerd — het beleidsplan (1 pagina) beschrijft doel en werkwijze, niet waarop wordt getoetst.",
+    "Geen aanvraagformulier of aanvraagreglement; aanvragen gaan “schriftelijk (…) bij Het Oversticht”, met twee kostenramingen, zonder verder gespecificeerd format.",
+    "Niet gepubliceerd of regulier onderhoud, restauratie of exploitatie wel/niet in aanmerking komt — de breuklijn onderhoud/restauratie is bij dit fonds niet vastgelegd.",
+    "Jaarrekening 2024 is wel online (link gevonden) maar niet uitgelezen; daarin staan de feitelijke bestedingen."
+  ]
+}
