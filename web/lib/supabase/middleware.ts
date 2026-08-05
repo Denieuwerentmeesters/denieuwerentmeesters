@@ -3,7 +3,22 @@ import { NextResponse, type NextRequest } from "next/server";
 
 // Ververst de Supabase-sessie bij elke request en beschermt de app-routes.
 // Publieke paden: /login, /uitnodiging en de landingsroute "/".
-const PUBLIEKE_PADEN = ["/login", "/uitnodiging", "/auth", "/api/extractie", "/api/subsidie", "/api/fondsen", "/api/inbound"];
+//
+// De /api-routes hieronder hebben géén ingelogde gebruiker: ze worden
+// aangeroepen door een scheduler of een externe dienst en bewaken zichzelf met
+// een gedeeld geheim (fail-closed). Staan ze hier niet bij, dan stuurt deze
+// proxy een 307 naar /login — en dat is een stille fout: Vercel-crons volgen
+// géén redirects, dus de job "slaagt" zonder ooit iets te doen.
+const PUBLIEKE_PADEN = [
+  "/login",
+  "/uitnodiging",
+  "/auth",
+  "/api/extractie",
+  "/api/subsidie",
+  "/api/fondsen",
+  "/api/inbound",
+  "/api/omgeving",
+];
 
 export async function updateSession(request: NextRequest) {
   let response = NextResponse.next({ request });

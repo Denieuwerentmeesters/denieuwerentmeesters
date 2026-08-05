@@ -5,7 +5,8 @@ import { revalidatePath } from "next/cache";
 import { scoorRelevantie } from "@/lib/ai";
 import { moet } from "@/lib/db";
 import { leidBestuursorganenAf, type Rechthoek } from "@/lib/omgeving/bestuursorganen";
-import { haalBronOp, telOp, type Bron, type Trechter } from "@/lib/omgeving/ingest";
+import { haalPublicatiesOp, ontdubbel } from "@/lib/omgeving/publicaties";
+import { createServiceClient, serviceBeschikbaar } from "@/lib/supabase/service";
 
 function lijst(fd: FormData, k: string): string[] | null {
   const v = String(fd.get(k) ?? "").trim();
@@ -145,19 +146,14 @@ export async function leidBronnenAf(fd: FormData) {
 }
 
 /**
- * Eén ophaalronde over alle actieve SRU-bronnen.
+ * Eén ophaalronde voor dit landgoed.
  *
- * De trechtercijfers gaan naar omgeving_run: zonder die cijfers is niet vast
- * te stellen of het filter te streng of te ruim staat, en dan wordt de drempel
- * op gevoel gezet.
+ * Twee fasen: publicaties ophalen en geocoderen per bestuursorgaan (het dure
+ * deel, gedeeld met alle andere landgoederen), daarna matchen tegen dit
+ * landgoed in SQL. Zie /api/omgeving/run voor de dagelijkse variant.
  */
 export async function haalBerichtenOp(fd: FormData) {
   const landgoed_id = String(fd.get("landgoed_id"));
-  // Eén maand, niet twaalf. Met vijf bronnen (drie gemeenten, provincie,
-  // waterschap) komen er ruim 570 publicaties per maand binnen; bij ~0,1 s
-  // per stuk is een maand ongeveer een minuut en twaalf maanden tien — ruim
-  // over de limiet van een serverless functie. De dagelijkse ronde
-  // (/api/omgeving/run) bouwt de historie verder op.
   const maanden = Math.min(3, Math.max(1, Number(fd.get("maanden") ?? 1)));
   const supabase = await createClient();
 
@@ -171,69 +167,83 @@ export async function haalBerichtenOp(fd: FormData) {
   const bronnen = await moet(
     supabase
       .from("omgevingsbron")
-      .select("id, naam, organisatiecode, bestuurslaag, zoekveld, zoekgebied")
+      .select("naam, bestuurslaag, organisatiecode, zoekveld, zoekgebied")
       .eq("landgoed_id", landgoed_id)
       .eq("type", "sru")
       .eq("actief", true),
     "bronnen ophalen",
   );
 
+  const provincie =
+    (bronnen.find((b) => b.bestuurslaag === "provincie")?.naam as string | undefined) ?? null;
+
   const run = await moet(
-    supabase
-      .from("omgeving_run")
-      .insert({ landgoed_id })
-      .select("id")
-      .single(),
+    supabase.from("omgeving_run").insert({ landgoed_id }).select("id").single(),
     "run starten",
   );
 
-  // De provincie waarin dit landgoed ligt. Provincie- en waterschapsbronnen
-  // publiceren over een veel groter gebied dan één gemeente, dus daar moet het
-  // geocoderen op provincienaam begrensd worden. Zonder dat vielen ze eerder
-  // helemaal buiten de radar.
-  const provincie =
-    (bronnen.find((b) => b.bestuurslaag === "provincie")?.naam as string | undefined) ??
-    null;
+  // Fase 1 — ophalen en geocoderen.
+  //
+  // omgevingspublicatie is een GEDEELDE tabel zonder landgoed_id: openbare
+  // bekendmakingen die voor elk landgoed dezelfde zijn. Daarom mag een
+  // ingelogde gebruiker er niet in schrijven — anders kan één gebruiker de
+  // gegevens van alle andere landgoederen vervuilen. Het vullen is
+  // systeemwerk en gaat via de service-client, net als de subsidie-ingestie.
+  //
+  // De matchfase hieronder gebruikt bewust wél de gewone client: die schrijft
+  // naar omgevingsbericht, en daar hoort de RLS van dit landgoed te gelden.
+  if (!serviceBeschikbaar()) {
+    throw new Error(
+      "SUPABASE_SERVICE_ROLE_KEY ontbreekt in de serveromgeving — " +
+        "zonder die sleutel kunnen publicaties niet worden opgeslagen.",
+    );
+  }
+  const systeem = createServiceClient();
 
-  const delen: Trechter[] = [];
-  for (const b of bronnen) {
-    const laag = b.bestuurslaag as string;
-    const gemeentelijk = laag === "gemeente" || laag === "buurgemeente";
+  // Publicaties die een ander landgoed al heeft opgehaald worden overgeslagen.
+  const organen = ontdubbel(
+    bronnen.map((b) => ({
+      naam: b.naam as string,
+      bestuurslaag: b.bestuurslaag as string,
+      organisatiecode: b.organisatiecode as string | null,
+      zoekveld: b.zoekveld as string | null,
+      zoekgebied: b.zoekgebied as string | null,
+      provincie,
+    })),
+  );
 
-    // Zoekgebied: uit de kolom als die gevuld is, anders afleiden uit de laag.
-    const veld =
-      (b.zoekveld as "gemeentenaam" | "provincienaam" | null) ??
-      (gemeentelijk ? "gemeentenaam" : "provincienaam");
-    const naam = (b.zoekgebied as string | null) ?? (gemeentelijk ? (b.naam as string) : provincie);
-
-    // Zonder begrensd zoekgebied niet ophalen: ongefilterd geocoderen levert
-    // treffers ergens anders in Nederland op die er geldig uitzien.
-    if (!naam) continue;
-
-    const bron: Bron = {
-      id: b.id as string,
-      organisatie: b.naam as string,
-      gebied: { veld, naam },
-      bestuurslaag: laag,
-    };
-    delen.push(await haalBronOp(supabase, landgoed_id, bron, periode));
-    await supabase
-      .from("omgevingsbron")
-      .update({ laatste_run_op: new Date().toISOString(), laatste_run_status: "ok" })
-      .eq("id", b.id);
+  let opgehaald = 0;
+  let onplaatsbaar = 0;
+  const fouten: string[] = [];
+  for (const o of organen) {
+    const c = await haalPublicatiesOp(systeem, o, periode);
+    opgehaald += c.opgehaald;
+    onplaatsbaar += c.onplaatsbaar;
+    fouten.push(...c.fouten);
   }
 
-  const t = telOp(delen);
+  // Fase 2 — matchen. Puur SQL.
+  const uit = await moet(
+    supabase.rpc("omgeving_match_landgoed", {
+      p_landgoed_id: landgoed_id,
+      p_sinds: periode.vanaf,
+    }),
+    "berichten matchen",
+  );
+  const cijfers = (Array.isArray(uit) ? uit[0] : uit) as
+    | { nieuw: number; doorgelaten: number; weggefilterd: number }
+    | undefined;
+
   await moet(
     supabase
       .from("omgeving_run")
       .update({
         geeindigd_op: new Date().toISOString(),
-        aantal_opgehaald: t.opgehaald,
-        aantal_door_poort: t.door_poort,
-        aantal_relevant: t.bewaard,
-        aantal_onplaatsbaar: t.onplaatsbaar,
-        fout: t.fouten.length ? t.fouten.slice(0, 10).join(" | ") : null,
+        aantal_opgehaald: opgehaald,
+        aantal_door_poort: cijfers?.doorgelaten ?? 0,
+        aantal_relevant: cijfers?.doorgelaten ?? 0,
+        aantal_onplaatsbaar: onplaatsbaar,
+        fout: fouten.length ? fouten.slice(0, 10).join(" | ") : null,
       })
       .eq("id", run.id),
     "run afsluiten",
