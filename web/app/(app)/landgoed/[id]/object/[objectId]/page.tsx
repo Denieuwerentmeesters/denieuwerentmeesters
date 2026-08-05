@@ -321,18 +321,63 @@ export default async function ObjectDetailPage({
               </span>
             )}
           </div>
-          <p className="mt-1 text-[13px]" style={{ color: "var(--text-2)" }}>
-            {[
-              oppervlakte,
-              kenmerken.adres ? String(kenmerken.adres) : null,
-              kenmerken.gebruik ? String(kenmerken.gebruik) : null,
-              kenmerken.bouwjaar ? `bouwjaar ${String(kenmerken.bouwjaar)}` : null,
-              kenmerken.pandstatus ? String(kenmerken.pandstatus) : null,
-            ]
-              .filter(Boolean)
-              .join(" · ") || "Geen aanvullende gegevens."}
-          </p>
+          {/* Gebouwen krijgen hun gegevens hieronder als paspoort-blok; voor
+              de overige objecten blijft de compacte samenvattingsregel. */}
+          {!isGebouw && (
+            <p className="mt-1 text-[13px]" style={{ color: "var(--text-2)" }}>
+              {[
+                oppervlakte,
+                kenmerken.adres ? String(kenmerken.adres) : null,
+                kenmerken.gebruik ? String(kenmerken.gebruik) : null,
+              ]
+                .filter(Boolean)
+                .join(" · ") || "Geen aanvullende gegevens."}
+            </p>
+          )}
         </header>
+
+        {/* ── Pandgegevens (het paspoort-blok, alleen bij gebouwen) ── */}
+        {isGebouw && (
+          <section className="mb-7">
+            <h2 className="mb-2 text-[16px] font-bold">Pandgegevens</h2>
+            <div className="card p-4">
+              <div className="grid grid-cols-2 gap-4 md:grid-cols-5">
+                <div>
+                  <div className="label-up mb-1">Gebruik</div>
+                  <div className="text-[14px]">
+                    {kenmerken.gebruik ? String(kenmerken.gebruik) : "—"}
+                  </div>
+                </div>
+                <div className="col-span-2 md:col-span-2">
+                  <div className="label-up mb-1">Adres</div>
+                  <div className="text-[14px]">
+                    {kenmerken.adres ? String(kenmerken.adres) : "—"}
+                  </div>
+                </div>
+                <div>
+                  <div className="label-up mb-1">Bouwjaar</div>
+                  <div className="text-[14px]">
+                    {kenmerken.bouwjaar ? String(kenmerken.bouwjaar) : "—"}
+                  </div>
+                </div>
+                <div>
+                  <div className="label-up mb-1">Oppervlakte</div>
+                  <div className="text-[14px]">{oppervlakte ?? "—"}</div>
+                </div>
+              </div>
+              <div className="mt-3 text-[11px]" style={{ color: "var(--text-2)" }}>
+                {[
+                  kenmerken.pandstatus
+                    ? `pandstatus: ${String(kenmerken.pandstatus)}`
+                    : null,
+                  "Bron: BAG · ingevuld bij plaatsing via de kaart",
+                ]
+                  .filter(Boolean)
+                  .join(" · ")}
+              </div>
+            </div>
+          </section>
+        )}
 
         {/* ── Kadastrale percelen (bezit) waar dit beheerperceel uit bestaat ── */}
         {kadastralePercelen.length > 0 && (
@@ -969,6 +1014,15 @@ export default async function ObjectDetailPage({
               })}
             </div>
           </section>
+        )}
+
+        {/* Vooruitblik: waar latere modules op dit paspoort aanhaken. */}
+        {isGebouw && (
+          <p className="mt-8 text-[11.5px]" style={{ color: "var(--text-3)" }}>
+            Onderhoud (meerjarenonderhoudsplan) en verzekeringen krijgen hier
+            hun eigen plek zodra die modules er zijn — dit paspoort is daarvoor
+            de kapstok.
+          </p>
         )}
       </div>
     </div>
