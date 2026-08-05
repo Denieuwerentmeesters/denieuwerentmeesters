@@ -168,7 +168,7 @@ export function bronHash(bron: MatchprofielBron): string {
 
 // Ophogen bij elke inhoudelijke wijziging van de prompt hieronder.
 // v2: het kaartje van 60-80 woorden erbij, in dezelfde modelaanroep.
-export const PROMPT_VERSIE = "matchprofiel-v2";
+export const PROMPT_VERSIE = "matchprofiel-v3";
 
 // ---------------------------------------------------------------------------
 // Promptopbouw
@@ -224,6 +224,19 @@ noemen, kort en zonder opsmuk:
   6. welk bedrag.
 Schrijf onderdeel 3 als één zin die begint met "Niet:". De rest is gewone lopende
 tekst. Geen kopjes, geen opsommingstekens in het kaartje.
+
+Let bij onderdeel 3 op twee dingen die in de praktijk misgaan:
+  - GEEN dubbele ontkenning. Fout: "Niet: dit fonds financiert onderwerpen buiten
+    deze programma's niet." Goed: "Niet: onderwerpen buiten deze drie programma's."
+    Na "Niet:" volgt een opsomming van wat er NIET gefinancierd wordt, niet een
+    zin die zelf al een ontkenning bevat.
+  - Staat er geen uitsluiting in de bron, schrijf dan exact "Niet: geen
+    uitsluitingen gepubliceerd." en bouw daar geen zin omheen. Dat het onbekend
+    is, is de mededeling.
+
+Neem termen letterlijk over uit de bron en verbeter ze niet naar wat aannemelijk
+lijkt; een verschrijving in de bron hoort zichtbaar te blijven in plaats van
+stilzwijgend gerepareerd of overgenomen als vaststaand feit.
 
 HET PROFIEL
 Nederlands, 300-500 woorden, platte tekst met deze zes kopjes, elk op een eigen
