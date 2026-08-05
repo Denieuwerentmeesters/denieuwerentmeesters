@@ -64,6 +64,7 @@ export default async function LandgoedLayout({
     { href: `/landgoed/${id}/contracten`, label: "Contracten", icon: "contracten", group: "Beheer" },
     // ── Radar ──
     { href: `/landgoed/${id}/subsidies`, label: "Subsidieradar",  icon: "subsidies", group: "Radar" },
+    { href: `/landgoed/${id}/fondsen`,   label: "Fondsenradar",   icon: "fondsen",   group: "Radar" },
     { href: `/landgoed/${id}/omgeving`,  label: "Omgevingsradar", icon: "omgeving",  group: "Radar" },
   ];
 
