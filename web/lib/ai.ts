@@ -76,6 +76,34 @@ async function vraagJson<T>(systeem: string, prompt: string, model?: string): Pr
   }
 }
 
+// Roept het model aan en verwacht gewone tekst terug (geen JSON). Geeft null bij
+// geen key/fout. Gebruikt door de fondsen-matchprofielen: die leveren proza op,
+// en dat door een JSON-veld persen levert alleen escaping-ellende op.
+export async function vraagTekst(
+  systeem: string,
+  prompt: string,
+  opties?: { model?: string; maxTokens?: number },
+): Promise<string | null> {
+  if (!aiBeschikbaar()) return null;
+  laatsteFout = null;
+  try {
+    const res = await client().messages.create({
+      model: opties?.model ?? MODEL,
+      max_tokens: opties?.maxTokens ?? 4096,
+      system: systeem,
+      messages: [{ role: "user", content: prompt }],
+    });
+    const tekst = res.content
+      .filter((b) => b.type === "text")
+      .map((b) => (b as { text: string }).text)
+      .join("")
+      .trim();
+    return tekst.length ? tekst : null;
+  } catch (e) {
+    return onthoudFout(e);
+  }
+}
+
 // Zelfde, maar met een PDF erbij (Claude leest PDF's native — geen parser nodig).
 async function vraagJsonMetDocument<T>(
   systeem: string,
