@@ -1,0 +1,50 @@
+{
+  "naam": "Fonds op Naam - Geldersch Landschap & Kasteelen (GLK)",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://www.glk.nl/fonds-op-naam",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "\"Via een fonds op naam kunnen particulieren, bedrijven en instellingen (een specifiek onderdeel van) ons werk steunen. U kunt een fonds op naam zetten tijdens uw leven of door middel van uw testament.\" Bedoeld voor wie \"een speciale band heeft met bijvoorbeeld het landgoed waar u vaak wandelt of met het kasteel waar u getrouwd bent\".",
+  "benaderbaarheid": "gesloten",
+  "benaderwijze_notitie": "\"Als u een speciale band heeft met bijvoorbeeld het landgoed waar u vaak wandelt (...) dan kunt u kiezen voor een schenking ten gunste van dat specifieke doel.\" De pagina staat onder 'Help mee / Doneren' en beschrijft uitsluitend het instellen van een fonds door een schenker. Er is geen aanvraagprocedure, geen criterialijst en geen bedrag gepubliceerd: dit is een donatie-instrument richting GLK, geen subsidieloket voor derden.",
+  "aanvrager_type": "nvt",
+  "geo_niveau": "provincie",
+  "geo_waarden": [
+    "Gelderland"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": null,
+  "cofinanciering_vereist": null,
+  "uitsluitingen": [
+    "Geen uitsluitingen gepubliceerd; er is geen aanvraagregeling waarvoor uitsluitingen zouden gelden."
+  ],
+  "kostensoort": [],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Een fonds op naam bij GLK komt ten goede aan \"(een specifiek onderdeel van) ons werk\" - dus aan bezit dat GLK zelf beheert (161 natuurgebieden, bijna 12.000 hectare Gelderse natuur, zeven kastelen en huizen, landgoederen als Duno, Waardenburg en Neerijnen en Staverden). Een particulier landgoed kan hier niet aanvragen. Toch niet 'niet_relevant': er bestaat een reele route waarbij GLK als beherende of samenwerkende partij optreedt en middelen uit een fonds op naam inzet, en bij GLK ondergebrachte fondsen op naam (Spiering Fonds, Van den Hazel Fonds) doen wel uitkeringen die landgoedwerk raken. Daarnaast is het instrument relevant voor een landgoedeigenaar in de omgekeerde richting: als manier om eigen vermogen of nalatenschap aan een landgoeddoel te binden.",
+    "partnertype": "Geldersch Landschap & Kasteelen zelf, als eigenaar/beheerder of als partner in een project; of een bij GLK ondergebracht fonds op naam met een eigen doelstelling."
+  },
+  "onderliggende_fondsen": [
+    {
+      "naam": "Spiering Fonds (via Geldersch Landschap & Kasteelen)",
+      "relevant": true,
+      "reden": "apart bij GLK ondergebracht fonds op naam met eigen uitkeringen; al verrijkt in een eigen bestand"
+    },
+    {
+      "naam": "Van den Hazel Fonds (via Geldersch Landschap & Kasteelen)",
+      "relevant": true,
+      "reden": "apart bij GLK ondergebracht fonds op naam met eigen uitkeringen; al verrijkt in een eigen bestand"
+    }
+  ],
+  "niet_gevonden": [
+    "Een overzicht van alle bij GLK bestaande fondsen op naam: glk.nl/fonds-op-naam noemt geen enkel bestaand fonds bij naam.",
+    "Aanvraagcriteria, bedragen, deadlines of een aanvraagformulier: die bestaan niet voor dit instrument - het is een schenkingsvorm, geen subsidieregeling.",
+    "Een minimumbedrag voor het instellen van een fonds op naam bij GLK: niet gepubliceerd op de pagina.",
+    "Een reglement of statuten voor fondsen op naam bij GLK."
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "naam": "Fiks Omgevingsfonds (Stichting Omgevingsfonds Windpark Fryslan)",
+  "bronnen": [
+    {"soort":"website","url":"https://www.fiksomgevingsfonds.frl/","jaar":2026,"gelezen":true},
+    {"soort":"website","url":"https://www.fiksomgevingsfonds.frl/over-ons/","jaar":2026,"gelezen":true},
+    {"soort":"aanvraagvoorwaarden","url":"https://www.fiksomgevingsfonds.frl/wp-content/uploads/2023/01/Fondsreglement-FIKS-januari-2023.pdf","jaar":2023,"gelezen":true}
+  ],
+  "doelstelling": "\"Het Omgevingsfonds heeft als doel het, binnen het werkveld, in de meest brede zin, ondersteunen van het verduurzamen, verbinden, verbeteren, vernieuwen en promoten van de kwaliteiten van het IJsselmeer en de IJsselmeerkust in de gemeente Sudwest-Fryslan, voor natuur, bewoners, toerisme en recreatie, het aandacht geven aan cultuur en erfgoed, het verbeteren van en het leveren van een positieve bijdrage aan de regio in het algemeen, en het verrichten van al en wat hiermee verband houdt of daartoe bevorderlijk kan zijn.\" (art. 1.1 Fondsreglement) De drie pijlers: \"Verbeteren en versterken van de kwaliteit van de leefomgeving voor, op en achter de IJsselmeerdijk; Ondersteunen van de energietransitie bij burgers en bedrijven en verduurzaming van toerisme en recreatie; Versterken en promoten van de aantrekkingskracht van de regio voor bewoners, toerisme en recreatie.\"",
+  "benaderbaarheid": "open",
+  "benaderwijze_notitie": "\"Met het geld uit het omgevingsfonds kunnen inwoners, bedrijven, stichtingen en verenigingen in de regio lokale projecten langs de kust van het IJsselmeer realiseren. Ideeen zijn welkom en worden beoordeeld op geschiktheid en haalbaarheid.\" Vier vaste tijdvakken per jaar: \"Jaarlijks zijn er vier tijdvakken... Deze tijdvakken sluiten op 28/29 februari, 31 mei, 31 augustus en 30 november\" - met de beperking dat \"in het eerste en derde tijdvak van ieder jaar alleen aanvragen van de kleinste categorie (tot 10.000 euro) in behandeling worden genomen\". Geen recht: \"Het indienen van een Aanvraag en de behandeling ervan geeft geen recht op een financiele bijdrage.\"",
+  "aanvrager_type": "beide",
+  "geo_niveau": "regio",
+  "geo_waarden": ["Friese IJsselmeerkust in gemeente Sudwest-Fryslan", "Breezanddijk (8766)", "Kornwerderzand (8752)", "Cornwerd (8753)", "Makkum (8754)", "Skuzum (8755)", "Piaam (8756)", "Gaast (8757)", "Ferwoude (8761)", "Workum (8710, 8711)", "Hindeloopen (8713)", "Molkwar (8722)", "Stavoren (8715)"],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": "Geen maximum per aanvraag, wel drie categorieen met oplopende eisen: \"categorie A tot EUR 10.000; categorie B EUR 10.000 tot EUR 100.000 en categorie C EUR 100.000 en hoger\". Jaarlijks fondsvolume: \"het Omgevingsfonds stelt de komende 20 jaar, elk jaar, ca. EUR 700.000 euro beschikbaar\". Maximaal aandeel: \"Het uit te betalen bedrag van de Aanvraag is maximaal 75% van de totale kosten van het initiatief.\"",
+  "cofinanciering_vereist": true,
+  "uitsluitingen": [
+    "\"voor regulier onderhoud of reguliere exploitatie\" (art. 2.4 d)",
+    "\"De Aanvraag wordt niet toegekend voor uitgaven die voor de Aanvraag zijn gedaan en voor het aflossen van leningen.\" (art. 2.1)",
+    "\"die uitsluitend of voor een substantieel deel zijn gebaseerd op politieke of levensbeschouwelijke aspecten\" (art. 2.4 a)",
+    "\"die discriminerend zijn, onder andere ten aanzien van godsdienst, levensovertuiging, politieke gezindheid, ras, geslacht, burgerlijke staat, seksuele geaardheid of leeftijd\" (art. 2.4 b)",
+    "\"waarvoor het gebruikelijk is of in de rede ligt dat financiele ondersteuning op andere (marktconforme) basis verkregen wordt of kan worden\" (art. 2.4 c)",
+    "\"van gemeente Sudwest Fryslan, Wetterskip Fryslan, provinciale- en centrale overheid en/of normaliter door deze instanties worden uitgevoerd, tenzij er sprake is van een duidelijke aanvulling op de normale wettelijke taken van deze instanties\" (art. 2.4 e)",
+    "Initiatieven buiten de postcodelijst van bijlage 1 (Friese IJsselmeerkust binnen circa 10 km van het windpark)",
+    "Initiatieven die niet binnen 2 jaar uitvoerbaar zijn of niet binnen 12 maanden na aanvangsdatum kunnen starten (art. 2.5)"
+  ],
+  "kostensoort": ["investering", "restauratie", "onderzoek", "personeel"],
+  "landgoed_relevantie": {
+    "route": "zelf",
+    "onderbouwing": "De doelstelling noemt natuur, landschap, cultuur en erfgoed rechtstreeks: \"ondersteunen van het verduurzamen, verbinden, verbeteren, vernieuwen en promoten van de kwaliteiten van het IJsselmeer en de IJsselmeerkust... voor natuur, bewoners, toerisme en recreatie, het aandacht geven aan cultuur en erfgoed\". Het fonds financierde aantoonbaar een restauratie van een historisch object: \"Scheepstimmerwerf de Hoop Restauratie - Het afgelopen jaar is Scheepstimmerwerf de Hoop in Workum grondig gerestaureerd... de 325 jaar oude Scheepstimmerwerf De Hoop\". Aanvragers mogen ook particulier of commercieel zijn: \"Met het geld uit het omgevingsfonds kunnen inwoners, bedrijven, stichtingen en verenigingen in de regio lokale projecten langs de kust van het IJsselmeer realiseren.\" Een landgoed binnen de postcodelijst kan dus zelf indienen voor bijvoorbeeld natuurherstel, een wandel- of recreatievoorziening, een erfgoedrestauratie of verduurzaming. Twee harde beperkingen: het gebied is zeer klein (twaalf kustplaatsen tussen Breezanddijk en Stavoren), en \"voor regulier onderhoud of reguliere exploitatie\" is uitgesloten - een onderhoudsvraag moet dus als vernieuwings- of herstelproject worden geformuleerd. Maximaal 75% van de kosten; de rest via cofinanciering of zelfwerkzaamheid, waarbij vrijwilligersuren tellen voor EUR 15,00 per uur.",
+    "partnertype": null
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "Beleidsplan FIKS Omgevingsfonds 2026-2030: gelinkt op /over-ons/ maar niet uitgelezen - kan afwijkende accenten of een gewijzigd reglement bevatten ten opzichte van de reglementversie van 18 januari 2023",
+    "Jaarrekening 2025 Stichting Omgevingsfonds Windpark Fryslan: gelinkt maar niet uitgelezen",
+    "Akte van oprichting/statuten: gelinkt maar niet uitgelezen",
+    "Actuele openstellingsdata 2026: de homepage meldt alleen 'Het fonds is open tot 1 september voor kleine projecten', wat aansluit bij het reglement (tijdvak sluit 31 augustus, alleen categorie A)",
+    "Bijlage 1 bevat een kaartweergave die in de PDF-tekstextractie niet leesbaar is; alleen de postcodetabel is overgenomen"
+  ]
+}

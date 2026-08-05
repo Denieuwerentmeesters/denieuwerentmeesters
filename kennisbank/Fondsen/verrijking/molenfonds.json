@@ -1,0 +1,58 @@
+{
+  "naam": "Molenfonds (initiatief van De Hollandsche Molen)",
+  "bronnen": [
+    {"soort":"website","url":"https://www.molenfonds.nl/","jaar":2026,"gelezen":true},
+    {"soort":"website","url":"https://www.molens.nl/molenbeheer","jaar":2026,"gelezen":true},
+    {"soort":"aanvraagvoorwaarden","url":"https://www.molens.nl/sites/d9p.molens.nl/files/documenten/Voorwaarden%20groot%20onderhoud%20en%20restauratie%20-%20Juli%202026.pdf","jaar":2026,"gelezen":true},
+    {"soort":"website","url":"https://web.archive.org/web/2022/https://molenfonds.nl/groot-onderhoud/","jaar":2022,"gelezen":true},
+    {"soort":"website","url":"https://web.archive.org/web/20220627032604/https://molenfonds.nl/aanvraag-groot-onderhoud-2/","jaar":2022,"gelezen":true}
+  ],
+  "doelstelling": "\"Het Molenfonds is opgericht door De Hollandsche Molen om zoveel mogelijk financiele middelen voor het molenbehoud samen te brengen. Het Molenfonds bevat diverse fondsen zoals het Groot Onderhoud- en Restauratie fonds, het Educatiefonds en het Jongerenfonds. Ook biedt het Molenfonds de mogelijkheid voor crowdfunding en om mee te doen aan de Molenprijs.\" De kernregeling: \"Het Molenfonds beoogt met de regeling Groot Onderhoud en Restauratie bij te dragen aan groot onderhoud en restauratie van molens. De regeling Groot Onderhoud en Restauratie stimuleert groot onderhoud ten opzichte van regulier onderhoud en grootschalige restauraties waardoor de algehele onderhoudsstaat toeneemt, de monumentale waarde beter blijft behouden en grote kostbare restauraties minder nodig zijn.\"",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "Doorlopend open: \"Aanvragers kunnen gedurende het gehele jaar een aanvraag indienen bij het Molenfonds voor een bijdrage\" via \"een aanmeldformulier op de website molens.nl\". De drempel zit in de rechtsvorm en de subsidievolgorde: \"Voor een bijdrage uit het Molenfonds komen uitsluitend stichtingen en verenigingen met de ANBI-status in aanmerking. Particuliere eigenaren kunnen in bijzondere gevallen een aanvraag doen\" en \"Sommige provincies kennen een specifieke subsidieregeling voor groot onderhoud... Is dat het geval, dan moeten aanvragers altijd eerst aanvragen bij de Provincie. Het Molenfonds kan in zo'n situatie alleen een aanvullende bijdrage doen, bovenop de provinciale subsidie.\"",
+  "aanvrager_type": "beide",
+  "geo_niveau": "landelijk",
+  "geo_waarden": ["Nederland"],
+  "bedrag_min": null,
+  "bedrag_max": 80000,
+  "bedrag_indicatie": "\"De regeling kent geen minimum en geen maximum aan subsidiabele kosten.\" De bijdrage is getrapt: subsidiabele kosten tot EUR 25.000 geven maximaal EUR 10.000; van EUR 25.000 tot EUR 125.000 maximaal EUR 80.000; boven EUR 125.000 maximaal EUR 48.000. Toegekende bedragen onder de vorige regeling lagen in de praktijk tussen EUR 9.400 en EUR 52.500 per molen.",
+  "cofinanciering_vereist": true,
+  "uitsluitingen": [
+    "\"De regeling kan niet gebruikt worden voor het eigen aandeel in de Subsidieregeling Instandhouding Monumenten (SIM) en werkzaamheden die gelden als regulier onderhoud.\"",
+    "Niet-monumenten: \"Het project betreft groot onderhoud of restauratie aan een wind- of watermolen die als Rijks-, Provinciaal- of Gemeentelijk Monument geregistreerd is. Voor weidemolens kan gemotiveerd een uitzondering worden gemaakt.\"",
+    "Reeds gestarte projecten: \"Met de uitvoering van het project mag nog niet begonnen zijn voordat de toekenning is ontvangen.\"",
+    "Herhaalde aanvragen: \"Een bijdrage voor groot onderhoud of restauratie kan eenmaal per vijf jaar worden toegekend. Indien het een aanvraag betreft voor hetzelfde onderdeel/onderdelen dan kan niet vaker dan eenmaal in de tien jaar per molen een bijdrage worden toegekend.\"",
+    "Meer dan twee aanvragen per jaar bij meerdere molens in bezit (tenzij het budget het toelaat)",
+    "Overfinanciering: \"Overfinanciering is niet mogelijk.\"",
+    "Werk dat niet sober en doelmatig of niet door vakbekwame ambachtslieden wordt uitgevoerd",
+    "Projecten die strijdig zijn met \"de wet- en regelgeving en het vigerende molenbeleid van de RCE en De Hollandsche Molen\""
+  ],
+  "kostensoort": ["restauratie", "investering"],
+  "landgoed_relevantie": {
+    "route": "zelf",
+    "onderbouwing": "Veel landgoederen hebben een wind- of watermolen op het terrein, en die vallen precies binnen de regeling: \"Het project betreft groot onderhoud of restauratie aan een wind- of watermolen die als Rijks-, Provinciaal- of Gemeentelijk Monument geregistreerd is.\" Dat de regeling ook echt bij landgoedachtige eigenaren terechtkomt, blijkt uit de toekenningen: de Watermolen van Singraven in Denekamp (landgoed Singraven) kreeg EUR 52.500 voor funderingsherstel, en Utrechts Landschap kreeg EUR 52.500 voor de fundering van de Middelste Molen in Cabauw. Aanvragen kan het hele jaar door. Twee harde aandachtspunten voor een landgoed: (1) de rechtsvorm - \"Voor een bijdrage uit het Molenfonds komen uitsluitend stichtingen en verenigingen met de ANBI-status in aanmerking. Particuliere eigenaren kunnen in bijzondere gevallen een aanvraag doen\", dus een landgoed-BV of prive-eigenaar moet een uitzondering bepleiten of de molen in een stichting onderbrengen; en (2) de breuklijn onderhoud/restauratie ligt hier scherp: regulier onderhoud is uitgesloten en het eigen aandeel in de SIM mag niet worden gedekt, maar groot onderhoud en restauratie juist wel - een onderhoudsvraag moet dus als groot onderhoud worden geherformuleerd. Er is bovendien een volgorde-eis: eerst provinciale subsidie aanvragen, het Molenfonds vult aan (die eis \"vervalt na de derde afwijzing van de provincie\"). Eigen bijdrage minimaal 5% van de subsidiabele kosten, bij voorkeur via crowdfunding op het eigen platform van het Molenfonds.",
+    "partnertype": null
+  },
+  "onderliggende_fondsen": [
+    {"naam":"Groot Onderhoud- en Restauratiefonds","relevant":true,"reden":"Kernregeling voor groot onderhoud en restauratie van monumentale wind- en watermolens; bijdrage tot EUR 80.000. Direct relevant voor een landgoed met een molen."},
+    {"naam":"Snoei- & Bloeifonds","relevant":true,"reden":"Aparte regeling met eigen voorwaarden (20250204_MEM_Voorwaarden_Snoei-&_Bloeifonds.pdf) en eigen aanvraagformulier. Naam en context wijzen op de molenbiotoop - het vrijhouden van wind- en watertoevoer, dus het snoeien of verwijderen van opgaand groen rond de molen. Dat raakt direct het landgoedbeheer rond een molen. Voorwaarden niet uitgelezen."},
+    {"naam":"Jongerenfonds","relevant":false,"reden":"Gericht op jongeren en molens (20200323_MEM_Voorwaarden_Jongerenfonds_Molens.pdf); geen route naar landgoedbeheer, hooguit indirect bij een educatieproject op het landgoed."},
+    {"naam":"Educatiefonds","relevant":false,"reden":"Genoemd in de inleiding van de voorwaarden; gericht op educatie over molens, niet op instandhouding van het object."},
+    {"naam":"Gezamenlijk Restauratiefonds na brand en storm voor Molens","relevant":true,"reden":"Op /molenbeheer staan een 'Missie Visie en Aanpak' en een 'Concept Reglement Vereniging Gezamenlijk Restauratiefonds na brand en storm voor Molens'. Calamiteitenherstel na brand of storm is voor een landgoed met een molen zeer relevant. Status lijkt in oprichting (conceptreglement); documenten niet uitgelezen."},
+    {"naam":"Crowdfundplatform Molenfonds","relevant":true,"reden":"Niet zelf een fonds maar een financieringsinstrument dat de regeling verplicht stelt cq. sterk stimuleert voor de eigen bijdrage van minimaal 5%: 'Tevens wordt gevraagd om inspanningen te doen om eigen middelen te verwerven... bij voorkeur crowdfunding via het crowdfundplatform van het Molenfonds. Crowdfunding wordt sterk gestimuleerd.' Lopende acties liggen tussen EUR 2.500 en EUR 5.000 per project."},
+    {"naam":"Molenprijs","relevant":true,"reden":"Jaarlijkse publieksprijs (september/oktober) waarmee een molenproject financiering kan winnen; open voor molens, dus ook voor een molen op een landgoed."},
+    {"naam":"Hamoen Molenfonds (Cultuurfonds op Naam)","relevant":true,"reden":"Een van de Cultuurfondsen op Naam die het Molenfonds voeden. Niet zelfstandig aan te vragen, maar wel een aanwijzing dat molenprojecten ook via het Cultuurfonds gefinancierd worden."},
+    {"naam":"Carolien Jongsma Fonds (Cultuurfonds op Naam)","relevant":true,"reden":"Voedt het Molenfonds; staat ook zelfstandig in de verrijkingsset (carolijn-jongsma-fonds-het-cultuurfonds)."},
+    {"naam":"Gezusters Kuipers-Ruurlo Fonds (Cultuurfonds op Naam)","relevant":true,"reden":"Voedt het Molenfonds via het Cultuurfonds."},
+    {"naam":"Krachtfonds (Cultuurfonds op Naam)","relevant":true,"reden":"Voedt het Molenfonds via het Cultuurfonds."},
+    {"naam":"Eleonora van Heusden Fonds (Cultuurfonds op Naam)","relevant":true,"reden":"Voedt het Molenfonds via het Cultuurfonds."},
+    {"naam":"M.A.O.C. Gravin van Bylandt Stichting","relevant":true,"reden":"Financier van het Molenfonds; is zelf een breed vermogensfonds dat ook rechtstreeks aan natuur- en monumentendoelen geeft en dus als aparte ingang voor landgoederen de moeite waard is."}
+  ],
+  "niet_gevonden": [
+    "Voorwaarden Snoei- & Bloeifonds (20250204_MEM_Voorwaarden_Snoei-_&_Bloeifonds.pdf): gelinkt op /molenbeheer maar niet uitgelezen - relevant voor molenbiotoop/groenbeheer op een landgoed",
+    "Voorwaarden Jongerenfonds en Educatiefonds: gelinkt maar niet uitgelezen",
+    "Missie Visie en Aanpak plus Concept Reglement Gezamenlijk Restauratiefonds na brand en storm: gelinkt maar niet uitgelezen; status (opgericht of nog concept) onbekend",
+    "Jaarlijks beschikbaar budget van de regeling Groot Onderhoud en Restauratie: niet gepubliceerd; de voorwaarden noemen alleen 'Indien het budget tekortschiet...'",
+    "De aanvraagpagina op de huidige site molenfonds.nl leidt alleen naar crowdfunding; de regeling zelf staat op molens.nl/molenbeheer. https://www.molens.nl/molenfonds geeft 404"
+  ]
+}

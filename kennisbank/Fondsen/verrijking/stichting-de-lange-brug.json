@@ -1,0 +1,32 @@
+{
+  "naam": "Stichting De Lange Brug",
+  "bronnen": [
+    {"soort": "website", "url": "https://delangebrug.nl/doelstelling.html", "jaar": 2026, "gelezen": true},
+    {"soort": "website", "url": "https://delangebrug.nl/crowdfunding.html", "jaar": 2026, "gelezen": true},
+    {"soort": "website", "url": "https://delangebrug.nl/index.html", "jaar": 2026, "gelezen": true},
+    {"soort": "website", "url": "https://www.landschapnoordholland.nl/doe-mee/fondsen-en-stichtingen", "jaar": 2026, "gelezen": true}
+  ],
+  "doelstelling": "\"We hebben verschillende interessegebieden op de terreinen van muziek, natuur, literatuur, gezondheid en restauratie.\" en \"Organisaties met doelstellingen op het gebied van cultuur, natuurbehoud, medisch onderzoek of stadsherstel kunnen jaarlijks financiele ondersteuning van de stichting vragen voor bijzondere projecten.\"",
+  "benaderbaarheid": "op_uitnodiging",
+  "benaderwijze_notitie": "\"Volgens de statuten kunnen instellingen op uitnodiging met een voorstel komen, waarin wordt aangegeven hoe het geld besteed gaat worden. Het bestuur kiest in de maand november uit de voorstellen degene die ons het meest aanspreekt.\" Tegenstrijdig hiermee stelt de homepage: \"Organisaties met doelstellingen op het gebied van cultuur, natuurbehoud, medisch onderzoek of stadsherstel kunnen jaarlijks financiele ondersteuning van de stichting vragen voor bijzondere projecten.\" Niet opgelost - vraag voor een telefoontje.",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": null,
+  "geo_waarden": [],
+  "bedrag_min": null,
+  "bedrag_max": 5000,
+  "bedrag_indicatie": "\"De stichting stelt jaarlijks een geldbedrag beschikbaar van € 5000,-\" / \"De LANGEBRUGPRIJS à € 5000 die jaarlijks wordt uitgereikt aan een organisatie\"",
+  "cofinanciering_vereist": null,
+  "uitsluitingen": [],
+  "kostensoort": ["investering", "restauratie"],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Twee van de vier genoemde terreinen zijn natuurbehoud en restauratie/stadsherstel, en het fonds financierde via Landschap Noord-Holland een fysieke landschapsingreep: \"Stichting de Lange Brug - Landschapsuitkijkpunt Fort bij Krommediedijk.\" Het gaat echter om één prijs van € 5.000 per jaar die \"op uitnodiging\" wordt toegekend; een landgoed komt realistisch alleen in beeld via een natuur- of erfgoedorganisatie die het project indient.",
+    "partnertype": "Natuur- of landschapsorganisatie (bijv. een provinciaal landschap) of een erfgoed-/stadsherstelorganisatie die het project indient; het landgoed is dan projectlocatie."
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "Beleidsplan, ANBI-publicatie en jaarverslag: niet op delangebrug.nl (/anbi.html, /aanvraag.html, /over-de-stichting.html geven een PHP fatal error)",
+    "Pagina op fondseninnederland.nl: /fonds/stichting-de-lange-brug en /fonds/de-lange-brug geven beide 404",
+    "Uitsluitingen, cofinancieringseis, werkgebied/geografische beperking, aanvraagformulier of indieningsdeadline: nergens gepubliceerd"
+  ]
+}

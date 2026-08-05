@@ -1,0 +1,33 @@
+{
+  "naam": "Stichting Jaap van Duijn Vogelfonds",
+  "bronnen": [
+    {"soort": "website", "url": "https://www.vogelfonds.nl/?page_id=38", "jaar": 2026, "gelezen": true},
+    {"soort": "aanvraagvoorwaarden", "url": "https://www.vogelfonds.nl/?page_id=45", "jaar": 2026, "gelezen": true},
+    {"soort": "website", "url": "https://www.vogelfonds.nl/?page_id=41", "jaar": 2026, "gelezen": true},
+    {"soort": "beleidsplan", "url": "https://www.vogelfonds.nl/?page_id=64", "jaar": 2026, "gelezen": true},
+    {"soort": "website", "url": "https://www.landschapnoordholland.nl/doe-mee/fondsen-en-stichtingen", "jaar": 2026, "gelezen": true}
+  ],
+  "doelstelling": "De stichting heeft ten doel: het verlenen van financiele steun aan projecten die het behoud en de verbetering van de natuur bevorderen, en in het bijzonder aan projecten die bijdragen aan de diversiteit en de verbetering van de vogelstand in Nederland.",
+  "benaderbaarheid": "open",
+  "benaderwijze_notitie": "\"Subsidieaanvragen dienen schriftelijk en in drievoud te worden gericht aan het secretariaat van de stichting (...) Subsidieaanvragen worden tweemaal per jaar in behandeling genomen. Deadline voor de eerste ronde is 1 maart, deadline voor de tweede 1 september.\" Het fonds gaat bovendien zelf werven: \"zal de Stichting zelf actief partijen gaan benaderen. Hierbij valt te denken aan instellingen als de provinciale landschappen en aan Vogelbescherming Nederland.\"",
+  "aanvrager_type": "beide",
+  "geo_niveau": "landelijk",
+  "geo_waarden": ["Nederland"],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": "\"Het spreiden van de uitkering van het vermogen over een periode van dertig jaar, betekent dat per jaar gemiddeld EUR 100.000 aan de doelen van de Stichting zal moeten worden besteed. Aangezien de jaarlijks aangevraagde subsidiebedragen tot dusver rond de EUR 25.000 lagen, zal de Stichting zelf actief partijen gaan benaderen.\" (beleidsplan 2026; vermogen ca EUR 3 miljoen na legaat 2025)",
+  "cofinanciering_vereist": true,
+  "uitsluitingen": [],
+  "kostensoort": ["investering", "onderzoek", "regulier_onderhoud"],
+  "landgoed_relevantie": {
+    "route": "zelf",
+    "onderbouwing": "Het fonds financiert terreininrichting en -beheer ten behoeve van vogels: \"Projecten die een positief effect hebben op de leefomgeving van in Nederland voorkomende vogelsoorten. Te denken valt aan het plaatsen van nestkasten, het inrichten en beheren van terreinen, e.d.\" en \"Ook kan de stichting financiele steun verlenen bij de aankoop en inrichting van natuurterreinen, waarvan het beheer kan bijdragen aan het verwezenlijken van de doelstelling.\" Dat past direct op landgoedopgaven als weidevogelbeheer, aanleg van poelen en natte graslanden, nestgelegenheid in oude bomen en herstel van kleinschalig landschap. De doelgroep is breed geformuleerd (\"geinitieerd door bijvoorbeeld natuurbeschermingsorganisaties, terreinbeherende organisaties, vogelwerkgroepen, instellingen die vogelonderzoek doen\") - een landgoed is een terreinbeherende partij, en het fonds heeft in de praktijk provinciale landschappen gesteund (o.a. \"Mosselwiel weidevogelvriendelijk maken\" bij Landschap Noord-Holland). Let op de harde cofinancieringseis: \"In beginsel subsidieert de Stichting niet meer dan 50% van een project.\" Het fonds zoekt sinds 2026 actief naar meer bestedingsruimte, wat de kans op honorering vergroot.",
+    "partnertype": null
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "Expliciete uitsluitingslijst: niet gepubliceerd op vogelfonds.nl",
+    "Minimum- en maximumbedrag per aanvraag: niet gepubliceerd; alleen indicaties over jaartotaal en historisch aangevraagd niveau",
+    "Formeel aanvraagformulier: bestaat niet; aanvraag is vormvrij schriftelijk in drievoud"
+  ]
+}

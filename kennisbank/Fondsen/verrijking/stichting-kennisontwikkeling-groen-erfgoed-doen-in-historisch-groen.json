@@ -1,0 +1,111 @@
+{
+  "naam": "Stichting Kennisontwikkeling Groen Erfgoed (SKGE) - 'Doen in Historisch Groen'",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://kennisontwikkelinggroenerfgoed.nl/doen-in-historisch-groen/",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "website",
+      "url": "https://kennisontwikkelinggroenerfgoed.nl/over-skge/",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "website",
+      "url": "https://kennisontwikkelinggroenerfgoed.nl/netwerk/",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "website",
+      "url": "https://kennisontwikkelinggroenerfgoed.nl/richtlijnen-groen-erfgoed/",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "website",
+      "url": "https://kennisontwikkelinggroenerfgoed.nl/contact/",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "“Doel is het realiseren van geschikte opleidingen voor mensen die zich beroepsmatig of als vrijwilliger bezighouden met het onderzoeken, beheren en onderhouden van groen erfgoed zoals historische tuinen en parken, buitenplaatsen, begraafplaatsen en historische bossen.”",
+  "benaderbaarheid": "gesloten",
+  "benaderwijze_notitie": "LET OP - dit is geen fonds. De SKGE verstrekt geen geld; zij is zelf ontvanger: “De ontwikkeling van het handboek wordt mede mogelijk gemaakt door de Rijksdienst voor het Cultureel Erfgoed en het Cultuurfonds met bijdragen vanuit het Osieck-Winkelman Fonds, het Gertrudis Offenberg Fonds, het Het Elisabeth Fonds, het Honselersdijk Fonds, het Pfältzer-Birnie Fonds, het Keg-Thate Fonds, het Zanen-Bakker Fonds en het Themafonds Erfgoedvrijwilligers.” ‘Doen in historisch groen’ is een boek: “Handboek voor vrijwilligers in groen erfgoed. (…) Prijs: € 29.95 + € 5.00 verzendkosten.” Op de hele site staat geen aanvraagloket, procedure of criterium voor derden. Wel een open uitnodiging tot samenwerking: “Wil je op jouw buitenplaats of landgoedwinkel dit boek ook verkopen, neem dan contact met ons op.”",
+  "aanvrager_type": "nvt",
+  "geo_niveau": "landelijk",
+  "geo_waarden": [
+    "Nederland"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": null,
+  "cofinanciering_vereist": null,
+  "uitsluitingen": [
+    "Verstrekt geen subsidies of donaties aan derden - er is geen regeling, dus ook geen uitsluitingslijst."
+  ],
+  "kostensoort": [
+    "onderzoek",
+    "personeel"
+  ],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Inhoudelijk staat de SKGE midden in het landgoedwerkveld: “opleidingen voor mensen die zich beroepsmatig of als vrijwilliger bezighouden met het onderzoeken, beheren en onderhouden van groen erfgoed zoals historische tuinen en parken, buitenplaatsen, begraafplaatsen en historische bossen”. Maar geld gaat er niet uit. De route voor een landgoed is drieledig: (1) een landgoed kan als leerwerkplek/locatie meeliften in de projectbegroting van SKGE of een partner (NCE, Erfgoedacademie, Hogeschool Utrecht, Vereniging van Erfgoedhoveniers) bij een vrijwilligers- of opleidingsproject in de eigen tuin/park; (2) de acht in het colofon genoemde Cultuurfonds-fondsen op naam plus het Themafonds Erfgoedvrijwilligers zijn bewezen financiers van groen erfgoed en zijn zelf aan te schrijven; (3) de ERM-uitvoeringsrichtlijnen (URL 6010 Hovenierswerk historische tuinen en parken, URL 6001 Tuinhistorisch Onderzoek) waar de SKGE aan meewerkt, gelden als kwaliteitsnorm bij subsidieaanvragen voor historisch groen.",
+    "partnertype": "Opleidings- of vakorganisatie in groen erfgoed: SKGE zelf, Nationaal Centrum Erfgoedopleidingen, Erfgoedacademie, Hogeschool Utrecht, Vereniging van Erfgoedhoveniers, Gilde van Tuinbazen, Nederlandse Tuinenstichting, Vakgroep Groen Erfgoed, LandschappenNL of sKBL."
+  },
+  "onderliggende_fondsen": [
+    {
+      "naam": "Osieck-Winkelman Fonds (Cultuurfonds)",
+      "relevant": true,
+      "reden": "Genoemd als financier van het handboek groen erfgoed — bewezen financier van historisch groen. Nog te verrijken."
+    },
+    {
+      "naam": "Gertrudis Offenberg Fonds (Cultuurfonds)",
+      "relevant": true,
+      "reden": "Genoemd als financier van het handboek groen erfgoed. Nog te verrijken."
+    },
+    {
+      "naam": "Het Elisabeth Fonds (Cultuurfonds)",
+      "relevant": true,
+      "reden": "Genoemd als financier van het handboek groen erfgoed. Nog te verrijken."
+    },
+    {
+      "naam": "Honselersdijk Fonds (Cultuurfonds)",
+      "relevant": true,
+      "reden": "Genoemd als financier van het handboek groen erfgoed. Nog te verrijken."
+    },
+    {
+      "naam": "Pfältzer-Birnie Fonds (Cultuurfonds)",
+      "relevant": true,
+      "reden": "Genoemd als financier van het handboek groen erfgoed. Nog te verrijken."
+    },
+    {
+      "naam": "Keg-Thate Fonds (Cultuurfonds)",
+      "relevant": true,
+      "reden": "Genoemd als financier van het handboek groen erfgoed. Nog te verrijken."
+    },
+    {
+      "naam": "Zanen-Bakker Fonds (Cultuurfonds)",
+      "relevant": true,
+      "reden": "Genoemd als financier van het handboek groen erfgoed. Nog te verrijken."
+    },
+    {
+      "naam": "Themafonds Erfgoedvrijwilligers (Cultuurfonds)",
+      "relevant": true,
+      "reden": "Genoemd als financier; specifiek gericht op erfgoedvrijwilligers — directe route voor vrijwilligersprojecten in een landgoedtuin of -park."
+    },
+    {
+      "naam": "Rijksdienst voor het Cultureel Erfgoed (RCE)",
+      "relevant": true,
+      "reden": "Medefinancier van het handboek; overheidsroute, geen fonds op naam."
+    }
+  ],
+  "niet_gevonden": [
+    "Geen aanvraagloket, aanvraagprocedure, criteria, bedragen of deadlines — de SKGE is geen subsidieverstrekker; gecontroleerd op /doen-in-historisch-groen/, /over-skge/, /netwerk/, /richtlijnen-groen-erfgoed/ en /contact/.",
+    "Geen beleidsplan, jaarverslag of ANBI-publicatie van de SKGE gevonden op de eigen site.",
+    "Geen bedragen gevonden van de bijdragen die de acht Cultuurfonds-fondsen op naam aan het handboek leverden."
+  ]
+}

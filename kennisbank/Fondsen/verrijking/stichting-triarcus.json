@@ -1,0 +1,36 @@
+{
+  "naam": "Stichting TriArcus",
+  "bronnen": [
+    {"soort": "website", "url": "https://www.triarcus.nl/", "jaar": 2026, "gelezen": true},
+    {"soort": "website", "url": "https://www.landschapnoordholland.nl/doe-mee/fondsen-en-stichtingen", "jaar": 2026, "gelezen": true},
+    {"soort": "website", "url": "https://www.oud-castricum.nl/categorie-activiteiten/nieuws/stichting-triarcus-schenkt-oud-castricum-e-25-000/", "jaar": 2016, "gelezen": true}
+  ],
+  "doelstelling": "\"Stichting TriArcus heeft als doelstellingen het bevorderen van: de instandhouding van cultureel erfgoed, het langer zelfstandig wonen van ouderen en duurzaam wonen.\" Over erfgoed: \"Stichting TriArcus wil bijdragen aan de instandhouding van materieel cultureel erfgoed (gebouwen, museumstukken, historische documenten en beeldmateriaal e.d.).\"",
+  "benaderbaarheid": "gesloten",
+  "benaderwijze_notitie": "\"Wegens organisatorische veranderingen neemt Stichting TriArcus tijdelijk geen nieuwe projecten aan. Wel ondersteunt Stichting TriArcus dit jaar een vast aantal organisaties met vergelijkbare doelstellingen als Stichting TriArcus. Indien u hiervoor in aanmerking wenst te komen, kunt u [contact] met ons opnemen.\" - tijdelijk gesloten voor nieuwe projecten, met een contactroute die openstaat.",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "gemeente",
+  "geo_waarden": ["Heemskerk", "Beverwijk", "Castricum", "Uitgeest"],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": null,
+  "cofinanciering_vereist": null,
+  "uitsluitingen": [
+    "Organisaties die geen vereniging of stichting zijn: \"De organisatie dient een vereniging of stichting te zijn.\" (sluit particuliere landgoedeigenaren en BV's/maatschappen uit)",
+    "Organisaties zonder ANBI- of SBBI-status: \"De organisatie heeft een ANBI of SBBI status. Dit in verband met de wetgeving rond de schenkbelasting.\"",
+    "Organisaties met een werkgebied buiten Heemskerk, Beverwijk, Castricum of Uitgeest"
+  ],
+  "kostensoort": ["investering", "restauratie", "onderzoek"],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Erfgoed is een kerndoelstelling (\"instandhouding van materieel cultureel erfgoed (gebouwen, museumstukken, historische documenten en beeldmateriaal e.d.)\") en het fonds financiert aantoonbaar fysiek erfgoed in het landschap: \"Stichting TriArcus - Driejarige bijdrage aan restauratie Fort bij Veldhuis / Funderingsherstel Fort K'IJK\" en \"Gratis bouwkundige inspectie van monumenten door Monumentenwacht Noord-Holland\". Maar de aanvrager moet een vereniging of stichting met ANBI/SBBI-status zijn met werkgebied in vier gemeenten, dus een landgoedeigenaar kan nooit zelf aanvragen.",
+    "partnertype": "Vereniging of stichting met ANBI- of SBBI-status en werkgebied in Heemskerk/Beverwijk/Castricum/Uitgeest: een natuur- of landschapsorganisatie (bijv. Landschap Noord-Holland), een historische vereniging, museum, of een steunstichting van het landgoed zelf."
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "Beleidsplan, jaarverslag en ANBI-publicatie: niet op triarcus.nl (site is één Inertia-pagina; /over-ons, /aanvraag, /anbi, /criteria geven 404)",
+    "Pagina op fondseninnederland.nl: /fonds/stichting-triarcus en /fonds/triarcus geven beide 404",
+    "Bedragen, deadlines en cofinancieringseis: nergens gepubliceerd; enige bekende bedrag (EUR 25.000, 2016) komt uit een nieuwsbericht van een ontvanger",
+    "Tegenstrijdigheid niet opgelost: site noemt 3 doelstellingen en 4 gemeenten, statuten-weergave uit 2016 noemt 5 doelstellingen (incl. sociale samenhang en welzijn) en 'heel Kennemerland'"
+  ]
+}

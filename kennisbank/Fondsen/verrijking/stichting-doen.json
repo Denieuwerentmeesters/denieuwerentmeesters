@@ -1,0 +1,84 @@
+{
+  "naam": "Stichting DOEN",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://www.doen.nl/aanvraag-doen/",
+      "jaar": 2025,
+      "gelezen": true
+    },
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://www.doen.nl/aanvraag-doen/criteria",
+      "jaar": 2025,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "Ben jij iemand die op ondernemende wijze werkt aan innoverende oplossingen voor een betere wereld? Past jouw initiatief binnen een van onze thema's; Regeneratieve economie, Solidaire samenleving en Veranderkracht van verbeelding? Binnen Regeneratieve economie: \"Ben jij een ondernemer die met een nieuw businessmodel werkt aan landschapsherstel of regeneratieve landbouw?\"",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "\"Een aanvraag kan het hele jaar door worden ingediend, maar dient minimaal vier maanden voor de start van het project binnen te zijn bij Stichting DOEN. Een aanvraagprocedure neemt in principe vier maanden in beslag. Aanvragen dienen gedaan te worden via het aanvraagformulier.\" En: \"De aanvrager is een rechtspersoon (aanvragen van individuen worden niet in behandeling genomen).\"",
+  "aanvrager_type": "beide",
+  "geo_niveau": "landelijk",
+  "geo_waarden": [
+    "Nederland",
+    "Oost-Afrika (regeneratieve economie)",
+    "Aruba, Bonaire, Curacao, St. Maarten, Saba, St. Eustatius (via VriendenLoterij Fonds)"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": "Voor Stichting DOEN zelf niet gepubliceerd. Wel: Postcode Loterij Buurtfonds \"een bijdrage tussen de 500 en 5.000 euro\" voor buurtprojecten. DOEN verstrekt zowel subsidies als leningen; voor grotere initiatieven verwijst DOEN naar DOEN Participaties.",
+  "cofinanciering_vereist": true,
+  "uitsluitingen": [
+    "aanvragen van individuen (alleen rechtspersonen)",
+    "initiatieven met een louter commerciele doelstelling",
+    "opzichzelfstaand (wetenschappelijk) onderzoek, debatten, seminars, congressen, symposia en conferenties",
+    "bewustwordingscampagnes/-activiteiten",
+    "regulier onderwijs, nadrukkelijk educatieve projecten en lespakketten",
+    "gezondheidszorg, zorgverlening, eerste lijnshulpverlening, sanitatie en (drink)waterprojecten",
+    "noodhulp",
+    "studiebeurzen, stages, studiereizen, groepsreizen, (dag)excursies",
+    "jubilea, festiviteiten, opzichzelfstaande (buurt)activiteiten, feesten, benefietconcerten, festivals",
+    "aankoop en/of behoud van vastgoed, cultureel erfgoed, plaatsen en/of onderhouden van monumenten en kunstwerken",
+    "opzichzelfstaande restauraties en bouwactiviteiten waaronder renovaties en verbouwingen (tenzij deze investeringen nieuwe arbeids- of (leer-)werkplekken of ontmoetingsplekken creeren)",
+    "amateurkunstbeoefening",
+    "opzichzelfstaande aanschaf van instrumenten, materialen, apparatuur, transportmiddelen en/of inventaris",
+    "opzichzelfstaande productie van films, cd's, boeken, publicaties, magazines en/of websites",
+    "initiatieven met een primair politieke of religieuze doelstelling",
+    "initiatieven van overheden en overheidsinstellingen",
+    "initiatieven van partners van de Nationale Postcode Loterij of de VriendenLoterij",
+    "organisaties met een vrije reserve van meer dan 1,5 maal de jaarlijkse uitvoeringskosten",
+    "organisaties die zelf over voldoende middelen beschikken (reserves/eigen vermogen) om het initiatief te realiseren"
+  ],
+  "kostensoort": [
+    "investering",
+    "exploitatie",
+    "personeel"
+  ],
+  "landgoed_relevantie": {
+    "route": "zelf",
+    "onderbouwing": "Het thema Regeneratieve economie noemt landgoed-kernactiviteit letterlijk: \"Ben jij een ondernemer die met een nieuw businessmodel werkt aan landschapsherstel of regeneratieve landbouw? (...) Of een burgercollectief dat de regeneratieve economie in de praktijk brengt?\" Een landgoed met een rechtspersoon en een ondernemend, vernieuwend businessmodel rond landschapsherstel of regeneratieve landbouw kan zelf aanvragen. Cruciale beperking voor de klassieke landgoedvraag: DOEN financiert nadrukkelijk niet \"aankoop en/of behoud van vastgoed, cultureel erfgoed, plaatsen en/of onderhouden van monumenten\" en geen \"opzichzelfstaande restauraties en bouwactiviteiten waaronder renovaties en verbouwingen (tenzij deze investeringen nieuwe arbeids- of (leer-)werkplekken of ontmoetingsplekken creeren)\" - die uitzondering is de route voor herbestemming van bijvoorbeeld een koetshuis of schuur tot werk- of ontmoetingsplek. Ook geldt: geen bijdrage aan organisaties met te veel eigen vermogen.",
+    "partnertype": null
+  },
+  "onderliggende_fondsen": [
+    {
+      "naam": "Postcode Loterij Buurtfonds",
+      "relevant": true,
+      "reden": "buurtprojecten die de buurt \"groener, socialer of creatiever\" maken, EUR 500-5.000; eigen criteria op postcodeloterijbuurtfonds.nl; route voor een publiek toegankelijk groen deelproject op of aan een landgoed, aangevraagd door een maatschappelijke organisatie/bewonersgroep"
+    },
+    {
+      "naam": "VriendenLoterij Fonds",
+      "relevant": true,
+      "reden": "thema Solidaire samenleving - sociale ondernemingen die \"door middel van arbeid een plek geeft aan mensen in de samenleving\"; route voor een sociale onderneming/zorgorganisatie met arbeidsplekken op een landgoed"
+    },
+    {
+      "naam": "DOEN Participaties",
+      "relevant": true,
+      "reden": "maatschappelijke investeringsmaatschappij \"voor grotere initiatieven\"; participaties/leningen in plaats van subsidie"
+    }
+  ],
+  "niet_gevonden": [
+    "de subthema-criteria van Regeneratieve economie - /aanvraag-doen/criteria/criteria-regeneratieve-economie niet gearchiveerd in Wayback (404) en doen.nl blokkeert direct ophalen met 403",
+    "bedragen/bandbreedte voor Stichting DOEN zelf (alleen het Buurtfonds publiceert EUR 500-5.000)",
+    "beleidsplan/jaarverslag-PDF (doen.nl/over-doen/jaarverslag niet bereikbaar door 403)"
+  ]
+}

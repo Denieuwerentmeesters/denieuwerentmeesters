@@ -1,0 +1,41 @@
+{
+  "naam": "Stichting Nutsfonds Zierikzee",
+  "bronnen": [
+    {"soort":"website","url":"https://nutsfondszierikzee.nl/","jaar":2026,"gelezen":true},
+    {"soort":"aanvraagvoorwaarden","url":"https://www.nutsfondszierikzee.nl/de-criteria/","jaar":2021,"gelezen":true}
+  ],
+  "doelstelling": "\"Het fonds ondersteunt onder criteria initiatieven op Schouwen-Duiveland van stichtingen en verenigingen op het gebied van kunst en cultuur, gezondheid en zorg, sport en recreatie, natuur en milieu en educatie.\" In de criteria: \"In het bijzonder steunt de Stichting Nutsfonds Zierikzee projecten op het gebied van kunst & cultuur, gezondheid & zorg, sport & recreatie, natuur & milieu en educatie.\"",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "Er is een openbaar aanvraagformulier en een gepubliceerd criteriadocument, maar met stevige drempels: \"De Stichting Nutsfonds Zierikzee ondersteunt uitsluitend projecten van privaatrechtelijke rechtspersonen zonder winstoogmerk\", \"De Stichting Nutsfonds Zierikzee verleent in beginsel geen financiele ondersteuning, indien andere subsidienten ontbreken\" en \"De aanvrager dient aan te tonen dat voor de realisatie van het project niet kan worden beschikt over voldoende geldelijke middelen uit andere bron.\" Termijn: \"Voor het behandelen van de aanvraag in deze vergadering moet de aanvraag 14 dagen voor de vergadering in ons bezit zijn.\" Geen beroep: \"Het oordeel van het bestuur is bindend. Beroep tegen een afwijzende beslissing is niet mogelijk.\"",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "regio",
+  "geo_waarden": ["Schouwen-Duiveland (Zeeland)"],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": null,
+  "cofinanciering_vereist": true,
+  "uitsluitingen": [
+    "\"projecten van overheden, overheidsinstellingen of daarmee naar het oordeel van het bestuur nauw gelieerde instellingen en van geheel of grotendeels door enige overheid structureel gesubsidieerde rechtspersonen\"",
+    "\"projecten van commerciele instellingen, institutionele beleggers of fondsen\"",
+    "\"projecten met een uitgesproken politiek of religieus karakter\"",
+    "\"projecten met een internationaal of buitenlands karakter\"",
+    "\"Exploitatiekosten, overheadkosten, niet-projectgebonden salariskosten en overige kosten van de aanvrager komen niet in aanmerking voor financiele ondersteuning.\"",
+    "\"Projecten die ten tijde van de indiening van de aanvraag of tijdens de behandeling daarvan geheel of gedeeltelijk in uitvoering zijn of reeds gerealiseerd zijn, komen niet in aanmerking voor ondersteuning.\"",
+    "Structurele steun: \"Iedere ondersteuning is in beginsel incidenteel.\"",
+    "Projecten zonder andere subsidienten: \"De Stichting Nutsfonds Zierikzee verleent in beginsel geen financiele ondersteuning, indien andere subsidienten ontbreken.\"",
+    "Projecten buiten Schouwen-Duiveland: \"Het werkgebied van de Stichting Nutsfonds Zierikzee is Schouwen-Duiveland.\""
+  ],
+  "kostensoort": ["investering", "restauratie"],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Natuur & milieu en educatie staan expliciet in het beleid: \"In het bijzonder steunt de Stichting Nutsfonds Zierikzee projecten op het gebied van kunst & cultuur, gezondheid & zorg, sport & recreatie, natuur & milieu en educatie.\" Een natuur-, landschaps-, cultuur- of educatieproject op een landgoed op Schouwen-Duiveland past daar rechtstreeks in. Het landgoed kan echter vrijwel nooit zelf aanvrager zijn: \"De Stichting Nutsfonds Zierikzee ondersteunt uitsluitend projecten van privaatrechtelijke rechtspersonen zonder winstoogmerk\" en uitgesloten zijn \"projecten van commerciele instellingen, institutionele beleggers of fondsen\" - een landgoed dat als bedrijf, maatschap of eenmanszaak is georganiseerd valt daarmee af. De weg loopt dus via een lokale stichting of vereniging die het project trekt, met het landgoed als locatie of uitvoeringspartner. Twee extra drempels die bij landgoedvragen zwaar wegen: cofinanciering is feitelijk verplicht ('in beginsel geen financiele ondersteuning, indien andere subsidienten ontbreken') en de aanvrager moet aantonen \"dat voor de realisatie van het project niet kan worden beschikt over voldoende geldelijke middelen uit andere bron\". Exploitatie en niet-projectgebonden kosten zijn uitgesloten; alleen afgebakende projectkosten komen in aanmerking.",
+    "partnertype": "Privaatrechtelijke rechtspersoon zonder winstoogmerk op Schouwen-Duiveland - lokale natuur-, landschaps-, cultuur-, educatie- of zorgstichting of -vereniging, niet overwegend door de overheid gesubsidieerd"
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "Bedragen (min/max/indicatie): nergens gepubliceerd op nutsfondszierikzee.nl, niet op de criteriapagina en niet bij de projecten",
+    "Doelstellingspagina (/over-de-stichting/doelstelling) en ANBI-gegevens-pagina: wel in het menu, niet uitgelezen; daar kan een statutaire doelstelling en RSIN staan",
+    "Vergaderdata na 10 september 2026: alleen die ene datum wordt op de homepage genoemd",
+    "Expliciete uitspraak over monumentenrestauratie of regulier onderhoud: niet gepubliceerd; wel is 'Exploitatiekosten... en overige kosten van de aanvrager' uitgesloten, wat regulier onderhoud raakt"
+  ]
+}

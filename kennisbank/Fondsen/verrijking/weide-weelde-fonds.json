@@ -1,0 +1,32 @@
+{
+  "naam": "Weide Weelde Fonds",
+  "bronnen": [
+    {"soort": "website", "url": "https://www.weideweeldefonds.nl/", "jaar": 2020, "gelezen": true},
+    {"soort": "aanvraagvoorwaarden", "url": "https://www.weideweeldefonds.nl/wp-content/uploads/2020/03/Sjabloon-aanvraagformulier-Weidevogelfonds-V-2020.docx", "jaar": 2020, "gelezen": true}
+  ],
+  "doelstelling": "\"Het Weide Weelde Fonds ondersteunt projecten die bijdragen aan een grotere biodiversiteit in het Noorden. Dankzij deze projecten krijgen vogels, vlinders, bijen en andere insecten meer kans. Boeren die op hun land een natuurproject willen realiseren, kunnen een beroep doen op het Weide Weelde Fonds.\"",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "\"Boeren die op hun land een natuurproject willen realiseren, kunnen een beroep doen op het Weide Weelde Fonds.\" en \"Projectaanvragen kunnen jaarlijks bij Weide Weelde worden ingediend. De Raad van Advies van het Weidevogelreglement toets hierna de ingezonden projecten aan de opgestelde criteria.\" Drempel: het aanvraagformulier spreekt de aanvrager consequent aan als \"<Naam veehouder>\" - het fonds is opgezet rond melkveehouders die aan het merk Weide Weelde leveren; of levering aan het merk een voorwaarde is, staat er niet.",
+  "aanvrager_type": "landgoedeigenaar",
+  "geo_niveau": "regio",
+  "geo_waarden": ["Noord-Nederland (\"het Noorden\")", "gerealiseerde projecten in Baaium, Gaastmeer, Oosterwolde (FR), Oudega (SWF), Ten Boer, Wijhe"],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": "\"De hoogte van de bijdrage wordt gebaseerd op de actuele lijst van vergoedingen natuurinvullingen.\" (die lijst is niet gepubliceerd). Omvang van het fonds: \"Per verkocht pak Weide Weelde gaat 2 cent naar het Weide Weelde Fonds... Dit jaar (2020) doneerde Poiesz ruim EUR 57.000 voor hulp aan de weidevogel!\"",
+  "cofinanciering_vereist": null,
+  "uitsluitingen": [],
+  "kostensoort": ["investering", "regulier_onderhoud"],
+  "landgoed_relevantie": {
+    "route": "zelf",
+    "onderbouwing": "Het fonds financiert precies de landschapselementen die op een landgoed met grasland liggen, en de aanvrager is de grondgebruiker zelf: \"Boeren die op hun land een natuurproject willen realiseren, kunnen een beroep doen op het Weide Weelde Fonds.\" De ondersteuningslijst noemt letterlijk \"Aanleg Natuurvriendelijke oever\", \"Aanleg poel\", \"Aanleg houtwal\", \"Aanleg plasdrasgebied\", \"Plaatsen stuw ter verhoging slootwaterpeil\" en jaarlijkse bijdragen voor \"Uitbreiding van kruidenrijk grasland met uitgestelde maaidatum tot 15 juni\" en \"Bescherming van leefgebied door gefaseerd maaien\". Een landgoed met verpachte of eigen melkveehouderij in Noord-Nederland kan dit direct benutten; wel is het formulier geschreven op de veehouder als aanvrager, dus bij verpachting loopt het via de pachter.",
+    "partnertype": null
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "De 'opgestelde criteria' waaraan de Raad van Advies toetst, en de 'actuele lijst van vergoedingen natuurinvullingen': beide genoemd in het aanvraagformulier maar niet gepubliceerd op weideweeldefonds.nl",
+    "Uitsluitingen, bedrag-maximum en indieningsdeadline (alleen 'jaarlijks')",
+    "Of levering aan het zuivelmerk Weide Weelde een voorwaarde is voor de aanvrager",
+    "Exacte afbakening werkgebied anders dan 'in het Noorden'",
+    "Beleidsplan, jaarverslag of ANBI-publicatie; site inhoudelijk laatst bijgewerkt in 2020, actualiteit van het fonds in 2026 niet te verifieren"
+  ]
+}

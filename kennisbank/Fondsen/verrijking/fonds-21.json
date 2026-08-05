@@ -1,0 +1,51 @@
+{
+  "naam": "Fonds 21",
+  "bronnen": [
+    {"soort": "aanvraagvoorwaarden", "url": "https://fonds21.nl/loket/voorwaarden/", "jaar": 2026, "gelezen": true},
+    {"soort": "website", "url": "https://fonds21.nl/loket/onze-pijlers/", "jaar": 2026, "gelezen": true},
+    {"soort": "website", "url": "https://fonds21.nl/loket/aanvraag-indienen/", "jaar": 2026, "gelezen": true}
+  ],
+  "doelstelling": "Fonds 21 investeert in projecten die ruimte maken voor verbeelding. Dat doen we vanuit drie pijlers: Kunst & Cultuur, Jongeren & Maatschappij en Kunst & Educatie. Elk met een eigen invalshoek, maar steeds met hetzelfde uitgangspunt: verbeelding toegankelijk maken en perspectief openen.",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "\"Je kunt een aanvraag doen als je organisatie in het Koninkrijk der Nederlanden is gevestigd en een stichting, vereniging, bv of nv zonder winstoogmerk is.\" en \"Heb je sinds 2023 geen toekenning van Fonds 21 ontvangen, dan is een vooraanvraag verplicht.\"",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "landelijk",
+  "geo_waarden": ["Koninkrijk der Nederlanden", "Caribisch deel van het Koninkrijk"],
+  "bedrag_min": 10000,
+  "bedrag_max": null,
+  "bedrag_indicatie": "\"Je vraagt minimaal € 10.000 aan. Wil je meer dan € 50.000 aanvragen? Neem dan eerst contact met ons op.\" Daarnaast: \"De totale projectbegroting bedraagt minimaal € 60.000.\"",
+  "cofinanciering_vereist": true,
+  "uitsluitingen": [
+    "projecten met een politieke of religieuze doelstelling",
+    "projecten die bijna volledig door Fonds 21 gefinancierd zouden moeten worden",
+    "projecten zonder duidelijk begin of einde",
+    "verbouwing, herinrichting of exploitatiekosten",
+    "permanente kunstwerken in de openbare ruimte",
+    "projecten van gemeenten, eenmanszaken, vof's of individuele kunstenaars",
+    "onderwijsinstellingen als aanvrager",
+    "reprises van voorstellingen, eendaagse festivals, reguliere jaarprogrammering",
+    "aankopen",
+    "restauraties",
+    "erfgoedprojecten",
+    "gratis publicaties of niet-publieksgerichte programma's",
+    "beurzen",
+    "herdenkingen",
+    "wedstrijden",
+    "organisaties in oprichting",
+    "structurele of doorlopende financiering",
+    "aanvragen onder € 10.000",
+    "projecten buiten het Koninkrijk der Nederlanden"
+  ],
+  "kostensoort": ["investering"],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Een landgoed kan zelf niet in aanmerking komen voor de bouwkundige of erfgoedkant: \"We steunen geen ... aanvragen die gaan over verbouwing, herinrichting of exploitatiekosten\" en \"We steunen geen reprises van voorstellingen, eendaagse festivals, reguliere jaarprogrammering, aankopen, restauraties, erfgoedprojecten\". Wél denkbaar is dat een professionele culturele instelling of jongerenorganisatie (stichting/vereniging zonder winstoogmerk) een tijdelijk publieksproject of kunsteducatieprogramma op het landgoed organiseert; het landgoed is dan locatiepost in haar begroting. De pijler Jongeren & Maatschappij (\"projecten die jongeren van 12 tot en met 30 jaar helpen hun toekomst vorm te geven\") biedt daarvoor ruimte.",
+    "partnertype": "professionele culturele instelling, festival-/theaterorganisatie of maatschappelijke jongerenorganisatie in de vorm van een stichting, vereniging, bv of nv zonder winstoogmerk"
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "De in de werklijst opgegeven URL https://www.fonds21.nl/voorwaarden/1/podiumkunsten geeft HTTP 404; de site is herbouwd en kent geen aparte pijler 'Podiumkunsten' meer, alleen Kunst & Cultuur, Kunst & Educatie en Jongeren & Maatschappij.",
+    "Maximaal toekenningsbedrag: niet genoemd; boven € 50.000 alleen 'eerst contact opnemen'. Gezocht op /loket/voorwaarden/ en /loket/aanvraag-indienen/.",
+    "Vaste indieningsdeadlines: bestaan niet; het hele jaar door, minimaal vier maanden voor projectstart."
+  ]
+}

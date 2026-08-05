@@ -1,0 +1,59 @@
+{
+  "naam": "Renée Pigeaud Fonds / Leestekens van het Landschap (Cultuurfonds)",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://www.cultuurfonds.nl/fondsen/leestekens-van-het-landschap-fonds",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://www.cultuurfonds.nl/aanvragen/voorwaarden",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "website",
+      "url": "https://www.cultuurfonds.nl/fondsen",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "Ondersteunt projecten in Nederland op het terrein van historische landschapselementen en de bewustwording van deze leestekens in het landschap.",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "“Ruim 500 bevlogen schenkers hebben bij het Cultuurfonds een eigen fonds ingesteld, met een zelfgekozen naam en doelstelling. (…) Het Cultuurfonds behandelt de aanvragen en informeert de insteller over de bestede gelden en de betrokken projecten.” Geen eigen loket; aanvragen via het Cultuurfonds-aanvraagportaal. Drempels: “Je organisatie heeft cultuur of natuur in de statutaire doelstelling” en “Je totale projectbegroting is minimaal € 15.000”.",
+  "aanvrager_type": "beide",
+  "geo_niveau": "landelijk",
+  "geo_waarden": [
+    "Nederland"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": "Geen bedragen gepubliceerd per fonds op naam. Wel: “Je totale projectbegroting is minimaal € 15.000.”",
+  "cofinanciering_vereist": null,
+  "uitsluitingen": [
+    "“Het project betreft niet groot of regulier onderhoud.” (voorwaarde bij Restauratie)",
+    "“Je project is geen reguliere activiteit”",
+    "“Je project heeft geen polariserend effect en is niet primair religieus, sociaal-maatschappelijk of politiek.”",
+    "“Je organisatie heeft dit jaar nog geen toekenning ontvangen van het Cultuurfonds”",
+    "Natuuraanleg: “Het project gaat niet om de aanleg van recreatieve infrastructuur (zoals bruggen en paden).”",
+    "Natuuraanleg: “De aanleg vindt plaats op het terrein van de aanvragende partij.”"
+  ],
+  "kostensoort": [
+    "investering",
+    "restauratie",
+    "onderzoek"
+  ],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "“projecten in Nederland op het terrein van historische landschapselementen en de bewustwording van deze leestekens in het landschap” — inhoudelijk vrijwel één-op-één het landgoedwerk (houtwallen, lanen, hakhout, grafheuvels, oude waterlopen, stinzenflora). Maar in de volledige toekenningenlijst is elke aanvrager een landschapsorganisatie, museum of uitgever; geen enkele particuliere landgoedeigenaar. Vergelijk “Stichting Landschap Overijssel — natuurontwikkeling Herstel van een tiental landschappelijke elementen (aardkundig en immaterieel erfgoed)”. Zelf aanvragen is niet uitgesloten wanneer het landgoed een stichting/vereniging is, maar de bewezen route loopt via een landschapsorganisatie.",
+    "partnertype": "Provinciale landschapsbeheer-/landschapsorganisatie (Landschapsbeheer Groningen/Drenthe, Landschap Overijssel, LandschappenNL, provinciale Natuur- en Milieufederatie) die het herstel van landschapselementen op het landgoed als project indient, met een educatie-/bewustwordingscomponent."
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "Geen bedragen, jaarbudget of deadlines per fonds op naam; de fondspagina geeft alleen één zin doelstelling plus de toekenningenlijst.",
+    "Geen apart beleidsplan of jaarverslag van het Renée Pigeaud Fonds gevonden op cultuurfonds.nl.",
+    "Geen toelichting gevonden op de relatie tussen de naam “Renée Pigeaud Fonds” en de oudere naam “Leestekens van het Landschap”."
+  ]
+}

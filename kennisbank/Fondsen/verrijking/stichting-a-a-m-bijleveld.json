@@ -1,0 +1,31 @@
+{
+  "naam": "Stichting \"A.A.M. Bijleveld\"",
+  "bronnen": [
+    {"soort": "jaarverslag", "url": "https://storage.googleapis.com/landschapoverijssel_assets/04/jaarrekening-landschap-overijssel-2024.pdf", "jaar": 2024, "gelezen": true}
+  ],
+  "doelstelling": null,
+  "benaderbaarheid": "gesloten",
+  "benaderwijze_notitie": "\"Een deel kwam van fondsen waarvan Landschap Overijssel vaste begunstigde is, te weten Ars Donandi, Hedwig Carolina, A.A.M. Bijleveld, Marke van Streukel.\" (jaarverslag Landschap Overijssel 2024). Het fonds keert uit aan een vaste begunstigde; er is geen aanvraagloket, website of procedure gevonden.",
+  "aanvrager_type": "onbekend",
+  "geo_niveau": null,
+  "geo_waarden": [],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": null,
+  "cofinanciering_vereist": false,
+  "uitsluitingen": [],
+  "kostensoort": [],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Het enige bekende feit is dat Landschap Overijssel \"vaste begunstigde\" van dit fonds is. Landschap Overijssel beheert en ondersteunt natuur, landschap en erfgoed in Overijssel, inclusief landgoederen; middelen uit dit fonds kunnen een landgoed dus alleen bereiken doordat Landschap Overijssel er een project mee uitvoert. Een eigen doelstelling of aanvraagroute is nergens gepubliceerd, dus 'niet_relevant' is niet vast te stellen.",
+    "partnertype": "Landschap Overijssel (vaste begunstigde)"
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "Eigen website: niet gevonden via websearch op 'Stichting A.A.M. Bijleveld'",
+    "Doelstelling/beleidsplan/ANBI-publicatie: niet gevonden; alleen vermelding als begunstiger in jaarverslag Landschap Overijssel 2024",
+    "Vermelding op fondseninnederland.nl: slugs stichting-a-a-m-bijleveld, stichting-aam-bijleveld, a-a-m-bijleveld en bijleveld geven alle 404",
+    "Bedragen/deadlines/uitsluitingen: nergens aangetroffen",
+    "Alleen registratiegegeven gevonden: LEI 72450082121A76HBVA54, adres Meentweg 48 Bussum, status 'Lapsed' (lei-nederland.nl)"
+  ]
+}

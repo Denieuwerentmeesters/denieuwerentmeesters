@@ -1,0 +1,38 @@
+{
+  "naam": "Nationale Postcode Loterij - beneficiantschap",
+  "bronnen": [
+    {"soort": "aanvraagvoorwaarden", "url": "https://www.postcodeloterij.nl/goede-doelen/aanvraag-indienen/toekenningscriteria", "jaar": 2026, "gelezen": true},
+    {"soort": "website", "url": "https://www.postcodeloterij.nl/goede-doelen/aanvraag-indienen", "jaar": 2026, "gelezen": true}
+  ],
+  "doelstelling": "De Postcode Loterij financiert non-profitorganisaties die zijn ontstaan in het maatschappelijk middenveld en werken aan mens- en planeetvraagstukken in binnen- en buitenland (ontwikkelingssamenwerking, mensenrechten, natuur- en dierenbescherming, klimaat, sociale samenhang, gezondheid) en zich inzetten voor 'een groene, rechtvaardige en gezonde wereld'.",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "'De Postcode Loterij financiert non-profit organisaties, die zijn ontstaan in het maatschappelijk middenveld' met 'minimaal 800.000,- aan eigen fondsenwerving' per jaar; de gevraagde bijdrage mag niet meer dan 25% van de totale inkomsten bedragen. Aanvragen kunnen worden ingediend via het online portaal, deadline 1 september.",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "landelijk",
+  "geo_waarden": ["Nederland"],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": "niet gepubliceerd; wel de regel dat de bijdrage maximaal 25% van de totale inkomsten van de organisatie mag zijn. Circa 150 meerjarige partners ontvangen vrij besteedbare langjarige steun; daarnaast eenmalige schenkingen afhankelijk van de jaaropbrengst.",
+  "cofinanciering_vereist": true,
+  "uitsluitingen": [
+    "organisaties met minder dan 800.000 euro eigen fondsenwerving per jaar",
+    "organisaties zonder breed maatschappelijk draagvlak of zonder landelijk bereik over alle regio's van Nederland",
+    "organisaties zonder ANBI-status (of bereidheid die te verkrijgen) en zonder CBF-erkenning",
+    "aanvragen van particulieren (die worden doorverwezen naar het Buurtfonds of Stichting DOEN)",
+    "aanvragen boven 25% van de totale inkomsten van de organisatie"
+  ],
+  "kostensoort": ["exploitatie", "personeel", "investering", "onderzoek"],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "De drempel 'minimaal 800.000,- aan eigen fondsenwerving' plus de eis van landelijk bereik ('omdat de deelnemers uit heel Nederland komen, moet de organisatie zich op alle regio's van Nederland richten') sluit individuele landgoederen en lokale stichtingen uit. De route loopt via grote landelijke natuur-, landschaps- of erfgoedorganisaties die wel beneficiant zijn of kunnen worden; het landgoed komt dan als project- of locatiepost in hun begroting terecht. Steun is bovendien vaak vrij besteedbaar, waardoor de bestedingskeuze bij de partnerorganisatie ligt.",
+    "partnertype": "landelijke natuur-, landschaps- of erfgoedorganisatie met ANBI- en CBF-status en meer dan 800.000 euro eigen fondsenwerving"
+  },
+  "onderliggende_fondsen": [
+    {"naam": "Postcode Loterij Buurtfonds (uitvoering Stichting DOEN)", "relevant": true, "reden": "door de loterij zelf genoemd als route voor buurtinitiatieven op wijkniveau, bijdragen 500-5.000 euro; bruikbaar voor een buurtproject op een landgoed via een buurtorganisatie"},
+    {"naam": "Stichting DOEN", "relevant": true, "reden": "door de loterij genoemd als route voor duurzaamheid en sociale samenhang in Nederland, voor organisaties die niet voor directe steun van de loterij in aanmerking komen"}
+  ],
+  "niet_gevonden": [
+    "concrete bedragen per toekenning - de loterij publiceert geen minimum of maximum",
+    "expliciete uitsluitingslijst van kostensoorten (restauratie, regulier onderhoud) - de criteria zijn organisatiegericht, niet projectgericht"
+  ]
+}

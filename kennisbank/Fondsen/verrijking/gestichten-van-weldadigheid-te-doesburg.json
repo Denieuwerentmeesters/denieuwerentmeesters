@@ -1,0 +1,73 @@
+{
+  "naam": "Gestichten van Weldadigheid te Doesburg (Gestichten Doesburg)",
+  "bronnen": [
+    {
+      "soort": "anbi_publicatie",
+      "url": "https://fondseninnederland.nl/fonds/gestichten-van-weldadigheid-te-doesburg",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "beleidsplan",
+      "url": "https://fondseninnederland.nl/storage/Fondsbestanden/bEZq5iUanmqzv4ISEFJ7cBO7UEMHr5yvm8JTxoa4.pdf",
+      "jaar": 2024,
+      "gelezen": true
+    },
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://gestichtendoesburg.nl/subsidie/",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "website",
+      "url": "https://gestichtendoesburg.nl/pachten/",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "\"De missie van de Gestichten is het bevorderen van het algemeen maatschappelijk welzijn in Doesburg.\" Statutair onder meer: \"Bijdragen aan het in stand houden en evt. exploiteren van gebouwen behorende tot het cultureel historisch erfgoed\"; \"Verlenen van financiële ondersteuning aan verenigingen, stichtingen en andere organisaties gericht op de bevordering en instandhouding van algemeen welzijn\"; \"Huisvesting van ouderen en jongeren\"; \"In stand houden van exploiteren van de Gasthuiskerk te Doesburg\"; \"Bevorderen van duurzaamheid, biodiversiteit en het beperken van belasting van het milieu bij het beheer en exploitatie van landerijen en het ondersteunen van projecten op dit gebied.\"",
+  "benaderbaarheid": "open",
+  "benaderwijze_notitie": "\"Aanvragen kunnen worden ingediend door stichtingen, verenigingen en andere organisaties zonder winstoogmerk.\" Het fonds is bovendien proactief geworden: \"Waar de Gestichten voorheen altijd reactief waren in het verstrekken van financiële steun, zoekt de stichting nu actief naar sociale en culturele initiatieven die in aanmerking komen voor subsidie.\" Drempels: \"De aanvrager moet aantonen dat de aanvraag wordt gedaan door of namens een rechtspersoon\", \"dat de (nieuwe) activiteiten vooral gericht zijn op de Doesburgse inwoners\" en \"dat er geen andere financiering te vinden is, of dat deze financiering onvoldoende is om de beoogde doelen te bereiken\".",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "gemeente",
+  "geo_waarden": [
+    "Doesburg",
+    "gronden in bezit van de stichting: Havikerpoortgebied",
+    "Drempt",
+    "Angerlo/Giesbeek",
+    "Zelhem",
+    "Hengelo (Gld.)",
+    "Wageningen/Opheusden"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": 200000,
+  "bedrag_indicatie": "Geen maximum per aanvraag gepubliceerd. Wel een jaarbudget: \"Het jaarlijkse subsidiebudget stelt de Gestichten vast op maximaal EUR 200.000 onder voorbehoud dat de begroting dit toelaat\" (gegroeid van EUR 20.000 per jaar). Verdeling: \"50% van het budget voor sociaal-maatschappelijke projecten, 30% voor culturele projecten en 20% voor overige projecten\". Daarnaast een aparte, niet via subsidie lopende pot: \"een jaarlijkse pachtopbrengst van EUR 250.000 waarvan 10% wordt gereserveerd om pachters bij te staan bij de verduurzaming van hun bedrijfsvoering\" (dus ca. EUR 25.000 per jaar voor verduurzaming door pachters).",
+  "cofinanciering_vereist": true,
+  "uitsluitingen": [
+    "individuele aanvragers die geen rechtspersoon zijn",
+    "het aanvullen van jaarlijkse exploitatietekorten",
+    "directe of indirecte commerciële doelen",
+    "overheden en bedrijven",
+    "activiteiten die niet vooral op Doesburgse inwoners gericht zijn",
+    "aanvragen waarvoor wel voldoende andere financiering te vinden is"
+  ],
+  "kostensoort": [
+    "investering",
+    "restauratie",
+    "onderzoek"
+  ],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Dit fonds is zelf een grondbezittende partij met een uitgesproken landgoed-agenda en daarmee zowel financier als potentiële samenwerkingspartner. Statutair: \"Bevorderen van duurzaamheid, biodiversiteit en het beperken van belasting van het milieu bij het beheer en exploitatie van landerijen en het ondersteunen van projecten op dit gebied\" en \"Bijdragen aan het in stand houden en evt. exploiteren van gebouwen behorende tot het cultureel historisch erfgoed\". Het bezit is 364 hectare agrarische grond plus 26 hectare natuurgebied, waarvan volgens de eigen site \"ongeveer 75% (...) met name in het Havikerpoortgebied, Drempt en Angerlo\" - het gebied van de Gelderse landgoederen langs de IJssel. De Meerjarenvisie noemt de samenwerking expliciet: \"Daarnaast bekijkt de Gestichten of een gebiedsproces mogelijk is, in samenwerking met omliggende landgoederen\" en als ambitie \"Verder samenwerken met andere landeigenaren en betrokken partijen om gebiedsgericht natuurbeheer te stimuleren\". Ook inhoudelijk sluit het aan bij landgoedwerk: \"waarbij bijvoorbeeld monotone raaigrasvelden zijn vervangen door kruidenrijk grasland, en er meer hagen en houtsingels op de landerijen zijn\". Erfgoedrestauratie wordt eveneens gefinancierd (restauratie gietijzeren vensters Martinikerk, renovatie historisch hekwerk). Route blijft via_partner en niet zelf: het subsidieloket accepteert alleen rechtspersonen zonder winstoogmerk, verstrekt niet aan \"overheden en bedrijven\", en het project moet \"vooral gericht zijn op de Doesburgse inwoners\". Een particulier landgoed of landgoed-B.V. kan dus niet zelf aanvragen. Twee reële routes: (1) een landgoedstichting of natuur-/erfgoedstichting die een publiek project in of om Doesburg uitvoert; (2) de niet-subsidieroute: gebiedssamenwerking of grondtransactie met de Gestichten als mede-landeigenaar (zij zoeken actief grond bij, richtprijs EUR 70.000-80.000 per hectare).",
+    "partnertype": "Een stichting of vereniging zonder winstoogmerk waarvan de activiteiten zich op Doesburgse inwoners richten: een erfgoedstichting (zoals Stichting Doesburg Historie en Erfgoed of Stibema, beide eerdere ontvangers), een natuur- of landschapsstichting, of een welzijnsorganisatie met een programma op het landgoed. Daarnaast, buiten het subsidiespoor: de Gestichten zelf als mede-landeigenaar in een gebiedsproces, benaderbaar via de portefeuillehouder Landerijen en de externe rentmeester."
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "Maximumbedrag per aanvraag of een aanvraagformulier/deadline: de subsidiepagina noemt alleen voorwaarden, geen bedragen, rondes of formulier; aanvragen lijkt vormvrij via info@gestichtendoesburg.nl.",
+    "Voorwaarden waaronder de 10% van de pachtopbrengst voor verduurzaming van pachters wordt ingezet: alleen als budgetregel genoemd, geen regeling gepubliceerd.",
+    "Of niet-pachters of externe landeigenaren aanspraak kunnen maken op de landerijen-doelstelling ('het ondersteunen van projecten op dit gebied'): niet uitgewerkt in beleidsplan of op de site.",
+    "Of het werkgebied 'alle gronden die in het bezit zijn van de stichting' ook betekent dat projecten buiten de gemeente Doesburg (Zelhem, Hengelo Gld., Betuwe) subsidiabel zijn - de statutaire werkgebiedsomschrijving suggereert van wel, de subsidievoorwaarden eisen gerichtheid op Doesburgse inwoners. Tegenstrijdigheid niet opgelost.",
+    "ANBI-status: de Meerjarenvisie 2024-2027 zegt 'Daarvoor is een ANBI-status van belang en die zal de Gestichten aanvragen' - of die inmiddels is verkregen is niet vastgesteld."
+  ]
+}

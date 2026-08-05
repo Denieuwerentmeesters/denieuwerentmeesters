@@ -1,0 +1,46 @@
+{
+  "naam": "Koninklijke Nederlandse Heidemaatschappij (KNHM foundation) / Katalys - Kern met Pit",
+  "bronnen": [
+    {"soort":"website","url":"https://www.knhm.nl/","jaar":2026,"gelezen":true},
+    {"soort":"aanvraagvoorwaarden","url":"https://www.katalys.nl/kern-met-pit/","jaar":2026,"gelezen":true},
+    {"soort":"website","url":"https://www.katalys.nl/missie-en-visie/","jaar":2026,"gelezen":true},
+    {"soort":"website","url":"https://katalys.nl/financieel/","jaar":2026,"gelezen":true}
+  ],
+  "doelstelling": "\"Katalys versterkt in heel Nederland mensen met plannen voor hun omgeving. Dat kan van alles zijn: het aanleggen van een speeltuin of voedselbos, een plek waar bewoners kunnen samenkomen en iets ondernemen zoals een buurthuiskamer of dorpshuis, of het opzetten van een kleinschalige woonvoorziening... We zijn er trots op dat we actieve bewoners kunnen helpen om de buurt of wijk groener, meer betrokken en duurzamer te maken. Al 135 jaar lang!\" En: \"Katalys versterkt bewoners bij hun initiatieven voor de buurt door hen op een betrokken en deskundige manier te motiveren, verbinden, verrijken, adviseren en soms te financieren.\" Kern met Pit: \"Kern met Pit is ons jaarlijks programma en daagt bewoners uit om binnen een jaar hun idee voor de buurt te realiseren, zoals de straat vergroenen, een buurtmoestuin of skatebaan aanleggen of een repaircafe opzetten.\"",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "Kern met Pit is een wedstrijd met een strak venster en selectie vooraf: \"Na je inschrijving (van september tot november) en de selectie ga je met je buurtgenoten een jaar lang aan de slag.\" en \"De nieuwe inschrijfperiode loopt van 1 september t/m 31 oktober 2026 voor de Kern met Pit editie van 2027.\" Het geld komt pas achteraf en alleen bij succes: \"Gelukt? Dan is 1.000 euro en het predicaat Kern met Pit de beloning.\" De tweede route (lening) is een gesprek, geen loket: \"Als wat hieronder staat van toepassing is op jullie initiatief, dan kun je met ons in gesprek gaan over een lening.\"",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "landelijk",
+  "geo_waarden": ["Nederland"],
+  "bedrag_min": null,
+  "bedrag_max": 3000,
+  "bedrag_indicatie": "Kern met Pit: \"Gelukt? Dan is 1.000 euro en het predicaat Kern met Pit de beloning. Ook maak je kans op de Gouden Pit, een extra prijs van 3.000 euro.\" Daarnaast leningen (geen gift) zonder gepubliceerde bedragen: \"maatschappelijke financiering. Dat is een lening tegen gunstige voorwaarden, zoals een relatief lage rente.\"",
+  "cofinanciering_vereist": null,
+  "uitsluitingen": [
+    "Kern met Pit keert niets uit als het plan niet binnen het jaar is gerealiseerd: het bedrag is een beloning achteraf ('Is het gelukt om je idee te realiseren? Dan is het feest en krijg je 1.000 euro')",
+    "Buiten de inschrijfperiode (1 september t/m 31 oktober) kan niet worden ingeschreven",
+    "Voor een lening: \"Reguliere partijen willen ons (nog) niet financieren\" is een voorwaarde - wie regulier gefinancierd kan worden, komt niet in aanmerking",
+    "Voor een lening moet er een terugbetaalcapaciteit zijn: \"Ons initiatief heeft een gezond verdienmodel om de lening te dragen\"",
+    "Plannen die niet door en voor bewoners zijn opgezet: \"Het plan is opgezet voor en door bewoners in de omgeving\""
+  ],
+  "kostensoort": ["investering", "exploitatie"],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Katalys financiert geen eigendom of erfgoed, maar bewonersinitiatieven in de leefomgeving - en die kunnen zich uitstekend op een landgoed afspelen. Het programma noemt zelf vergroening en voedselbossen: \"het aanleggen van een speeltuin of voedselbos\" en \"zoals de straat vergroenen, een buurtmoestuin of skatebaan aanleggen\". Een buurtgroep, dorpsbelang of vrijwilligersgroep die samen met het landgoed een moestuin, wandelpad, natuurspeelplek of ontmoetingsplek realiseert, past binnen Kern met Pit; het landgoed levert de grond of de locatie. Daarnaast is er een tweede, zwaardere route: maatschappelijke financiering in de vorm van een lening tegen lage rente voor \"aanschaf, verbouwing of verduurzaming van een gebouw\", waarbij het typisch gaat om \"een dorps- of buurthuis, een broedplaats of multifunctionele accommodatie\" of \"kleinschalige wooninitiatieven voor en door bewoners (tot ongeveer 25 woningen)\". Een landgoed dat een koetshuis of bijgebouw wil herbestemmen tot ontmoetingsplek of kleinschalige woonvorm samen met een bewonerscooperatie kan daarvoor met Katalys in gesprek. Let op: dat is geen gift maar een lening met terugbetaalverplichting, en het eigenaarschap moet bij de bewoners liggen ('Het plan is opgezet voor en door bewoners in de omgeving'). Naast geld biedt Katalys gratis advies van meer dan 100 provinciale adviseurs en technische kennis van Arcadis - voor een landgoedproject met een buurtcomponent vaak waardevoller dan de 1.000 euro.",
+    "partnertype": "Bewonersgroep, dorpsbelang, buurtvereniging, wooncooperatie of vrijwilligersgroep uit de omgeving van het landgoed; bij de leningsroute een rechtspersoon met een gezond verdienmodel"
+  },
+  "onderliggende_fondsen": [
+    {"naam":"Kern met Pit (jaarlijks programma)","relevant":true,"reden":"Bewonersinitiatieven in de leefomgeving, inclusief vergroening en moestuinen; 1.000 euro bij realisatie binnen een jaar, plus kans op de Gouden Pit van 3.000 euro. Inschrijving 1 september t/m 31 oktober."},
+    {"naam":"Maatschappelijke financiering (lening tegen lage rente)","relevant":true,"reden":"Lening voor aanschaf, verbouwing of verduurzaming van een gebouw met maatschappelijke functie - dorps- of buurthuis, broedplaats, multifunctionele accommodatie. Relevant voor herbestemming van een landgoedbijgebouw samen met bewoners. Geen gift."},
+    {"naam":"Kleinschalige wooninitiatieven","relevant":true,"reden":"Aparte programmalijn voor wooninitiatieven voor en door bewoners tot ongeveer 25 woningen, met advies en financiering. Denkbaar bij herbestemming van landgoedopstallen."},
+    {"naam":"Adviesteams per provincie / technische kennis Arcadis","relevant":true,"reden":"Gratis advies op maat van ruim 100 vrijwillige adviseurs plus technische expertise van Arcadis; geen geld, wel een substantiele bijdrage in natura bij een landgoedproject met bewonerscomponent."}
+  ],
+  "niet_gevonden": [
+    "Reglement of volledige voorwaarden van Kern met Pit: op katalys.nl staat alleen de programmabeschrijving in vijf stappen; de inschrijving en het reglement lopen via www.kernmetpit.nl, dat niet is uitgelezen",
+    "Selectiecriteria van Kern met Pit ('en de selectie'): welke criteria de jury hanteert is niet gepubliceerd op de bezochte pagina's",
+    "Rentepercentage, looptijd en maximale omvang van de maatschappelijke financiering: niet gepubliceerd; alleen 'een relatief lage rente'. De folder 'Maatschappelijke Financieringen' is gelinkt maar niet uitgelezen",
+    "ANBI-publicatie en jaarbericht van Katalys: gelinkt in de footer, niet uitgelezen",
+    "Of KNHM foundation naast Katalys nog een eigen fonds voert: knhm.nl redirect volledig naar katalys.nl ('KNHM is Katalys'), er is geen aparte KNHM-fondsregeling meer aangetroffen",
+    "De URL's https://www.katalys.nl/financieren/ en /wat-we-doen/financieren/ geven 404; de werkende pagina is https://katalys.nl/financieel/"
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "naam": "VriendenLoterij - Clubs van de Week",
+  "bronnen": [
+    {"soort": "aanvraagvoorwaarden", "url": "https://www.vriendenloterij.nl/goede-doelen/clubs-verenigingen/club-van-de-week", "jaar": 2026, "gelezen": true}
+  ],
+  "doelstelling": "De VriendenLoterij steunt jaarlijks 100 clubs, verenigingen of stichtingen met elk 5.000 euro voor een project dat 'je club of stichting helpt en voor plezier zorgt'; genoemde richtingen zijn onder meer verduurzaming en inclusiviteit.",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "Alleen projecten van clubs en stichtingen met een bestaande samenwerking met de VriendenLoterij komen in aanmerking; er moeten minimaal 20 loten meespelen voor de club/stichting.",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "landelijk",
+  "geo_waarden": ["Nederland"],
+  "bedrag_min": 5000,
+  "bedrag_max": 5000,
+  "bedrag_indicatie": "5.000 euro per project; voorkeur voor projecten met totale projectkosten van maximaal 10.000 euro inclusief btw",
+  "cofinanciering_vereist": false,
+  "uitsluitingen": [
+    "clubs/stichtingen zonder bestaande samenwerking (clubpartnerschap) met de VriendenLoterij",
+    "aanvragers met minder dan 20 meespelende loten"
+  ],
+  "kostensoort": ["investering"],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Aanvragen kunnen alleen worden gedaan door 'een club, vereniging of stichting' die al clubpartner is van de VriendenLoterij en waarvoor minimaal 20 loten meespelen. Een particuliere landgoedeigenaar valt daar niet onder; een aan het landgoed verbonden vereniging of stichting (vrienden-, natuur- of erfgoedvereniging) kan wel aanvragen, bijvoorbeeld voor een verduurzamings- of toegankelijkheidsproject op het landgoed.",
+    "partnertype": "vereniging of stichting met VriendenLoterij-clubpartnerschap, bijvoorbeeld een vriendenstichting, natuur- of erfgoedvereniging verbonden aan het landgoed"
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "expliciete lijst van niet-financierbare kostensoorten (regulier onderhoud, exploitatie) - niet vermeld op de pagina Club van de Week",
+    "beleidsplan of ANBI-publicatie met inhoudelijke criteria - niet gezocht buiten vriendenloterij.nl",
+    "aanvraagdeadlines - niet vermeld; alleen een beslistermijn van 8 tot 12 weken"
+  ]
+}

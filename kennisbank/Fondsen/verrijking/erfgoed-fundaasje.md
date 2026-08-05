@@ -290,3 +290,54 @@ Eeltsje Hettinga
 Broer van der Hoek
 Eric Hoekstra
 Lolkje Hoekstr
+
+## About us (Oer us)
+Bron: https://erfgoed-fundaasje.nl/about/
+Opgehaald: 2026-08-05
+
+Purpose
+Plenty of precious archive material is thrown out, mostly due to ignorance about its importance. To help prevent this and to preserve an important part of Dutch/Frisian history, the Heritage Foundation/Erfgoed Fundaasje was created on 18 February 2009.
+Erfgoed Fundaasje collects history, this can be letters, photo albums and genealogical material, but also birth spoons, tabacco boxes with inscriptions or books with personal information and family- or business archives.
+All these materials don't always have to be 'old'. Because things that don't seem so important now, may have great historical value in a couple of decades.
+
+Work method
+The work method is divided in the following categories:
+1 discovery
+2 storage (climate controlled in acidic free archive boxes)
+3 inventory (e.g. is this about a person, a family or a bussinnes)
+4 categorization (e.g. by letters, deeds, maps, poetry albums etc.)
+5 digitization of parts of the archive
+6 management of the archive
+7 providing access to the archive for those who are interested in it
+
+Terrain
+The geographical work area is the Klaaiboustreek, an agricultural part of the province of Fryslan. But the gathering of materials is not limited to this area, if the family or business has expanded into other areas this is then still considered our work area.
+
+Offering material
+Everybody who has something that is important in its own way, can offer it to the foundation. Be it a single letter or an entire company archive.
+
+Donating or loaning out
+The materials can be donated or loaned to the foundation. When donated, it becomes property of the foundation. When provided on loan the material remains the property of the legal guardian, family or company.
+Erfgoed Fundaasje has a lot of material in its care. For many it is a relieve that their historical materials are stored in a safe place and remain accessible "forever".
+The foundation ultimately decides if materials can be added to the archives. In case offered materials are accepted a compensation may be in order for archiving.
+
+Acessibility
+The material is either publicly accessible, subject to a conditional disclosure (e.g. after a period of time), or subject to special permission from the donor.
+The family and business archives can be consulted for research by appointment with Erfgoed Fundaasje: 058-212 00 35 or info@erfgoed-fundaasje.nl
+
+Language
+The language policy of Erfgoed Fundaasje is to use the language and dialect from the area where the history takes place.
+
+Fees / costs
+Not expensive, though good. The research into the value of heritage has already been conducted by erfgoed Fundaasje for many families and businesses. For inventorying, documenting, digitizing, describing a family or business history, etc. a fee will be charged in consultation with the donor. The fee depends on the scope of the project in question.
+
+Erfgoed Fundaasje/Heritage Foundation
+Vredeman de Vriesstrjitte 59, 8921 BS Ljouwert - Friesland
+058-212 00 35, info@erfgoed-fundaasje.nl
+Chamber of Commerce: 1104 57 16
+
+## Constatering
+Op de gehele site (home, about, contact, questions) staat geen aanvraagprocedure, geen
+subsidie- of donatieregeling en geen toekenningsbeleid. Erfgoed Fundaasje verstrekt geen
+geld aan derden; het is een archiefdienst die zelf een vergoeding in rekening brengt
+("a fee will be charged in consultation with the donor").

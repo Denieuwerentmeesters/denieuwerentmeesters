@@ -1,0 +1,34 @@
+{
+  "naam": "Jantjes Scouting Fonds",
+  "bronnen": [
+    {"soort": "website", "url": "https://www.scouting.nl/nieuws/jantje-beton-en-scouting-nederland-lanceren-jantjes-scouting-fonds", "jaar": 2020, "gelezen": true},
+    {"soort": "website", "url": "https://www.scouting.nl/partners-en-sponsors/jantje-beton", "jaar": 2026, "gelezen": true}
+  ],
+  "doelstelling": "Scoutinggroepen extra financiele steun in de rug bieden om hun gebouw en/of terrein toekomstbestendig te maken; 'daarmee maken ze samen meer en betere speelruimte voor kinderen en jongeren'. Inzetbaar voor 'nieuw-/verbouwprojecten van het Scoutinggebouw en voor het opknappen van de buitenruimte rondom een Scoutinggebouw; zolang het maar direct of indirect bijdraagt aan de speelkansen en speelruimte voor kinderen en jongeren'.",
+  "benaderbaarheid": "onbekend",
+  "benaderwijze_notitie": "'In het nieuwe Jantjes Scouting Fonds is er gedurende vier jaar (2021 - 2024) in totaal 120.000 euro beschikbaar voor Scoutinggroepen die een aanvraag doen bij Jantjes Scouting Fonds, als zij meedoen aan de Jantje Beton Collecte.' De aangekondigde periode is verstreken en de aanvraagpagina's op scouting.nl geven per augustus 2026 een 404; of het fonds nog open staat is niet vast te stellen.",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "landelijk",
+  "geo_waarden": ["Nederland"],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": "Totaal 120.000 euro over vier jaar (2021-2024). Volgens zoekresultaten bedroegen individuele toekenningen in de getoonde voorbeelden 2.000 euro per project; dit is niet op een bereikbare bronpagina geverifieerd.",
+  "cofinanciering_vereist": null,
+  "uitsluitingen": [
+    "aanvragers die geen Scoutinggroep zijn",
+    "Scoutinggroepen die niet meedoen aan de Jantje Beton Collecte"
+  ],
+  "kostensoort": ["investering", "restauratie"],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Alleen Scoutinggroepen die meedoen aan de Jantje Beton Collecte kunnen aanvragen: '120.000 euro beschikbaar voor Scoutinggroepen die een aanvraag doen bij Jantjes Scouting Fonds, als zij meedoen aan de Jantje Beton Collecte'. Een landgoed kan dus nooit zelf aanvragen. Wel bestaat een reele route: veel Scoutinggroepen huren of gebruiken een gebouw en terrein op of naast een landgoed. Het fonds financiert 'nieuw-/verbouwprojecten van het Scoutinggebouw en het opknappen van de buitenruimte rondom een Scoutinggebouw', wat een investering op landgoedgrond kan betreffen wanneer de Scoutinggroep de aanvrager en uitvoerder is.",
+    "partnertype": "lokale Scoutinggroep die op of nabij het landgoed een gebouw of terrein gebruikt en meedoet aan de Jantje Beton Collecte"
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "actuele criteria en voorwaarden: het nieuwsbericht verwijst naar de pagina 'Subsidies & fondsen' op scouting.nl, maar zowel /ondersteuning/financien/subsidies-fondsen/jantjes-scouting-fonds als de projectenpagina geven per augustus 2026 een 404",
+    "maximumbedrag per aanvraag, aanvraagformulier en indieningsdeadlines",
+    "of het fonds na 2024 is voortgezet of beeindigd - geen bron gevonden die dit vaststelt",
+    "de oorspronkelijke nieuwspagina is alleen nog leesbaar via de Wayback Machine"
+  ]
+}

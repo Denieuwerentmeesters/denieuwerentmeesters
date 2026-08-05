@@ -1,0 +1,48 @@
+{
+  "naam": "Stichting Kinderpostzegels Nederland (subsidieprogramma)",
+  "bronnen": [
+    {"soort": "aanvraagvoorwaarden", "url": "https://www.kinderpostzegels.nl/subsidieaanvraag/aanvraag", "jaar": 2026, "gelezen": false},
+    {"soort": "aanvraagvoorwaarden", "url": "https://www.kinderpostzegels.nl/criteria-subsidieaanvraag/", "jaar": 2026, "gelezen": false},
+    {"soort": "website", "url": "https://www.fondswervingonline.nl/regelingen/subsidie-projecten-voor-kwetsbare-kinderen", "jaar": 2026, "gelezen": true},
+    {"soort": "website", "url": "https://www.fondswervingonline.nl/regelingen/subsidie-pleegzorg", "jaar": 2020, "gelezen": true}
+  ],
+  "doelstelling": "Steun aan maatschappelijk relevante projecten gericht op ondersteuning van kwetsbare kinderen in hun eigen leefomgeving, binnen drie programma's: Onderwijs (het recht op onderwijs garanderen en de persoonlijke, sociale en economische ontwikkeling van kinderen stimuleren), Werken aan veerkracht (kinderen helpen ingrijpende gebeurtenissen te verwerken) en Pleegzorg (kinderen een veilig thuis bieden waar zij zich gezond kunnen ontwikkelen en hechten).",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "Aanvragen kan doorlopend via een online vooraanvraagformulier van maximaal 1 A4, maar met drempels: 'De aanvrager is een non-profit stichting of vereniging', 'Kinderpostzegels verstrekt geen subsidies in de vorm van individuele hulp' en het project moet aansluiten op de programma's Pleegzorg, Onderwijs of Veerkracht. Let op: deze citaten komen van derde bronnen; kinderpostzegels.nl zelf was niet leesbaar (Cloudflare, HTTP 403).",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "internationaal",
+  "geo_waarden": ["Nederland", "Senegal", "Mali", "Burkina Faso", "Ethiopie", "India"],
+  "bedrag_min": 5000,
+  "bedrag_max": null,
+  "bedrag_indicatie": "Tegenstrijdig: fondswervingonline.nl en een snippet van kinderpostzegels.nl noemen een minimum van 5.000 euro; een snippet van de criteriapagina zegt dat een verzoek niet in behandeling wordt genomen als de bijdrage van Kinderpostzegels kleiner wordt dan 2.000 euro. Jaarbudget ruim 10 miljoen euro. In de (gesloten) deelregeling Pleegzorg gold 5.000 tot 25.000 euro per project. Voor jongerenaanvragen geldt: 'Kinderpostzegels geeft niet minder dan 1.000 euro voor een activiteit'.",
+  "cofinanciering_vereist": true,
+  "uitsluitingen": [
+    "projecten die behoren tot de taak en verantwoordelijkheid van de overheid",
+    "individuele hulp",
+    "projecten gericht op medische behandeling of medicatie",
+    "aanleg of renovatie van schoolpleinen",
+    "projecten van grote gevestigde goede doelen die al actief zijn in de Nederlandse fondsenwerving",
+    "projecten die al gestart zijn",
+    "aanvragers die geen non-profit stichting of vereniging zijn",
+    "in de deelregeling Pleegzorg: projecten gericht op pleegzorgprofessionals en/of organisatiewerkwijze"
+  ],
+  "kostensoort": ["investering", "exploitatie", "personeel"],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Het fonds financiert 'maatschappelijk relevante projecten gericht op ondersteuning van kwetsbare kinderen', met als eis dat de aanvrager een non-profit stichting of vereniging is en dat het om 'collectieve hulp' met kinderparticipatie gaat; een landgoedeigenaar kan dus niet zelf aanvragen. De route loopt via een jeugd-, onderwijs- of pleegzorgorganisatie die een programma voor kwetsbare kinderen op het landgoed organiseert. Binnen het programma Pleegzorg werden expliciet 'natuurbeleving, sport, spel en drama' als gewenste activiteiten genoemd - dat is precies het soort programma waarvoor een landgoed de locatie levert en waarbij de landgoedkosten als locatiepost in de begroting van de aanvragende organisatie komen. Let wel op de uitsluiting van 'aanleg of renovatie van schoolpleinen': fysieke terreininrichting is niet de kern van dit fonds.",
+    "partnertype": "pleegzorgorganisatie, jeugdzorg- of welzijnsorganisatie, school of onderwijsstichting die een programma voor kwetsbare kinderen op het landgoed uitvoert"
+  },
+  "onderliggende_fondsen": [
+    {"naam": "Programma Pleegzorg", "relevant": true, "reden": "noemt natuurbeleving, sport en spel voor pleeggezinnen als gewenste activiteiten - een landgoed kan de locatie zijn; de deelregeling zoals beschreven op fondswervingonline was echter in 2020 gesloten"},
+    {"naam": "Programma Onderwijs", "relevant": true, "reden": "onderwijsprojecten voor kwetsbare kinderen; natuur- en erfgoededucatie op een landgoed kan hier passen, mits een onderwijs- of jeugdorganisatie aanvraagt"},
+    {"naam": "Programma Werken aan veerkracht", "relevant": true, "reden": "traumaverwerking bij kinderen; natuur- of dierondersteunde programma's op een landgoed kunnen hier onder vallen"},
+    {"naam": "Subsidieaanvraag door jongeren", "relevant": true, "reden": "aparte route voor minimaal drie jongeren tussen 15 en 22 jaar met een activiteit van maatschappelijke meerwaarde, vanaf 1.000 euro"}
+  ],
+  "niet_gevonden": [
+    "de primaire bronpagina's: kinderpostzegels.nl geeft HTTP 403 via WebFetch en een Cloudflare-interstitial via curl met browser-user-agent, voor /subsidieaanvraag/aanvraag, /criteria-subsidieaanvraag/ en /subsidieaanvraag/aanvraag/richtlijnen; ook kinderpostzegels.zendesk.com geeft 403 en de Wayback Machine heeft geen snapshot van de richtlijnenpagina",
+    "alle criteria en bedragen hier berusten daardoor op fondswervingonline.nl en zoekmachine-snippets, niet op geverifieerde brontekst van het fonds zelf",
+    "maximumbedrag voor het algemene programma",
+    "actuele status van de deelregeling Pleegzorg (op fondswervingonline gemarkeerd als gesloten sinds juni 2020)",
+    "het formulier aanvraagformulier-pleegzorgverbouwingen-particulieren.doc op kinderpostzegels.nl - niet ingezien; suggereert een regeling waarbij particulieren wel kunnen aanvragen voor verbouwingen ten behoeve van pleegzorg"
+  ]
+}

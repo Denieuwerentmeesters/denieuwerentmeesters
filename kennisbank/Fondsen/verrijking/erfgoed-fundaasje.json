@@ -1,0 +1,33 @@
+{
+  "naam": "Erfgoed Fundaasje (Stichting Erfgoed Fundaasje / Heritage Foundation)",
+  "bronnen": [
+    {"soort":"website","url":"https://erfgoed-fundaasje.nl/home/","jaar":2026,"gelezen":true},
+    {"soort":"website","url":"https://erfgoed-fundaasje.nl/about/","jaar":2026,"gelezen":true},
+    {"soort":"website","url":"https://erfgoed-fundaasje.nl/contact/","jaar":2026,"gelezen":true}
+  ],
+  "doelstelling": "\"Plenty of precious archive material is thrown out, mostly due to ignorance about its importance. To help prevent this and to preserve an important part of Dutch/Frisian history, the Heritage Foundation/Erfgoed Fundaasje was created on 18 February 2009. Erfgoed Fundaasje collects history, this can be letters, photo albums and genealogical material, but also birth spoons, tabacco boxes with inscriptions or books with personal information and family- or business archives.\" Werkgebied: \"The geographical work area is the Klaaiboustreek, an agricultural part of the province of Fryslan. But the gathering of materials is not limited to this area, if the family or business has expanded into other areas this is then still considered our work area.\"",
+  "benaderbaarheid": "open",
+  "benaderwijze_notitie": "\"Everybody who has something that is important in its own way, can offer it to the foundation. Be it a single letter or an entire company archive.\" Let wel: dit is een aanbod van archiefmateriaal, geen aanvraag om geld. Er is geen subsidie- of donatieregeling gepubliceerd; omgekeerd brengt de stichting kosten in rekening: \"For inventorying, documenting, digitizing, describing a family or business history, etc. a fee will be charged in consultation with the donor. The fee depends on the scope of the project in question.\"",
+  "aanvrager_type": "nvt",
+  "geo_niveau": "regio",
+  "geo_waarden": ["Klaaiboustreek (Fryslan)", "Fryslan"],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": null,
+  "cofinanciering_vereist": null,
+  "uitsluitingen": [
+    "Er is geen financieringsregeling; het fonds keert geen geld uit aan derden. \"The foundation ultimately decides if materials can be added to the archives. In case offered materials are accepted a compensation may be in order for archiving.\""
+  ],
+  "kostensoort": [],
+  "landgoed_relevantie": {
+    "route": "onbekend",
+    "onderbouwing": "Dit is geen geldverstrekkend fonds maar een archiefstichting: nergens op de site staat een aanvraagprocedure, toekenningsbeleid of donatieregeling, en de kosten lopen de andere kant op ('a fee will be charged in consultation with the donor'). De inhoudelijke relevantie voor landgoederen is er wel: de kerntaak is het redden en ontsluiten van familie- en bedrijfsarchieven - \"family- or business archives\" - en de organisatie heeft aantoonbaar boerderij- en familiearchieven veiliggesteld (\"Heritage Foundation has an agreement with the Municipality of Waadhoeke regarding the future security of agricultural business and family archives\"). Een Fries landgoed met een familie- of rentmeestersarchief kan dat hier laten inventariseren, digitaliseren en ontsluiten, maar betaalt daarvoor zelf. Route staat op 'onbekend' en niet op 'niet_relevant', omdat niet uit te sluiten is dat de stichting binnen een gezamenlijk erfgoedproject als uitvoerende partner of cofinancier van archiefwerk optreedt; dat is niet gepubliceerd en zou een telefoontje vergen (058-212 00 35).",
+    "partnertype": "Bij een gezamenlijk archiefproject: Erfgoed Fundaasje zelf als uitvoerder, eventueel naast Tresoar of gemeente Waadhoeke, waarmee samenwerkingsafspraken bestaan"
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "Aanvraagprocedure, criteria, bedragen, deadlines en uitsluitingen: bestaan niet - gecontroleerd op /home/, /about/, /contact/ en de menupagina 'Questions'; de site is een archiefpresentatie, geen fondsensite",
+    "ANBI-publicatie of beleidsplan: niet gevonden op de eigen site (KvK 1104 57 16 wel vermeld, RSIN niet)",
+    "Het in de werklijst opgegeven domein erfgoedfundaasje.nl bestaat niet; het juiste domein is erfgoed-fundaasje.nl"
+  ]
+}

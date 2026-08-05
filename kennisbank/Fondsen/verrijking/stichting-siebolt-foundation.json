@@ -1,0 +1,40 @@
+{
+  "naam": "Stichting Siebolt Foundation",
+  "bronnen": [
+    {"soort":"website","url":"https://stichtingsiebolt.nl/","jaar":null,"gelezen":true},
+    {"soort":"website","url":"https://stichtingsiebolt.nl/voor-wie/","jaar":null,"gelezen":true},
+    {"soort":"aanvraagvoorwaarden","url":"https://stichtingsiebolt.nl/onze-aanpak/","jaar":null,"gelezen":true},
+    {"soort":"aanvraagvoorwaarden","url":"https://stichtingsiebolt.nl/vragen/","jaar":2026,"gelezen":true},
+    {"soort":"anbi_publicatie","url":"https://stichtingsiebolt.nl/anbi/","jaar":null,"gelezen":true}
+  ],
+  "doelstelling": "\"De doelstelling van Stichting Siebolt is het bewaren van Fries historisch- en cultureel erfgoed en het bevorderen en ondersteunen van maatschappelijk relevante evenementen, projecten en gebeurtenissen die mienskip-vorming tot doel hebben en anderszins bevorderen, in de provincie Fryslan. Al hetgeen in de ruimste zin met het voorgaande verband houdt, daartoe behoort en/of daartoe bevorderlijk kan zijn.\" Op de homepage korter: \"Stichting Siebolt ondersteunt initiatieven voor het behoud van Fries cultureel- en historisch erfgoed en de leefbaarheid op het Friese platteland.\"",
+  "benaderbaarheid": "open",
+  "benaderwijze_notitie": "\"Friese organisaties en instellingen met een project of evenement dat voldoet aan onze doelstelling, kunnen bij ons een donatie aanvragen voor hun project of evenement.\" en \"Via het aanvraagformulier kunt u een verzoek indienen.\" Geen kosten of intermediair: \"Zijn er kosten verbonden aan het doen van een aanvraag? Nee.\" Wel een rechtspersoonlijkheidseis: \"Alleen rechtspersonen (verenigingen, stichtingen etc.) kunnen een aanvraag indienen voor een donatie.\"",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "provincie",
+  "geo_waarden": ["Fryslan"],
+  "bedrag_min": 500,
+  "bedrag_max": 5000,
+  "bedrag_indicatie": "\"Wij zijn een klein vermogensfonds en geven doorgaans een donatie tussen EUR 500 en EUR 5000 aan een project\"",
+  "cofinanciering_vereist": true,
+  "uitsluitingen": [
+    "\"Aanvragen voor initiatieven buiten Friesland worden niet in behandeling genomen.\"",
+    "\"Ook aanvragen met een winstoogmerk zullen wij niet honoreren.\"",
+    "\"Alleen rechtspersonen (verenigingen, stichtingen etc.) kunnen een aanvraag indienen voor een donatie\" - dus geen natuurlijke personen/eenmanszaken",
+    "\"Kan er ook uitbetaald worden aan een prive persoon? Nee, dat kan niet.\"",
+    "\"Indien het project onverhoopt niet afgerond kan worden, ingrijpend wijzigt zonder overleg of onze steun niet (volledig) nodig blijkt, dan vervalt onze donatie.\""
+  ],
+  "kostensoort": ["restauratie", "investering", "onderzoek"],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Behoud van Fries historisch erfgoed is een van de vier expliciete criteria: \"Wanneer uw project voldoet aan een van de volgende criteria, dan kunt u een aanvraag doen: behoud van cultureel/historisch Fries erfgoed, een Fries cultureel evenement, leefbaarheid op het Friese platteland (mienskip) en overige Friese evenementen.\" Het fonds financierde aantoonbaar landgoed-/state-achtig erfgoed: uitgelicht staan \"Theekoepel Franeker - Restauratie Theekoepel\" en op de aanpak-pagina \"Dekema State\". Ook 'leefbaarheid op het Friese platteland' past bij landgoedprojecten met publieksfunctie. Route is via_partner en niet zelf, omdat een landgoed dat als besloten eigendom of eenmanszaak/maatschap is georganiseerd niet kan indienen: \"Alleen rechtspersonen (verenigingen, stichtingen etc.) kunnen een aanvraag indienen\" en \"aanvragen met een winstoogmerk zullen wij niet honoreren\". Een Fries landgoed dat als stichting is ondergebracht (zoals Dekema State) kan wel zelf aanvragen.",
+    "partnertype": "Een Friese rechtspersoon zonder winstoogmerk: landgoedstichting, stichting tot behoud van het huis/de state, dorpsbelang, erfgoed- of natuurvereniging"
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "Beleidsplan: de pagina https://stichtingsiebolt.nl/beleidsplan/ toont alleen een downloadknop 'Beleidsplan-Siebolt-Foundation-' zonder PDF-URL in de HTML; document niet uitgelezen",
+    "Publicatierapport jaarrekening: gelinkt in de footer maar niet uitgelezen; jaarlijks beschikbaar donatiebudget dus niet uit primaire bron bevestigd (een aggregator noemt circa EUR 58.000 per jaar - niet overgenomen)",
+    "Harde deadline per ronde: niet gepubliceerd; alleen vergaderdata 2026 (18 maart, 13 mei, 8 juli, 23 september, 16 december) en 'binnen twee weken na een bestuursvergadering' bericht",
+    "Expliciete uitspraak over regulier onderhoud versus restauratie: niet gepubliceerd; wel is een restauratieproject (Theekoepel Franeker) gehonoreerd"
+  ]
+}

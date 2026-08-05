@@ -1,0 +1,53 @@
+{
+  "naam": "Gertrudis Offenberg Fonds (Cultuurfonds)",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://www.cultuurfonds.nl/fondsen/gertrudis-offenberg-fonds",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://www.cultuurfonds.nl/aanvragen/voorwaarden",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "Voor historisch groen projecten, bij voorkeur door het bevorderen van kennisoverdracht bij erfgoedhoveniers en investering in jong talent.",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "Fonds op naam bij het Cultuurfonds; geen eigen aanvraagloket. Algemene basisvoorwaarden: \"Je organisatie staat ingeschreven bij de Kamer van Koophandel. Je organisatie heeft cultuur of natuur in de statutaire doelstelling. (...) Je totale projectbegroting is minimaal EUR 15.000.\"",
+  "aanvrager_type": "beide",
+  "geo_niveau": "landelijk",
+  "geo_waarden": [
+    "Nederland"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": null,
+  "cofinanciering_vereist": true,
+  "uitsluitingen": [
+    "projecten met polariserend effect of primair religieus, sociaal-maatschappelijk of politiek karakter",
+    "reguliere activiteiten van de organisatie",
+    "projecten die zich alleen op fondsenwerving richten",
+    "projecten buiten Nederland",
+    "totale projectbegroting onder EUR 15.000",
+    "organisaties zonder cultuur of natuur in de statutaire doelstelling"
+  ],
+  "kostensoort": [
+    "investering",
+    "onderzoek",
+    "personeel"
+  ],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "\"Voor historisch groen projecten, bij voorkeur door het bevorderen van kennisoverdracht bij erfgoedhoveniers en investering in jong talent.\" En: \"Een substantieel deel van Nederland bestaat uit historische tuinen en parken behorend bij kastelen, buitenplaatsen en landgoederen.\" Het zwaartepunt ligt op opleiding, stage en kennisoverdracht (Gilde van Tuinbazen, opleiding erfgoedhovenier), niet op fysiek herstel; een landgoed komt eerder in beeld als stage- of praktijklocatie binnen een project van een opleidings- of kennisorganisatie. De gehonoreerde projecten zijn kennis- en landschapsorganisaties (Stichting Kennisontwikkeling Groen Erfgoed, Stichting Landschapsbeheer Groningen).",
+    "partnertype": "opleidings- of kennisorganisatie voor groen erfgoed (bv. Stichting Kennisontwikkeling Groen Erfgoed, Gilde van Tuinbazen, landschapsbeheerorganisatie); een landgoed kan zelf aanvragen als het project echt om kennisoverdracht/opleiding gaat"
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "eigen bedragen, deadlines of aanvullende criteria van dit fonds op naam - niet gepubliceerd op cultuurfonds.nl; fondsen op naam bij het Cultuurfonds publiceren die niet",
+    "eigen beleidsplan/ANBI-publicatie van het fonds op naam (valt onder de ANBI van het Prins Bernhard Cultuurfonds)",
+    "expliciete uitspraak over regulier onderhoud vs. restauratie voor dit fonds"
+  ]
+}

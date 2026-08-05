@@ -189,3 +189,89 @@ analytics
 Marketing
 marketing
 Opslaan en accepteren
+
+## Voorwaarden Groot Onderhoud- en Restauratieregeling (versie juli 2026) - ACTUEEL
+Bron: https://www.molens.nl/sites/d9p.molens.nl/files/documenten/Voorwaarden%20groot%20onderhoud%20en%20restauratie%20-%20Juli%202026.pdf
+(gelinkt vanaf https://www.molens.nl/molenbeheer)
+Opgehaald: 2026-08-05
+
+Voorwaarden Groot Onderhoud - en Restauratieregeling
+
+Inleiding
+Het Molenfonds is opgericht door De Hollandsche Molen om zoveel mogelijk financiele middelen voor het molenbehoud samen te brengen. Het Molenfonds bevat diverse fondsen zoals het Groot Onderhoud- en Restauratie fonds, het Educatiefonds en het Jongerenfonds. Ook biedt het Molenfonds de mogelijkheid voor crowdfunding en om mee te doen aan de Molenprijs.
+Het Molenfonds is mogelijk dankzij bijdragen van Ministerie van Onderwijs, Cultuur en Wetenschap, VriendenLoterij, het Cultuurfonds (onder afkomstig van de volgende Cultuurfondsen op Naam: Hamoen Molenfonds, Carolien Jongsma Fonds, Gezusters Kuipers-Ruurlo Fonds, Krachtfonds en Eleonora van Heusden Fonds), M.A.O.C. Gravin van Bylandt Stichting en bijdragen van particuliere molenliefhebbers.
+
+Regeling Groot Onderhoud en Restauratie
+Het Molenfonds beoogt met de regeling Groot Onderhoud en Restauratie bij te dragen aan groot onderhoud en restauratie van molens. De regeling Groot Onderhoud en Restauratie stimuleert groot onderhoud ten opzichte van regulier onderhoud en grootschalige restauraties waardoor de algehele onderhoudsstaat toeneemt, de monumentale waarde beter blijft behouden en grote kostbare restauraties minder nodig zijn.
+De regeling kan niet gebruikt worden voor het eigen aandeel in de Subsidieregeling Instandhouding Monumenten (SIM) en werkzaamheden die gelden als regulier onderhoud. De regeling kan wel aansluiten bij werkzaamheden groot onderhoud die in de SIM zijn opgenomen.
+Tevens wordt gevraagd om inspanningen te doen om eigen middelen te verwerven. Dit kan eigen fondsenwerving zijn, bij voorkeur crowdfunding via het crowdfundplatform van het Molenfonds of een bijdrage uit het eigen vermogen. Crowdfunding wordt sterk gestimuleerd. De Hollandsche Molen biedt ondersteuning bij het opzetten van de crowdfunding en op maat gemaakte materialen.
+Zodra deze herziene regeling ingaat, vervallen de eerdere regeling en Groot Onderhoud en Restauratie.
+
+Omvang van de bijdrage
+De aanvrager maakt bij het aanvragen van een bijdrage de totale kosten van het voorgenomen herstel inzichtelijk. De Hollandsche Molen stelt de subsidiabele kosten vast op basis van de overlegde informatie. Uitgangspunt is de Leidraad subsidiabele kosten van de Rijksdienst voor het Cultureel Erfgoed (RCE), welke onderdeel uitmaakt van de SIM.
+De regeling kent geen minimum en geen maximum aan subsidiabele kosten.
+Projecten met een omvang tot EUR 25.000 aan subsidiabele kosten kunnen een maximale aanvullende bijdrage krijgen van EUR 10.000.
+Projecten vanaf EUR 25.000 tot EUR 125.000 aan subsidiabele kosten kunnen een maximale aanvullende bijdrage krijgen van EUR 80.000. Bij subsidiabele kosten van EUR 25.000 tot EUR 125.000 is de regeling GO&R aanvullend op de provinciale subsidies voor restauratie en groot onderhoud. Het is een voorwaarde dat eerst bij een overheid subsidie wordt aangevraagd.
+Projecten boven de EUR 125.000 aan subsidiabele kosten kunnen een maximale aanvullende bijdrage aanvragen tot EUR 48.000.
+
+Subsidiabele kosten / Maximale (aanvullende) bijdrage vanuit Molenfonds
+EUR 0 - EUR 25.000 : EUR 10.000
+EUR 25.000 - EUR 125.000 : EUR 80.000
+EUR 125.000 en hoger : EUR 48.000
+
+Voor een indicatie van een mogelijke bijdrage kunt u contact opnemen met De Hollandsche Molen. Hier kunnen geen rechten aan worden ontleend.
+
+Voorwaarden
+1. Aanvragers kunnen gedurende het gehele jaar een aanvraag indienen bij het Molenfonds voor een bijdrage.
+2. Aanvragers met meerdere molens in bezit kunnen maximaal twee aanvragen per jaar indienen. Indien het budget dit toelaat, kan hiervan worden afgeweken.
+3. Voor een bijdrage uit het Molenfonds komen uitsluitend stichtingen en verenigingen met de ANBI-status in aanmerking. Particuliere eigenaren kunnen in bijzondere gevallen een aanvraag doen.
+4. De Hollandsche Molen verwacht bij ieder project een eigen bijdrage van minimaal 5% van de subsidiabele kosten. De eigen bijdrage kan verkregen worden middels crowdfunding of vanuit het eigen vermogen van de aanvrager.
+5. Een bijdrage voor groot onderhoud of restauratie kan eenmaal per vijf jaar worden toegekend. Indien het een aanvraag betreft voor hetzelfde onderdeel/onderdelen dan kan niet vaker dan eenmaal in de tien jaar per molen een bijdrage worden toegekend.
+6. Het project betreft groot onderhoud of restauratie aan een wind- of watermolen die als Rijks-, Provinciaal- of Gemeentelijk Monument geregistreerd is. Voor weidemolens kan gemotiveerd een uitzondering worden gemaakt.
+7. De uit te voeren werkzaamheden moeten sober en doelmatig uitgevoerd worden door vakbekwame ambachtslieden. Bij de beoordeling zijn de gebruikelijke kwaliteitseisen binnen de molensector uitgangspunt.
+8. Het project mag niet strijdig zijn met de wet- en regelgeving en het vigerende molenbeleid van de RCE en De Hollandsche Molen.
+9. Een onherroepelijke omgevingsvergunning dan wel een verklaring dat een dergelijke vergunning niet noodzakelijk is, kan verlangd worden. Dit is ter beoordeling aan De Hollandsche Molen.
+10. Met de uitvoering van het project mag nog niet begonnen zijn voordat de toekenning is ontvangen. Indien de aanvrager wil beginnen met het project (bijvoorbeeld met het bestellen van roeden) alvorens een toekenning is ontvangen over de bijdrage uit het Molenfonds, neemt de aanvrager daarover van tevoren contact op met De Hollandsche Molen.
+11. Sommige provincies kennen een specifieke subsidieregeling voor groot onderhoud of een lage drempel in de subsidieregeling voor restauraties. Is dat het geval, dan moeten aanvragers altijd eerst aanvragen bij de Provincie. Het Molenfonds kan in zo'n situatie alleen een aanvullende bijdrage doen, bovenop de provinciale subsidie. Het is raadzaam om de provinciale aanvraag gelijktijdig te doen met de aanvraag bij het Molenfonds. De voorwaarde dat het Molenfonds alleen kan aanvullen bovenop een provinciale subsidie vervalt na de derde afwijzing van de provincie. Het is wel mogelijk om een gemotiveerd verzoek in te dienen om af te wijken van deze voorwaarde. Overfinanciering is niet mogelijk.
+12. Indien het budget tekortschiet, kan De Hollandsche Molen een keuze maken uit de ingediende aanvragen op basis van: Datum van aanvraag; Belang van de molen op basis van bouwhistorisch onderzoek; Suppletie provinciale subsidie; Afwijzing van provinciale subsidie; Zicht op financiering en uitvoering; Verdeling over provincies; Verdeling over type en functie molens; Maatschappelijk draagvlak voor restauratie of groot onderhoud; Mate van eigen bijdrage.
+13. De door De Hollandsche Molen gedane bijdrage is inclusief eventuele verplichte fiscale heffingen daarover.
+14. De bijdrage wordt pas definitief indien de getekende toekenningsbrief is ontvangen door de aanvrager en daadwerkelijk opdracht is verleend voor het volledige bovengenoemd herstel.
+15. De aanvrager begint met genoemde werkzaamheden binnen twee jaar na toekenning van deze bijdrage. Indien De Hollandsche Molen de kopie opdracht aan de molenmaker c.q. aannemer niet binnen twee jaar ontvangen heeft, vervalt de toezegging, tenzij binnen drie maanden na deze datum gemotiveerd om uitstel is gevraagd.
+16. De werkzaamheden geschieden conform het door De Hollandsche Molen ontvangen plan.
+17. In het belang van de molen kan De Hollandsche Molen bij uitzondering gemotiveerd afwijken van de door haar gestelde regels.
+
+Procedure
+1. De aanvrager dient een aanvraag in bij het Molenfonds via een aanmeldformulier op de website molens.nl.
+2. De Hollandsche Molen laat binnen een maand na ontvangst van het aanvraagformulier en bijgevoegde stukken weten of de aanvraag compleet is. In bijzondere gevallen wordt eerst een bezoek aan de betreffende molen gebracht.
+3. De aanvraag wordt door De Hollandsche Molen besproken.
+4. Voor bijzondere aanvragen wordt een Molentafel georganiseerd. Hiervoor worden uitgenodigd de aanvrager (desgewenst met zijn adviseur), vertegenwoordigers van de RCE, provinciale molenconsulenten, eventueel externe deskundigen, vertegenwoordigers van andere fondsen en De Hollandsche Molen.
+5. Als het dossier compleet is, neemt De Hollandsche Molen binnen zes weken een besluit over het al dan niet verlenen van een bijdrage en de hoogte daarvan.
+
+Voorschotten
+De aanvrager kan van de toegezegde bijdrage 80% bij wijze van voorschot uitbetaald krijgen, nadat de werkzaamheden zijn begonnen.
+
+Bezwaarmogelijkheid
+Voor bezwaren tegen genomen besluiten heeft De Hollandsche Molen een commissie van onafhankelijke deskundigen ingesteld. Bezwaar binnen zes weken na ontvangst van het besluit. Tegen het definitieve besluit is geen beroep mogelijk.
+
+## Overige Molenfonds-regelingen (gelinkt op https://www.molens.nl/molenbeheer)
+Opgehaald: 2026-08-05
+
+- Groot Onderhoud- en Restauratieregeling: /sites/d9p.molens.nl/files/documenten/Voorwaarden groot onderhoud en restauratie - Juli 2026.pdf, aanvraagformulier /aanvraagformulier-groot-onderhoud-restauratie
+- Snoei- & Bloeifonds: /sites/d9p.molens.nl/files/documenten/20250204_MEM_Voorwaarden_Snoei-%20%26%20Bloeifonds.pdf, aanvraagformulier /aanvraagformulier-snoei-en-bloeifonds
+- Jongerenfonds: /sites/d9p.molens.nl/files/documenten/20200323_MEM_Voorwaarden_Jongerenfonds_Molens.pdf, aanvraagformulier /aanvraagformulier-jongerenfonds
+- Gezamenlijk Restauratiefonds na brand en storm voor Molens (in oprichting): Missie Visie en Aanpak + Concept Reglement
+- Educatiefonds, crowdfundplatform en Molenprijs
+
+## Bedragen uit de praktijk (Wayback-overzicht groot-onderhoudsprojecten)
+Bron: https://web.archive.org/web/2022/https://molenfonds.nl/groot-onderhoud/
+Opgehaald: 2026-08-05
+
+Toegekende bijdragen liepen onder de oude regeling van EUR 9.400 tot EUR 52.500 per molen,
+onder meer: De Vlijt Marle EUR 52.500; De Roosdonck Nuenen EUR 31.612; d'Admiraal Amsterdam EUR 9.400;
+Poldermolen D Stompetoren EUR 15.000; De Hoop Bavel EUR 52.500; Arkens Franeker EUR 52.500;
+Ondermolen v/d Tweemanspolder Zevenhuizen EUR 15.000; De Zaandplatte Ruinen EUR 38.292;
+Watermolen van Singraven Denekamp EUR 52.500 (funderingsherstel); Klikjesmolen Midwoud EUR 23.100;
+Binnenmolen Rhenen EUR 20.215 (nieuwe stelling); Veendermolen Roelofarendsveen EUR 15.000;
+Middelste Molen Cabauw EUR 52.500 (fundering, eigenaar Utrechts Landschap);
+Hoop Doet Leven Voorhout EUR 15.000 (metsel- en voegwerk); Loenderveense Molen EUR 10.000;
+Strijkmolen I Rustenburg EUR 10.000; Hoekermolen Vreeland EUR 10.000; De Leeuw Lettele (stelling).

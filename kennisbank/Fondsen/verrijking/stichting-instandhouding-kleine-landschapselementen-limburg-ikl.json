@@ -1,0 +1,29 @@
+{
+  "naam": "Stichting Instandhouding Kleine Landschapselementen Limburg (IKL)",
+  "bronnen": [
+    {"soort":"website","url":"https://www.ikl-limburg.nl/","jaar":null,"gelezen":false}
+  ],
+  "doelstelling": "Niet meer vast te stellen uit eigen bron. De stichting zette zich in voor het behoud en beheer van kleine landschapselementen in de provincie Limburg; het faillissement is op 6 juli 2021 uitgesproken door de rechtbank Roermond en het eigen domein bestaat niet meer.",
+  "benaderbaarheid": "gesloten",
+  "benaderwijze_notitie": "Geen citaat mogelijk: het eigen domein ikl-limburg.nl levert geen DNS-record op (met en zonder www) en er is dus geen enkele eigen beleidsbron meer bereikbaar. De organisatie is failliet verklaard (6 juli 2021); in augustus 2021 volgde een doorstart onder VivaraPro en in maart 2023 startte de provincie Limburg het Steunpunt Landschapsbeheer als opvolger.",
+  "aanvrager_type": "onbekend",
+  "geo_niveau": "provincie",
+  "geo_waarden": ["Limburg"],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": null,
+  "cofinanciering_vereist": null,
+  "uitsluitingen": [],
+  "kostensoort": [],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Als fonds bestaat IKL niet meer - er valt hier niets aan te vragen. De inhoudelijke route naar Limburgse landgoederen loopt nu via de opvolgers: het Steunpunt Landschapsbeheer Limburg (provinciaal, adviserende rol) en vooral de provinciale regeling 'Subsidie Landschapselementen', die volgens de openbare beschrijving 100% subsidie geeft voor aanleg of herstel van houtige landschapselementen in het landelijk gebied - hagen, struweelhagen, boomgaarden, knotbomenrijen, houtsingels, houtwallen en poelen - voor zowel natuurlijke personen als stichtingen, verenigingen, bedrijven, maatschappen en eenmanszaken, met minimaal EUR 5.000 en maximaal EUR 100.000 per aanvrager, looptijd februari 2025 tot augustus 2027. Dat raakt precies de landgoedpraktijk (laanherstel, hakhout, poelen). Route staat op via_partner en niet op zelf, omdat het geen fonds is maar een provinciale regeling met een verplichte voorafgaande melding en adviesgesprek, en omdat deze gegevens niet uit de primaire provinciebron zijn geverifieerd.",
+    "partnertype": "Provincie Limburg (Subsidie Landschapselementen) met adviserende rol van het Steunpunt Landschapsbeheer Limburg; voor uitvoering en collectieve aanvragen eventueel een agrarisch collectief of landschapsbeheerorganisatie"
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "Doelstelling, criteria, bedragen, uitsluitingen en aanvraagprocedure van IKL zelf: geen enkele eigen bron meer bereikbaar. Gezocht op https://www.ikl-limburg.nl/ en http://ikl-limburg.nl (beide NXDOMAIN), op de kennisbank van erfgoedplatformoverijssel.nl (noemt IKL niet) en via algemene websearch",
+    "Wayback Machine is voor dit fonds niet geprobeerd - een gearchiveerde versie van ikl-limburg.nl zou het oude beleid alsnog kunnen leveren, maar dat beleid is na het faillissement van 2021 niet meer actueel",
+    "Primaire verificatie van de provinciale opvolgregeling: https://www.limburg.nl/@10264/subsidie-landschapselementen-2025/ is niet integraal uitgelezen; de genoemde bedragen en voorwaarden komen uit de openbare beschrijving en moeten voor gebruik in de matchmotor worden nagelezen"
+  ]
+}

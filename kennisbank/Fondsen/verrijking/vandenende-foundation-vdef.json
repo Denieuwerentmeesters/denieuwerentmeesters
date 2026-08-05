@@ -1,0 +1,43 @@
+{
+  "naam": "VandenEnde Foundation (VDEF)",
+  "bronnen": [
+    {"soort": "website", "url": "https://vdef.nl/", "jaar": 2026, "gelezen": true},
+    {"soort": "aanvraagvoorwaarden", "url": "https://vdef.nl/aanvragen/", "jaar": 2026, "gelezen": true}
+  ],
+  "doelstelling": "Een particulier cultuurfonds dat is opgericht door Joop en Janine van den Ende in 2001, dat bijdraagt aan de versterking van het culturele klimaat in Nederland door het ondersteunen van professioneel artistiek toptalent en het stimuleren van cultureel ondernemerschap.",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "Aanvragen kan alleen binnen afgebakende loketten en met leeftijds-/beroepsdrempels: bij de Ideeenbus geldt 'Je bent een individuele kunstenaar, muzikant, danser of filmmaker', niet gebonden aan een gezelschap of collectief, en 'Je bent niet ouder dan 28 jaar'; voor projectfinanciering is het aanvraagloket open van 15 december 2026 tot 30 januari 2027.",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "landelijk",
+  "geo_waarden": ["Nederland"],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": "Ideeenbus: 10 x 5.000 euro per winnaar. Voor studiebeurzen en projectfinanciering zijn geen bedragen gepubliceerd op de aanvraagpagina.",
+  "cofinanciering_vereist": null,
+  "uitsluitingen": [
+    "aankoop van instrumenten of apparatuur",
+    "concertreeksen",
+    "muziekopnames en video's",
+    "afstudeerprojecten van studenten",
+    "tijdschriften",
+    "boeken",
+    "begrotingsgaten van lopende producties",
+    "bij de Ideeenbus: aanvragers ouder dan 28 jaar en aanvragers gebonden aan een gezelschap of collectief"
+  ],
+  "kostensoort": ["investering", "onderzoek"],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Het fonds richt zich uitsluitend op mensen, niet op gebouwen of terreinen: 'ondersteunen van professioneel artistiek toptalent' en financiering voor 'professionele (podium)kunstenaars in Nederland'. Restauratie, onderhoud en herbestemming van landgoedopstallen vallen er niet onder en 'begrotingsgaten van lopende producties' zijn expliciet uitgesloten. Toch bestaat een denkbare route: een landgoed dat als podium of residentieplek dient voor een kunstproject van een professionele kunstenaar of gezelschap; de kunstenaar of het gezelschap is dan de aanvrager en de huur- of locatiekosten van het landgoed komen in hun begroting. Voor het landgoed zelf is dit dus een indirecte, marginale route.",
+    "partnertype": "professionele (podium)kunstenaar, gezelschap of culturele producent die een project op of met het landgoed als locatie uitvoert"
+  },
+  "onderliggende_fondsen": [
+    {"naam": "De Ideeenbus", "relevant": false, "reden": "alleen individuele kunstenaars tot en met 28 jaar, 10 x 5.000 euro voor de ontwikkeling van een idee - geen route naar landgoedkosten"},
+    {"naam": "Studiebeurzen", "relevant": false, "reden": "beurzen voor opleidingen en trainingen van individuele kunstenaars"},
+    {"naam": "Projectfinanciering", "relevant": true, "reden": "de enige route waarbij een kunstproject met locatiekosten kan worden gefinancierd; loket open 15 december 2026 tot 30 januari 2027 voor projecten in 2027"}
+  ],
+  "niet_gevonden": [
+    "inhoudelijke criteria en bedragen voor de projectfinanciering en de studiebeurzen - de aanvraagpagina noemt alleen de openingsdata van de loketten",
+    "beleidsplan, jaarverslag of ANBI-publicatie - niet aangetroffen via vdef.nl; niet verder gezocht",
+    "of cofinanciering vereist is"
+  ]
+}

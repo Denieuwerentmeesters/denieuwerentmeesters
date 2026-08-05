@@ -1,0 +1,38 @@
+{
+  "naam": "Reuvensfonds (Stichting Reuvens) — feitelijk: Innovatiefonds Nederlandse Archeologie",
+  "bronnen": [
+    {"soort": "website", "url": "https://www.reuvens.nl/innovatieplatform/innovatiefonds/", "jaar": 2026, "gelezen": true},
+    {"soort": "aanvraagvoorwaarden", "url": "https://www.reuvens.nl/innovatieplatform/innovatiefonds/aanvragen/", "jaar": 2026, "gelezen": true},
+    {"soort": "website", "url": "https://www.reuvens.nl/", "jaar": 2026, "gelezen": true},
+    {"soort": "beleidsplan", "url": "https://www.reuvens.nl/wp-content/uploads/2025/10/SR-Innovatieagenda.pdf", "jaar": 2025, "gelezen": false},
+    {"soort": "beleidsplan", "url": "https://www.reuvens.nl/wp-content/uploads/2025/10/21092025_PvA-Innovatieplatform-Archeologie.pdf", "jaar": 2025, "gelezen": false}
+  ],
+  "doelstelling": "Stichting Reuvens zet zich in voor de bevordering van kennisoverdracht in de archeologie, en biedt een platform voor alle personen en instellingen die actief zijn op het gebied van onderzoek, behoud, beheer, presentatie, educatie en/of infrastructuur van het archeologisch erfgoed. Het Innovatiefonds is bedoeld voor experimenten die leerzaam zijn voor de sector als geheel en die daardoor de kwaliteit en diepgang van het archeologisch onderzoek duurzaam bevorderen.",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "\"Overweegt u een aanvraag voor een financiële bijdrage bij ons in te dienen? Stuur dan eerst een mail naar Stichting Reuvens (info@reuvens.nl) met een beknopte beschrijving van uw plan. Wij kunnen dan bekijken of uw aanvraag voldoet aan de algemene richtlijnen.\" Verder: \"De Stichting Reuvens organiseert tweemaal per jaar een call voor verzoeken tot bijdragen.\" en op 2026-08-05: \"De derde call, die zich wederom richtte op kleinschalige initiatieven, is per 2 juni 2026 gesloten.\"",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "landelijk",
+  "geo_waarden": ["Nederland"],
+  "bedrag_min": null,
+  "bedrag_max": 500000,
+  "bedrag_indicatie": "Drie schalen: Element tot € 25.000; Systeem \"Het subsidieplafond is € 125.000\"; Integraal \"kan het subsidieplafond hier tot ten hoogste € 500.000 oplopen\".",
+  "cofinanciering_vereist": null,
+  "uitsluitingen": [
+    "onderzoek dat sowieso al gedaan moet worden vanuit de reguliere 'Malta-regelgeving' (\"Het innovatiefonds biedt geen 'subsidieregeling' om onderzoek mogelijk te maken dat sowieso al gedaan moet worden\")",
+    "onderzoeken die inhoudelijk misschien grensverleggend zijn maar die qua aanpak niet vernieuwend zijn",
+    "aanvragen die niet voldoen aan artikel 53 van Verordening (EU) nr. 651/2014 (Algemene Groepsvrijstellingsverordening)"
+  ],
+  "kostensoort": ["onderzoek"],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Het fonds financiert archeologisch innovatie-onderzoek, niet vastgoed of beheer: \"Voor ondersteuning komen die kosten in aanmerking die extra gemaakt moeten worden om het experiment mogelijk te maken.\" Een landgoed met archeologische waarden kan als onderzoekslocatie en partner meedoen in een consortium; de Innovatieadviesraad moedigt dat expliciet aan (\"Betrek bij projectaanvragen ook 'nieuwe' partners\"). Gehonoreerde projecten laten deze route zien, bijvoorbeeld 'Verborgen Verhalen uit het Veen. Burgerwetenschap op het snijvlak van cultureel erfgoed en natuurbeheer' (Wageningen Universiteit) en 'De diepte in! Waardering van diepgelegen vindplaatsen' (RAAP). Een van de zes speerpunten is bovendien \"innovatie op het vlak van publiek-private financiering\" en een ander \"innovatie op gebied van publieksbereik en publieksparticipatie\".",
+    "partnertype": "archeologisch onderzoeksbureau (RAAP, Archol, BAAC, ADC, De Steekproef), universiteit/kennisinstelling, gemeentelijke archeologiedienst of provinciale erfgoedorganisatie als penvoerder van een consortium"
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "Er bestaat geen fonds met de naam 'Reuvensfonds'. De werklijst-URL https://www.reuvensdagen.nl/reuvensfonds/ geeft 404; reuvensdagen.nl is doorgetrokken naar reuvens.nl. Het enige subsidie-instrument van Stichting Reuvens is het Innovatiefonds Nederlandse Archeologie.",
+    "Volledige 'algemene richtlijnen' en 'handleiding projectplan': op de aanvraagpagina genoemd als tab-inhoud (Richtlijnen / Criteria en schaalgrootte / Projectplan / Aanvraagformulier), maar niet als losse PDF-link in de HTML gevonden.",
+    "Cofinancieringseis: niet expliciet gepubliceerd; wel geldt als voorwaarde voor omzetting van de toekenning dat 'de aanvrager beschikt over de benodigde vergunningen en financiering'.",
+    "Datum eerstvolgende call: niet gepubliceerd ('Houd onze socials, website en nieuwsbrief in de gaten')."
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "naam": "Stichting Herbert Duintjer Fonds",
+  "bronnen": [
+    {"soort":"website","url":"https://www.herbertduintjerfonds.nl/","jaar":null,"gelezen":true},
+    {"soort":"website","url":"https://www.herbertduintjerfonds.nl/de-stichting/","jaar":null,"gelezen":true},
+    {"soort":"aanvraagvoorwaarden","url":"https://www.herbertduintjerfonds.nl/subsidie-aanvragen/","jaar":null,"gelezen":true},
+    {"soort":"anbi_publicatie","url":"https://kenniscentrumfilantropie.nl/anbi/?url=herbert-duintjer-fonds","jaar":2025,"gelezen":true},
+    {"soort":"beleidsplan","url":"https://kenniscentrumfilantropie.nl/umbraco/surface/documenten/View/8497?file=Beleidsplan","jaar":null,"gelezen":true},
+    {"soort":"jaarverslag","url":"https://kenniscentrumfilantropie.nl/umbraco/surface/documenten/View/8497?file=Jaarverslag","jaar":2025,"gelezen":true}
+  ],
+  "doelstelling": "\"Het doel der stichting is het lenigen van sociale, culturele en andere de mensen beroerende noden, en het stimuleren van activiteiten ter bestrijding van die noden, bij voorkeur in de provincie Fryslan, een en ander in de ruimste zin genomen. Tot het doel der stichting behoort onder meer ook het steunen van activiteiten op oudheidkundig, heemkundig en museaal gebied, en op het gebied van dierenbescherming, natuurbescherming, monumentenzorg, gezondheidszorg, enzovoort.\" (art. 2.1 statuten) En: \"De stichting kan haar doel ook nastreven door het verlenen van bijdragen aan verenigingen, stichtingen of andere organisaties van algemeen nut wier werkzaamheden in overeenstemming met het doel der stichting zijn.\" (art. 2.2)",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "\"Als u een project hebt dat past binnen de doelstellingen van de stichting, dan kunt u bij ons alleen een subsidie aanvragen via het onderstaande formulier.\" Aanvragen worden in de bestuursvergaderingen behandeld: \"In het verslagjaar 2025 is vijf maal vergaderd... In deze vergaderingen zijn de subsidieaanvragen besproken en is besloten over de toekenning van bijdragen.\" Drempel: er zijn geen criteria, bedragen of uitsluitingen gepubliceerd, en er is geen beleidsplan ('Er is geen beleidsplan beschikbaar'), zodat een aanvrager vooraf niet kan toetsen of hij kansrijk is.",
+  "aanvrager_type": "beide",
+  "geo_niveau": "provincie",
+  "geo_waarden": ["Fryslan"],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": null,
+  "cofinanciering_vereist": null,
+  "uitsluitingen": [],
+  "kostensoort": ["restauratie", "investering", "onderzoek"],
+  "landgoed_relevantie": {
+    "route": "zelf",
+    "onderbouwing": "De statutaire doelstelling noemt monumentenzorg en natuurbescherming met zoveel woorden: \"Tot het doel der stichting behoort onder meer ook het steunen van activiteiten op oudheidkundig, heemkundig en museaal gebied, en op het gebied van dierenbescherming, natuurbescherming, monumentenzorg, gezondheidszorg, enzovoort.\" De historie bevestigt dat het fonds dit ook daadwerkelijk doet: \"Zo heeft het fonds wetenschappelijk onderzoek gefinancierd, bijgedragen aan de restauratie van historische gebouwen en monumenten en kunst en cultuur gesteund.\" Een Fries landgoed met een monument of natuurwaarde valt daarmee rechtstreeks binnen de doelstelling en kan zelf via het digitale formulier indienen. Art. 2.2 laat daarnaast toe dat het fonds via een algemeen-nut-organisatie (bijvoorbeeld een landgoed-stichting of Friese erfgoedvereniging) bijdraagt. Geografische restrictie is zacht geformuleerd ('bij voorkeur in de provincie Fryslan'), maar het bestuur is statutair aan Friesland gebonden ('De bestuursleden moeten in Friesland woonachtig zijn').",
+    "partnertype": null
+  },
+  "onderliggende_fondsen": [
+    {"naam":"Herbert Duintjerbeurs (voor jonge musici)","relevant":false,"reden":"Beurs voor jonge musici: 'Naast de verlening van subsidies is in april de Herbert Duintjesbeurs aan twee jonge musici verstrekt.' Geen route naar landgoedbeheer; hooguit indirect als een landgoed als concertlocatie dient."}
+  ],
+  "niet_gevonden": [
+    "Beleidsplan: bestaat niet - de ANBI-download stelt letterlijk 'Er is geen beleidsplan beschikbaar. De Stichting handelt volgens haar doelstellingen en doet donaties zoveel mogelijk in lijn met de begrote inkomsten.'",
+    "Bedragen (min/max/indicatie): niet gepubliceerd op de eigen site, in de ANBI-publicatie of in het bestuursverslag 2025",
+    "Deadlines/aanvraagtermijnen: niet gepubliceerd; er wordt vijf keer per jaar vergaderd maar de data zijn niet openbaar",
+    "Uitsluitingen: nergens gepubliceerd",
+    "Cofinancieringseis: niet gepubliceerd. Een externe bron (Keunstwurk-samenvatting) noemt dat de aanvraag een motivatie, dekkingsplan/begroting en vermelding van andere benaderde fondsen moet bevatten, maar de oorspronkelijke Keunstwurk-pagina redirect (301) inmiddels naar https://stipe.frl/fondsen-en-subsidies/ en is niet meer verifieerbaar - daarom niet als beleid overgenomen",
+    "Het 'jaarlijkse overzicht van donaties' waarnaar het beleidsplan-document verwijst ('elders op deze website') is niet gevonden op herbertduintjerfonds.nl; de site heeft maar drie pagina's (home, de stichting, subsidie aanvragen)",
+    "FIN-pagina https://fondseninnederland.nl/fonds/herbert-duintjer-fonds bestaat wel maar is niet uitgelezen"
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "naam": "Emmaplein Foundation",
+  "bronnen": [
+    {"soort":"website","url":"https://www.emmapleinfoundation.nl/","jaar":null,"gelezen":true},
+    {"soort":"website","url":"https://www.emmapleinfoundation.nl/doel.html","jaar":null,"gelezen":true},
+    {"soort":"aanvraagvoorwaarden","url":"https://www.emmapleinfoundation.nl/uitgangspunten.html","jaar":2025,"gelezen":true},
+    {"soort":"aanvraagvoorwaarden","url":"https://www.emmapleinfoundation.nl/aanvraag.html","jaar":2026,"gelezen":true}
+  ],
+  "doelstelling": "\"Het doel van de stichting is het doen van uitkeringen aan charitatieve, culturele, wetenschappelijke en het algemeen nut beogende instellingen in de ruimste zin des woords. Bij het doen van uitkeringen kan het bestuur rekening houden met de speciale band die bestaat tussen de Emmaplein Foundation en Noord-Nederland.\" Sinds 6-6-2025 aangevuld: \"Emmaplein Foundation wil ook graag ruimte bieden voor vernieuwing en ondersteunt niet alleen sociaalmaatschappelijke- en culturele organisaties in hun meer traditionele projecten, maar richt zich ook op vernieuwende en grensverleggende initiatieven in dezen. We moedigen aanvragen aan die innovatie centraal stellen, of het nu gaat om nieuwe samenwerkingsvormen, baanbrekende technologieen of frisse benaderingen van maatschappelijke uitdagingen.\"",
+  "benaderbaarheid": "open",
+  "benaderwijze_notitie": "\"Geldelijke steun kan slechts worden aangevraagd met het indienen van een aanvraag via deze website.\" Criteria, uitsluitingen, bedragen en vergaderdata staan volledig gepubliceerd; wel geldt: \"Aanvragen dienen minstens twee maanden voor aanvang van een project en tenminste twee weken voor de bestuursvergadering digitaal beschikbaar te zijn op het bureau van de foundation.\"",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "provincie",
+  "geo_waarden": ["Groningen", "Friesland", "Drenthe"],
+  "bedrag_min": 500,
+  "bedrag_max": 5000,
+  "bedrag_indicatie": "\"Te vragen schenkingsbedrag: in principe tussen de EUR 500,- en EUR 5.000,-.\"",
+  "cofinanciering_vereist": true,
+  "uitsluitingen": [
+    "\"Investeringen in, aankoop van, onderhoud c.q. restauratie van gebouwen\"",
+    "\"Monumenten\"",
+    "\"Restauraties van kerken en kerkorgels\"",
+    "\"Projecten met politiek of religieus doel\"",
+    "\"Boeken\"",
+    "\"Films\"",
+    "\"Catalogi bij tentoonstellingen en dergelijke\"",
+    "\"Studentensymposia en -congressen\"",
+    "\"Dorpsfeesten\"",
+    "\"(Buitenland)reizen van (sport)verenigingen\"",
+    "\"De aanvragende organisatie betreft geen overheidsinstelling of serviceclub.\"",
+    "\"Aanvragen van individuen worden niet in behandeling genomen.\"",
+    "\"De aanvraag betreft geen ondersteuning in de overhead/vaste lasten van de rechtspersoon.\"",
+    "\"Uitvoeringen van muziek-, zang- of toneelverenigingen komen alleen bij jubilea in aanmerking voor een donatie... Reguliere uitvoeringen komen niet in aanmerking\""
+  ],
+  "kostensoort": ["investering"],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Alle fysieke landgoedkosten zijn hard uitgesloten: \"Niet in aanmerking komen: ... Investeringen in, aankoop van, onderhoud c.q. restauratie van gebouwen; Restauraties van kerken en kerkorgels; Monumenten\". Een landgoed kan hier dus nooit voor steen, laan of gebouw terecht. De route die overblijft is programmatisch: het doel is \"het doen van uitkeringen aan charitatieve, culturele, wetenschappelijke en het algemeen nut beogende instellingen in de ruimste zin des woords\" met voorkeur voor Noord-Nederland, en het fonds noemt zichzelf steun aan \"sociaalmaatschappelijke- en culturele organisaties\" en aan \"vernieuwende en grensverleggende initiatieven\". Een culturele, educatieve, natuur- of welzijnsorganisatie in Groningen, Friesland of Drenthe kan dus een programma of evenement op een landgoed laten financieren, waarbij het landgoed als locatie in haar projectbegroting staat - een van de uitgelichte projecten is bijvoorbeeld een (kinder)vakantieproject 'BioTop'. Alleen projectkosten, geen overhead: \"De aanvraag betreft geen ondersteuning in de overhead/vaste lasten van de rechtspersoon.\"",
+    "partnertype": "Rechtspersoon (stichting of vereniging) met een cultureel, sociaal-maatschappelijk, educatief of wetenschappelijk project in Groningen, Friesland of Drenthe, bij voorkeur zelf daar gevestigd; geen overheidsinstelling of serviceclub"
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "Beleidsplan of ANBI-standaardformulier: niet aangetroffen op emmapleinfoundation.nl (site heeft home, doel, uitgangspunten, aanvraag, projecten, contact)",
+    "Jaarlijks te besteden bedrag: alleen 'De stichting beheert ruim vier miljoen euro en doet uitkeringen uit de opbrengsten van dit kapitaal' - geen jaarbudget gepubliceerd",
+    "Of natuurbehoud/landschap onder de doelstelling valt: niet expliciet genoemd; de doelstelling noemt alleen charitatief, cultureel, wetenschappelijk en algemeen nut"
+  ]
+}

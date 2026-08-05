@@ -1,0 +1,80 @@
+{
+  "naam": "Gansoord Fonds (Stichting Gansoord)",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://www.gansoord.nl/doelstelling/",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "website",
+      "url": "https://www.gansoord.nl/missie-visie-en-doelen/",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "beleidsplan",
+      "url": "https://www.gansoord.nl/beleidsplan-algemeen-2/",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://www.gansoord.nl/procedure/",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://www.gansoord.nl/procedure-aanvragen/",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "anbi_publicatie",
+      "url": "https://www.gansoord.nl/anbi/",
+      "jaar": 2025,
+      "gelezen": false
+    }
+  ],
+  "doelstelling": "Doel van de stichting is enerzijds bijdragen aan de instandhouding van Nederlands cultuur- en natuurhistorisch erfgoed. De stichting beoogt dit doel na te streven door restauratieprojecten financieel te ondersteunen op specifieke onderdelen. Anderzijds beoogt de stichting de interesse van nieuwe generaties voor dit erfgoed te bevorderen (…) richt de stichting zich in het bijzonder op projecten die jonge en toekomstige vaklieden betrekken bij restauraties en/of op specifieke opleidingstrajecten voor vaklieden in de diverse specialisaties binnen de erfgoed restauratie.",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "“Om zo efficiënt mogelijk te kunnen werken verdient het aanbeveling om bij twijfel omtrent het in aanmerking komen voor ondersteuning eerst een oriënterende mail met een korte omschrijving van het project te versturen. Aanvragen dienen bij voorkeur per e-mail te worden ingezonden.” Open loket dus, maar met een harde drempel: “De Stichting stelt geen fondsen ter beschikking aan particulieren.” Beslisritme: “Het bestuur komt 2 à 3 maal per jaar bijeen.”",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "landelijk",
+  "geo_waarden": [
+    "Nederland",
+    "Voorkeur: in- en rond Amsterdam en Rotterdam"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": "“Ten behoeve daarvan heeft de Stichting een jaarlijks budget van ca. € 150.000 ter beschikking, voor beide doelen tezamen. Toekenning van hogere subsidiebedragen per periode is bij uitzondering mogelijk.” Geen maximum per project gepubliceerd.",
+  "cofinanciering_vereist": true,
+  "uitsluitingen": [
+    "“De Stichting stelt geen fondsen ter beschikking aan particulieren.”",
+    "“Bijdragen aan projecten zijn in beginsel eenmalig, dus geen reguliere bijdrage aan de exploitatie.”",
+    "“In beginsel worden geen donaties toegekend aan immaterieel erfgoed.”",
+    "“Vanwege de vele aanvragen zijn wij terughoudend in het verstrekken van fondsen voor draaiend (molens), religieus (kerken en kerkorgels) en varend en rollend erfgoed.”",
+    "“Levensvatbaarheid van een project mag niet (alleen) afhankelijk zijn van de giften van de stichting.” — projecten zonder eigen dekking vallen af",
+    "“De Stichting levert geen inhoudelijke en organisatorische bijdrage.” (alleen geld, geen uitvoering)"
+  ],
+  "kostensoort": [
+    "restauratie",
+    "investering",
+    "onderzoek"
+  ],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Inhoudelijk uitstekend passend: “bijdragen aan de instandhouding van Nederlands cultuur- én natuurhistorisch erfgoed (…) door restauratieprojecten financieel te ondersteunen op specifieke onderdelen”, en “Het te ondersteunen project dient een afgerond en beeldbepalend geheel te zijn, eventueel binnen het verband van een groter project” — precies een laanpoort, spiltrap, oranjerie of smeedijzeren hek. In de projectenlijst staan letterlijk “Toegangspoorten tot de moestuin op Landgoed Leyduin” en “Restauratie spiltrap Landgoed Huis Sevenaer”. Maar de rechtsvormeis is hard: “De Stichting stelt geen fondsen ter beschikking aan particulieren.” Een landgoed in privé- of familiehanden moet dus via een rechtspersoon aanvragen. Extra pluspunt bij dit fonds: “Projecten zijn publiekelijk toegankelijk” en de nadruk op leerlingen/vaklieden — een restauratie die als leerwerkplek wordt uitgevoerd scoort hier expliciet.",
+    "partnertype": "Een stichting of vereniging: eigen landgoed-/vriendenstichting, een erfgoedstichting die het landgoed beheert (vergelijk Stichting Huis Sevenaer, Landschap Noord-Holland bij Leyduin), of een restauratieopleiding/erfgoedopleider (NCE, RIBO) die de restauratie als opleidingsproject indient."
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "Geen maximum bijdrage per project en geen minimum projectomvang gepubliceerd (beleidsplan noemt alleen het jaarbudget van ca. € 150.000).",
+    "Geen deadlines gepubliceerd; alleen “Het bestuur komt 2 à 3 maal per jaar bijeen.”",
+    "Geen algemeen e-mailadres of telefoonnummer gevonden op de contactpagina-vermelding; alleen postadres, KvK 34258713 en RSIN 8172.24.270.",
+    "ANBI-publicatie 2025 staat als PDF-link (https://www.gansoord.nl/anbi/) maar is niet uitgelezen; daar staan mogelijk de werkelijke uitkeringsbedragen per project.",
+    "De pagina /aanvragen/ bestaat niet (404); de aanvraaginformatie staat op /procedure-aanvragen/."
+  ]
+}

@@ -26,3 +26,26 @@ Conclusie: dit is geen actief fonds meer. Voor Limburgse landschapselementen is 
 opvolgroute het Steunpunt Landschapsbeheer Limburg en de provinciale subsidieregels.
 Voor het fondsenradar-model betekent dat: niet meer als fonds opvoeren, wel als
 verwijzing naar de provinciale regeling.
+
+## Opvolgroute: provinciale Subsidie Landschapselementen (geen fonds, wel de feitelijke route)
+Bron: https://www.limburg.nl/@10264/subsidie-landschapselementen-2025/ (via websearch, niet integraal uitgelezen)
+Opgehaald: 2026-08-05
+
+Kernpunten uit de openbare beschrijving van de provinciale regeling die IKL's rol heeft
+overgenomen:
+- Doel: behoud en versterking van het Limburgse landschap (groen-blauwe dooradering) en biodiversiteit.
+- Doelgroep: zowel natuurlijke personen als rechtspersonen - stichtingen, verenigingen, bedrijven,
+  gemeenten, maatschappen en eenmanszaken. Landgoedeigenaren vallen hier dus onder.
+- Steunpercentage: 100% subsidie voor aanleg of herstel van houtige landschapselementen in het
+  landelijk gebied.
+- Bedragen: minimaal EUR 5.000 en maximaal EUR 100.000 per aanvrager.
+- Looptijd: februari 2025 tot augustus 2027.
+- Elementtypen: geschoren en snoeiheggen, struweelhagen, boomgaarden, knotbomenrijen,
+  houtsingels, houtwallen en poelen.
+- Procedure: voorafgaand aan de subsidieaanvraag moet via een meldingsformulier een gesprek met
+  de provincie worden aangevraagd; de betrokken beleidsmedewerker neemt daarna contact op.
+- Het Steunpunt Landschapsbeheer Limburg heeft binnen de regeling een adviserende rol.
+
+LET OP: dit is een provinciale subsidieregeling, geen vermogensfonds. Bovenstaande is niet
+integraal van de provinciale bronpagina gelezen en moet worden geverifieerd voordat het
+in de matchmotor als harde regeling wordt opgevoerd.

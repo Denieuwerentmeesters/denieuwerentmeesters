@@ -1,0 +1,40 @@
+{
+  "naam": "Landschapsfonds Het Groene Woud (Stichting Landschap Het Groene Woud)",
+  "bronnen": [
+    {"soort": "aanvraagvoorwaarden", "url": "https://www.hetgroenewoud.com/organisatie/streekfonds/bijdrage-aanvragen/", "jaar": 2026, "gelezen": true},
+    {"soort": "beleidsplan", "url": "https://www.hetgroenewoud.com/download/5881/documenten/Programma-Landschapsfonds-Het-Groene-Woud--okt2024.pdf", "jaar": 2024, "gelezen": true}
+  ],
+  "doelstelling": "Het Landschapsfonds is het fonds van Stichting Landschap Het Groene Woud dat als doel heeft bij te dragen aan de realisatie van projecten van derden die bijdragen aan de doelstellingen van Het Groene Woud. Hierbij ligt de focus op het realiseren van robuustere natuur, een mooier landschap en gewaardeerd erfgoed in Het Groene Woud. Prioritaire/primaire doelen: behoud, herstel en toename van natuur en biodiversiteit; behoud, herstel en versterking van landschappelijke waarden; behoud, herstel en versterking van cultuurhistorische waarden (erfgoed). Secundair doel: vergroten van kennis over en creëren van draagvlak voor kernkwaliteiten van Het Groene Woud, o.a. middels duurzame publicaties.",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "\"Indiener moet vriend of partner zijn van Het Groene Woud, waarbij de indiener jaarlijks financieel bijdraagt aan het Landschapsfonds.\" en \"Bij toekenning van een bijdrage dient de aanvrager binnen een overeen te komen termijn drie nieuwe potentiële vrienden van Het Groene Woud aan te dragen.\" Aanvragen via aanvraagformulier op vier vaste inleverdata per jaar; het smeeroliepotje voor kleinschalige initiatieven via info@hetgroenewoud.com.",
+  "aanvrager_type": "beide",
+  "geo_niveau": "regio",
+  "geo_waarden": ["Nationaal Landschap Het Groene Woud", "Noord-Brabant", "Best", "Boxtel", "Oirschot", "Oisterwijk", "Sint-Michielsgestel", "Meierijstad"],
+  "bedrag_min": null,
+  "bedrag_max": 15000,
+  "bedrag_indicatie": "\"Een aanvrager kan een aanvraag voor een stimuleringsbijdrage indienen tot maximaal 50% van de projectkosten. Daarbij geldt een maximum bijdrage van: € 5.000 per project als sprake is van een primair doel met een fysiek resultaat; € 2.500 per project als sprake is van een secundaire doel. Daarnaast kan het bestuur max. tweemaal per jaar een maximum bijdrage van € 15.000 per project toekennen als sprake is van een groot primair project met veel fysieke impact.\" Daarnaast de aparte stimuleringsregeling projectinitiatieven ('€ 5.000-regeling'): 50 procent van de totale kosten tot maximaal € 5.000 voor het laten maken van een uitvoeringsgereed projectplan.",
+  "cofinanciering_vereist": true,
+  "uitsluitingen": [
+    "projecten in gemeenten die geen structureel partner zijn van Het Groene Woud (\"Een aanvrager kan alleen in aanmerking komen voor een bijdrage als de gemeente waar het project plaatsvindt structureel partner is van Het Groene Woud.\")",
+    "aanvragers die geen vriend of partner van Het Groene Woud zijn en niet jaarlijks financieel bijdragen aan het Landschapsfonds",
+    "meer dan 50% van de projectkosten",
+    "bij de stimuleringsregeling: de uitvoering zelf (\"Het geld is dus niet bedoeld voor de uitvoering van het plan, maar om een goed plan te laten maken.\")"
+  ],
+  "kostensoort": ["investering", "restauratie", "onderzoek"],
+  "landgoed_relevantie": {
+    "route": "zelf",
+    "onderbouwing": "Een landgoed binnen Het Groene Woud kan rechtstreeks aanvragen, mits het vriend/partner wordt. De doelen dekken precies de landgoedopgaven: \"behoud, herstel en versterking van landschappelijke waarden\" en \"behoud, herstel en versterking van cultuurhistorische waarden (erfgoed) in Het Groene Woud\", met de nadruk op \"innovatieve, duurzame projecten die een fysiek resultaat opleveren\". Het jaarthema 2025 en 2026 is Bekenlandschap, waarvoor 20% van het jaarbudget is gereserveerd — relevant voor landgoederen met beken, sprengen of watermolenlandschap. Bovendien: \"Het Landschapsfonds is altijd stapelbaar: met Europese programma's en andere financieringsbronnen.\" Beperking: bedragen zijn klein (€ 2.500 - € 15.000) en de gemeente moet partner zijn.",
+    "partnertype": null
+  },
+  "onderliggende_fondsen": [
+    {"naam": "Stimuleringsregeling projectinitiatieven Het Groene Woud ('€ 5.000-regeling')", "relevant": true, "reden": "50% van de kosten tot maximaal € 5.000 voor het laten maken van een uitvoeringsgereed projectplan gericht op maatregelen die natuur, landschap, biodiversiteit of erfgoed behouden of versterken; ruimte voor circa tien projectplannen per jaar. Geschikt om een landgoedplan planrijp te maken voor andere financiers."},
+    {"naam": "Smeeroliepotje Het Groene Woud", "relevant": true, "reden": "Snelle, lichte procedure voor kleinschalige initiatieven die bijdragen aan behoud en versterking van (draagvlak voor) natuur, landschap en cultuurhistorisch erfgoed, gekoppeld aan eigen initiatief en zelfwerkzaamheid. Aan te vragen via info@hetgroenewoud.com."},
+    {"naam": "Boekenfonds Stichting Het Groene Woud", "relevant": false, "reden": "Uitsluitend voor het medefinancieren van boeken over Het Groene Woud."}
+  ],
+  "niet_gevonden": [
+    "Omvang van het totale jaarbudget van het Landschapsfonds: niet gepubliceerd; alleen de verdeling 10% eigen initiatief / 20% jaarthema / 70% overige projecten.",
+    "Kosten of drempel van het vriend-/partnerschap van Het Groene Woud: niet op de aanvraagpagina genoemd (staat mogelijk op /organisatie/steun-hgw/).",
+    "Voorwaarden en bedragen van het smeeroliepotje: alleen als PDF gelinkt (/download/4234/documenten/Smeeroliepotje_HGW_2021_voorwaarden_en_procedure.pdf), niet gelezen.",
+    "Expliciete uitsluitingslijst (bijv. regulier onderhoud of exploitatie): ontbreekt in het Programma Landschapsfonds okt 2024."
+  ]
+}

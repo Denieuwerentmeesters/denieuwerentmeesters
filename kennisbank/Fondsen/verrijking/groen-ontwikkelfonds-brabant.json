@@ -1,0 +1,44 @@
+{
+  "naam": "Groen Ontwikkelfonds Brabant",
+  "bronnen": [
+    {"soort": "website", "url": "https://www.groenontwikkelfondsbrabant.nl/", "jaar": 2026, "gelezen": true},
+    {"soort": "aanvraagvoorwaarden", "url": "https://www.groenontwikkelfondsbrabant.nl/homepage/ik-wil-subsidie-aanvragen", "jaar": 2026, "gelezen": true},
+    {"soort": "aanvraagvoorwaarden", "url": "https://www.groenontwikkelfondsbrabant.nl/homepage/ik-wil-subsidie-aanvragen/subsidieregeling", "jaar": 2026, "gelezen": true},
+    {"soort": "beleidsplan", "url": "https://www.groenontwikkelfondsbrabant.nl/wp-content/uploads/2023/02/toelichting-subsidieregeling-Realisering-Natuurnetwerk-Brabant-vs-1-januari-2020.pdf", "jaar": 2020, "gelezen": true}
+  ],
+  "doelstelling": "Groen Ontwikkelfonds Brabant helpt particulieren, ondernemers en organisaties die nieuwe natuur in Brabant willen realiseren; het fonds biedt financiele steun, heeft grond beschikbaar en geeft advies. Met de Subsidieregeling realisering Natuurnetwerk Noord-Brabant wordt beoogd om het Natuurnetwerk Brabant (NNB), inclusief ecologische verbindingszones, gerealiseerd te hebben.",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "'Groen Ontwikkelfonds Brabant helpt particulieren, ondernemers en organisaties die nieuwe natuur in Brabant willen realiseren.' Aanvragen kan via een openbaar aanvraagformulier, maar met drempels: 'Lees, voordat u een aanvraag indient, eerst de Subsidieregeling realisering Natuurnetwerk Brabant, de toelichting op de subsidieregeling en bekijk op de kaart waar in Brabant nieuwe natuur kan worden aangelegd', plus verplichte stappen (advies bij Groenloket Brabant, (pre)taxatie, projectplan) en een kwalitatieve verplichting op de grond.",
+  "aanvrager_type": "beide",
+  "geo_niveau": "provincie",
+  "geo_waarden": ["Noord-Brabant"],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": "Geen vast bedrag: subsidie is een percentage van de subsidiabele kosten. Verwerving/functiewijziging buiten het NNB maximaal 50% (provinciaal deel) of maximaal 85% (rijksdeel, bij specifiek hoogwaardige natuurbeheertypen); inrichting 50% van de bijgestelde normkosten (lumpsumbedragen per natuurtype in bijlage 3 van de regeling); droge EVZ 75%, natte EVZ 50% van vier tiende plus 75% van zes tiende van de subsidiabele kosten; subsidiabele verwervingskosten gemaximeerd op 150% van de regioprijs; bijkomende kosten lumpsum 5% van de verwervingskosten.",
+  "cofinanciering_vereist": true,
+  "uitsluitingen": [
+    "gronden gelegen in door Gedeputeerde Staten aangewezen complexe PAS-gebieden",
+    "kavelruil die niet leidt tot realisatie van het Natuurnetwerk Brabant",
+    "ondernemingen in financiele moeilijkheden (staatssteunrichtsnoeren)",
+    "de niet-subsidiabele kosten uit artikel 1.14 van de subsidieregeling",
+    "meer dan 5 ha toevoeging aan het rijks-NNB respectievelijk 25 ha aan het provinciale NNB per aanvraag bij gronden grenzend aan het NNB",
+    "bijkomende kosten bij functiewijziging als de grond niet uiterlijk drie jaar voor de aanvraag is verworven"
+  ],
+  "kostensoort": ["investering", "onderzoek"],
+  "landgoed_relevantie": {
+    "route": "zelf",
+    "onderbouwing": "Het fonds richt zich expliciet ook op particuliere grondeigenaren: 'Groen Ontwikkelfonds Brabant helpt particulieren, ondernemers en organisaties die nieuwe natuur in Brabant willen realiseren.' Een Brabants landgoed met gronden binnen of grenzend aan het Natuurnetwerk Brabant kan zelf aanvragen voor functiewijziging ('Is de grond op dat moment in eigendom van de aanvrager, dan is er sprake van functiewijziging'), inrichting, verwerving van aangrenzende percelen, aanleg van een ecologische verbindingszone of kavelruil. Het Ondernemend NNB (ONNB) is bovendien toegesneden op eigenaren die agrarisch gebruik willen combineren met natuurwaarden: gedeeltelijke functiewijziging met behoud van agrarische bestemming, waardedaling vergoed via een eenmalige afkoopsom. Let op: er wordt een kwalitatieve verplichting op de grond gevestigd en het gaat om nieuwe natuur, niet om beheer of onderhoud van bestaande natuur.",
+    "partnertype": null
+  },
+  "onderliggende_fondsen": [
+    {"naam": "Groenloket Brabant", "relevant": true, "reden": "adviesloket binnen Groen Ontwikkelfonds Brabant dat vooraf meekijkt of een aanvraag kansrijk is - stap 1 van het aanvraagproces"},
+    {"naam": "Ondernemend NNB (ONNB)", "relevant": true, "reden": "spoor binnen de subsidieregeling voor gedeeltelijke functiewijziging met behoud van agrarische bestemming; bij uitstek passend bij landgoederen met agrarisch gebruik"},
+    {"naam": "Grondtransacties (verkoop, pacht, ruil, gebouwen te koop)", "relevant": true, "reden": "het fonds verkoopt, verpacht en ruilt zelf grond voor natuurontwikkeling en biedt gebouwen te koop aan - een tweede route naast subsidie"}
+  ],
+  "niet_gevonden": [
+    "de actuele regelingstekst zelf (versie 9 februari 2026, 11e wijziging) en bijlage 3 met lumpsumbedragen per natuurtype - alleen de toelichting van 1 januari 2020 is als PDF gelezen; de actuele regeling staat in het archief op de site",
+    "subsidieplafond/jaarbudget - niet aangetroffen op de gelezen pagina's",
+    "indieningsdeadlines - er lijkt doorlopend te kunnen worden ingediend ('Aanvragen worden op datum van binnenkomst behandeld'), maar dit is niet als expliciete uitspraak gevonden",
+    "WebFetch geeft op dit domein HTTP 403; alle pagina's zijn opgehaald met curl en een browser-user-agent"
+  ]
+}

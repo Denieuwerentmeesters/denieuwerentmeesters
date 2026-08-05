@@ -144,3 +144,43 @@ Schrijf je in voor de nieuwsbrief
 Naar welk e-mailadres vliegt het nieuws?
 Meld je aan voor onze nieuwsbrief
 © Katalys 2026 | Privacyverklaring
+
+## Missie en visie
+Bron: https://www.katalys.nl/missie-en-visie/
+Opgehaald: 2026-08-05
+
+Mensen kunnen zelf hun dorp of buurt veranderen en verbeteren. Actieve bewoners brengen beweging in hun leefomgeving. Als zij omgeven worden door bevlogen professionals, dan worden hun ideeen en plannen sneller werkelijkheid. Dan kan er worden gepland, gebouwd, gewerkt, gedeeld en genoten. Als netwerk van professionals helpen wij actieve bewoners bij het verbeteren van hun leefomgeving.
+
+Samen werken we aan krachtige dorpen en buurten in heel Nederland
+Katalys versterkt in heel Nederland mensen met plannen voor hun omgeving. Dat kan van alles zijn: het aanleggen van een speeltuin of voedselbos, een plek waar bewoners kunnen samenkomen en iets ondernemen zoals een buurthuiskamer of dorpshuis, of het opzetten van een kleinschalige woonvoorziening zodat jongeren en ouderen in eigen buurt of dorp kunnen blijven. We zijn er trots op dat we actieve bewoners kunnen helpen om de buurt of wijk groener, meer betrokken en duurzamer te maken. Al 135 jaar lang!
+
+We helpen initiatiefnemers om hun doel sneller te bereiken. Hoe doen we dat? We geven gratis adviezen op maat, stellen ons netwerk open, geven workshops en hebben aandacht voor initiatiefnemers als het even tegenzit. Soms geven we initiatieven een extra zetje met een gunstige lening. Meer dan 100 adviseurs ondersteunen bewonersinitiatieven vanuit provinciale teams en kennen de lokale context en processen. Zij zijn als vrijwilliger aan ons verbonden.
+
+Katalys versterkt bewoners bij hun initiatieven voor de buurt door hen op een betrokken en deskundige manier te motiveren, verbinden, verrijken, adviseren en soms te financieren.
+
+## Financieel / Maatschappelijke financiering (leningen)
+Bron: https://katalys.nl/financieel/
+Opgehaald: 2026-08-05
+
+Financieel advies van experts
+Deskundige adviseurs van Katalys maken inzichtelijk of jullie initiatief haalbaar is, helpen bij het maken van een solide financieel plan of het vinden van co-financiering. Via hun netwerk komen jullie makkelijker binnen bij een investeerder of overheid. Indien nodig kunnen we expertise inschakelen van advies- en ingenieursbureau Arcadis.
+
+Maatschappelijke financiering
+Voor de continuiteit en levensvatbaarheid van een initiatief is het goed als de mensen zelf verantwoordelijkheid en eigenaarschap hebben. Dat kan het ontmoetingscentrum zijn in de wijk of appartementen voor ouderen of jongeren in het dorp. Kost het moeite om voldoende kapitaal te vinden voor bijvoorbeeld aanschaf, verbouwing of verduurzaming van een gebouw, dan kan Katalys uitkomst bieden met maatschappelijke financiering. Dat is een lening tegen gunstige voorwaarden, zoals een relatief lage rente. Door een gedeelte van wat jullie nodig hebben te financieren, lukt het vaak om ook andere financiers (banken) mee te krijgen.
+
+Maakt ons project kans op een lening van Katalys?
+Als wat hieronder staat van toepassing is op jullie initiatief, dan kun je met ons in gesprek gaan over een lening:
+- Ons plan draagt bij aan een maatschappelijk doel in het dorp of de buurt.
+- Het plan is opgezet voor en door bewoners in de omgeving.
+- Ons initiatief is ook gericht op contact en verbinding tussen buurtgenoten.
+- Reguliere partijen willen ons (nog) niet financieren.
+- Ons initiatief heeft een gezond verdienmodel om de lening te dragen.
+- Wij hebben ook advies nodig.
+
+Wat voor initiatieven ondersteunen we met advies of een lening?
+Bij (vastgoed)projecten gaat het meestal om een dorps- of buurthuis, een broedplaats of multifunctionele accommodatie. Maar denk ook aan kleinschalige wooninitiatieven voor en door bewoners (tot ongeveer 25 woningen).
+
+Contactpersonen voor financieringen zijn op de site vermeld (kleinschalige wooninitiatieven en ontmoetingsplekken).
+Algemeen: info@katalys.nl, 026 44 55 146, Amsterdamseweg 13, 6814 CM Arnhem.
+
+De pagina's /financieren/ en /wat-we-doen/financieren/ geven 404; de juiste URL is https://katalys.nl/financieel/.
