@@ -7,6 +7,11 @@ import {
   type Beleidsdocument,
   type MatchprofielBron,
 } from "./matchprofiel";
+import {
+  schoonmaakRegel,
+  telRapporten,
+  type SchoonmaakRapport,
+} from "./beleidstekst-schoonmaak";
 
 // Genereert de matchprofielen (migratie 0053) voor de fondsencatalogus.
 //
@@ -41,6 +46,13 @@ export type MatchprofielTelling = {
   overgeslagen_geen_bron: { regeling_id: string; naam: string }[];
   gewijzigd_maar_geaccordeerd: { regeling_id: string; naam: string }[];
   mislukt: { regeling_id: string; naam: string; reden: string }[];
+  // Fondsen waarvan het KAARTJE niet deugt (te kort/lang of zonder uitsluiting).
+  // Het profiel is dan wel opgeslagen; alleen de goedkope rankingstap mist iets.
+  kaartje_bezwaren: { regeling_id: string; naam: string; bezwaren: string[] }[];
+  // Wat de boilerplate-schoonmaak deze ronde in totaal scheelde. Controleerbaar
+  // maken is de bedoeling: zie ook de regel per fonds in het log.
+  schoonmaak_totaal: SchoonmaakRapport;
+  schoonmaak_rapporten: SchoonmaakRapport[];
   model: string;
   afgekapt_op_limiet: boolean;
   fout?: string;
@@ -99,6 +111,9 @@ export async function genereerMatchprofielen(
     overgeslagen_geen_bron: [],
     gewijzigd_maar_geaccordeerd: [],
     mislukt: [],
+    kaartje_bezwaren: [],
+    schoonmaak_totaal: telRapporten([]),
+    schoonmaak_rapporten: [],
     model,
     afgekapt_op_limiet: false,
   };
@@ -188,9 +203,9 @@ export async function genereerMatchprofielen(
     }
     aanroepen++;
 
-    let profiel;
+    let resultaat;
     try {
-      profiel = await maakMatchprofiel(bron, { model });
+      resultaat = await maakMatchprofiel(bron, { model });
     } catch (e) {
       telling.mislukt.push({
         regeling_id: rij.id,
@@ -199,13 +214,30 @@ export async function genereerMatchprofielen(
       });
       continue;
     }
-    if (!profiel) {
+    if (!resultaat) {
       telling.mislukt.push({
         regeling_id: rij.id,
         naam: rij.naam,
         reden: "AI-laag gaf niets terug (geen ANTHROPIC_API_KEY of aanroep mislukt).",
       });
       continue;
+    }
+    const { profiel, schoonmaak, kaartje_bezwaren } = resultaat;
+
+    // PER FONDS LOGGEN wat de deterministische schoonmaak heeft weggehaald. Zonder
+    // dit is niet te controleren dat er geen beleid is gesneuveld: een profiel dat
+    // op een gestripte bron berust leest nog steeds prima.
+    console.log(schoonmaakRegel(rij.naam, schoonmaak));
+    telling.schoonmaak_rapporten.push(schoonmaak);
+    if (kaartje_bezwaren.length) {
+      // Het profiel wordt wél bewaard — dat is bruikbaar. Alleen het kaartje deugt
+      // niet, en dat moet zichtbaar zijn: een kaartje zonder uitsluiting laat een
+      // fonds bovenaan eindigen dat er niet hoort.
+      telling.kaartje_bezwaren.push({
+        regeling_id: rij.id,
+        naam: rij.naam,
+        bezwaren: kaartje_bezwaren,
+      });
     }
 
     // METEEN wegschrijven, per fonds. Dit is het punt van deze hele opzet: een
@@ -221,6 +253,7 @@ export async function genereerMatchprofielen(
     else telling.gemaakt++;
   }
 
+  telling.schoonmaak_totaal = telRapporten(telling.schoonmaak_rapporten);
   return telling;
 }
 

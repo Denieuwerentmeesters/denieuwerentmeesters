@@ -79,10 +79,51 @@ async function vraagJson<T>(systeem: string, prompt: string, model?: string): Pr
 // Roept het model aan en verwacht gewone tekst terug (geen JSON). Geeft null bij
 // geen key/fout. Gebruikt door de fondsen-matchprofielen: die leveren proza op,
 // en dat door een JSON-veld persen levert alleen escaping-ellende op.
+//
+// PROMPT CACHING (opties.cacheSysteem / opties.stabielBlok)
+// Bij de fondsenradar is een deel van de prompt bij ELKE aanroep identiek: de
+// instructie (systeem) bij het destilleren, en straks — bij het zoeken in fase 3 —
+// het blok met ~100 fondskaartjes waar alleen de vraag van de gebruiker onder
+// verschilt. Zo'n stabiel deel één keer laten cachen scheelt op de herhaalde
+// invoerkosten: een cache-hit kost ~10% van gewone invoertokens.
+//
+// Twee haken, allebei optioneel zodat bestaande aanroepen niets merken:
+//   * cacheSysteem: zet cache_control op het systeemdeel;
+//   * stabielBlok: een tekstblok dat VÓÓR de eigenlijke vraag in het
+//     gebruikersbericht komt en zelf een cache_control-markering krijgt. Fase 3 zet
+//     hier het kaartjesblok in; de vraag van de gebruiker gaat in `prompt` en blijft
+//     dus buiten de cache.
+// De volgorde is wat telt: alles tot en met het gemarkeerde blok moet byte-voor-byte
+// gelijk zijn, anders is het een cache-miss. Daarom staat het stabiele blok vooraan
+// en de variabele vraag erachter.
+export type CacheOpties = {
+  model?: string;
+  maxTokens?: number;
+  cacheSysteem?: boolean;
+  stabielBlok?: string;
+  // Prefill: hiermee begint het antwoord van het model al. Dwingt een formaat af
+  // zonder dat de prompt erover hoeft te onderhandelen.
+  aanhef?: string;
+};
+
+// Bouwt het gebruikersbericht: stabiel blok (gecached) eerst, variabele vraag erna.
+// Losse functie zodat de volgorde te testen is zonder een modelaanroep — die
+// volgorde is het hele punt van de cache.
+export function bouwGebruikersBericht(
+  prompt: string,
+  stabielBlok?: string,
+): Anthropic.MessageParam["content"] {
+  if (!stabielBlok) return prompt;
+  return [
+    { type: "text", text: stabielBlok, cache_control: { type: "ephemeral" } },
+    { type: "text", text: prompt },
+  ];
+}
+
 export async function vraagTekst(
   systeem: string,
   prompt: string,
-  opties?: { model?: string; maxTokens?: number },
+  opties?: CacheOpties,
 ): Promise<string | null> {
   if (!aiBeschikbaar()) return null;
   laatsteFout = null;
@@ -90,8 +131,18 @@ export async function vraagTekst(
     const res = await client().messages.create({
       model: opties?.model ?? MODEL,
       max_tokens: opties?.maxTokens ?? 4096,
-      system: systeem,
-      messages: [{ role: "user", content: prompt }],
+      system: opties?.cacheSysteem
+        ? [{ type: "text", text: systeem, cache_control: { type: "ephemeral" } }]
+        : systeem,
+      messages: [
+        {
+          role: "user",
+          content: bouwGebruikersBericht(prompt, opties?.stabielBlok),
+        },
+        ...(opties?.aanhef
+          ? [{ role: "assistant" as const, content: opties.aanhef }]
+          : []),
+      ],
     });
     const tekst = res.content
       .filter((b) => b.type === "text")
