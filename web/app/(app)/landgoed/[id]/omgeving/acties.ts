@@ -6,6 +6,7 @@ import { scoorRelevantie } from "@/lib/ai";
 import { moet } from "@/lib/db";
 import { leidBestuursorganenAf, type Rechthoek } from "@/lib/omgeving/bestuursorganen";
 import { haalPublicatiesOp, ontdubbel } from "@/lib/omgeving/publicaties";
+import { createServiceClient, serviceBeschikbaar } from "@/lib/supabase/service";
 
 function lijst(fd: FormData, k: string): string[] | null {
   const v = String(fd.get(k) ?? "").trim();
@@ -145,13 +146,6 @@ export async function leidBronnenAf(fd: FormData) {
 }
 
 /**
- * Eén ophaalronde over alle actieve SRU-bronnen.
- *
- * De trechtercijfers gaan naar omgeving_run: zonder die cijfers is niet vast
- * te stellen of het filter te streng of te ruim staat, en dan wordt de drempel
- * op gevoel gezet.
- */
-/**
  * Eén ophaalronde voor dit landgoed.
  *
  * Twee fasen: publicaties ophalen en geocoderen per bestuursorgaan (het dure
@@ -188,8 +182,25 @@ export async function haalBerichtenOp(fd: FormData) {
     "run starten",
   );
 
-  // Fase 1 — ophalen en geocoderen. Publicaties die een ander landgoed al
-  // heeft opgehaald worden hier overgeslagen.
+  // Fase 1 — ophalen en geocoderen.
+  //
+  // omgevingspublicatie is een GEDEELDE tabel zonder landgoed_id: openbare
+  // bekendmakingen die voor elk landgoed dezelfde zijn. Daarom mag een
+  // ingelogde gebruiker er niet in schrijven — anders kan één gebruiker de
+  // gegevens van alle andere landgoederen vervuilen. Het vullen is
+  // systeemwerk en gaat via de service-client, net als de subsidie-ingestie.
+  //
+  // De matchfase hieronder gebruikt bewust wél de gewone client: die schrijft
+  // naar omgevingsbericht, en daar hoort de RLS van dit landgoed te gelden.
+  if (!serviceBeschikbaar()) {
+    throw new Error(
+      "SUPABASE_SERVICE_ROLE_KEY ontbreekt in de serveromgeving — " +
+        "zonder die sleutel kunnen publicaties niet worden opgeslagen.",
+    );
+  }
+  const systeem = createServiceClient();
+
+  // Publicaties die een ander landgoed al heeft opgehaald worden overgeslagen.
   const organen = ontdubbel(
     bronnen.map((b) => ({
       naam: b.naam as string,
@@ -205,7 +216,7 @@ export async function haalBerichtenOp(fd: FormData) {
   let onplaatsbaar = 0;
   const fouten: string[] = [];
   for (const o of organen) {
-    const c = await haalPublicatiesOp(supabase, o, periode);
+    const c = await haalPublicatiesOp(systeem, o, periode);
     opgehaald += c.opgehaald;
     onplaatsbaar += c.onplaatsbaar;
     fouten.push(...c.fouten);
