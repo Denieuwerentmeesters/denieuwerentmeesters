@@ -160,6 +160,7 @@ export function vraagHash(
 ): string {
   const vraag = JSON.stringify([
     a.plan.trim().toLowerCase().replace(/\s+/g, " "),
+    a.motivatie.trim().toLowerCase().replace(/\s+/g, " "),
     a.doel,
     a.fase,
     a.bedragband,
@@ -258,7 +259,10 @@ function landgoedBlok(p: Landgoedprofiel): string {
 }
 
 function vraagBlok(a: Antwoorden): string {
-  return `DE VRAAG\n${a.plan.trim() || "(geen vrije omschrijving gegeven)"}\n\nANTWOORDEN OP DE VIJF VRAGEN\n${vraagSamenvatting(a)}\n\n"Nog niet opgegeven" betekent dat de gebruiker het niet weet. Reken dat niet tegen een fonds, maar noem het als het uitmaakt.`;
+  const waarom = a.motivatie.trim()
+    ? `\n\nWAAROM (motivatie, los van wat er gebeurt)\n${a.motivatie.trim()}`
+    : "";
+  return `DE VRAAG\n${a.plan.trim() || "(geen vrije omschrijving gegeven)"}${waarom}\n\nANTWOORDEN OP DE VIJF VRAGEN\n${vraagSamenvatting(a)}\n\n"Nog niet opgegeven" betekent dat de gebruiker het niet weet. Reken dat niet tegen een fonds, maar noem het als het uitmaakt.`;
 }
 
 // ---------------------------------------------------------------------------
@@ -459,8 +463,11 @@ export async function zoek(
   );
 
   // ── Laag 2 — goedkope weging (nul tokens) ───────────────────────────────
-  const treffers = antwoorden.plan.trim()
-    ? await zoekMatchprofielen(db, antwoorden.plan, {
+  // Motivatie ("waarom") telt mee in de zoektekst: fondsprofielen benoemen
+  // vaak een doelstelling/missie die in de plantekst zelf niet terugkomt.
+  const zoektekst = [antwoorden.plan.trim(), antwoorden.motivatie.trim()].filter(Boolean).join(". ");
+  const treffers = zoektekst
+    ? await zoekMatchprofielen(db, zoektekst, {
         regelingIds: doorDePoort.map((f) => f.id),
         limiet: 100,
       })
