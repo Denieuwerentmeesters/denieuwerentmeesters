@@ -320,21 +320,9 @@ export default async function FondsenPagina({
         </span>
       </div>
       <p className="mb-6 max-w-2xl text-[13.5px] leading-snug" style={{ color: "var(--text-2)" }}>
-        Private geldgevers die een goed plan willen steunen. Anders dan bij subsidies is er geen
-        aanspraak: u overtuigt een bestuur. Hieronder staat wat er voor dit landgoed door de harde
-        filters komt — en, net zo belangrijk, waarom de rest afvalt.
+        Hieronder vindt u een module om te kijken of uw plan raakvlak heeft met een fonds dat kan
+        bijdragen aan de financiële haalbaarheid.
       </p>
-
-      <div
-        className="mb-6 rounded-lg border px-4 py-3 text-[13px] leading-snug"
-        style={{ borderColor: "var(--border)", background: "rgba(245,158,11,0.06)" }}
-      >
-        <strong>Dit is de poort, nog geen rangschikking.</strong> Er staat hier bewust geen
-        matchscore: wat u ziet zijn de harde ja/nee/onbekend-filters (benaderbaarheid, geografie,
-        rechtsvorm, aanvrager, bedrag, timing, kostensoort). De inhoudelijke weging en de match op
-        uw plan komen in de volgende stap. Toetsing tegen: {profiel.rechtsvorm ?? "rechtsvorm onbekend"},{" "}
-        {profiel.gemeente ?? "gemeente onbekend"} ({profiel.provincie ?? "provincie onbekend"}).
-      </div>
 
       {/* HET VRAAGVELD — fase 3, de eerste functie waarmee de module iets doet
           wat een lijst niet kan. Server-rendered GET-formulier: geen client-JS
