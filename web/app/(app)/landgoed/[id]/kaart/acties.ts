@@ -536,6 +536,14 @@ export async function wijzigBeheerperceel(fd: FormData) {
 
   const update: Record<string, unknown> = { naam, kenmerken };
 
+  // Geprikte beheerobjecten: de soort mag wijzigen (boom bleek een brug…),
+  // maar alleen binnen de prik-lijst — een object wordt hier nooit ineens
+  // een gebouw of beheerperceel.
+  if (fd.has("soort")) {
+    const soort = String(fd.get("soort") ?? "").trim();
+    if (BEHEEROBJECT_CATEGORIEEN.has(soort)) update.categorie = soort;
+  }
+
   // Gebouwen-cluster: alleen als het formulier het veld meestuurt (bij
   // gebouwen) raken we bovenliggend_id aan — en alléén de gebouw-op-gebouw
   // variant. De AI-extractie hangt objecten in de stamgegevens-boom soms
