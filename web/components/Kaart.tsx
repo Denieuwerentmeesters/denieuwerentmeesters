@@ -44,6 +44,7 @@ import {
   kaartGroep,
   groepeerOpties,
   ordenGebouwen,
+  ordenPercelenMetObjecten,
   haTekst,
   geomNaarLatlngs,
   maakKadastraleLaag,
@@ -2156,23 +2157,41 @@ export default function Kaart({
                 {objecten.filter((o) => kaartGroep(o) === "Gebouwen").length})
               </button>
             </div>
-            {KAARTGROEP_LABELS.filter((l) =>
-              lijstTab === "gebouwen" ? l === "Gebouwen" : l !== "Gebouwen",
-            ).map((label) => {
-              const lijst = groepenMap.get(label)!;
-              if (lijst.length === 0) return null;
+            {(lijstTab === "gebouwen"
+              ? /* Gebouwen als clusters: bijgebouwen ingesprongen onder
+                   hun hoofdgebouw. */
+                ([["Gebouwen", ordenGebouwen(groepenMap.get("Gebouwen")!)]] as [
+                  string,
+                  { item: PlaatsObject; ingesprongen: boolean }[],
+                ][])
+              : /* Percelen: beheerperceel als hoofditem, geprikte objecten
+                   ingesprongen eronder; losse objecten apart (issue #130). */
+                (() => {
+                  const { groepen, los } = ordenPercelenMetObjecten(objecten);
+                  return [
+                    ...groepen,
+                    ...(los.length
+                      ? ([
+                          [
+                            "Losse objecten (nog niet gekoppeld)",
+                            los.map((item) => ({ item, ingesprongen: false })),
+                          ],
+                        ] as [
+                          string,
+                          { item: PlaatsObject; ingesprongen: boolean }[],
+                        ][])
+                      : []),
+                  ];
+                })()
+            ).map(([label, geordend]) => {
+              if (geordend.length === 0) return null;
               return (
                 <div key={label} className="card p-4">
                   <div className="mb-2 text-[12px] font-semibold uppercase tracking-wide" style={{ color: "var(--text-2)" }}>
-                    {label} ({lijst.length})
+                    {label} ({geordend.length})
                   </div>
                   <div className="divide-y" style={{ borderColor: "var(--border)" }}>
-                    {/* Gebouwen als clusters: bijgebouwen ingesprongen onder
-                        hun hoofdgebouw. */}
-                    {(label === "Gebouwen"
-                      ? ordenGebouwen(lijst)
-                      : lijst.map((item) => ({ item, ingesprongen: false }))
-                    ).map(({ item: o, ingesprongen }) => (
+                    {geordend.map(({ item: o, ingesprongen }) => (
                       <div
                         key={o.id}
                         id={`obj-rij-${o.id}`}
@@ -2214,7 +2233,10 @@ export default function Kaart({
                               Wijzig
                             </button>
                           )}
-                          {GEBOUW_CATS.has(o.categorie) && (
+                          {/* Ook geprikte objecten (boom, vijver…) zijn zo
+                              handmatig te (ont)koppelen — zelfde verband en
+                              formulier als bij gebouwen. */}
+                          {!PERCEEL_CATS.has(o.categorie) && (
                             <button
                               type="button"
                               className="text-[11.5px] hover:underline"
