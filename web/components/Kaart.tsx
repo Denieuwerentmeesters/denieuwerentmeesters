@@ -269,6 +269,12 @@ export default function Kaart({
   const [koppelGebouwId, setKoppelGebouwId] = useState<string | null>(null);
   // De lijst kent twee tabbladen: grond (beheerpercelen) en gebouwen.
   const [lijstTab, setLijstTab] = useState<"percelen" | "gebouwen">("percelen");
+  // In-/uitklappen van onderliggende rijen (objecten onder een beheerperceel,
+  // bijgebouwen onder een hoofdgebouw). Standaard ingeklapt — overzicht eerst.
+  const [uitgeklapt, setUitgeklapt] = useState<Record<string, boolean>>({});
+  function klapOm(id: string) {
+    setUitgeklapt((prev) => ({ ...prev, [id]: !prev[id] }));
+  }
   // Deelgebruik-knop in het indeel-paneel: pas na een bewuste druk hierop
   // zijn al-ingedeelde percelen aanklikbaar om extra te koppelen.
   const [extraKoppelen, setExtraKoppelen] = useState(false);
@@ -383,6 +389,13 @@ export default function Kaart({
     // De rij staat mogelijk op het andere tabblad — dan eerst omschakelen.
     const o = objecten.find((x) => x.id === id);
     if (o) setLijstTab(kaartGroep(o) === "Gebouwen" ? "gebouwen" : "percelen");
+    // Zit de rij ingeklapt onder een ouder (object onder perceel, bijgebouw
+    // onder hoofdgebouw), klap die dan eerst open — anders is er niets om
+    // naartoe te scrollen. Een bijgebouw heeft ook een staatOpId, maar in de
+    // gebouwen-lijst is het hoofdgebouw de ouder.
+    const ouder =
+      o && kaartGroep(o) === "Gebouwen" ? o.hoortBijId : o?.staatOpId;
+    if (ouder) setUitgeklapt((prev) => ({ ...prev, [ouder]: true }));
     setTimeout(() => {
       document
         .getElementById(`obj-rij-${id}`)
@@ -2186,7 +2199,7 @@ export default function Kaart({
                    hun hoofdgebouw. */
                 ([["Gebouwen", ordenGebouwen(groepenMap.get("Gebouwen")!)]] as [
                   string,
-                  { item: PlaatsObject; ingesprongen: boolean }[],
+                  { item: PlaatsObject; ingesprongen: boolean; ouderId?: string }[],
                 ][])
               : /* Percelen: beheerperceel als hoofditem, geprikte objecten
                    ingesprongen eronder; losse objecten apart (issue #130). */
@@ -2202,7 +2215,7 @@ export default function Kaart({
                           ],
                         ] as [
                           string,
-                          { item: PlaatsObject; ingesprongen: boolean }[],
+                          { item: PlaatsObject; ingesprongen: boolean; ouderId?: string }[],
                         ][])
                       : []),
                   ];
@@ -2215,7 +2228,17 @@ export default function Kaart({
                     {label} ({geordend.length})
                   </div>
                   <div className="divide-y" style={{ borderColor: "var(--border)" }}>
-                    {geordend.map(({ item: o, ingesprongen }) => (
+                    {geordend
+                      .filter(
+                        (r) =>
+                          !r.ingesprongen ||
+                          (r.ouderId != null && uitgeklapt[r.ouderId]),
+                      )
+                      .map(({ item: o, ingesprongen }) => {
+                      const kinderen = geordend.filter(
+                        (r) => r.ouderId === o.id,
+                      ).length;
+                      return (
                       <div
                         key={o.id}
                         id={`obj-rij-${o.id}`}
@@ -2226,6 +2249,26 @@ export default function Kaart({
                         }}
                       >
                         <div className="flex items-center gap-3 py-2.5">
+                          {/* Pijltje voor in-/uitklappen van wat eronder
+                              hangt; rijen zonder kinderen krijgen een spacer
+                              zodat de namen uitlijnen. */}
+                          {kinderen > 0 ? (
+                            <button
+                              type="button"
+                              onClick={() => klapOm(o.id)}
+                              className="shrink-0 text-[12.5px] font-medium"
+                              style={{ color: "var(--text-2)", minWidth: 22 }}
+                              title={
+                                uitgeklapt[o.id]
+                                  ? "Klap in"
+                                  : `Toon ${kinderen} onderliggende`
+                              }
+                            >
+                              {uitgeklapt[o.id] ? "▾" : `▸ ${kinderen}`}
+                            </button>
+                          ) : (
+                            <span className="shrink-0" style={{ minWidth: 22 }} />
+                          )}
                           <button
                             type="button"
                             onClick={() => selecteer(o)}
@@ -2508,7 +2551,8 @@ export default function Kaart({
                             </div>
                           )}
                       </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 </div>
               );

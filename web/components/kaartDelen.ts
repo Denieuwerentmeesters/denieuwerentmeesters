@@ -179,7 +179,7 @@ export function groepeerOpties<
 // bijgebouwen (ingesprongen). Gebouwen zonder cluster blijven gewoon staan.
 export function ordenGebouwen<T extends { id: string; hoortBijId?: string | null }>(
   lijst: T[],
-): { item: T; ingesprongen: boolean }[] {
+): { item: T; ingesprongen: boolean; ouderId?: string }[] {
   const bijgebouwenVan = new Map<string, T[]>();
   const hoofd: T[] = [];
   for (const g of lijst) {
@@ -191,11 +191,11 @@ export function ordenGebouwen<T extends { id: string; hoortBijId?: string | null
       hoofd.push(g);
     }
   }
-  const uit: { item: T; ingesprongen: boolean }[] = [];
+  const uit: { item: T; ingesprongen: boolean; ouderId?: string }[] = [];
   for (const h of hoofd) {
     uit.push({ item: h, ingesprongen: false });
     for (const b of bijgebouwenVan.get(h.id) ?? []) {
-      uit.push({ item: b, ingesprongen: true });
+      uit.push({ item: b, ingesprongen: true, ouderId: h.id });
     }
   }
   return uit;
@@ -218,7 +218,7 @@ export function ordenPercelenMetObjecten<
 >(
   objecten: T[],
 ): {
-  groepen: [string, { item: T; ingesprongen: boolean }[]][];
+  groepen: [string, { item: T; ingesprongen: boolean; ouderId?: string }[]][];
   los: T[];
 } {
   const hoofd: T[] = [];
@@ -244,23 +244,24 @@ export function ordenPercelenMetObjecten<
       perPerceel.delete(perceelId);
     }
   }
-  const groepenMap = new Map<string, { item: T; ingesprongen: boolean }[]>(
-    KAARTGROEP_LABELS.map((l) => [l as string, []]),
-  );
+  const groepenMap = new Map<
+    string,
+    { item: T; ingesprongen: boolean; ouderId?: string }[]
+  >(KAARTGROEP_LABELS.map((l) => [l as string, []]));
   for (const p of hoofd) {
     const lijst = groepenMap.get(kaartGroep({ categorie: p.categorie, gebruik: p.gebruik }))!;
     lijst.push({ item: p, ingesprongen: false });
     for (const kind of (perPerceel.get(p.id) ?? []).sort((a, b) =>
       a.naam.localeCompare(b.naam),
     )) {
-      lijst.push({ item: kind, ingesprongen: true });
+      lijst.push({ item: kind, ingesprongen: true, ouderId: p.id });
     }
   }
   return {
     groepen: KAARTGROEP_LABELS.filter((l) => l !== "Gebouwen").map(
       (l) => [l as string, groepenMap.get(l)!] as [
         string,
-        { item: T; ingesprongen: boolean }[],
+        { item: T; ingesprongen: boolean; ouderId?: string }[],
       ],
     ),
     los,
