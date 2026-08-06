@@ -111,6 +111,59 @@ export function kleurVoorGebruik(gebruik: string | null): string {
   return GEBRUIK_KLEUR[gebruik ?? ""] ?? KLEUR_GEEN_GEBRUIK;
 }
 
+// ── Merkjes voor geprikte puntobjecten (wens Steven, 6 aug) ──
+// Kleur per soort doet de eerste herkenning op afstand; het witte pictogram
+// de tweede van dichtbij. Bewust rondjes gehouden: sterren en vijfhoeken
+// worden op kaartformaat (±12 px) onherkenbare vlekjes.
+export const OBJECT_KLEUR: Record<string, string> = {
+  boom: "#16a34a",
+  tuin: "#16a34a",
+  vijver_sloot: "#2563eb",
+  weg_pad: "#8B5E3C",
+  voetpad: "#8B5E3C",
+  fietspad: "#8B5E3C",
+  brug: "#8B5E3C",
+  hek: "#111827",
+  risicoplek: "#ea580c",
+  voorziening: "#6b7280",
+};
+
+// Simpele witte lijn-pictogrammen (viewBox 0 0 16 16).
+const STIP_GLYPH_STANDAARD =
+  '<circle cx="8" cy="8" r="2.2" fill="#fff" stroke="none"/>';
+const STIP_GLYPHS: Record<string, string> = {
+  boom: '<circle cx="8" cy="6.5" r="3.5"/><path d="M8 10v3.5"/>',
+  tuin: '<circle cx="8" cy="6.5" r="3.5"/><path d="M8 10v3.5"/>',
+  vijver_sloot:
+    '<path d="M2.5 6.5q2.75-2.6 5.5 0t5.5 0"/><path d="M2.5 10.5q2.75-2.6 5.5 0t5.5 0"/>',
+  weg_pad:
+    '<path d="M4.5 13.5c3.5-1.5 0-5 3.5-6.5s1-4.5 3.5-4.5" stroke-dasharray="2.6 2"/>',
+  voetpad:
+    '<path d="M4.5 13.5c3.5-1.5 0-5 3.5-6.5s1-4.5 3.5-4.5" stroke-dasharray="2.6 2"/>',
+  fietspad:
+    '<circle cx="4.8" cy="10.8" r="2.4"/><circle cx="11.2" cy="10.8" r="2.4"/><path d="M4.8 10.8l2.6-5.2h3.2M11.2 10.8l-1.4-5.2"/>',
+  brug: '<path d="M2 11.5h12"/><path d="M4 11.5q0-5 4-5t4 5"/>',
+  hek: '<path d="M4.5 4v8M8 4v8M11.5 4v8M3 6.5h10M3 9.5h10"/>',
+  risicoplek:
+    '<path d="M8 3.5v5.5"/><circle cx="8" cy="12" r="1.3" fill="#fff" stroke="none"/>',
+  voorziening:
+    '<circle cx="8" cy="8" r="2.8"/><path d="M8 2.5v2.2M8 11.3v2.2M2.5 8h2.2M11.3 8h2.2M4.1 4.1l1.6 1.6M10.3 10.3l1.6 1.6M11.9 4.1l-1.6 1.6M5.7 10.3l-1.6 1.6"/>',
+};
+
+// Leaflet-divIcon voor een puntobject: gekleurd rondje met wit pictogram.
+// Groeien bij hover doet de CSS (.stip-merkje:hover), geen JS nodig.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function maakStipIcoon(L: any, categorie: string) {
+  const kleur = OBJECT_KLEUR[categorie] ?? "#6b7280";
+  const glyph = STIP_GLYPHS[categorie] ?? STIP_GLYPH_STANDAARD;
+  return L.divIcon({
+    className: "stip-merkje",
+    html: `<div class="stip-badge" style="background:${kleur}"><svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${glyph}</svg></div>`,
+    iconSize: [22, 22],
+    iconAnchor: [11, 11],
+  });
+}
+
 // Eerst de grond-groepen (de beheerpercelen, per gebruik), dan pas de
 // gebouwen: "de grond, en dan wat erop staat" — zelfde denklaag als de kaart.
 export const KAARTGROEP_LABELS = [

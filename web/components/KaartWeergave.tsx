@@ -25,6 +25,7 @@ import {
   ordenPercelenMetObjecten,
   geomNaarLatlngs,
   maakKadastraleLaag,
+  maakStipIcoon,
 } from "@/components/kaartDelen";
 // De gebruik-lijsten per soort: percelen en gebouwen hebben elk hun eigen
 // gebruiksvormen — de filterchips volgen het actieve tabblad.
@@ -211,12 +212,6 @@ export default function KaartWeergave({
       const L = (await import("leaflet")).default;
       if (cancelled || !containerRef.current || mapRef.current) return;
       const map = L.map(containerRef.current).setView([52.15, 5.4], 8);
-      // Eigen laag voor puntobjecten, bóven de vlakken (overlay-pane = 400):
-      // de objecten worden nieuwste-eerst getekend, dus zonder dit schuift
-      // het beheerperceel-vlak over de stip heen en vangt het alle
-      // muis-events af — hover en klik op de stip deden dan niets.
-      map.createPane("stippen").style.zIndex = "450";
-      const stipRenderer = L.svg({ pane: "stippen" });
       achtergrondRef.current = L.tileLayer(PDOK_TILES("grijs"), {
         maxZoom: 19,
         attribution: "© PDOK BRT-Achtergrondkaart",
@@ -318,34 +313,19 @@ export default function KaartWeergave({
           bounds.extend(poly.getBounds());
         });
         // Puntobjecten (boom, brug, voorziening…) hebben geen vlak — die
-        // krijgen een stip, met dezelfde tooltip-, klik- en filtertaal.
+        // krijgen een merkje: gekleurd rondje met wit pictogram per soort.
+        // Groeien bij hover doet de CSS; markers leven in Leaflets
+        // marker-pane en liggen dus vanzelf bóven de vlakken.
         if (
           eenheid.length === 0 &&
           Number.isFinite(o.lat) &&
           Number.isFinite(o.lon)
         ) {
-          const stip = L.circleMarker([o.lat, o.lon], {
-            radius: 7,
-            color: kleur,
-            fillColor: kleur,
-            fillOpacity: 0.8,
-            weight: 2,
-            renderer: stipRenderer,
+          const stip = L.marker([o.lat, o.lon], {
+            icon: maakStipIcoon(L, o.categorie),
           });
           stip.bindTooltip(`${o.naam}${o.gebruik ? ` · ${o.gebruik}` : ""}`, {
             sticky: true,
-          });
-          // Zelfde hover-taal als de vlakken: oplichten en iets groeien —
-          // een klein rondje is anders lastig te raken (wens Steven).
-          stip.on("mouseover", () => {
-            if (selectieRef.current.length || filterRef.current) return;
-            stip.setRadius(10);
-            stip.setStyle({ weight: 3, fillOpacity: 1 });
-          });
-          stip.on("mouseout", () => {
-            if (selectieRef.current.length || filterRef.current) return;
-            stip.setRadius(7);
-            stip.setStyle({ opacity: 1, weight: 2, fillOpacity: 0.8 });
           });
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           stip.on("click", (e: any) => {
@@ -353,12 +333,13 @@ export default function KaartWeergave({
             toonInLijst(o.id);
           });
           // De stijl-pass en zoomNaar verwachten de polygon-API; een punt
-          // levert zijn eigen mini-bounds en zijn eigen basisstijl (voller
-          // dan een vlak, anders vervaagt het rondje na elke stijl-pass).
+          // levert zijn eigen mini-bounds en vertaalt setStyle naar
+          // marker-opacity (dimmen bij selectie/filter elders).
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           (stip as any).getBounds = () => L.latLngBounds([[o.lat, o.lon]]);
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          (stip as any)._puntBasis = { weight: 2, fillOpacity: 0.8 };
+          (stip as any).setStyle = (s: { opacity?: number }) =>
+            stip.setOpacity(s?.opacity != null && s.opacity < 1 ? 0.35 : 1);
           stip.addTo(groep);
           bounds.extend([o.lat, o.lon]);
           eenheid.push(stip);
@@ -368,8 +349,7 @@ export default function KaartWeergave({
             o.id,
             eenheid.map((p) => ({
               poly: p,
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              basis: (p as any)._puntBasis ?? basis,
+              basis,
               gebruik: o.gebruik,
               isPerceel,
             })),
