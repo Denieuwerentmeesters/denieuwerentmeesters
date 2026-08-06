@@ -1,0 +1,79 @@
+{
+  "naam": "KIEM - natuuraanvraagloket provincie Utrecht",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://kiemutrecht.nl/",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "website",
+      "url": "https://www.cultuurfonds.nl/kiem-regeling",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "“Overal in de provincie Utrecht ontstaan mooie initiatieven, maar vaak ontbreekt het aan geld om ideeën echt tot bloei te laten komen. Daarom is er KIEM: wij geven tot €5.000 voor natuur- en duurzaamheidsprojecten in de provincie Utrecht. Zo helpen we bewoners, scholen en organisaties om hun plannen verder te brengen. KIEM is een initiatief van het Elise Mathilde Fonds, het K.F. Hein Fonds en het Cultuurfonds Utrecht.”",
+  "benaderbaarheid": "open",
+  "benaderwijze_notitie": "“Er is geen deadline, je kunt altijd aanvragen” en “Onze behandeltijd is maximaal 2 maanden”. Eén loket voor drie fondsen: “Dit betekent één aanvraag, één loket, en van drie fondsen een toekenning.”",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "provincie",
+  "geo_waarden": [
+    "Utrecht"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": 5000,
+  "bedrag_indicatie": "“Vanuit KIEM is de gift maximaal 5.000 euro” en “De totale projectkosten zijn maximaal 20.000 euro”. Verder: “Kost het 5.000 euro of minder? Vraag het hele bedrag aan. Kost het meer? Vertel hoe je de rest financiert.”",
+  "cofinanciering_vereist": false,
+  "uitsluitingen": [
+    "“de aanvrager is geen stichting of vereniging” (niet-ontvankelijk)",
+    "“het project vindt plaats buiten de provincie Utrecht”",
+    "“de aanvraag is te laat ingestuurd (het project is al begonnen of begint al tijdens de behandeltermijn)”",
+    "“Projecten die al rechtstreeks door het K.F. Hein Fonds, het Elise Mathilde Fonds en/of het Cultuurfonds Utrecht worden gesteund kunnen niet óók geld van KIEM krijgen (en andersom)”",
+    "Indirecte aankopen: “Andere, meer indirecte aankopen (bijvoorbeeld vervoersmiddelen, computer, toiletten) worden niet ondersteund.”",
+    "Bij moestuinen niet: “Bestrating / paadjes / boomschors, waterleidingsystemen, broeikas, opslaghokken / gereedschapsschuren, muurtjes, fietsenstalling, zithoek, bankjes, picknicktafels.”",
+    "Projecten zonder vrijwilligers (“komt (mede) tot stand met vrijwilligers die meehelpen”)",
+    "Niet-openbare locaties (“bevindt zich in de openbare ruimte en is toegankelijk voor andere mensen”)"
+  ],
+  "kostensoort": [
+    "investering"
+  ],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "De doelstelling (“natuur- en duurzaamheidsprojecten in de provincie Utrecht”: bijenkasten, paddenpoelen, nestkasten, pluktuinen, insectenweiden, informatieborden, natuurwandelingen) past goed op het publiek toegankelijke deel van een Utrechts landgoed. Maar twee harde eisen blokkeren de directe route voor een particuliere eigenaar: “de aanvrager is geen stichting of vereniging” is een reden om de aanvraag niet in behandeling te nemen, en het project “bevindt zich in de openbare ruimte en is toegankelijk voor andere mensen”, met vrijwilligers. De site geeft de uitweg zelf: “Geen stichting? Een andere organisatie kan penvoerder zijn.” Bedragen zijn klein (max € 5.000), dus dit is een fonds voor een deelproject, niet voor een landgoedplan.",
+    "partnertype": "Een stichting of vereniging als penvoerder: een vriendenstichting van het landgoed, een lokale natuur- of vrijwilligersgroep, IVN, Landschap Erfgoed Utrecht (LEU) of het lokale NDE-centrum. Begeleidingsuren van zo'n derde partij mogen mee in de begroting: “Deze begeleidingskosten mogen niet meer dan 30% van de totale kosten zijn.”"
+  },
+  "onderliggende_fondsen": [
+    {
+      "naam": "Elise Mathilde Fonds",
+      "relevant": true,
+      "reden": "Een van de drie fondsen achter KIEM; heeft ook een eigen, ruimer aanvraagloket buiten KIEM om."
+    },
+    {
+      "naam": "K.F. Hein Fonds",
+      "relevant": true,
+      "reden": "Een van de drie fondsen achter KIEM; eigen loket voor grotere Utrechtse aanvragen."
+    },
+    {
+      "naam": "het Cultuurfonds Utrecht",
+      "relevant": true,
+      "reden": "Provinciale afdeling van het Cultuurfonds; behandelt zelf ook grotere regionale natuur- en erfgoedaanvragen met vooraanvraagdeadlines 1 april / 1 juli / 1 oktober / 8 januari."
+    },
+    {
+      "naam": "Madzy van Nagell-Martini Buys Fonds (CultuurFonds op Naam, Utrecht)",
+      "relevant": true,
+      "reden": "Gevonden op cultuurfonds.nl/kiem-regeling: “steunt projecten die gaan over cultuur- en natuurbehoud in Loenersloot en omgeving” — zeer specifiek landgoed-/buitenplaatsgebied aan de Angstel. Stond niet in de werklijst."
+    },
+    {
+      "naam": "Van Hoorn-Koster Fonds (CultuurFonds op Naam, Utrecht)",
+      "relevant": true,
+      "reden": "“steunt (audiovisuele) publicaties over archeologie en geschiedenis in de provincie Utrecht” — bruikbaar voor een historisch onderzoek/publicatie over een Utrechts landgoed. Stond niet in de werklijst."
+    }
+  ],
+  "niet_gevonden": [
+    "Geen beleidsplan of jaarverslag van KIEM als samenwerkingsverband gevonden; kiemutrecht.nl publiceert alleen de regeling zelf.",
+    "Geen jaarbudget of aantal toekenningen per jaar gepubliceerd.",
+    "Niet gepubliceerd of een NSW-landgoed met betaalde openstelling als 'openbare ruimte' telt."
+  ]
+}

@@ -1,0 +1,102 @@
+{
+  "naam": "Cultuurfonds Gelderland",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://www.cultuurfonds.nl/provinciale-afdelingen/gelderland",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://www.cultuurfonds.nl/aanvragen/voorwaarden",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "website",
+      "url": "https://www.cultuurfonds.nl/fondsen",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "Het Cultuurfonds heeft in elke provincie een afdeling met een eigen bestuur. Die afdeling behandelt en beoordeelt de aanvragen van projecten met een regionaal belang.",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "“Ik ben een stichting of vereniging op het gebied van cultuur of natuur en wil geld aanvragen voor mijn project”. Open loket met vaste rondes: “De deadlines zijn de data waarop je vooraanvraag in ieder geval bij ons binnen moet zijn” (1 april / 1 juli / 1 oktober / 8 januari). Drempels: KvK-inschrijving, “cultuur of natuur in de statutaire doelstelling” en “Je totale projectbegroting is minimaal € 15.000”.",
+  "aanvrager_type": "beide",
+  "geo_niveau": "provincie",
+  "geo_waarden": [
+    "Gelderland"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": "Geen bedragen gepubliceerd door de afdeling Gelderland. Wel de landelijke drempel: “Je totale projectbegroting is minimaal € 15.000.”",
+  "cofinanciering_vereist": null,
+  "uitsluitingen": [
+    "“Het project betreft niet groot of regulier onderhoud.” (voorwaarde bij Restauratie)",
+    "“Je project is geen reguliere activiteit”",
+    "“Je project heeft geen polariserend effect en is niet primair religieus, sociaal-maatschappelijk of politiek.”",
+    "“Je project richt zich op andere doelen dan alleen fondsenwerving.”",
+    "“Je organisatie heeft dit jaar nog geen toekenning ontvangen van het Cultuurfonds”",
+    "“Je hebt voor dit project nog niet eerder een aanvraag gedaan bij het Cultuurfonds”",
+    "Natuuraanleg: “Het project gaat niet om de aanleg van recreatieve infrastructuur (zoals bruggen en paden).”",
+    "Startdatum: “Stuur je definitieve aanvraag altijd in voordat het project begint. De startdatum van het project moet daarnaast ook na de besluitdatum liggen.” — reeds gestarte projecten vallen af."
+  ],
+  "kostensoort": [
+    "investering",
+    "restauratie",
+    "onderzoek"
+  ],
+  "landgoed_relevantie": {
+    "route": "zelf",
+    "onderbouwing": "De afdeling behandelt “aanvragen van projecten met een regionaal belang” op het gebied van cultuur én natuur in Gelderland — de provincie met de hoogste landgoeddichtheid van Nederland. Restauratie van groen en onroerend erfgoed, herbestemming van monumenten, natuuraanleg en grondaankoop zijn allemaal benoemde aanvraagroutes. Rechtsvormeis: “Het erfgoed is in bezit van een stichting, vereniging of religieus genootschap. Uitzondering: in het geval van historische buitenplaatsen mag het erfgoed ook in bezit zijn van een familie-B.V. die verbonden is aan de Natuurschoonwet.” Die uitzondering is expliciet voor buitenplaatsen geschreven.",
+    "partnertype": "Alleen nodig als het landgoed geen stichting/vereniging is en ook geen NSW-familie-B.V.: dan via een eigen erfgoed-/vriendenstichting of via Geldersch Landschap & Kasteelen / een andere landschapsorganisatie."
+  },
+  "onderliggende_fondsen": [
+    {
+      "naam": "Palet fonds",
+      "relevant": false,
+      "reden": "“ondersteunt projecten voor amateurs op het terrein van de beeldende kunst in Gelderland” — geen groen/erfgoed."
+    },
+    {
+      "naam": "Buurtcultuurfonds Mooiland Gelderland",
+      "relevant": false,
+      "reden": "“cultuurprojecten die bijdragen aan de ‘kunst van het samenleven’ in het rayon waar Mooiland woningbezit heeft” — gebonden aan woningbezit van corporatie Mooiland."
+    },
+    {
+      "naam": "Cultuurfonds Rumpt",
+      "relevant": true,
+      "reden": "“steunt bijzondere cultuur- en natuurprojecten in Rumpt en directe omgeving” — natuur expliciet, relevant voor landgoederen in de Betuwe rond Rumpt."
+    },
+    {
+      "naam": "Corry Takken Fonds",
+      "relevant": true,
+      "reden": "“projecten op het werkterrein van het Cultuurfonds in Gelderland, waarbij de voorkeur uitgaat naar kleinere projecten met een sociaal karakter” — route voor een sociaal/participatief project op een landgoed."
+    },
+    {
+      "naam": "Dina Altena Fonds",
+      "relevant": true,
+      "reden": "“cultuurprojecten in de provincie Gelderland, in het bijzonder in de Gelderse Achterhoek (…) tentoonstellingen en publicaties” — route voor een publicatie of tentoonstelling over de geschiedenis van een Achterhoeks landgoed."
+    },
+    {
+      "naam": "Eleonora van Heusden Fonds",
+      "relevant": true,
+      "reden": "“draagt bij aan projecten in de (klassieke) muziek en de restauratie van molens” — molenrestauratie is direct landgoedrelevant (water- en windmolens in landgoedbezit); ook concerten op de buitenplaats."
+    },
+    {
+      "naam": "Oene Fonds",
+      "relevant": true,
+      "reden": "“stimuleert activiteiten op het gebied van cultuur en natuur in de Noord-Oost Veluwe met een voorkeur voor kleine kernen”; op de fondspagina staat letterlijk “het herstel van een cultuurhistorische bomenrij” als voorbeeldproject."
+    },
+    {
+      "naam": "ZuGO Fonds",
+      "relevant": true,
+      "reden": "“culturele projecten in de provincies Gelderland en Overijssel, met een voorkeur voor Zutphen” — mogelijke route voor erfgoedprojecten op landgoederen rond Zutphen."
+    }
+  ],
+  "niet_gevonden": [
+    "Geen bedragenrange, maximum bijdrage of jaarbudget van de afdeling Gelderland gepubliceerd.",
+    "Geen expliciete cofinancieringseis gevonden op de afdelingspagina of de landelijke voorwaardenpagina.",
+    "Geen apart beleidsplan of jaarverslag van de afdeling Gelderland gevonden op cultuurfonds.nl."
+  ]
+}

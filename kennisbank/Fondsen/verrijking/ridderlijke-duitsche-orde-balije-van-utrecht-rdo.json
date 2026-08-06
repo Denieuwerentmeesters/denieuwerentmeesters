@@ -1,0 +1,41 @@
+{
+  "naam": "Ridderlijke Duitsche Orde Balije van Utrecht (RDO)",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://rdo.nl/nl/cultuurhistorische-projecten/",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "Het steunen van restauratieprojecten aan gebouwen met een aantoonbare band met de Ridderlijke Duitsche Orde, en van historisch onderzoek naar de geschiedenis van de Orde. De Orde 'bezat door de eeuwen heen vele kerken, huizen en landerijen'.",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "Aanvragers wordt gevraagd contact op te nemen met de archivaris via archief@rdo.nl, in het bijzonder 'indien uw object voorkomt in de gebouweninventarisatie'; harde toegangseis is dat er 'een aantoonbare relatie bestaat tussen het gebouw en de RDO'.",
+  "aanvrager_type": "beide",
+  "geo_niveau": "landelijk",
+  "geo_waarden": [
+    "Nederland; zwaartepunt in het historische bezit van de Balije van Utrecht"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": null,
+  "cofinanciering_vereist": false,
+  "uitsluitingen": [
+    "gebouwen zonder aantoonbare historische relatie met de RDO",
+    "objecten die niet in de gebouweninventarisatie van de RDO voorkomen"
+  ],
+  "kostensoort": [
+    "restauratie",
+    "onderzoek"
+  ],
+  "landgoed_relevantie": {
+    "route": "zelf",
+    "onderbouwing": "De Orde bezat 'vele kerken, huizen en landerijen'; landgoederen, hoeven en kerken uit dat voormalige bezit komen rechtstreeks in aanmerking voor restauratie van interieur en exterieur. De poort is smal maar concreet: eerst nagaan of het object in de gebouweninventarisatie van de RDO staat. Voor landgoederen in het Utrechtse en aangrenzende gebied is dat een gerichte vraag met een eenduidig antwoord.",
+    "partnertype": null
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "bedragen, uitsluitingen en beoordelingstermijnen",
+    "de gebouweninventarisatie zelf is niet online gevonden - alleen op te vragen bij de archivaris"
+  ]
+}

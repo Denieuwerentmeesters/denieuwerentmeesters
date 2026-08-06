@@ -1,0 +1,40 @@
+{
+  "naam": "HandicapNL (fusie Fonds Verstandelijk Gehandicapten & Revalidatiefonds)",
+  "bronnen": [
+    {"soort": "website", "url": "https://handicap.nl/", "jaar": 2026, "gelezen": true},
+    {"soort": "aanvraagvoorwaarden", "url": "https://web.archive.org/web/2024/https://handicap.nl/projectaanvraag/aanvraag-indienen/aanvraag-indienen-kleine-lokale-projecten/", "jaar": 2021, "gelezen": true}
+  ],
+  "doelstelling": "Een normaal, waardevol leven voor iedereen met een handicap. Onder de noemer 'Klein Geluk': \"Voor iedereen is het belangrijk om mee te kunnen doen, ook voor mensen met een handicap. Maar vaak is bij stichtingen en clubs weinig geld beschikbaar voor groepsactiviteiten. Daarom steunen wij onder de noemer 'Klein Geluk' al jaren dit soort activiteiten: een theaterbezoek met de dagbesteding, een dagje strand met het G-team of een kookcursus met de woongroep.\"",
+  "benaderbaarheid": "onbekend",
+  "benaderwijze_notitie": "In de gearchiveerde opzet open met twee rondes en een tegenprestatie: \"Werk je voor een club of stichting voor mensen met een handicap? En is er een activiteit waarvoor je nog geld nodig hebt? Vraag dan vóór 30 juni of 30 augustus een bijdrage aan. In ruil vragen we jullie om mee te doen met onze jaarlijkse HandicapNL collecte en minimaal € 500,- op te halen.\" MAAR de aanvraagpagina geeft nu HTTP 410 Gone en het menu-item 'Financiering aanvragen' is van de site verdwenen; HandicapNL presenteert zich nu uitsluitend via eigen programma's. Onbekend of Klein Geluk nog aanvraagbaar is.",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "landelijk",
+  "geo_waarden": ["Nederland"],
+  "bedrag_min": null,
+  "bedrag_max": 4000,
+  "bedrag_indicatie": "\"Met een bijdrage van maximaal € 4.000,- per jaar bieden we ontspanning en plezier.\" en \"Iedere organisatie kan maximaal € 4.000,- per kalenderjaar aanvragen.\" Daarbovenop: \"De helft (50%) van jullie totale opbrengst [van de collecte] krijg je van ons terug om EXTRA te besteden aan jullie activiteiten voor mensen met een handicap.\"",
+  "cofinanciering_vereist": true,
+  "uitsluitingen": [
+    "particulieren (\"Helaas komen alleen organisaties in aanmerking voor Klein Geluk.\")",
+    "andere rechtsvormen dan stichting, vereniging of universiteit/hogeschool (blijkens het aanvraagformulier)",
+    "eten en drinken (\"We geven geen vergoeding meer voor 'eten en drinken' in een projectvoorstel.\")",
+    "organisaties die niet deelnemen aan de digitale HandicapNL collecte en daar geen € 500 mee ophalen",
+    "meer dan € 4.000 per organisatie per kalenderjaar"
+  ],
+  "kostensoort": ["exploitatie", "investering"],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Dit is de klassieke partnerroute: het fonds geeft nooit aan een landgoed, maar wél aan de zorg- of welzijnsorganisatie die een activiteit op een landgoed organiseert. De genoemde voorbeelden zijn letterlijk dagbesteding en groepsuitjes: \"een theaterbezoek met de dagbesteding, een dagje strand met het G-team of een kookcursus met de woongroep\". Een landgoed dat een boerderij-, natuur- of dagbestedingsprogramma huisvest kan als locatiepost in de begroting van een zorgstichting of gehandicaptenvereniging staan. Aanvrager moet een \"club of stichting voor mensen met een handicap\" zijn met rechtsvorm stichting, vereniging of universiteit/hogeschool. Bedragen zijn klein (max € 4.000 per jaar) en er hangt een collecteverplichting van minimaal € 500 aan vast. Status onzeker: het aanvraagloket is offline.",
+    "partnertype": "club, vereniging of stichting voor mensen met een handicap (zorgorganisatie, woongroep, dagbesteding, G-sportvereniging) die bereid is deel te nemen aan de HandicapNL-collecte"
+  },
+  "onderliggende_fondsen": [
+    {"naam": "Klein Geluk", "relevant": true, "reden": "De enige gevonden aanvraagregeling: max € 4.000 per kalenderjaar voor groepsactiviteiten van clubs en stichtingen voor mensen met een handicap; genoemde voorbeelden (dagbesteding, woongroep, G-team) zijn precies het type activiteit dat op een landgoed kan plaatsvinden."}
+  ],
+  "niet_gevonden": [
+    "Actueel beleid: de werklijst-URL https://handicap.nl/projectaanvraag/aanvraag-indienen/aanvraag-indienen-kleine-lokale-projecten/ geeft HTTP 410 Gone en https://handicap.nl/projectaanvraag/ geeft 404. In de volledige linklijst van de homepage komt geen aanvraag- of financieringspagina meer voor; het vroegere menu-item 'Financiering aanvragen' is verdwenen.",
+    "https://handicap.nl/klein-geluk/ bestaat nog wel op de live site maar is niet opgehaald; onbekend of daar nog een aanvraagmogelijkheid onder hangt.",
+    "De volledige criteriatekst waarnaar de gearchiveerde pagina verwijst ('Alle aanvragen worden getoetst aan onze criteria'): niet gevonden.",
+    "Een tweede, groter loket voor niet-kleine projecten: de gearchiveerde broodkruimel 'Home > Start projectaanvraag > Aanvraag indienen > Aanvraag indienen kleine, lokale projecten' suggereert dat er ook een regeling voor grotere projecten bestond; die pagina is niet opgehaald.",
+    "Jaarlijks fondsbudget: niet gepubliceerd ('Het budget voor Klein Geluk is begrensd')."
+  ]
+}

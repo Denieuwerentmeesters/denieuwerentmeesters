@@ -1,0 +1,29 @@
+{
+  "naam": "Bouwman Boerema Fonds",
+  "bronnen": [
+    {"soort": "website", "url": "https://www.cultuurfonds.nl/fondsen/bouwman-boerema-fonds", "jaar": 2026, "gelezen": true},
+    {"soort": "aanvraagvoorwaarden", "url": "https://www.cultuurfonds.nl/aanvragen", "jaar": 2026, "gelezen": true}
+  ],
+  "doelstelling": "Voor projecten op het gebied van onderhoud en restauratie in Noord-Nederland met een voorkeur voor de borg Verhildersum te Leens, de overige Groninger borgen en de restauratie van de oud-Groninger kerken, kerkorgels en begraafplaatsen.",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "Aanvragen loopt via het algemene Cultuurfonds-aanvraagportaal (https://aanvragen.cultuurfonds.nl/); het fonds is een CultuurFonds op Naam zonder eigen loket. \"Het Cultuurfonds dekt de kosten van projecten altijd gedeeltelijk\".",
+  "aanvrager_type": "beide",
+  "geo_niveau": "regio",
+  "geo_waarden": ["Noord-Nederland", "Groningen", "Friesland", "Drenthe"],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": "Geen eigen bedragen gepubliceerd; algemene Cultuurfonds-maxima lopen van EUR 1.500 tot EUR 50.000 afhankelijk van de aanvraagroute.",
+  "cofinanciering_vereist": true,
+  "uitsluitingen": ["projecten die binnen 4-6 weken na aanvraag starten (algemene Cultuurfonds-voorwaarde, verschilt per route)"],
+  "kostensoort": ["restauratie", "regulier_onderhoud", "investering"],
+  "landgoed_relevantie": {
+    "route": "zelf",
+    "onderbouwing": "Dit is een van de weinige fondsen die onderhoud expliciet naast restauratie noemt: \"Voor projecten op het gebied van onderhoud en restauratie in Noord-Nederland met een voorkeur voor de borg Verhildersum te Leens, de overige Groninger borgen\". Groninger borgen zijn landgoederen met hoofdhuis; de gesteunde projecten bevestigen dat (Menkemaborg, Fraeylemaborg, Borg Welgeleven, historische landschappen en tuinen, en \"Van Stinzenplant tot Boergbloumke\" van Stichting Landschapsbeheer Groningen). Het Cultuurfonds staat sinds januari 2025 ook individuele aanvragers toe; de meeste gehonoreerde projecten komen echter van stichtingen, dus een landgoedstichting of vriendenstichting is de gebruikelijke aanvragersvorm.",
+    "partnertype": null
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "Eigen bedragen, deadlines en uitsluitingen van het Bouwman Boerema Fonds: fondsen-op-naam-pagina's bij het Cultuurfonds publiceren die niet",
+    "Oprichtingsjaar en achtergrond van de schenker: niet vermeld op de fondspagina"
+  ]
+}

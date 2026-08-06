@@ -1,0 +1,36 @@
+{
+  "naam": "Postcode Loterij Buurtfonds (uitvoering Stichting DOEN)",
+  "bronnen": [
+    {"soort": "website", "url": "https://www.postcodeloterij.nl/goede-doelen/postcode-loterij-buurtfonds", "jaar": 2026, "gelezen": true},
+    {"soort": "website", "url": "https://www.doen.nl/postcode-loterij-buurtfonds/", "jaar": 2026, "gelezen": false},
+    {"soort": "aanvraagvoorwaarden", "url": "https://www.postcodeloterijbuurtfonds.nl/criteria-vergroen-je-buurt", "jaar": 2026, "gelezen": false}
+  ],
+  "doelstelling": "Met steun van het Postcode Loterij Buurtfonds worden buurten in heel Nederland groener, socialer en creatiever - het fonds steunt initiatieven van bewoners die hun buurt en het buurtleven verbeteren.",
+  "benaderbaarheid": "open",
+  "benaderwijze_notitie": "'Met steun van het Postcode Loterij Buurtfonds worden buurten in heel Nederland groener, socialer en creatiever' - aanvragen verlopen via een openbaar online aanvraagformulier in de Mijn DOEN-omgeving; volgens zoeksnippets van postcodeloterijbuurtfonds.nl kunnen alle in Nederland gevestigde maatschappelijke organisaties (stichtingen en verenigingen) een bijdrage aanvragen, particulieren niet.",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "landelijk",
+  "geo_waarden": ["Nederland"],
+  "bedrag_min": 500,
+  "bedrag_max": 5000,
+  "bedrag_indicatie": "minimaal 500 en maximaal 5.000 euro (volgens zoeksnippet van postcodeloterijbuurtfonds.nl; niet geverifieerd op de bronpagina zelf)",
+  "cofinanciering_vereist": null,
+  "uitsluitingen": [
+    "aanvragen van particulieren",
+    "initiatieven van organisaties met een onevenredig groot eigen vermogen",
+    "projecten die niet in een openbaar toegankelijke ruimte plaatsvinden",
+    "meer dan een bijdrage per organisatie per 365 dagen"
+  ],
+  "kostensoort": ["investering"],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Het fonds financiert buurtprojecten die 'duidelijk gedragen worden door de buurt', 'toegankelijk zijn voor een brede groep bewoners' en 'plaatsvinden in een openbaar toegankelijke ruimte', en aanvragen komen van stichtingen/verenigingen, niet van particulieren. Een landgoed kan daardoor niet als eigenaar aanvragen, maar wel als locatie fungeren voor een buurtinitiatief (moestuin, speelplek, natuurwerkdag, buurtactiviteit) dat een buurtvereniging of bewonersstichting indient; het openbaar toegankelijke deel van een landgoed past bij het criterium.",
+    "partnertype": "buurtvereniging, bewonersstichting of lokale maatschappelijke organisatie die het project indient en uitvoert met bewoners"
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "de primaire bronpagina's zelf: doen.nl/postcode-loterij-buurtfonds gaf HTTP 403 via WebFetch en een Cloudflare-interstitial via curl met browser-user-agent",
+    "postcodeloterijbuurtfonds.nl (voor-wie, criteria, over-ons, algemene voorwaarden) levert als Nuxt-SPA alleen een lege shell; /_payload.json geeft geen data - criteria en bedragen berusten daardoor op zoekmachine-snippets, niet op geverifieerde brontekst",
+    "volledige lijst van uitgesloten kostensoorten en of regulier onderhoud/exploitatie financierbaar is"
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "naam": "Stimuleringsfonds Groene Bondgenoten (Samen voor onze Leefomgeving)",
+  "bronnen": [
+    {"soort":"website","url":"https://www.samenvooronzeleefomgeving.nl/stimuleringsfonds","jaar":2026,"gelezen":true},
+    {"soort":"aanvraagvoorwaarden","url":"https://www.groenebondgenoten.nl/media/download/897/Reglement-Stimuleringsfonds-2026.docx","jaar":2026,"gelezen":true}
+  ],
+  "doelstelling": "\"Doelstelling van het fonds is het ondersteunen en stimuleren van samenwerking tussen groene vrijwilligersgroepen gericht op het verbeteren van de kwaliteit van de groene leefomgeving. Aanvragen moeten in ieder geval gericht zijn op samenwerking, en bij voorkeur ook een of meerdere van de volgende aspecten: Basiskwaliteit Natuur; De Omgevingswet; Initieren/uitbreiden lokale groene samenwerkingsverbanden; Behoud en herstel van landschap, planten en dieren in de omgeving (met name in het stedelijk en landelijk gebied).\" Op de website: \"Groene vrijwilligers kunnen een financiele bijdrage aanvragen voor initiatieven waarbij: die bijdragen aan het verbeteren van de Basiskwaliteit Natuur in de groene leefomgeving (in de bebouwde omgeving, maar ook in het landelijk gebied) en waar wordt samengewerkt tussen groene vrijwilligersgroepen.\"",
+  "benaderbaarheid": "open",
+  "benaderwijze_notitie": "\"Iedere groene vrijwilligersgroep kan een aanvraag doen, mits het een (beoogde) samenwerking met andere vrijwilligers(groepen) betreft. Het heeft de voorkeur dat een vrijwilligersgroep met een rechtsvorm (stichting of vereniging) de aanvraag indient. Eventueel kan ook een particulier namens een groene vrijwilligersgroep zonder rechtsvorm een aanvraag doen.\" Doorlopend open: \"Een aanvraag indienen kan weer vanaf 15 maart 2026 tot uiterlijk 30 november 2026. De regeling wordt eerder gesloten als het budget op is. Aanvragen worden doorlopend op volgorde van binnenkomst door een jury beoordeeld... Je hoort binnen zes weken of je aanvraag wordt toegekend.\" Geen bezwaar mogelijk: \"Over de uitslag en toekenning kan niet worden gecorrespondeerd. Tegen een afwijzing (of toekenning) kan geen bezwaar worden gemaakt.\"",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "landelijk",
+  "geo_waarden": ["Nederland"],
+  "bedrag_min": null,
+  "bedrag_max": 1000,
+  "bedrag_indicatie": "\"Het totale beschikbare bedrag voor uitvoering van projecten is in 2026 ten minste EUR 30.000. Aanvragen kunnen ingediend worden voor een bedrag tot maximaal EUR 1.000.\"",
+  "cofinanciering_vereist": false,
+  "uitsluitingen": [
+    "\"Exploitatietekorten, vaste salariskosten en dergelijke zijn van steun uitgesloten.\"",
+    "\"Uren van vrijwilligers worden niet vergoed.\"",
+    "\"Er kunnen alleen aanvragen worden ingediend voor activiteiten die nog uitgevoerd moeten worden.\"",
+    "\"Alleen activiteiten die nog niet gefinancierd zijn komen voor een aanvraag in aanmerking.\"",
+    "Materiaal voor eenmalig gebruik: \"Materiaal. Niet: Materiaal eenmalig gebruik. Wel: investering in meerjarig te gebruiken materiaal. Plantgoed: biologisch en inheems\"",
+    "Eenmalige inhuur zonder doorwerking: \"Inzet professionals. Wel: een investering in vrijwilligers (kennis, ontmoeting) en de samenwerkingsstructuren. Niet: eenmalige inzet zonder doorwerking.\"",
+    "Begrotingen die vrijwel geheel uit professionals bestaan: \"Dit fonds draagt maximaal EUR 75 incl. btw bij in het uurtarief van de professionele uitvoering, mits niet de hele begroting opgaat aan de inhuur van professionals.\"",
+    "\"Projectvoorstellen in strijd met wettelijke bepalingen worden niet meegenomen.\"",
+    "Projecten zonder samenwerking tussen vrijwilligersgroepen: \"Aanvragen moeten in ieder geval gericht zijn op samenwerking\"",
+    "Meer dan een aanvraag tegelijk: \"Indieners kunnen steeds maar een aanvraag indienen.\""
+  ],
+  "kostensoort": ["investering", "onderzoek"],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Het beleid noemt het landelijk gebied en landschapsherstel expliciet: aanvragen zijn bij voorkeur gericht op \"Behoud en herstel van landschap, planten en dieren in de omgeving (met name in het stedelijk en landelijk gebied)\" en op \"het verbeteren van de Basiskwaliteit Natuur in de groene leefomgeving (in de bebouwde omgeving, maar ook in het landelijk gebied)\". Voorbeelden van gehonoreerde projecten raken direct aan landgoedbeheer: \"Bescherming bomen en landschapselementen Zundert\", \"Natuurlijke oevers voor biodiversiteit\", \"Maaien met kwaliteit\" en \"Inheemse heesters voor mens en dier\". Ook subsidiabel: \"Opzetten monitoring in het eigen gebied t.b.v. basiskwaliteit natuur of te monitoren in hoeverre beheerdoelstellingen worden behaald (materiaal, inhuur/vergoeding expert)\" en \"Inrichtingsmaatregel voor verhogen biodiversiteit (bijv. ontwerp, aanschaf plantmateriaal) als onderdeel van een samenwerking\". Het landgoed kan echter nooit zelf aanvragen: \"Een indiener is een vrijwilligersgroep\", gedefinieerd als \"groep van burger(s) die buiten een (vast) dienstverband onbetaald - of tegen betaling van slechts een vrijwilligersvergoeding - werkzaamheden verricht\", en er moet samenwerking zijn tussen meerdere vrijwilligersgroepen. De route is dus: een lokale vrijwilligersgroep (landschapsbeheer, vogelwerkgroep, IVN-afdeling, KNNV) doet samen met een andere groep een project op het landgoed - monitoring, aanplant van inheems plantgoed, herstel van een houtwal of poel, of een cursus op locatie. Het bedrag is klein (maximaal EUR 1.000) en exploitatie en regulier beheer zijn uitgesloten; dit is een aanjaagfonds voor samenwerking, geen beheerfinanciering.",
+    "partnertype": "Groene vrijwilligersgroep, bij voorkeur met rechtsvorm (stichting of vereniging), die samenwerkt met minstens een andere vrijwilligersgroep - bijvoorbeeld een lokale landschapsbeheergroep, vogelwerkgroep, IVN-afdeling, KNNV-afdeling of natuurwerkgroep uit de omgeving van het landgoed"
+  },
+  "onderliggende_fondsen": [
+    {"naam":"Groene Bondgenoten (samenwerkingsverband, niet zelf een fonds)","relevant":true,"reden":"\"Groene Bondgenoten is een samenwerking van Vogelbescherming Nederland, LandschappenNL, de Natuur- en Milieufederaties, IVN Natuureducatie, Natuurvereniging KNNV en SoortenNL.\" Elk van deze zes koepels heeft eigen provinciale afdelingen en programma's; LandschappenNL en de provinciale Landschappen zijn voor landgoederen de meest directe ingang. Het fonds zelf is mede mogelijk gemaakt door de Nationale Postcode Loterij."}
+  ],
+  "niet_gevonden": [
+    "Contactgegevens van de secretaris van het fonds (waar de aanvraag per mail heen moet): staan niet in het reglement en niet op de gelezen webpagina",
+    "Aanvraagformulier 2026 (https://www.groenebondgenoten.nl/media/download/896/Aanvraagformulier-Fonds-2026.docx): gelinkt maar niet uitgelezen; kan aanvullende vragen bevatten",
+    "Formulier eindrapportage: gelinkt maar niet uitgelezen",
+    "Of het budget van 2026 (ten minste EUR 30.000) op het moment van raadplegen nog beschikbaar was: 'De regeling wordt eerder gesloten als het budget op is' - actuele stand niet vermeld",
+    "De in het reglement genoemde 'bomen-, struiken- en plantenlijst' voor biologisch en inheems plantgoed: hyperlink in het DOCX niet gevolgd"
+  ]
+}

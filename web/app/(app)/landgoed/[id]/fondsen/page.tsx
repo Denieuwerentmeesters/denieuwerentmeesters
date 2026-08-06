@@ -2,358 +2,824 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { moet } from "@/lib/db";
 import { RadarKaart, IcoonGeld, IcoonWereld, IcoonVinkje } from "@/components/RadarKaart";
+import { laadProfiel } from "@/app/(app)/landgoed/[id]/subsidies/matching";
+import {
+  aliasIndex,
+  toetsPoort,
+  trechter,
+  PROJECTSTATUSSEN,
+  type FondsOordeel,
+  type PoortCriterium,
+  type PoortFonds,
+  type Projectstatus,
+  type RegioAlias,
+  type Vraag,
+} from "@/lib/fondsen/poort";
+import { laadCatalogus } from "@/lib/fondsen/zoek";
+import { zoekMetOpslag } from "@/lib/fondsen/opslag";
+import {
+  AANVRAGERS,
+  AANVRAGER_LABELS,
+  BEDRAGBANDEN,
+  BEDRAGBAND_LABELS,
+  DOELEN,
+  DOEL_LABELS,
+  PLANFASEN,
+  PLANFASE_LABELS,
+  PUBLIEK_LABELS,
+  PUBLIEK_OPTIES,
+  type Antwoorden,
+} from "@/lib/fondsen/vraag";
 
-// Fondsenradar — gezicht 1 van de module: welke private geldgevers bestaan er,
-// en wat is bij elk het handelingsperspectief?
+// Fondsenradar — fase 2: DE POORT.
 //
-// Bewust NOG GEEN matchscore per landgoed: de matchmotor is fase 2. Deze pagina
-// toont de catalogus eerlijk geordend op de twee dingen die vandaag al bekend
-// zijn en die het gesprek bepalen:
-//   1. WIE kan aanvragen (aanvrager_type) — bij veel sociale fondsen is dat niet
-//      het landgoed maar een zorg- of jeugdorganisatie die op het landgoed actief
-//      wordt. De actie is dan "zoek een partner", niet "schrijf een aanvraag".
-//   2. STAAT het fonds open (benaderbaarheid, §3 van het implementatieplan).
+// Deze pagina toont niet meer de hele catalogus maar het resultaat van de harde
+// filters (lib/fondsen/poort.ts): wat komt er voor DIT landgoed doorheen, en
+// waarom valt de rest af. De reden tonen is hier belangrijker dan de shortlist
+// zelf — daarmee wordt zichtbaar wat er aan het landgoed zou moeten veranderen.
 //
-// Zodra de matchmotor er is, komt de score naast deze indeling te staan — niet
-// in plaats ervan. Een hoge score op een fonds waar u niet mag aanvragen blijft
-// een verkeerd advies.
+// Bewust NOG GEEN matchscore: laag 2 (weging) en laag 3 (semantiek) komen
+// later. Wat hier staat is deterministisch en met de hand na te rekenen.
 
 export const dynamic = "force-dynamic";
 
-type Fonds = {
-  id: string;
-  naam: string;
+type FondsRij = PoortFonds & {
   organisatie: string | null;
   samenvatting: string | null;
-  categorie: string | null;
-  trefwoorden: string[] | null;
-  themas: string[] | null;
   soort_bron: string;
-  benaderbaarheid: string;
-  benaderwijze_notitie: string | null;
-  aanvrager_type: string;
-  verdienmodel: string;
-  geo_niveau: string | null;
-  geo_waarden: string[] | null;
-  bedrag_indicatie: string | null;
   herkomst: string;
-  geaccordeerd: boolean;
+  bedrag_indicatie: string | null;
   bron_url: string | null;
-  bron_tabblad: string | null;
+  themas: string[] | null;
+  trefwoorden: string[] | null;
 };
 
-// ── Etiketten ──────────────────────────────────────────────────────────────
+const VELDEN =
+  "id, naam, organisatie, samenvatting, themas, trefwoorden, soort_bron, benaderbaarheid, " +
+  "benaderwijze_notitie, aanvrager_type, landgoed_route, landgoed_partnertype, geo_niveau, " +
+  "geo_waarden, bedrag_min, bedrag_max, bedrag_indicatie, kostensoort, herkomst, bron_url";
 
-const BENADERBAARHEID: Record<
-  string,
-  { label: string; cls: string; uitleg: string; rang: number }
-> = {
-  open: {
-    label: "open",
-    cls: "tag-green",
-    uitleg: "Publiek aanvraagloket — iedereen mag indienen.",
-    rang: 1,
-  },
-  open_met_drempel: {
-    label: "open met drempel",
-    cls: "tag-green",
-    uitleg:
-      "Aanvragen kan, maar met een voorwaarde vooraf: alleen ANBI's, alleen na oriënterend contact, of alleen via een portaal.",
-    rang: 2,
-  },
-  via_intermediair: {
-    label: "via een intermediair",
-    cls: "tag-amber",
-    uitleg:
-      "Dit fonds neemt directe aanvragen niet in behandeling. De actie is contact leggen met de partij die het wél mag indienen.",
-    rang: 3,
-  },
-  onbekend: {
-    label: "nog uit te zoeken",
-    cls: "tag-gray",
-    uitleg:
-      "De bron zegt niet of en hoe u hier kunt aanvragen. Dit is geen 'nee' — het is werk dat nog gedaan moet worden.",
-    rang: 4,
-  },
-  op_uitnodiging: {
-    label: "op uitnodiging",
-    cls: "tag-red",
-    uitleg: "Uitsluitend op uitnodiging. Ongevraagd aanschrijven kost goodwill.",
-    rang: 5,
-  },
-  gesloten: {
-    label: "gesloten",
-    cls: "tag-red",
-    uitleg: "Financiert alleen eigen doelen. Blijft in de lijst zodat u weet dat het bekeken is.",
-    rang: 6,
-  },
+const KOSTENSOORT_LABELS: Record<string, string> = {
+  investering: "investering",
+  restauratie: "restauratie",
+  regulier_onderhoud: "regulier onderhoud",
+  exploitatie: "exploitatie",
+  personeel: "personeel",
+  onderzoek: "onderzoek",
 };
 
-const VERDIENMODEL: Record<string, string> = {
-  directe_subsidie: "geld rechtstreeks aan het landgoed",
-  locatievergoeding: "locatievergoeding via de begroting van de partner",
-  indirecte_bezoekersinkomsten: "geen geldstroom, wel meer bezoek",
-  pacht_huur: "structurele huur- of pachtrelatie",
-  geen: "geen opbrengst, alleen maatschappelijke waarde",
-  nvt: "niet van toepassing",
-  onbekend: "",
+const STATUS_LABELS: Record<Projectstatus, string> = {
+  idee: "idee",
+  in_voorbereiding: "in voorbereiding",
+  gegund: "gegund",
+  gestart: "gestart",
+  afgerond: "afgerond",
 };
 
-const SOORT_BRON: Record<string, { label: string; cls: string }> = {
-  fonds: { label: "fonds", cls: "tag-blue" },
-  lening: { label: "lening", cls: "tag-amber" },
-  fiscaal: { label: "fiscaal", cls: "tag-gray" },
-  eigen_bijdrage: { label: "eigen bijdrage", cls: "tag-gray" },
-};
-
-// De drie bakken waarin de lijst uiteenvalt. De volgorde is de volgorde op de
-// pagina: eerst wat u zelf kunt doen.
-const BAKKEN: {
-  key: string;
-  titel: string;
-  uitleg: string;
-  types: string[];
-}[] = [
-  {
-    key: "zelf",
-    titel: "U kunt hier zelf aanvragen",
-    uitleg:
-      "Het landgoed is een toegestane aanvrager. Dit is de stapel waar een aanvraag van uzelf kan uitkomen.",
-    types: ["landgoedeigenaar", "beide"],
-  },
-  {
-    key: "partner",
-    titel: "Hier vraagt een partner aan, niet u",
-    uitleg:
-      "Deze fondsen geven aan een zorg-, jeugd- of welzijnsorganisatie die op uw landgoed actief wordt. Er valt geld te verdienen, maar via een ander: u zoekt een partner en komt in hun begroting terecht als locatiepost. Zelf aanschrijven heeft geen zin.",
-    types: ["derde_partij"],
-  },
-  {
-    key: "onbekend",
-    titel: "Nog niet vastgesteld wie mag aanvragen",
-    uitleg:
-      "Bij deze fondsen is niet uitgezocht of het landgoed zelf kan aanvragen. Ze staan hier apart in plaats van gemengd tussen de rest, omdat een gok op dit punt de verkeerde actie oplevert.",
-    types: ["onbekend", "nvt"],
-  },
-];
-
-function rang(f: Fonds) {
-  return BENADERBAARHEID[f.benaderbaarheid]?.rang ?? 9;
+// Regio-aliassen ophalen. De `landelijk`-kolom komt uit migratie 0055; staat
+// die nog niet op deze database, dan valt de query terug op de oude vorm in
+// plaats van de pagina te laten klappen. Zonder aliassen blijft de geografische
+// poort op 'onbekend' staan — precies de bedoelde veilige stand.
+async function laadAliassen(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+): Promise<RegioAlias[]> {
+  const met = await supabase.from("regio_alias").select("alias, provincie, gemeenten, landelijk, geaccordeerd");
+  if (!met.error && met.data)
+    return met.data.map((r) => ({
+      alias: r.alias,
+      provincie: r.provincie,
+      gemeenten: r.gemeenten ?? [],
+      landelijk: Boolean(r.landelijk),
+      geaccordeerd: Boolean(r.geaccordeerd),
+    }));
+  const zonder = await supabase.from("regio_alias").select("alias, provincie, gemeenten, geaccordeerd");
+  if (zonder.error || !zonder.data) return [];
+  return zonder.data.map((r) => ({
+    alias: r.alias,
+    provincie: r.provincie,
+    gemeenten: r.gemeenten ?? [],
+    landelijk: false,
+    geaccordeerd: Boolean(r.geaccordeerd),
+  }));
 }
-
-function werkgebied(f: Fonds): string {
-  if (f.geo_niveau === "landelijk") return "landelijk";
-  if (f.geo_niveau === "internationaal") return "buitenland";
-  const w = (f.geo_waarden ?? []).filter(Boolean);
-  if (w.length === 0) return f.geo_niveau ?? "";
-  if (w.length <= 2) return w.join(", ");
-  return `${w.slice(0, 2).join(", ")} +${w.length - 2}`;
-}
-
-// ── Pagina ─────────────────────────────────────────────────────────────────
 
 export default async function FondsenPagina({
   params,
   searchParams,
 }: {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ b?: string; q?: string }>;
+  searchParams: Promise<{
+    q?: string;
+    status?: string;
+    kostensoort?: string;
+    bedrag?: string;
+    plan?: string;
+    doel?: string;
+    fase?: string;
+    band?: string;
+    aanvrager?: string;
+    publiek?: string;
+  }>;
 }) {
   const { id } = await params;
-  const { b: benaderFilter, q } = await searchParams;
+  const zoekParams = await searchParams;
   const supabase = await createClient();
 
-  const alle = (await moet(
-    supabase
-      .from("regeling")
-      .select(
-        "id, naam, organisatie, samenvatting, categorie, trefwoorden, themas, soort_bron, benaderbaarheid, benaderwijze_notitie, aanvrager_type, verdienmodel, geo_niveau, geo_waarden, bedrag_indicatie, herkomst, geaccordeerd, bron_url, bron_tabblad",
-      )
-      .in("soort_bron", ["fonds", "lening"])
-      .order("naam"),
-    "Fondsen ophalen",
-  )) as Fonds[];
+  const [alle, profiel, aliassen] = await Promise.all([
+    moet(
+      supabase.from("regeling").select(VELDEN).in("soort_bron", ["fonds", "lening"]).order("naam"),
+      "Fondsen ophalen",
+    ) as Promise<unknown> as Promise<FondsRij[]>,
+    laadProfiel(supabase, id),
+    laadAliassen(supabase),
+  ]);
 
-  // Tellingen over de héle lijst — die veranderen niet mee met het filter,
-  // anders meet je je eigen filter in plaats van de werkelijkheid.
-  const totaal = alle.length;
-  const benaderbaar = alle.filter(
-    (f) => f.benaderbaarheid === "open" || f.benaderbaarheid === "open_met_drempel",
-  ).length;
-  const viaPartner = alle.filter((f) => f.aanvrager_type === "derde_partij").length;
-  const uitTeZoeken = alle.filter((f) => f.benaderbaarheid === "onbekend").length;
-  const geaccordeerd = alle.filter((f) => f.geaccordeerd).length;
+  // Criteria (fase 'vooraf') bij de fondsen. Deze voeden de rechtsvormpoort —
+  // de grootste harde filter van de hele lijst (§9.1).
+  const criteriaPer = new Map<string, PoortCriterium[]>();
+  const { data: criteria } = await supabase
+    .from("regeling_criterium")
+    .select("regeling_id, omschrijving, veld, operator, waarde, soort, fase")
+    .in(
+      "regeling_id",
+      alle.map((f) => f.id),
+    )
+    .eq("fase", "vooraf");
+  for (const c of (criteria ?? []) as (PoortCriterium & { regeling_id: string })[]) {
+    const arr = criteriaPer.get(c.regeling_id) ?? [];
+    arr.push(c);
+    criteriaPer.set(c.regeling_id, arr);
+  }
 
-  const zoek = (q ?? "").trim().toLowerCase();
+  // De vraag: projectstatus, kostensoort en bedrag zijn parameters van wat de
+  // gebruiker wil, niet van het fonds. Zonder vraag worden die poorten niet
+  // getoetst — een fonds mag nooit afvallen op een vraag die niet gesteld is.
+  const status = (PROJECTSTATUSSEN as readonly string[]).includes(zoekParams.status ?? "")
+    ? (zoekParams.status as Projectstatus)
+    : null;
+  const kostensoort = zoekParams.kostensoort && KOSTENSOORT_LABELS[zoekParams.kostensoort]
+    ? zoekParams.kostensoort
+    : null;
+  const bedragRuw = Number(zoekParams.bedrag);
+  const bedrag = Number.isFinite(bedragRuw) && bedragRuw > 0 ? bedragRuw : null;
+  const vraag: Vraag = { projectstatus: status, kostensoort, bedrag };
+
+  // Is een fonds ooit onderzocht? Een `ai_voorstel`-rij zonder gelezen bron is
+  // nog nooit bekeken; die hoort niet als "onbekend" mee te tellen, want dat
+  // meet de achterstand van de verrijking in plaats van de scherpte van de
+  // poort. Zie `isOnderzocht` in lib/fondsen/poort.ts.
+  const lezingenPer = new Map<string, number>();
+  const { data: lezingen } = await supabase
+    .from("regeling_bronlezing")
+    .select("regeling_id")
+    .in(
+      "regeling_id",
+      alle.map((f) => f.id),
+    );
+  for (const l of (lezingen ?? []) as { regeling_id: string }[]) {
+    lezingenPer.set(l.regeling_id, (lezingenPer.get(l.regeling_id) ?? 0) + 1);
+  }
+
+  const index = aliasIndex(aliassen);
+  const oordelen = new Map<string, FondsOordeel>();
+  for (const f of alle) {
+    oordelen.set(
+      f.id,
+      toetsPoort(
+        { ...f, criteria: criteriaPer.get(f.id) ?? [], bronlezingen: lezingenPer.get(f.id) ?? 0 },
+        profiel,
+        vraag,
+        index,
+      ),
+    );
+  }
+  const cijfers = trechter([...oordelen.values()]);
+
+  const zoek = (zoekParams.q ?? "").trim().toLowerCase();
   const zichtbaar = alle.filter((f) => {
-    if (benaderFilter && f.benaderbaarheid !== benaderFilter) return false;
     if (!zoek) return true;
-    const hooiberg = [
-      f.naam,
-      f.organisatie,
-      f.samenvatting,
-      f.categorie,
-      (f.trefwoorden ?? []).join(" "),
-      (f.themas ?? []).join(" "),
-      (f.geo_waarden ?? []).join(" "),
-    ]
+    return [f.naam, f.organisatie, f.samenvatting, (f.themas ?? []).join(" "), (f.trefwoorden ?? []).join(" ")]
       .filter(Boolean)
       .join(" ")
-      .toLowerCase();
-    return hooiberg.includes(zoek);
+      .toLowerCase()
+      .includes(zoek);
   });
 
+  const bak = (u: FondsOordeel["uitkomst"], metActie: boolean | null = null) =>
+    zichtbaar
+      .filter((f) => {
+        const o = oordelen.get(f.id)!;
+        if (!o.onderzocht) return false;
+        if (o.uitkomst !== u) return false;
+        if (metActie === null) return true;
+        return metActie ? o.acties.length > 0 : o.acties.length === 0;
+      })
+      .sort((a, b) => a.naam.localeCompare(b.naam));
+
+  const door = bak("doorgelaten", false);
+  const anders = bak("doorgelaten", true);
+  const onbekend = bak("onbekend");
+  const afgevallen = bak("afgevallen");
+  // Eigen categorie: gevonden, maar nog niet onderzocht. Niet wegfilteren (dit
+  // is de werkvoorraad), maar ook niet meetellen alsof ze beoordeeld zijn.
+  const nietOnderzocht = zichtbaar
+    .filter((f) => !oordelen.get(f.id)!.onderzocht)
+    .sort((a, b) => a.naam.localeCompare(b.naam));
+
+  // ── De vraag van de gebruiker (fase 3) ────────────────────────────────────
+  // De vijf antwoorden komen als URL-parameters binnen, zodat een uitkomst te
+  // delen en te herladen is. Er wordt pas gezocht als er iets gevraagd is:
+  // een lege pagina hoort niets te kosten.
+  const antwoorden: Antwoorden = {
+    plan: (zoekParams.plan ?? "").trim(),
+    doel: (DOELEN as readonly string[]).includes(zoekParams.doel ?? "")
+      ? (zoekParams.doel as Antwoorden["doel"])
+      : null,
+    fase: (PLANFASEN as string[]).includes(zoekParams.fase ?? "")
+      ? (zoekParams.fase as Antwoorden["fase"])
+      : null,
+    bedragband: (BEDRAGBANDEN as readonly string[]).includes(zoekParams.band ?? "")
+      ? (zoekParams.band as Antwoorden["bedragband"])
+      : null,
+    aanvrager: (AANVRAGERS as readonly string[]).includes(zoekParams.aanvrager ?? "")
+      ? (zoekParams.aanvrager as Antwoorden["aanvrager"])
+      : null,
+    publiek: (PUBLIEK_OPTIES as readonly string[]).includes(zoekParams.publiek ?? "")
+      ? (zoekParams.publiek as Antwoorden["publiek"])
+      : null,
+  };
+  const erIsGevraagd =
+    antwoorden.plan.length > 0 ||
+    antwoorden.doel !== null ||
+    antwoorden.fase !== null ||
+    antwoorden.bedragband !== null;
+
+  // Faalt de zoekstap (bijvoorbeeld omdat migratie 0056 nog niet is toegepast,
+  // of omdat het model onbereikbaar is), dan blijft de catalogus gewoon staan.
+  // Een kapotte zoekopdracht mag de pagina niet meenemen.
+  let uitkomst: Awaited<ReturnType<typeof zoekMetOpslag>> | null = null;
+  let zoekfout: string | null = null;
+  if (erIsGevraagd) {
+    try {
+      const catalogus = await laadCatalogus(supabase);
+      uitkomst = await zoekMetOpslag(supabase, id, profiel, antwoorden, catalogus);
+    } catch (e) {
+      zoekfout = e instanceof Error ? e.message : String(e);
+    }
+  }
+
+  const uit = uitkomst?.uitkomst ?? null;
+
   const basis = `/landgoed/${id}/fondsen`;
-  const bewaarZoek = zoek ? `&q=${encodeURIComponent(zoek)}` : "";
+  const vraagQuery = (over: Record<string, string | null>) => {
+    const p = new URLSearchParams();
+    const huidig: Record<string, string | null> = {
+      q: zoek || null,
+      status,
+      kostensoort,
+      bedrag: bedrag ? String(bedrag) : null,
+      ...over,
+    };
+    for (const [k, v] of Object.entries(huidig)) if (v) p.set(k, v);
+    const s = p.toString();
+    return s ? `${basis}?${s}` : basis;
+  };
 
   return (
     <div className="mx-auto max-w-5xl px-6 py-7">
       <div className="mb-1 flex items-baseline justify-between gap-4">
         <h1 className="text-[22px] font-bold">Fondsenradar</h1>
         <span className="text-[12.5px]" style={{ color: "var(--text-3)" }}>
-          {totaal} fondsen in de catalogus
+          {cijfers.totaal} onderzochte fondsen getoetst
+          {cijfers.niet_onderzocht > 0 && ` · ${cijfers.niet_onderzocht} nog niet onderzocht`}
         </span>
       </div>
       <p className="mb-6 max-w-2xl text-[13.5px] leading-snug" style={{ color: "var(--text-2)" }}>
         Private geldgevers die een goed plan willen steunen. Anders dan bij subsidies is er geen
-        aanspraak: u overtuigt een bestuur. Daarom staat hier niet wie het meeste geeft, maar bij wie
-        u terecht kunt en langs welke weg.
+        aanspraak: u overtuigt een bestuur. Hieronder staat wat er voor dit landgoed door de harde
+        filters komt — en, net zo belangrijk, waarom de rest afvalt.
       </p>
 
-      {/* Eerlijk over de stand van zaken. Zolang de matchmotor er niet is, is dit
-          een catalogus en geen kansenlijst — dat hoort de pagina zelf te zeggen. */}
       <div
         className="mb-6 rounded-lg border px-4 py-3 text-[13px] leading-snug"
         style={{ borderColor: "var(--border)", background: "rgba(245,158,11,0.06)" }}
       >
-        <strong>Nog niet toegespitst op dit landgoed.</strong> De matching tegen uw profiel — regio,
-        rechtsvorm, thema's, bedragen — wordt in de volgende stap gebouwd. Tot die tijd ziet u de
-        volledige catalogus.{" "}
-        {geaccordeerd === 0 ? (
-          <>
-            Er is nog <strong>geen enkel fonds geaccordeerd</strong>: alles staat als voorstel in het
-            systeem, afkomstig uit het bronnenonderzoek.
-          </>
-        ) : (
-          <>
-            {geaccordeerd} van de {totaal} fondsen zijn geaccordeerd.
-          </>
-        )}
+        <strong>Dit is de poort, nog geen rangschikking.</strong> Er staat hier bewust geen
+        matchscore: wat u ziet zijn de harde ja/nee/onbekend-filters (benaderbaarheid, geografie,
+        rechtsvorm, aanvrager, bedrag, timing, kostensoort). De inhoudelijke weging en de match op
+        uw plan komen in de volgende stap. Toetsing tegen: {profiel.rechtsvorm ?? "rechtsvorm onbekend"},{" "}
+        {profiel.gemeente ?? "gemeente onbekend"} ({profiel.provincie ?? "provincie onbekend"}).
       </div>
 
-      <div className="mb-7 grid gap-4 sm:grid-cols-3">
+      {/* HET VRAAGVELD — fase 3, de eerste functie waarmee de module iets doet
+          wat een lijst niet kan. Server-rendered GET-formulier: geen client-JS
+          nodig, en de vraag staat als URL-parameters in de link, dus een
+          uitkomst is te delen en te herladen zonder opnieuw te betalen (de
+          hash in opslag.ts zorgt daarvoor). */}
+      <form method="get" className="card mb-6 p-4 md:p-5">
+        <label htmlFor="plan" className="mb-1 block text-[13px] font-semibold">
+          Beschrijf uw plan
+        </label>
+        <p className="mb-2 text-[12px]" style={{ color: "var(--text-3)" }}>
+          Bijvoorbeeld: &ldquo;ik wil de historische laan herstellen&rdquo; of &ldquo;het koetshuis
+          herbestemmen tot werkplek voor een zorgpartij&rdquo;.
+        </p>
+        <textarea
+          id="plan"
+          name="plan"
+          rows={2}
+          defaultValue={antwoorden.plan}
+          className="w-full rounded-md border px-3 py-2 text-[13.5px]"
+          style={{ borderColor: "var(--border)" }}
+          placeholder="Wat wilt u doen?"
+        />
+
+        <div className="mt-4 grid gap-3 sm:grid-cols-2">
+          <VraagVeld
+            naam="doel"
+            label="Wat gaat u doen?"
+            waarde={antwoorden.doel ?? ""}
+            opties={[{ waarde: "", label: "weet ik nog niet" }, ...DOELEN.map((d) => ({ waarde: d, label: DOEL_LABELS[d] }))]}
+          />
+          <VraagVeld
+            naam="fase"
+            label="Waar staat het plan nu?"
+            waarde={antwoorden.fase ?? ""}
+            opties={[{ waarde: "", label: "weet ik nog niet" }, ...PLANFASEN.map((f) => ({ waarde: f, label: PLANFASE_LABELS[f] }))]}
+          />
+          <VraagVeld
+            naam="band"
+            label="Orde van grootte?"
+            waarde={antwoorden.bedragband ?? ""}
+            opties={[{ waarde: "", label: "weet ik nog niet" }, ...BEDRAGBANDEN.map((b) => ({ waarde: b, label: BEDRAGBAND_LABELS[b] }))]}
+          />
+          <VraagVeld
+            naam="aanvrager"
+            label="Wie zou aanvragen?"
+            waarde={antwoorden.aanvrager ?? ""}
+            opties={[{ waarde: "", label: "weet ik nog niet" }, ...AANVRAGERS.map((a) => ({ waarde: a, label: AANVRAGER_LABELS[a] }))]}
+          />
+          <VraagVeld
+            naam="publiek"
+            label="Komt er publiek bij?"
+            waarde={antwoorden.publiek ?? ""}
+            opties={[{ waarde: "", label: "weet ik nog niet" }, ...PUBLIEK_OPTIES.map((p) => ({ waarde: p, label: PUBLIEK_LABELS[p] }))]}
+          />
+        </div>
+
+        <div className="mt-4 flex items-center gap-2">
+          <button type="submit" className="btn btn-primary">
+            Zoek fondsen
+          </button>
+          {erIsGevraagd && (
+            <Link href={basis} className="btn btn-ghost btn-sm">
+              Wissen
+            </Link>
+          )}
+        </div>
+      </form>
+
+      {erIsGevraagd && (
+        <ZoekResultaat
+          fondsenId={id}
+          zoekfout={zoekfout}
+          uitkomst={uit}
+          uitOpslag={uitkomst?.uit_opslag ?? false}
+        />
+      )}
+
+      <details className="mb-6">
+        <summary className="cursor-pointer text-[13px] font-semibold" style={{ color: "var(--text-2)" }}>
+          Of blader door de hele catalogus
+        </summary>
+        <p className="mb-3 mt-2 max-w-2xl text-[12.5px] leading-snug" style={{ color: "var(--text-2)" }}>
+          Wat hieronder staat zijn de harde ja/nee/onbekend-filters, zonder inhoudelijke weging op uw
+          plan. Handig om te bladeren; voor een gerichte vraag is het veld hierboven sneller en
+          scherper.
+        </p>
+
+      <div className="mb-6 grid gap-4 sm:grid-cols-3">
         <RadarKaart
-          href={`${basis}?b=open`}
+          href={`${basis}#door`}
           icoon={IcoonGeld}
-          aantal={benaderbaar}
+          aantal={door.length}
           eenheid="fondsen"
-          titel="Direct benaderbaar"
-          uitleg="Publiek loket of een drempel die te nemen is. Hier kan een aanvraag uit voortkomen."
+          titel="Door de poort"
+          uitleg="Geen enkele harde filter valt hierop af. Hier kan een aanvraag van uzelf uit voortkomen."
           stip="grijs"
-          stipTekst="Open voor aanvragen"
-          voet="Nog zonder toets op uw landgoed"
+          stipTekst="Aanvraag mogelijk"
+          voet="Nog zonder inhoudelijke weging"
         />
         <RadarKaart
-          href={`${basis}#partner`}
+          href={`${basis}#anders`}
           icoon={IcoonWereld}
-          aantal={viaPartner}
+          aantal={anders.length}
           eenheid="fondsen"
-          titel="Alleen via een partner"
-          uitleg="Geven aan een organisatie die op uw landgoed actief wordt. U komt in hun begroting, niet in die van het fonds."
+          titel="Ander handelingsperspectief"
+          uitleg="Niet afgewezen, maar de actie is een andere: leg contact met een intermediair, of zoek een partner die aanvraagt."
           stip="amber"
-          stipTekst="Vraagt een partner, geen aanvraag"
-          voet="Ander handelingsperspectief"
+          stipTekst="Vraagt eerst iets anders"
+          voet="Zelf aanschrijven heeft geen zin"
         />
         <RadarKaart
-          href={`${basis}?b=onbekend`}
+          href={`${basis}#onbekend`}
           icoon={IcoonVinkje}
-          aantal={uitTeZoeken}
+          aantal={onbekend.length}
           eenheid="fondsen"
-          titel="Nog uit te zoeken"
-          uitleg="De bron zegt niet of en hoe u kunt aanvragen. Dit is de eerste verrijkingsbatch."
+          titel="Eerst uitzoeken"
+          uitleg="Onderzochte fondsen waarbij de bron op minstens één punt niets zegt. Uitdrukkelijk geen 'nee' — dit is navraagwerk, geen afwijzing."
           stip="amber"
           stipTekst="Onbekend is geen nee"
-          voet="Werk dat nog gedaan moet worden"
+          voet={`${afgevallen.length} vielen wel af`}
         />
       </div>
 
-      {/* Filter op benaderbaarheid. Bewust links en geen client-component:
-          de pagina is een leeslijst, geen formulier. */}
-      <div className="mb-5 flex flex-wrap items-center gap-1.5">
-        <Link
-          href={`${basis}${zoek ? `?q=${encodeURIComponent(zoek)}` : ""}`}
-          className={`tag ${!benaderFilter ? "tag-green" : "tag-gray"}`}
-        >
-          alles ({totaal})
+      {/* De vraag. Projectstatus is de timing-val (§6): vanaf 'gegund' knijpt de
+          poort alles af, en dat hoort de gebruiker zelf te kunnen zien. */}
+      <div className="mb-6 flex flex-wrap items-center gap-1.5 text-[12.5px]">
+        <span style={{ color: "var(--text-3)" }}>Projectstatus:</span>
+        <Link href={vraagQuery({ status: null })} className={`tag ${!status ? "tag-green" : "tag-gray"}`}>
+          niet opgegeven
         </Link>
-        {Object.entries(BENADERBAARHEID)
-          .sort((a, b2) => a[1].rang - b2[1].rang)
-          .map(([key, meta]) => {
-            const n = alle.filter((f) => f.benaderbaarheid === key).length;
-            if (n === 0) return null;
-            return (
-              <Link
-                key={key}
-                href={`${basis}?b=${key}${bewaarZoek}`}
-                className={`tag ${benaderFilter === key ? "tag-green" : "tag-gray"}`}
-              >
-                {meta.label} ({n})
-              </Link>
-            );
-          })}
+        {PROJECTSTATUSSEN.map((s) => (
+          <Link
+            key={s}
+            href={vraagQuery({ status: s })}
+            className={`tag ${status === s ? "tag-green" : "tag-gray"}`}
+          >
+            {STATUS_LABELS[s]}
+          </Link>
+        ))}
       </div>
 
-      {benaderFilter && BENADERBAARHEID[benaderFilter] && (
-        <p className="mb-5 text-[12.5px] leading-snug" style={{ color: "var(--text-2)" }}>
-          {BENADERBAARHEID[benaderFilter].uitleg}
-        </p>
+      {status && ["gegund", "gestart", "afgerond"].includes(status) && (
+        <div
+          className="mb-6 rounded-lg border px-4 py-3 text-[13px] leading-snug"
+          style={{ borderColor: "var(--border)", background: "rgba(220,38,38,0.06)" }}
+        >
+          <strong>Te laat voor financiering.</strong> Vrijwel geen enkel fonds financiert met
+          terugwerkende kracht. Is de opdracht gegund of de schop de grond in, dan valt vrijwel de
+          hele lijst af — niet omdat het plan niet deugt, maar omdat de aanvraag vóór gunning had
+          moeten liggen. Voor een volgende fase van hetzelfde project kan het wél.
+        </div>
       )}
 
-      {zichtbaar.length === 0 && (
-        <p className="py-10 text-center text-[13.5px]" style={{ color: "var(--text-3)" }}>
-          Geen fondsen die aan dit filter voldoen.
-        </p>
+      <div className="mb-6 flex flex-wrap items-center gap-1.5 text-[12.5px]">
+        <span style={{ color: "var(--text-3)" }}>Kostensoort:</span>
+        <Link
+          href={vraagQuery({ kostensoort: null })}
+          className={`tag ${!kostensoort ? "tag-green" : "tag-gray"}`}
+        >
+          niet opgegeven
+        </Link>
+        {Object.entries(KOSTENSOORT_LABELS).map(([k, label]) => (
+          <Link
+            key={k}
+            href={vraagQuery({ kostensoort: k })}
+            className={`tag ${kostensoort === k ? "tag-green" : "tag-gray"}`}
+          >
+            {label}
+          </Link>
+        ))}
+      </div>
+
+      {kostensoort && ["regulier_onderhoud", "exploitatie"].includes(kostensoort) && (
+        <div
+          className="mb-6 rounded-lg border px-4 py-3 text-[13px] leading-snug"
+          style={{ borderColor: "var(--border)", background: "rgba(245,158,11,0.06)" }}
+        >
+          <strong>Onderhoud en exploitatie zijn de categorie die bijna niemand financiert.</strong>{" "}
+          Er wordt geïnvesteerd, gerestaureerd en geprojecteerd, niet onderhouden. Herkader de vraag:
+          als restauratie van een monumentaal onderdeel, of als het wegwerken van achterstallig
+          onderhoud in één afgebakend project met begin en eind, komen er wél bronnen in beeld.
+        </div>
       )}
 
-      {BAKKEN.map((bak) => {
-        const rijen = zichtbaar
-          .filter((f) => bak.types.includes(f.aanvrager_type))
-          .sort((a, b2) => rang(a) - rang(b2) || a.naam.localeCompare(b2.naam));
-        if (rijen.length === 0) return null;
-        return (
-          <section key={bak.key} id={bak.key} className="mb-9 scroll-mt-6">
-            <h2 className="text-[16px] font-semibold">
-              {bak.titel}{" "}
-              <span className="font-normal" style={{ color: "var(--text-3)" }}>
-                ({rijen.length})
-              </span>
-            </h2>
-            <p
-              className="mb-3 mt-1 max-w-2xl text-[12.5px] leading-snug"
-              style={{ color: "var(--text-2)" }}
-            >
-              {bak.uitleg}
-            </p>
-            <div className="flex flex-col gap-2">
-              {rijen.map((f) => (
-                <FondsRij key={f.id} fonds={f} />
-              ))}
-            </div>
-          </section>
-        );
-      })}
+      <Bak
+        anker="door"
+        titel="Door de poort"
+        uitleg="Geen enkele harde filter valt hierop af en het landgoed is zelf een toegestane aanvrager."
+        rijen={door}
+        oordelen={oordelen}
+      />
+      <Bak
+        anker="anders"
+        titel="Niet afgewezen, maar de actie is een andere"
+        uitleg="Deze fondsen nemen geen directe aanvraag van u aan, of geven aan een organisatie die op uw landgoed actief wordt. Er valt geld te verdienen, maar via een ander."
+        rijen={anders}
+        oordelen={oordelen}
+      />
+      <Bak
+        anker="onbekend"
+        titel="Eerst uitzoeken"
+        uitleg="Op minstens één punt zegt de bron niets. Deze fondsen staan apart in plaats van gemengd tussen de rest, omdat een gok hier de verkeerde actie oplevert."
+        rijen={onbekend}
+        oordelen={oordelen}
+      />
+
+      {/* Nog niet onderzocht. Een ánder soort onwetendheid dan "onbekend":
+          daar hebben we gekeken en staat het er niet, hier is nog niet
+          gekeken. Dat verschil moet zichtbaar zijn, anders lijkt de motor het
+          niet te weten terwijl er simpelweg nog werk ligt. */}
+      {nietOnderzocht.length > 0 && (
+        <details className="mb-9">
+          <summary className="cursor-pointer text-[16px] font-semibold">
+            Nog niet onderzocht{" "}
+            <span className="font-normal" style={{ color: "var(--text-3)" }}>
+              ({nietOnderzocht.length})
+            </span>
+          </summary>
+          <p className="mb-3 mt-1 max-w-2xl text-[12.5px] leading-snug" style={{ color: "var(--text-2)" }}>
+            Dit zijn gevonden fondsen die nog een verrijkingsronde moeten krijgen: er is nog geen
+            bron gelezen, dus er is geen werkgebied, geen route en geen bedragband. Ze staan hier
+            omdat ze de werkvoorraad zijn — maar ze tellen niet mee in de cijfers hierboven, want
+            ze zijn niet beoordeeld. &quot;Onbekend&quot; hierboven betekent: we hebben gekeken en het
+            staat er niet.
+          </p>
+          <div className="flex flex-col gap-2">
+            {nietOnderzocht.map((f) => (
+              <FondsRegel key={f.id} fonds={f} oordeel={oordelen.get(f.id)!} />
+            ))}
+          </div>
+        </details>
+      )}
+
+      {/* Afgevallen — uitklapbaar, want dit is de langste stapel. Maar hij
+          verdwijnt niet: wat weggegooid is ziet niemand meer terug, en juist
+          hier staat wat er aan het landgoed zou moeten veranderen. */}
+      {afgevallen.length > 0 && (
+        <details className="mb-9">
+          <summary className="cursor-pointer text-[16px] font-semibold">
+            Afgevallen, en waarom{" "}
+            <span className="font-normal" style={{ color: "var(--text-3)" }}>
+              ({afgevallen.length})
+            </span>
+          </summary>
+          <p className="mb-3 mt-1 max-w-2xl text-[12.5px] leading-snug" style={{ color: "var(--text-2)" }}>
+            Deze fondsen blijven staan zodat u ziet dat ze bekeken zijn. Per fonds staat welke poort
+            hem tegenhield — dat is de informatie waarmee zichtbaar wordt wat er aan het landgoed of
+            aan de vraag zou moeten veranderen.
+          </p>
+          <div className="flex flex-col gap-2">
+            {afgevallen.map((f) => (
+              <FondsRegel key={f.id} fonds={f} oordeel={oordelen.get(f.id)!} />
+            ))}
+          </div>
+        </details>
+      )}
+
+      {/* Trechtercijfers (§9.7). Zonder deze cijfers is niet te zien of het
+          filter te streng staat. */}
+      <details className="mb-4">
+        <summary className="cursor-pointer text-[13px] font-semibold">Trechtercijfers</summary>
+        <p className="mb-2 mt-1 max-w-2xl text-[12.5px] leading-snug" style={{ color: "var(--text-2)" }}>
+          Per poort: hoeveel fondsen erdoor kwamen, hoeveel erop afvielen en bij hoeveel het onbekend
+          bleef. De noemer is het aantal <strong>onderzochte</strong> fondsen ({cijfers.totaal} van{" "}
+          {cijfers.totaal_in_catalogus} in de catalogus); de {cijfers.niet_onderzocht} nog niet
+          onderzochte voorstel-rijen tellen niet mee, anders meet u uw eigen achterstand in plaats
+          van de scherpte van het filter. Let op dezelfde beperking als bij de omgevingsradar: dit
+          meet alleen wat er in de catalogus staat — wat er nooit in kwam telt hier nergens mee.
+        </p>
+        <table className="w-full text-[12.5px]">
+          <thead>
+            <tr style={{ color: "var(--text-3)" }}>
+              <th className="py-1 text-left font-normal">poort</th>
+              <th className="py-1 text-right font-normal">door</th>
+              <th className="py-1 text-right font-normal">afgevallen</th>
+              <th className="py-1 text-right font-normal">onbekend</th>
+              <th className="py-1 text-right font-normal">hoofdreden</th>
+            </tr>
+          </thead>
+          <tbody>
+            {Object.entries(cijfers.per_poort).map(([naam, t]) => (
+              <tr key={naam} className="border-t" style={{ borderColor: "var(--border)" }}>
+                <td className="py-1">{naam.replace("_", " ")}</td>
+                <td className="py-1 text-right">{t.door}</td>
+                <td className="py-1 text-right">{t.af}</td>
+                <td className="py-1 text-right">{t.onbekend}</td>
+                <td className="py-1 text-right">
+                  {cijfers.hoofdreden[naam as keyof typeof cijfers.hoofdreden]}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <p className="mt-2 text-[12.5px]" style={{ color: "var(--text-3)" }}>
+          {cijfers.totaal} onderzocht → {cijfers.doorgelaten} doorgelaten, {cijfers.onbekend}{" "}
+          onbekend, {cijfers.afgevallen} afgevallen ({cijfers.met_actie} met een ander
+          handelingsperspectief). Daarnaast {cijfers.niet_onderzocht} fondsen die nog een
+          verrijkingsronde moeten krijgen.
+        </p>
+      </details>
+      </details>
     </div>
   );
 }
 
-// ── Eén fonds in de lijst ──────────────────────────────────────────────────
+// ── Het vraagveld: één keuzeveld ────────────────────────────────────────────
 
-function FondsRij({ fonds: f }: { fonds: Fonds }) {
-  const ben = BENADERBAARHEID[f.benaderbaarheid] ?? BENADERBAARHEID.onbekend;
-  const soort = SOORT_BRON[f.soort_bron];
-  const gebied = werkgebied(f);
-  const verdien = VERDIENMODEL[f.verdienmodel] ?? "";
+function VraagVeld({
+  naam,
+  label,
+  waarde,
+  opties,
+}: {
+  naam: string;
+  label: string;
+  waarde: string;
+  opties: { waarde: string; label: string }[];
+}) {
+  return (
+    <div>
+      <label htmlFor={naam} className="mb-1 block text-[12.5px] font-medium">
+        {label}
+      </label>
+      <select
+        id={naam}
+        name={naam}
+        defaultValue={waarde}
+        className="w-full rounded-md border px-2.5 py-1.5 text-[13px]"
+        style={{ borderColor: "var(--border)" }}
+      >
+        {opties.map((o) => (
+          <option key={o.waarde} value={o.waarde}>
+            {o.label}
+          </option>
+        ))}
+      </select>
+    </div>
+  );
+}
 
+// ── Het resultaat van de zoekopdracht ───────────────────────────────────────
+
+const ROUTE_LABELS: Record<string, string> = {
+  zelf: "u kunt zelf aanvragen",
+  partner: "via een partner",
+  intermediair: "via een intermediair",
+};
+
+function ZoekResultaat({
+  fondsenId,
+  zoekfout,
+  uitkomst,
+  uitOpslag,
+}: {
+  fondsenId: string;
+  zoekfout: string | null;
+  uitkomst: Awaited<ReturnType<typeof zoekMetOpslag>>["uitkomst"] | null;
+  uitOpslag: boolean;
+}) {
+  if (zoekfout) {
+    return (
+      <div
+        className="mb-8 rounded-lg border px-4 py-3 text-[13px] leading-snug"
+        style={{ borderColor: "var(--border)", background: "rgba(220,38,38,0.05)" }}
+      >
+        <strong>De zoekopdracht kon niet worden uitgevoerd.</strong> De catalogus hieronder blijft
+        gewoon bruikbaar. ({zoekfout})
+      </div>
+    );
+  }
+  if (!uitkomst) return null;
+
+  // De timing-val (§6): geen model aangeroepen, geen lijst getoond — alleen
+  // de reden waarom het te laat is.
+  if (uitkomst.te_laat) {
+    return (
+      <div
+        className="mb-8 rounded-lg border px-4 py-3 text-[13.5px] leading-snug"
+        style={{ borderColor: "var(--border)", background: "rgba(220,38,38,0.06)" }}
+      >
+        <strong>Voor dit plan bent u te laat.</strong> {uitkomst.te_laat.reden}
+        <div className="mt-1.5">{uitkomst.te_laat.wat_wel}</div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="mb-8">
+      <div className="mb-2 flex items-baseline justify-between gap-3">
+        <h2 className="text-[16px] font-semibold">
+          {uitkomst.fondsen.length > 0
+            ? `${uitkomst.fondsen.length} fonds${uitkomst.fondsen.length === 1 ? "" : "en"} die passen`
+            : "Geen match gevonden"}
+        </h2>
+        <span className="text-[11.5px]" style={{ color: "var(--text-3)" }}>
+          {uitOpslag ? "eerder berekend, geen nieuwe kosten" : `$${uitkomst.kosten.dollars.toFixed(4)}`}
+        </span>
+      </div>
+      <p className="mb-3 max-w-2xl text-[12.5px] leading-snug" style={{ color: "var(--text-2)" }}>
+        {uitkomst.toelichting}
+      </p>
+
+      {uitkomst.fondsen.length === 0 && uitkomst.wat_zou_helpen.length > 0 && (
+        <div
+          className="mb-4 rounded-lg border px-4 py-3 text-[13px] leading-snug"
+          style={{ borderColor: "var(--border)", background: "rgba(245,158,11,0.06)" }}
+        >
+          <strong>Wat zou helpen:</strong>
+          <ul className="mt-1 list-disc pl-5">
+            {uitkomst.wat_zou_helpen.map((w, i) => (
+              <li key={i}>{w}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {/* Een stapeling met volgorde, geen ranglijst (§9.3): gesorteerd op
+          slagingskans, met per fonds de route en de eerste stap. */}
+      <div className="flex flex-col gap-2.5">
+        {uitkomst.fondsen.map((f, i) => (
+          <article key={f.fonds_id} className="card p-4">
+            <div className="flex flex-wrap items-start justify-between gap-x-4 gap-y-1.5">
+              <h3 className="text-[14.5px] font-semibold leading-tight">
+                <Link href={`/landgoed/${fondsenId}/fondsen/${f.fonds_id}`} className="hover:underline">
+                  {i + 1}. {f.naam}
+                </Link>
+              </h3>
+              <div className="flex shrink-0 flex-wrap items-center gap-1.5">
+                <span className="tag tag-green">slagingskans {f.slagingskans}/100</span>
+                <span className="tag tag-gray" title="Hoeveel wij van dit fonds weten — een ander getal dan de slagingskans">
+                  matchbaarheid {f.matchbaarheid}/100
+                </span>
+              </div>
+            </div>
+
+            <p className="mt-1.5 text-[12.5px] leading-snug" style={{ color: "var(--text-2)" }}>
+              {f.waarom}
+            </p>
+            {f.citaat && (
+              <p
+                className="mt-1.5 border-l-2 pl-2.5 text-[12px] leading-snug"
+                style={{ borderColor: "var(--border)", color: "var(--text-3)" }}
+              >
+                &ldquo;{f.citaat}&rdquo;
+                {!f.citaat_gecontroleerd && " (kon niet worden teruggevonden in het profiel)"}
+              </p>
+            )}
+
+            <div className="mt-2 text-[12.5px]" style={{ color: "var(--text-2)" }}>
+              <strong>{ROUTE_LABELS[f.route] ?? f.route}.</strong> {f.route_uitleg}
+            </div>
+            <div className="mt-1 text-[12.5px] font-medium">→ {f.eerste_stap}</div>
+
+            {f.waarschuwingen.map((w) => (
+              <div key={w} className="mt-1.5 text-[12px]" style={{ color: "var(--text-3)" }}>
+                Let op: {w}
+              </div>
+            ))}
+          </article>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ── Bakken en rijen ────────────────────────────────────────────────────────
+
+function Bak({
+  anker,
+  titel,
+  uitleg,
+  rijen,
+  oordelen,
+}: {
+  anker: string;
+  titel: string;
+  uitleg: string;
+  rijen: FondsRij[];
+  oordelen: Map<string, FondsOordeel>;
+}) {
+  if (rijen.length === 0) return null;
+  return (
+    <section id={anker} className="mb-9 scroll-mt-6">
+      <h2 className="text-[16px] font-semibold">
+        {titel}{" "}
+        <span className="font-normal" style={{ color: "var(--text-3)" }}>
+          ({rijen.length})
+        </span>
+      </h2>
+      <p className="mb-3 mt-1 max-w-2xl text-[12.5px] leading-snug" style={{ color: "var(--text-2)" }}>
+        {uitleg}
+      </p>
+      <div className="flex flex-col gap-2">
+        {rijen.map((f) => (
+          <FondsRegel key={f.id} fonds={f} oordeel={oordelen.get(f.id)!} />
+        ))}
+      </div>
+    </section>
+  );
+}
+
+const UITKOMST_TAG: Record<string, { label: string; cls: string }> = {
+  doorgelaten: { label: "door de poort", cls: "tag-green" },
+  onbekend: { label: "eerst uitzoeken", cls: "tag-gray" },
+  afgevallen: { label: "valt af", cls: "tag-red" },
+};
+
+function FondsRegel({ fonds: f, oordeel: o }: { fonds: FondsRij; oordeel: FondsOordeel }) {
+  const tag = UITKOMST_TAG[o.uitkomst];
   return (
     <article className="card p-4">
       <div className="flex flex-wrap items-start justify-between gap-x-4 gap-y-1.5">
@@ -367,52 +833,59 @@ function FondsRij({ fonds: f }: { fonds: Fonds }) {
           )}
         </h3>
         <div className="flex shrink-0 flex-wrap items-center gap-1.5">
-          <span className={`tag ${ben.cls}`}>{ben.label}</span>
-          {soort && f.soort_bron !== "fonds" && (
-            <span className={`tag ${soort.cls}`}>{soort.label}</span>
-          )}
-          {/* Gissing en feit uit elkaar houden (§2). Een fonds dat alleen uit een
-              sector-tag komt, mag nooit als vastgesteld overkomen. */}
+          <span className={`tag ${tag.cls}`}>{tag.label}</span>
+          {f.soort_bron === "lening" && <span className="tag tag-amber">lening</span>}
+          {/* Gissing en feit uit elkaar houden (§2). */}
           {f.herkomst === "afgeleid_tag" && (
-            <span className="tag tag-gray" title="Afgeleid uit een sector-tag, niet nagelezen op de eigen bron">
+            <span
+              className="tag tag-gray"
+              title="Afgeleid uit een sector-tag, niet nagelezen op de eigen bron"
+            >
               niet geverifieerd
             </span>
           )}
         </div>
       </div>
 
-      {f.samenvatting && (
-        <p className="mt-1.5 text-[12.5px] leading-snug" style={{ color: "var(--text-2)" }}>
-          {f.samenvatting.length > 240 ? `${f.samenvatting.slice(0, 240)}…` : f.samenvatting}
+      <p className="mt-1.5 text-[12.5px] leading-snug" style={{ color: "var(--text-2)" }}>
+        {o.reden}
+      </p>
+
+      {o.acties.map((a) => (
+        <p key={a} className="mt-1.5 text-[12.5px] font-medium leading-snug">
+          → {a}
         </p>
+      ))}
+
+      {o.herkaderingen.map((h) => (
+        <p key={h} className="mt-1.5 text-[12.5px] leading-snug" style={{ color: "var(--text-2)" }}>
+          Herkadering: {h}
+        </p>
+      ))}
+
+      {o.waarschuwingen.length > 0 && (
+        <ul className="mt-1.5 text-[12px] leading-snug" style={{ color: "var(--text-3)" }}>
+          {o.waarschuwingen.map((w) => (
+            <li key={w}>Nog uit te zoeken: {w}</li>
+          ))}
+        </ul>
       )}
 
-      <div
-        className="mt-2.5 flex flex-wrap gap-x-4 gap-y-1 text-[12px]"
-        style={{ color: "var(--text-3)" }}
-      >
-        {gebied && <span>Werkgebied: {gebied}</span>}
-        {f.bedrag_indicatie ? (
-          <span>Bedrag: {f.bedrag_indicatie}</span>
-        ) : (
-          <span>Bedrag: niet gepubliceerd</span>
-        )}
-        {verdien && <span>Opbrengst: {verdien}</span>}
-      </div>
-
-      {/* Het letterlijke citaat waarop de benaderbaarheid berust. Dit staat er
-          omdat de kosten van een fout asymmetrisch zijn: een fonds ten onrechte
-          aanschrijven kost goodwill in een kleine sector (§3). */}
-      {f.benaderwijze_notitie && (
-        <p
-          className="mt-2 border-l-2 pl-2.5 text-[12px] leading-snug"
-          style={{ borderColor: "var(--border)", color: "var(--text-3)" }}
-        >
-          {f.benaderwijze_notitie.length > 200
-            ? `${f.benaderwijze_notitie.slice(0, 200)}…`
-            : f.benaderwijze_notitie}
-        </p>
-      )}
+      <details className="mt-2">
+        <summary className="cursor-pointer text-[12px]" style={{ color: "var(--text-3)" }}>
+          alle zeven poorten
+        </summary>
+        <ul className="mt-1 flex flex-col gap-1 text-[12px]" style={{ color: "var(--text-3)" }}>
+          {o.poorten.map((po) => (
+            <li key={po.poort}>
+              <span className={`tag ${UITKOMST_TAG[po.uitkomst].cls}`}>
+                {po.poort.replace("_", " ")}
+              </span>{" "}
+              {po.reden}
+            </li>
+          ))}
+        </ul>
+      </details>
     </article>
   );
 }

@@ -1,0 +1,58 @@
+{
+  "naam": "Stichting Fonds voor de Geld- en Effectenhandel",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://www.sfge.nl/",
+      "jaar": null,
+      "gelezen": true
+    },
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://sfge.nl/index.php/werkterrein/",
+      "jaar": null,
+      "gelezen": true
+    },
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://sfge.nl/index.php/aanvragen/",
+      "jaar": null,
+      "gelezen": true
+    },
+    {
+      "soort": "anbi_publicatie",
+      "url": "https://www.fondseninnederland.nl/fonds/stichting-fonds-voor-de-geld-en-effectenhandel",
+      "jaar": null,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "Het Fonds voor de Geld- en Effectenhandel heeft tot doel onderzoek en belangstelling op het gebied van het bank- en effectenbedrijf te stimuleren. Daarnaast is het Fonds actief op gebied van steunen van culturele, educatieve en sociale activiteiten.",
+  "benaderbaarheid": "open",
+  "benaderwijze_notitie": "\"Aanvragen kunnen digitaal worden ingediend met behulp van ons digitaal aanvraagformulier. In het formulier vult u in zes stappen de gevraagde informatie in over uw organisatie en het project.\" (sfge.nl/index.php/aanvragen/)",
+  "aanvrager_type": "onbekend",
+  "geo_niveau": null,
+  "geo_waarden": [],
+  "bedrag_min": 500,
+  "bedrag_max": 1500,
+  "bedrag_indicatie": "Een gebruikelijke bijdrage bedraagt € 500 à € 1500.",
+  "cofinanciering_vereist": null,
+  "uitsluitingen": [
+    "Beurzen voor het bachelor- en mastertraject (\"Geen beurzen worden verstrekt voor het bachelor- en mastertraject.\")",
+    "Grootschalige projecten, feitelijk uitgesloten: \"kleinschalige en individuele aanvragen [maken] een grotere kans dan grootschalige projecten, waaraan het Fonds geen relevante bijdrage kan leveren\""
+  ],
+  "kostensoort": [
+    "onderzoek"
+  ],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Het fonds is inhoudelijk gericht op bank- en effectenwezen, maar noemt daarnaast expliciet een brede tweede poot: \"Daarnaast is het Fonds actief op gebied van steunen van culturele, educatieve en sociale activiteiten.\" Binnen cultuur ligt de focus op \"literair-culturele studies of activiteiten, alsmede (klassieke) muziekbeoefening\", met de toevoeging \"Andere culturele activiteiten worden niet op voorhand uitgesloten.\" Een landgoed komt hier niet zelf als eigenaar binnen, maar kan wel locatie/decor zijn in de begroting van een culturele organisatie (bijvoorbeeld een concertreeks of literair programma op het landgoed). Bedragen (€500-€1500) sluiten fysiek herstelwerk uit.",
+    "partnertype": "Culturele of muziekorganisatie (bv. concertstichting, literair festival) die een activiteit op het landgoed organiseert"
+  },
+  "niet_gevonden": [
+    "Beleidsplan-PDF: niet aanwezig onder 'Bijlagen en links' op de FIN-pagina en niet op sfge.nl",
+    "Jaarlijkse Verklaring FIN Code Goed Bestuur: niet gevonden op de FIN-pagina",
+    "Werkgebied/geografische beperking: nergens vermeld",
+    "Cofinancieringseis: nergens vermeld",
+    "Uitsluitingslijst: bestaat niet als expliciete lijst"
+  ]
+}

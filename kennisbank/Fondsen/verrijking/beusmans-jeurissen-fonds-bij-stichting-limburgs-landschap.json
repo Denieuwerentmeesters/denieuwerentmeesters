@@ -1,0 +1,59 @@
+{
+  "naam": "Beusmans-Jeurissen Fonds (bij Stichting het Limburgs Landschap)",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://beusmans-jeurissenfonds.nl/project/stichting-limburgs-landschap/",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://beusmans-jeurissenfonds.nl/aanvragen/",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "website",
+      "url": "https://www.cultuurfonds.nl/provinciale-afdelingen/limburg",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "In 2020 door het echtpaar Beusmans-Jeurissen opgericht naamfonds dat samenwerkt met Stichting het Limburgs Landschap, gericht op \"het veiligstellen van waardevolle landschappen en natuurgebieden in Limburg, inclusief monumenten\", en dat projecten steunt \"in het bijzonder in de omgeving van Sittard, waar het echtpaar woont\". Huidige focus: de Ruine Stein, het Spaubekerbos en Marissen.",
+  "benaderbaarheid": "gesloten",
+  "benaderwijze_notitie": "\"In verband met ontwikkelingen binnen onze stichting is het vanaf 1 januari 2026 tijdelijk niet mogelijk nieuwe aanvragen in te dienen.\" De organisatie beperkt zich tot donaties via bestaande samenwerkingsverbanden en eerder aangegane meerjarige verplichtingen. Let op: het woord 'tijdelijk' - dit is een sluiting op termijn, geen opheffing.",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "regio",
+  "geo_waarden": [
+    "omgeving Sittard",
+    "Stein",
+    "Spaubeek",
+    "Beek (L)",
+    "Limburg"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": "Geen gepubliceerd maximum. Feitelijke toekenningen blijkens de projectpagina: 2024 EUR 62.704 voor Kasteelpark Stein plus EUR 3.882 landaankopen; 2023 EUR 14.791 grondaankoop; 2022 EUR 21.267,50 voor historische parkaanleg.",
+  "cofinanciering_vereist": false,
+  "uitsluitingen": [
+    "nieuwe aanvragen vanaf 1 januari 2026 (tijdelijk gesloten)",
+    "projecten buiten Limburg / buiten de omgeving Sittard"
+  ],
+  "kostensoort": [
+    "investering",
+    "restauratie"
+  ],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Zeer relevant qua inhoud: het fonds financierde blijkens de eigen projectpagina \"EUR 21.267,50 voor historische parkaanleg\" en \"EUR 62.704 voor Kasteelpark Stein\" - precies de combinatie van historisch groen en kasteelensemble die een landgoed kenmerkt, plus grondaankopen. De route loopt echter via Stichting het Limburgs Landschap als uitvoerende partner; en vanaf 1 januari 2026 zijn nieuwe aanvragen tijdelijk niet mogelijk. Niet als niet_relevant gemarkeerd: de sluiting is expliciet tijdelijk en het inhoudelijke profiel is een van de best passende in deze werklijst.",
+    "partnertype": "Stichting het Limburgs Landschap, of een andere natuur-/erfgoedorganisatie waarmee het fonds een bestaand samenwerkingsverband heeft. Het fonds werkt via meerjarige verplichtingen met vaste partners, niet via losse projectaanvragen."
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "Criteria, voorwaarden en uitsluitingen: de aanvraagpagina geeft die niet; de pagina 'donatiebeleid en algemene voorwaarden' is niet apart uitgelezen.",
+    "Tot wanneer de tijdelijke sluiting duurt.",
+    "Of het gelijknamige CultuurFonds op Naam bij Cultuurfonds Limburg dezelfde geldstroom is als deze zelfstandige stichting.",
+    "Jaarverslag of ANBI-publicatie van de stichting."
+  ]
+}

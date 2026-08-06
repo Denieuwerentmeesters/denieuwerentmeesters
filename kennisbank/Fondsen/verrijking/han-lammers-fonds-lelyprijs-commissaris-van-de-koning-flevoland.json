@@ -1,0 +1,55 @@
+{
+  "naam": "Han Lammers Fonds / Lelyprijs (Commissaris van de Koning Flevoland)",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://www.flevoland.nl/wie-zijn-we/commissaris-van-de-koning/fondsen",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://www.flevoland.nl/wat-doen-we/cultuur-en-erfgoed/cultuur/han-lammers-fonds",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "Han Lammers Fonds: \"ondersteunt jonge Flevolanders, die een kunst en cultuur opleiding volgen en hun talent verder willen ontwikkelen\" via een jaarlijkse beurs van EUR 5.000. Lelyprijs: jaarlijkse prijs van het Cultuurfonds Flevoland \"aan personen of verenigingen die zich hebben ingezet voor cultuur of natuur in Flevoland\", bestaande uit EUR 5.000 plus een kunstwerk.",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "Han Lammers Fonds: \"Om in aanmerking te komen voor de beurs uit het fonds, moet je voor 28 augustus 2026 een aanvraag indienen met het onderstaande formulier\" - een individuele beurs met leeftijdsgrens 18-25 jaar en woonplaatseis Flevoland. De Lelyprijs is een prijs die wordt toegekend, geen aanvraagbare regeling; de pagina noemt geen indienings- of voordrachtprocedure.",
+  "aanvrager_type": "nvt",
+  "geo_niveau": "provincie",
+  "geo_waarden": [
+    "Flevoland"
+  ],
+  "bedrag_min": 5000,
+  "bedrag_max": 5000,
+  "bedrag_indicatie": "Han Lammers Fonds: eenmaal per jaar een beurs van EUR 5.000 aan een persoon. Lelyprijs: EUR 5.000 plus het kunstwerk 'Geven' van Siemen Bolhuis.",
+  "cofinanciering_vereist": false,
+  "uitsluitingen": [
+    "aanvragers ouder dan 25 of jonger dan 18 jaar",
+    "aanvragers die niet in Flevoland wonen",
+    "organisaties en projecten (het HLF is uitsluitend een individuele talentbeurs)",
+    "aanvragers wier toekomst niet in de professionele beoefening van kunst en cultuur ligt"
+  ],
+  "kostensoort": [
+    "personeel"
+  ],
+  "landgoed_relevantie": {
+    "route": "niet_relevant",
+    "onderbouwing": "Het Han Lammers Fonds is uitsluitend een individuele talentbeurs: \"Je bent tussen de 18 en 25 jaar\", \"Je woont in Flevoland\", \"Je toekomst ligt in de professionele beoefening van kunst en cultuur.\" Er is geen enkele denkbare route waarlangs een landgoed, een landgoedstichting of een partnerorganisatie hier middelen voor een landgoedopgave uit krijgt: het geld gaat naar een persoon voor de eigen ontwikkeling. De Lelyprijs is een erkenningsprijs achteraf, geen financieringsinstrument - hoogstens denkbaar als eer voor iemand die zich \"heeft ingezet voor cultuur of natuur in Flevoland\", maar niet als route naar projectgeld. NB: Flevoland heeft nauwelijks historische landgoederen, wat de relevantie verder beperkt.",
+    "partnertype": null
+  },
+  "onderliggende_fondsen": [
+    {
+      "naam": "Lelyprijs (Cultuurfonds Flevoland)",
+      "relevant": false,
+      "reden": "erkenningsprijs van EUR 5.000 plus kunstwerk voor personen of verenigingen die zich hebben ingezet voor cultuur of natuur in Flevoland; geen aanvraagbare projectfinanciering"
+    }
+  ],
+  "niet_gevonden": [
+    "Een voordracht- of nominatieprocedure voor de Lelyprijs: niet op de pagina van de provincie; het Cultuurfonds Flevoland heeft geen eigen afdelingspagina in deze werklijst.",
+    "Statuten of ANBI-publicatie van Stichting Han Lammers Fonds.",
+    "Of het Cultuurfonds Flevoland naast de Lelyprijs ook reguliere provinciale projectbijdragen toekent (waarschijnlijk wel, als provinciale afdeling, maar niet geverifieerd binnen deze opdracht)."
+  ]
+}

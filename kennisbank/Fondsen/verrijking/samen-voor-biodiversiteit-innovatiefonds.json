@@ -1,0 +1,41 @@
+{
+  "naam": "'Samen voor Biodiversiteit' Innovatiefonds (Stichting Deltaplan Biodiversiteitsherstel)",
+  "bronnen": [
+    {"soort": "website", "url": "https://www.samenvoorbiodiversiteit.nl/activiteiten/innovatiefonds", "jaar": 2026, "gelezen": true},
+    {"soort": "aanvraagvoorwaarden", "url": "https://www.samenvoorbiodiversiteit.nl/innovatiefonds-2022/criteria-innovatiefonds-2022.pdf", "jaar": 2022, "gelezen": true}
+  ],
+  "doelstelling": "\"Het Samen voor Biodiversiteit Innovatiefonds, een initiatief van Stichting Deltaplan Biodiversiteitsherstel, stimuleert innovatieve samenwerkingen tussen burgers en grondgebruikers zoals boeren, terreinbeherende organisaties en (lokale) overheden. Het fonds is gericht op het versterken van biodiversiteit in specifieke gebieden door het ondersteunen van vernieuwende en impactvolle projecten die bijdragen aan een duurzaam herstel van de natuur.\"",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "\"U dient een aanvraag in via de website www.samenvoorbiodiversiteit.nl.\" en \"Het Innovatiefonds opent jaarlijks voor nieuwe aanvragen.\" Harde drempel: \"Het projectvoorstel wordt ingediend door een samenwerkingsverband van verschillende partijen, denk bijvoorbeeld aan boeren, terreinbeherende organisaties, bedrijven, (lokale) overheden, enzovoorts.\" - een solo-aanvrager valt af. Let op: de aanvraagpagina uit de werklijst geeft nu 404 en de site beschrijft 2024 als laatste ronde; actuele openstelling niet vastgesteld.",
+  "aanvrager_type": "beide",
+  "geo_niveau": "landelijk",
+  "geo_waarden": ["Nederland"],
+  "bedrag_min": null,
+  "bedrag_max": 20000,
+  "bedrag_indicatie": "\"De aanvraag betreft een eenmalige subsidie van maximaal EUR 20.000,-. Aanvragen voor een bedrag lager dan EUR 20.000,- komen ook in aanmerking voor een bijdrage.\" Rondebudget 2022: \"Dankzij een bijdrage van De Hoge Dennen is er voor 2022 EUR 100.000 beschikbaar om lokale projecten te ondersteunen.\" (bedragen per ronde 2022; latere rondes niet gepubliceerd)",
+  "cofinanciering_vereist": false,
+  "uitsluitingen": [
+    "Kosten voor het opstellen van een (project)plan",
+    "Kosten voor het opzetten van een organisatie",
+    "Structurele huurkosten (bijv. van een kantoor)",
+    "Salariskosten van aanvragers",
+    "Aankoop van grond",
+    "Kosten gericht op het vermarkten van producten",
+    "\"Projecten met een commerciele insteek, waarbij het verkopen van een product een doel is.\""
+  ],
+  "kostensoort": ["investering"],
+  "landgoed_relevantie": {
+    "route": "zelf",
+    "onderbouwing": "Het fonds richt zich expliciet op grondgebruikers en op fysieke landschapsingrepen: \"stimuleert samenwerkingen tussen burgers en andere grondgebruikers zoals boeren, terreinbeherende organisaties en (lokale) overheden om de biodiversiteit te versterken\" en \"Dit jaar worden projecten die streekeigen landschapselementen realiseren hoger gewaardeerd.\" Vergoed worden \"Aanschaf van (plant)materiaal\" en \"Algemene werkzaamheden\" - precies poelen, houtwallen en singels. Een landgoed kan zelf indienen, mits het optreedt binnen een samenwerkingsverband en burgers een actieve rol krijgen: \"Projecten waar burgers een actieve bijdrage leveren aan het project scoren hoger in de beoordeling.\" Wel is er een risico bij een commercieel geexploiteerd landgoed: projecten \"met een commerciele insteek, waarbij het verkopen van een product een doel is\" vallen af. Ook geldt: \"Langjarig beheer en onderhoud van het project is ook na afloop van de financiering geborgd.\"",
+    "partnertype": null
+  },
+  "onderliggende_fondsen": [
+    {"naam": "Subsidieaanvraag landschapselementen (Deltaplan Biodiversiteitsherstel)", "relevant": true, "reden": "\"Oproep voor projectplannen voor de aanleg van landschapselementen op landbouwgrond\" - aparte, actieve regeling van dezelfde stichting, direct relevant voor landgoedgronden in agrarisch gebruik"},
+    {"naam": "Subsidieaanvraag bijenlandschappen (Deltaplan Biodiversiteitsherstel)", "relevant": true, "reden": "\"Oproep voor projectplannen voor de aanleg van bijenlandschappen en de versterking van bestuivers\"; nieuwe ronde gestart 2 februari 2026"}
+  ],
+  "niet_gevonden": [
+    "Actuele (2025/2026) criterialijst of openstaande ronde van het Innovatiefonds; site beschrijft ronde 2024 als laatste, en /innovatiefonds/aanvraag uit de werklijst geeft 404",
+    "Bedragen en deadline voor rondes na 2022; de vastgelegde criteria zijn die van de ronde 2022",
+    "Geografische afbakening binnen Nederland"
+  ]
+}

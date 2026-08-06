@@ -1,0 +1,45 @@
+{
+  "naam": "Stichting Dr. Hendrik Muller's Vaderlandsch Fonds",
+  "bronnen": [
+    {"soort": "website", "url": "https://www.mullerfonds.nl/", "jaar": 2026, "gelezen": true},
+    {"soort": "anbi_publicatie", "url": "https://www.mullerfonds.nl/#overons", "jaar": 2025, "gelezen": true},
+    {"soort": "aanvraagvoorwaarden", "url": "https://www.mullerfonds.nl/subsidie.php", "jaar": 2026, "gelezen": true}
+  ],
+  "doelstelling": "Statutair: \"Werkzaam zijn in het belang van het Nederlandse volk\" en \"Werkzaam zijn als instelling van weldadigheid ten opzichte van Nederlanders\". In de praktijk: studiebeurzen voor \"jonge, veelbelovende Nederlanders\" plus \"bijdragen aan diverse culturele doelen van regionale en landelijke betekenis\": wetenschappelijke publicaties en catalogi, \"Restauratie van rijksmonumenten zoals kerken, orgels en kunstvoorwerpen\", culturele prijzen, en \"Eventuele andere culturele en wetenschappelijke doelen ter beoordeling van het bestuur\".",
+  "benaderbaarheid": "open",
+  "benaderwijze_notitie": "\"Aanvragen kunnen alleen online worden ingediend. Hieronder kunt u een aanvraag starten door op de button 'subsidie aanvragen' te klikken.\" Geen deadlines, wel een indieningstermijn: \"Wij raden u aan om de aanvraag ruim op tijd, maar minimaal drie maanden vóór de start van uw project, in te dienen.\" En: \"Alleen complete aanvraagdossiers worden in de vergadering behandeld. Wij streven ernaar om alle aanvragen binnen vier maanden te behandelen.\"",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "landelijk",
+  "geo_waarden": ["Nederland"],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": "Geen bedragen gepubliceerd; wel afleidbaar uit de eigen jaarcijfers 2025: \"In 2025 werden er 362 aanvragen ingediend waarvan er 217 zijn gehonoreerd. In totaal is er 656.835 euro toegekend aan giften voor restauraties, publicaties en culturele activiteiten\" — gemiddeld circa € 3.000 per toekenning. Honoreringspercentage projecten circa 60%.",
+  "cofinanciering_vereist": false,
+  "uitsluitingen": [
+    "Monumenten die voor privédoeleinden worden gebruikt: \"Monumenten die voor privédoeleinden worden gebruikt, komen niet in aanmerking voor een bijdrage.\"",
+    "Groot onderhoud, nieuwbouw en verduurzaming: \"Ook aan de kosten voor groot onderhoud, nieuwbouw of verduurzaming draagt het fonds niet bij.\"",
+    "Monumenten zonder rijksmonumentstatus of zonder publieke toegankelijkheid",
+    "Kunstenaarsboeken en monografieën van hedendaagse kunstenaars (behalve belangrijke oeuvreoverzichten)",
+    "Kosten voor onderzoek, schrijven en/of vertalen bij publicaties (alleen productiekosten)",
+    "Dissertaties anders dan handelsedities",
+    "Tijdelijke tentoonstellingen voor hedendaagse kunst, muzikale opnames of artistieke films",
+    "Organisaties met ruime reserves, eigen vermogen of structurele overheidssubsidies, tenzij \"het project aantoonbaar uitstijgt boven de reguliere activiteiten\""
+  ],
+  "kostensoort": ["restauratie"],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Het monumentenspoor is inhoudelijk relevant maar wordt door twee zinnen sterk ingeperkt. Positief: \"Het Hendrik Mullerfonds ondersteunt de restauratie van publiek toegankelijke rijksmonumenten, zoals kerken, orgels, molens en standbeelden en de restauratie van cultuurgoederen.\" Een landgoedkapel, grafmonument, standbeeld, tuinbeeld of ander cultuurgoed op een structureel opengesteld landgoed past daarin, evenals restauratie van roerend erfgoed (interieurstukken, schilderijen) in een opengesteld huis. Negatief en beslissend voor de route: \"Monumenten die voor privédoeleinden worden gebruikt, komen niet in aanmerking voor een bijdrage\" — een bewoond landhuis of dienstwoning valt daarmee af. En de scherpe breuklijn onderhoud/restauratie ligt hier ongunstig: \"Ook aan de kosten voor groot onderhoud, nieuwbouw of verduurzaming draagt het fonds niet bij\" — alleen echte restauratie telt. Bedragen zijn bovendien klein (gemiddeld circa € 3.000), dus dit is een aanvullend fonds. De aanvraag moet lopen via een instelling of organisatie met een officiële naam, rekeningnummer en financieel jaarverslag; particuliere eigenaren zijn feitelijk uitgesloten via de privégebruik-clausule.",
+    "partnertype": "Stichting of vereniging die een publiek toegankelijk rijksmonument of cultuurgoed beheert: kerk- of kapelstichting, museum-, kasteel- of huisstichting, of een stichting tot behoud van het landgoed. Het object mag niet voor privédoeleinden worden gebruikt."
+  },
+  "onderliggende_fondsen": [
+    {"naam": "Dr. Hendrik Muller Prijs (KNAW)", "relevant": false, "reden": "Tweejaarlijkse prijs van € 25.000 voor onderzoekers in de geestes- of sociale wetenschappen, toegekend onder auspiciën van de KNAW. Geen aanvraagbare route voor een landgoed."},
+    {"naam": "Studiebeurzen", "relevant": false, "reden": "Beurzen voor studenten en promovendi op universitair niveau; geen landgoedroute."}
+  ],
+  "niet_gevonden": [
+    "Maximumbedragen per categorie: nergens gepubliceerd; alleen af te leiden uit het jaartotaal en het aantal toekenningen.",
+    "Of historische groenaanleg, tuinornamenten of landschapselementen als 'cultuurgoed' of rijksmonument in aanmerking komen — de opsomming noemt kerken, orgels, molens, standbeelden en cultuurgoederen.",
+    "Hoe 'publiek toegankelijk' en 'privédoeleinden' zich verhouden bij een deels bewoond, deels opengesteld landhuis: dat is niet uitgewerkt en zou een telefoontje vergen (070 3831241).",
+    "De in 2025 herziene categorie-indeling van het donatiebeleid ('nieuwe indeling van de categorieën die ook gebruikt zal worden in het nieuwe aanvraagportaal') is nog niet op de publieke pagina's zichtbaar.",
+    "Het Standaardformulier ANBI vermogensfondsen (downloadbaar PDF) is niet uitgelezen."
+  ]
+}

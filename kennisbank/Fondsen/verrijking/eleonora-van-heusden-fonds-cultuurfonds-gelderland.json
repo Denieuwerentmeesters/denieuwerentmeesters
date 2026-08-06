@@ -1,0 +1,61 @@
+{
+  "naam": "Eleonora van Heusden Fonds (Cultuurfonds Gelderland)",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://www.cultuurfonds.nl/fondsen/eleonora-van-heusden-fonds",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "website",
+      "url": "https://www.cultuurfonds.nl/provinciale-afdelingen/gelderland",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://www.cultuurfonds.nl/aanvragen/voorwaarden",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "Draagt bij aan projecten in de (klassieke) muziek en de restauratie van molens.",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "Geen eigen loket: “Fondsen op naam dragen bij aan projecten met een bepaald doel. Het bestuur bepaalt welke bijdragen uit welk budget worden gesteund. Je kan in je aanvraag wel een suggestie doen.” Je dient dus een gewone aanvraag in bij het Cultuurfonds Gelderland en noemt dit fonds als suggestie. Deadlines vooraanvraag: 1 april / 1 juli / 1 oktober / 8 januari. Drempel: “Je totale projectbegroting is minimaal € 15.000.”",
+  "aanvrager_type": "beide",
+  "geo_niveau": "regio",
+  "geo_waarden": [
+    "Gelderland (afdeling Cultuurfonds Gelderland behandelt de aanvragen)",
+    "Toekenningen geconcentreerd rond Wageningen, Arnhem, Nijmegen, Zutphen, Deventer, Brummen, Ruurlo, Nunspeet"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": "Geen bedragen of jaarbudget gepubliceerd voor dit fonds op naam. Wel de landelijke drempel: “Je totale projectbegroting is minimaal € 15.000.”",
+  "cofinanciering_vereist": null,
+  "uitsluitingen": [
+    "“Het project betreft niet groot of regulier onderhoud.” (voorwaarde bij Restauratie)",
+    "“Je project is geen reguliere activiteit”",
+    "“Je project heeft geen polariserend effect en is niet primair religieus, sociaal-maatschappelijk of politiek.”",
+    "“Je project richt zich op andere doelen dan alleen fondsenwerving.”",
+    "“Je organisatie heeft dit jaar nog geen toekenning ontvangen van het Cultuurfonds”",
+    "“Je hebt voor dit project nog niet eerder een aanvraag gedaan bij het Cultuurfonds”",
+    "Natuuraanleg: “Het project gaat niet om de aanleg van recreatieve infrastructuur (zoals bruggen en paden).”",
+    "Buiten de twee doelen: het fonds noemt alleen “(klassieke) muziek en de restauratie van molens” — ander groen of gebouwd erfgoed valt buiten de doelstelling."
+  ],
+  "kostensoort": [
+    "restauratie",
+    "investering"
+  ],
+  "landgoed_relevantie": {
+    "route": "zelf",
+    "onderbouwing": "“Draagt bij aan projecten in de (klassieke) muziek en de restauratie van molens.” Water- en windmolens zijn een klassiek landgoedonderdeel; in de toekenningenlijst staat letterlijk “Houtzagerij Agneta V.O.F., AALTEN — restauratie molen Agneta-Ruurlo te Ruurlo” en “Willemsen, NUNSPEET — restauratie molen De Duif te Nunspeet” — beide géén stichting, dus particulier molenbezit werd hier gehonoreerd. Daarnaast de muziekroute op de buitenplaats zelf: “Harmonie Orkest Brummen — Unique concert aan de IJssel - HOB jubileert bij Reuversweerd”. Randvoorwaarde uit de landelijke voorwaarden: “Het erfgoed heeft een monumentale status” en “Het project betreft niet groot of regulier onderhoud.”",
+    "partnertype": "Voor de muziekkant: een koor, orkest of concertstichting die een uitvoering op het landgoed programmeert, met het landgoed als locatiepost in hun begroting."
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "Geen bedragen, jaarbudget of eigen deadlines van dit fonds op naam; alleen de afdelingsdeadlines van Cultuurfonds Gelderland gelden.",
+    "Geen eigen beleidsplan, jaarverslag of criteria van het Eleonora van Heusden Fonds gevonden op cultuurfonds.nl.",
+    "Geen toelichting gevonden waarom de restauratieroute hier ook aan een V.O.F./particulier werd toegekend, terwijl de landelijke Restauratie-voorwaarde stichting/vereniging vereist (uitzondering alleen voor NSW-familie-B.V.). Dit is een tegenstrijdigheid om na te vragen."
+  ]
+}

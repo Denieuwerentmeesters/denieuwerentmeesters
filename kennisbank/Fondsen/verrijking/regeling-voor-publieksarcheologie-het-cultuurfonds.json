@@ -1,0 +1,45 @@
+{
+  "doelstelling": "Op een toegankelijke en laagdrempelige manier financieel bijdragen aan kleinschalige initiatieven in archeologische publieksparticipatie.",
+  "benaderbaarheid": "open",
+  "benaderwijze_notitie": "\"Aanvragen kunnen doorlopend worden ingediend\"; aanvragers zijn expliciet ook \"personen met aantoonbare betrokkenheid bij archeologie\" en \"maatschappelijk betrokken bedrijven (BV/NV met winstoogmerk)\".",
+  "aanvrager_type": "beide",
+  "geo_waarden": [
+    "Nederland (voorkeur ondervertegenwoordigde regio's)"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": 25000,
+  "bedrag_indicatie": "Maximaal EUR 25.000 per project; onder EUR 5.000 tot 100% van de kosten, tussen EUR 5.000 en EUR 25.000 maximaal 50%.",
+  "cofinanciering_vereist": true,
+  "uitsluitingen": [
+    "regulier AMZ-veldwerk"
+  ],
+  "kostensoort": [
+    "investering",
+    "onderzoek"
+  ],
+  "landgoed_relevantie": {
+    "route": "zelf",
+    "onderbouwing": "Uitzonderlijk toegankelijk: aanvragers mogen \"maatschappelijk betrokken bedrijven (BV/NV met winstoogmerk)\" en particulieren met aantoonbare archeologische betrokkenheid zijn - een landgoed-BV kan dus zelf indienen voor een publieksarcheologieproject op eigen terrein (opgraving met vrijwilligers, publieksdag, informatiepaneel bij een grafheuvel). Alleen \"regulier veldwerk\" (AMZ) is uitgesloten, dus de verplichte archeologie bij een bouwvergunning valt er niet onder.",
+    "partnertype": null
+  },
+  "niet_gevonden": [
+    "exacte lijst van ondervertegenwoordigde regio's"
+  ],
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://www.cultuurfonds.nl/monumentenzorg-erfgoed/regeling-voor-publieksarcheologie",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://www.cultuurfonds.nl/aanvragen",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "naam": "Regeling voor Publieksarcheologie (het Cultuurfonds)",
+  "geo_niveau": "landelijk",
+  "onderliggende_fondsen": []
+}

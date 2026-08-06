@@ -1,0 +1,40 @@
+{
+  "naam": "VriendenLoterij - culturele partners / eenmalige schenking",
+  "bronnen": [
+    {"soort": "website", "url": "https://www.vriendenloterij.nl/goede-doelen/culturele-partners", "jaar": 2026, "gelezen": true},
+    {"soort": "aanvraagvoorwaarden", "url": "https://www.vriendenloterij.nl/goede-doelen/culturele-partners/aanvraagprocedure/", "jaar": 2026, "gelezen": true},
+    {"soort": "aanvraagvoorwaarden", "url": "https://www.vriendenloterij.nl/goede-doelen/culturele-partners/aanvraagprocedure/eenmalige-schenkingen", "jaar": 2026, "gelezen": true}
+  ],
+  "doelstelling": "\"De VriendenLoterij steunt organisaties die zich inzetten voor behoud en beleving van cultuur en monumentenzorg in Nederland.\" Specifiek voor eenmalige schenkingen: \"De nadruk ligt bij de eenmalige schenkingen op monumentenzorg en grootscheepse verbouwingen en herinrichtingen binnen de culturele sector.\"",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "\"Aanvragen verlopen zonder standaardformulier en moeten vergezeld gaan van een jaarverslag, jaarrekening, projectplan, begroting en dekkingsplan.\" en \"Voor een aanvraag moeten uiterlijk 15 september de volgende stukken zijn ingediend: projectplan, begroting, dekkingsplan en meest recente jaarverslag en jaarrekening. U kunt hiervoor het mailadres aanvragen@vriendenloterij.nl gebruiken.\" De drempel is zeer hoog: \"De minimale bijdrage van de VriendenLoterij bedraagt EUR 200.000,-\" en de aanvrager moet zelf \"minimaal EUR 400.000,-\" aan eigen fondsenwerving genereren.",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "landelijk",
+  "geo_waarden": ["Nederland (met bovenregionale of landelijke uitstraling)"],
+  "bedrag_min": 200000,
+  "bedrag_max": null,
+  "bedrag_indicatie": "\"De minimale bijdrage van de VriendenLoterij bedraagt EUR 200.000,-.\" Context: \"Dankzij deelnemers konden we uit de opbrengst van 2025 maar liefst EUR 162 miljoen verdelen onder 64 culturele partners en meer dan 4.400 andere goede doelen, clubs en verenigingen.\"",
+  "cofinanciering_vereist": true,
+  "uitsluitingen": [
+    "Projecten zonder blijvende publieke toegankelijkheid: \"geldt als criterium dat de projecten (na afronding van de werkzaamheden) publiek toegankelijk en van blijvende aard moeten zijn\"",
+    "Puur regionale of lokale projecten: \"Daarom steunen wij projecten in Nederland met een bovenregionale of landelijke uitstraling.\"",
+    "Organisaties die met minder dan EUR 200.000 geholpen zijn, of die minder dan EUR 400.000 aan eigen fondsenwerving genereren",
+    "Organisaties die financieel afhankelijk zouden worden: \"Het voortbestaan van de partner mag niet in gevaar komen bij een eventueel wegvallen van de gelden van de Vriendenloterij.\""
+  ],
+  "kostensoort": ["investering", "restauratie"],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Monumentenzorg is expliciet het zwaartepunt: \"De nadruk ligt bij de eenmalige schenkingen op monumentenzorg en grootscheepse verbouwingen en herinrichtingen binnen de culturele sector\", met als inhoudelijk criterium \"behoud, verrijking en/of toegankelijkheid van het nationaal openbaar cultuurbezit en cultureel of historisch erfgoed\" - dat past op een buitenplaats of landgoedmonument. Maar de aanvrager moet een professionele culturele instelling van formaat zijn: minimaal EUR 200.000 bijdrage, minimaal EUR 400.000 eigen fondsenwerving, \"Erkenning voor Goede Doelen\", \"Binnen de organisatie zijn professionals werkzaam en is een gedegen beleidsplan opgemaakt\", en het project moet blijvend publiek toegankelijk zijn met landelijke uitstraling. Een individueel landgoed haalt die drempels vrijwel nooit zelf.",
+    "partnertype": "Grote landelijke erfgoed- of natuurorganisatie met Erkenning Goede Doelen en substantiele eigen fondsenwerving (bijv. een landelijke monumentenorganisatie, een provinciaal landschap of een museale stichting) die het landgoed of de buitenplaats in beheer of in een programma heeft."
+  },
+  "onderliggende_fondsen": [
+    {"naam": "Meerjarige partners (VriendenLoterij)", "relevant": false, "reden": "Structurele jaarlijkse bijdrage aan een vaste groep van 64 culturele partners; geen route voor een individueel landgoed"},
+    {"naam": "Bijzondere projecten (VriendenLoterij)", "relevant": true, "reden": "\"Met bijzondere projecten wil de VriendenLoterij verschillende sectoren met elkaar in verbinding brengen\" - criteria niet apart opgehaald, mogelijke aparte route"}
+  ],
+  "niet_gevonden": [
+    "Maximumbedrag voor een eenmalige schenking (alleen een minimum van EUR 200.000 gepubliceerd)",
+    "Expliciete lijst van niet-vergoede kostensoorten",
+    "Vereist cofinancieringspercentage; wel wordt een 'dekkingsplan' geeist",
+    "Criteria voor de categorie 'Bijzondere projecten' - aparte pagina niet opgehaald"
+  ]
+}

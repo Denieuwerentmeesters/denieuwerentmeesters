@@ -1,0 +1,41 @@
+{
+  "naam": "Uyttenboogaart-Eliasen Stichting (UES)",
+  "bronnen": [
+    {"soort": "website", "url": "https://www.fondseninnederland.nl/fonds/uyttenboogaart-eliasen-stichting", "jaar": null, "gelezen": true},
+    {"soort": "beleidsplan", "url": "https://www.fondseninnederland.nl/storage/Fondsbestanden/QELANlcSucP93JYMXHB0d75XaDAAEGixcSRml03k.pdf", "jaar": 2024, "gelezen": true},
+    {"soort": "website", "url": "http://www.ue-stichting.nl/", "jaar": null, "gelezen": true},
+    {"soort": "website", "url": "https://insectenstichting.nl/subsidie.html", "jaar": null, "gelezen": true},
+    {"soort": "aanvraagvoorwaarden", "url": "https://www.insectenstichting.nl/docs/RICHTLIJNEN_VOOR_SUBSIDIEVERSTREKKING_DOOR_DE_UES2024.pdf", "jaar": 2024, "gelezen": true}
+  ],
+  "doelstelling": "\"Dit betreft het bevorderen van de entomologische wetenschap in Nederland. De stichting tracht dit doel te bereiken door subsidie te verstrekken ten behoeve van activiteiten op het gebied van de entomologie in Nederland.\" En: \"Subsidie wordt onder meer verleend voor het doen van onderzoek, het afleggen van werkbezoeken, het bijwonen van congressen en symposia, het ondersteunen van de uitgave van publicaties en het gebruik van apparatuur benodigd voor entomologisch onderzoek.\"",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "\"Alle aanvragen voor subsidie dienen te worden ingediend door middel van het passende aanvraagformulier. Er zijn 5 verschillende formulieren voor onderscheiden activiteiten.\" en \"De aanvragen dienen voor 15 april, respectievelijk voor 15 november, voor behandeling in de betreffende bestuursvergaderingen van mei en december, bij het secretariaat van de stichting op het juiste formulier te zijn ingediend. Op andere wijze ingediende aanvragen worden niet in behandeling genomen.\"",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "landelijk",
+  "geo_waarden": [
+    "Nederland (\"activiteiten waarmee de kennis van de entomologie ... in Nederland wordt bevorderd\"; ue-stichting.nl spreekt van \"het Koninkrijk der Nederlanden\"). De gesubsidieerde activiteit zelf mag in het buitenland plaatsvinden (studiereizen, verzamelreizen, stages)."
+  ],
+  "bedrag_min": null,
+  "bedrag_max": 1300,
+  "bedrag_indicatie": "\"De maximale subsidie voor een congres binnen Europa bedraagt € 650, voor een congres buiten Europa wordt maximaal een bedrag van € 1300 beschikbaar gesteld\"; buitenlandse onderzoeksstages: \"eenmalig subsidie ... voor reiskosten (tot een maximum van €1300)\"; autoreiskosten: \"een maximale KM-vergoeding van €0,30 per gereden KM\". Voor onderzoeks-, natuurbeschermings- en inventarisatieprojecten en publicaties is geen maximum gepubliceerd.",
+  "cofinanciering_vereist": false,
+  "uitsluitingen": [
+    "\"Personele kosten worden in het algemeen niet gesubsidieerd.\"",
+    "\"Activiteiten die voor bovengenoemde uiterste indien data al zijn gestart of al zijn afgesloten komen niet meer voor subsidiering in aanmerking.\"",
+    "\"Binnen Europa worden de kosten gemaakt voor een vliegreis in principe niet vergoed als reizen met andere middelen redelijkerwijs mogelijk is.\"",
+    "\"Per aanvrager kan per subsidieronde slechts voor een activiteit een aanvraag worden ingediend.\"",
+    "\"Aanvragen dienen door de belanghebbende zelf ingediend te worden.\" (geen aanvraag namens een ander)"
+  ],
+  "kostensoort": ["onderzoek", "investering"],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Het fonds financiert expliciet natuur- en inventarisatiewerk aan insecten: \"Een activiteit gericht op de bevordering van de entomologie kan betreffen: een onderzoeksproject, natuurbeschermingsproject, een inventarisatieproject, studiereis, onderzoeksstages, publicatie of het bijwonen van een congres c.q. symposium.\" Een insecteninventarisatie of insectgericht natuurherstelproject op een landgoed past daar rechtstreeks in - het landgoed is dan de onderzoekslocatie. De aanvraag kan echter niet door het landgoed als organisatie worden gedaan: \"Aanvragen dienen door de belanghebbende zelf ingediend te worden\" en aanvragen lopen via persoonsgebonden formulieren (onderzoeker, student, promovendus). Bovendien: \"Personele kosten worden in het algemeen niet gesubsidieerd\", dus het gaat om materiaal- en reiskosten van de onderzoeker. Route loopt dus via een entomoloog, EIS/NEV-onderzoeker of student die op het landgoed werkt.",
+    "partnertype": "Een individuele entomoloog, onderzoeker, BSc/MSc-student of promovendus (verbonden aan een Nederlandse onderwijs- of onderzoeksinstelling, of aan een entomologische vereniging/museum) die de inventarisatie of het natuurbeschermingsproject op het landgoed uitvoert en zelf de aanvraag indient."
+  },
+  "niet_gevonden": [
+    "Maximumbedrag voor onderzoeks-, inventarisatie- en publicatiesubsidies - niet gepubliceerd in de richtlijnen 2024, op insectenstichting.nl of in het verkort beleidsplan",
+    "Jaarlijks beschikbaar subsidiebudget - het beleidsplan meldt alleen dat er jaarlijks een bedrag aan de subsidiereserve wordt toegevoegd, zonder cijfer",
+    "De eigen website ue-stichting.nl is nog in aanbouw; het beleidsplan verwijst herhaaldelijk naar 'elders op deze website' (o.a. voorwaarden UE-leerstoel en prijzen), pagina's die op de tijdelijke site insectenstichting.nl niet allemaal terug te vinden zijn",
+    "Cofinanciering is uitdrukkelijk niet verplicht maar wel aanbevolen: \"Het aanvragen van subsidies bij andere instellingen wordt sterk aanbevolen\""
+  ]
+}

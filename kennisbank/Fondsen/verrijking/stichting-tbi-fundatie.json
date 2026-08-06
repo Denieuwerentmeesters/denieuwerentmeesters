@@ -1,0 +1,64 @@
+{
+  "naam": "Stichting TBI Fundatie",
+  "bronnen": [
+    {
+      "soort": "anbi_publicatie",
+      "url": "https://anbi.nl/publicatieverplichting/stichting-tbi-fundatie/",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "website",
+      "url": "https://www.stichtingtbifundatie.nl/",
+      "jaar": 2026,
+      "gelezen": false
+    }
+  ],
+  "doelstelling": "Ondersteunen en bevorderen van activiteiten op cultureel, wetenschappelijk, educatief en sociaal gebied. Het subsidiebeleid is gericht op het verstrekken van bijdragen in de kosten van restauratie van (oude) rijksmonumenten met een publieke bestemming.",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "\"Het subsidiebeleid is gericht op het verstrekken van bijdragen in de kosten van restauratie van (oude) rijksmonumenten met een publieke bestemming. Aanvragen van particuliere eigenaren worden – gelet op de eis van publieke bestemming – niet gehonoreerd.\" Er is een algemeen e-mailadres (info@stichtingtbifundatie.nl) maar geen gepubliceerde aanvraagprocedure of formulier.",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "landelijk",
+  "geo_waarden": [
+    "Nederland"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": null,
+  "cofinanciering_vereist": null,
+  "uitsluitingen": [
+    "aanvragen van particuliere eigenaren: \"Aanvragen van particuliere eigenaren worden – gelet op de eis van publieke bestemming – niet gehonoreerd\"",
+    "monumenten zonder publieke bestemming",
+    "monumenten die geen (oud) rijksmonument zijn — de stichting beperkt zich bij cascorestauraties tot (oude) rijksmonumenten"
+  ],
+  "kostensoort": [
+    "restauratie"
+  ],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Het fonds financiert precies wat landgoedeigenaren nodig hebben — \"bijdragen in de kosten van restauratie van (oude) rijksmonumenten\", specifiek cascorestauraties — maar sluit de landgoedeigenaar zelf hard uit: \"Aanvragen van particuliere eigenaren worden – gelet op de eis van publieke bestemming – niet gehonoreerd.\" De route loopt dus via een stichting of vereniging met publieke bestemming die het rijksmonument (of een onderdeel daarvan: kasteel, koetshuis, orangerie, kapel, molen) in eigendom of langdurig beheer heeft. Het bestuur volgt daarbij het oordeel van de RCE, dus een RCE-erkende restauratieopgave helpt.",
+    "partnertype": "stichting/vereniging die een rijksmonument met publieke bestemming bezit of beheert (bijvoorbeeld een monumentenstichting, museumstichting, Stadsherstel of een landgoedstichting met publieksfunctie)"
+  },
+  "onderliggende_fondsen": [
+    {
+      "naam": "TBI Fonds Duurzame Ontmoeting (uitvoering Oranje Fonds)",
+      "relevant": null,
+      "reden": "apart TBI-fonds, uitvoering bij het Oranje Fonds; beleid niet opgehaald — gericht op ontmoeting/sociaal, mogelijk partnerroute"
+    },
+    {
+      "naam": "Fonds TBI Klimaattrein",
+      "relevant": true,
+      "reden": "apart TBI-fonds voor CO2-reductie in de gebouwde omgeving, staat als eigen regel in de werklijst en is apart verrijkt"
+    },
+    {
+      "naam": "TBI Studiefonds",
+      "relevant": false,
+      "reden": "studiebeurzen voor individuen"
+    }
+  ],
+  "niet_gevonden": [
+    "de eigen website stichtingtbifundatie.nl — gaf een time-out (2026-08-05); daar staat mogelijk een aanvraagprocedure",
+    "bedragen, maxima, cofinancieringseis of deadlines — niet in de ANBI-publicatie",
+    "het beleidsplan en het activiteitenverslag (downloadbaar via anbi.nl, niet opgehaald)"
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "naam": "Stichting VSB Fonds Woerden",
+  "bronnen": [
+    {"soort": "aanvraagvoorwaarden", "url": "https://vsbfondswoerden.nl/donatie-aanvragen/richtlijnen-en-criteria/", "jaar": 2026, "gelezen": true},
+    {"soort": "website", "url": "https://vsbfondswoerden.nl/donatie-aanvragen/", "jaar": 2026, "gelezen": true},
+    {"soort": "beleidsplan", "url": "https://fondseninnederland.nl/storage/Fondsbestanden/WNtlbCE5kYiw1wsRZlytDSJRVugnXx3vFjJjRTcg.pdf", "jaar": 2025, "gelezen": true}
+  ],
+  "doelstelling": "Het statutaire doel van de stichting VSB Fonds Woerden is - zonder winstoogmerk - een bijdrage te leveren in haar werkgebied aan het behoud en het verbeteren van een leefbare samenleving met het oog op een duurzame toekomst, alles in de breedste zin van het woord.",
+  "benaderbaarheid": "open",
+  "benaderwijze_notitie": "\"Het Fonds wil laagdrempelig zijn in de communicatie en contact met de aanvragers. (...) Om hen te helpen bij het indienen van een aanvraag is op afspraak overleg mogelijk met de directeur.\" Er is een online aanvraagformulier; het bestuur vergadert zes keer per jaar en \"Binnen een week na de bestuursvergadering worden alle aanvragers geinformeerd over de bestuursbesluiten\".",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "gemeente",
+  "geo_waarden": ["Woerden", "Harmelen", "Kamerik", "Zegveld"],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": "Voor burgerinitiatieven: \"Vraag dan een donatie aan van maximaal EUR 1000.\" Voor projecten van stichtingen en verenigingen is geen maximum gepubliceerd.",
+  "cofinanciering_vereist": true,
+  "uitsluitingen": [
+    "projecten van organisaties met een winstoogmerk",
+    "projecten van organisaties met voldoende eigen vermogen",
+    "projecten met een uitgesproken commercieel, politiek of religieus karakter",
+    "aanvragen voor dekking van reguliere exploitatiekosten, overheadskosten of salariskosten",
+    "niet-projectgebonden aanvragen",
+    "projecten die buiten de gemeentegrenzen van Woerden plaatsvinden",
+    "projecten die niet passen binnen het beleid (bijvoorbeeld jubilea, feesten of de uitgave van boeken)",
+    "projecten van individuele aanvragers, anders dan een burgerinitiatief",
+    "projecten die al gestart zijn (\"Het project moet nog van start gaan\")"
+  ],
+  "kostensoort": ["investering", "onderzoek"],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Alleen relevant voor landgoederen binnen de gemeente Woerden (incl. Harmelen, Kamerik, Zegveld) - \"projecten die buiten de gemeentegrenzen van Woerden plaatsvinden\" zijn uitgesloten. Binnen dat gebied zijn er wel aanknopingspunten: het aandachtsgebied \"Natuur en milieu: in het bijzonder voorlichtende projecten om het natuurbesef te stimuleren\" en burgerinitiatieven zoals \"het aanleggen van meer groen, zoals een moestuin of bloementuin\" en \"projecten die de omgeving mooier maken\". Het fonds meldt zelf dat Natuur & Milieu achterblijft (2 procent van de donaties) en dat het aanvragers op dat thema actief wil stimuleren. Een landgoedeigenaar kan niet als individuele aanvrager indienen (\"projecten van individuele aanvragers, anders dan een burgerinitiatief\" is uitgesloten) en het gaat om publieksgerichte, voorlichtende natuurprojecten, niet om restauratie of beheer; de route loopt dus via een stichting/vereniging of een burgerinitiatiefgroep die een publieks- of natuureducatieproject op het landgoed organiseert.",
+    "partnertype": "Woerdense stichting, vereniging of burgerinitiatiefgroep (natuur-, erfgoed- of publieksorganisatie) die een afgebakend project op of rond het landgoed uitvoert"
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "Maximumbedrag voor organisatieprojecten: niet gepubliceerd op richtlijnenpagina of in beleidsplan 2026-2030",
+    "Vaste indieningsdeadlines: alleen 'zes bestuursvergaderingen per jaar', geen data gepubliceerd",
+    "Expliciet beleid over monumenten/erfgoedrestauratie: niet genoemd in beleidsplan of richtlijnen"
+  ]
+}

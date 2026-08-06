@@ -1,0 +1,57 @@
+{
+  "naam": "Zanen-Bakker Fonds (Cultuurfonds)",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://www.cultuurfonds.nl/fondsen/zanen-bakker-fonds",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://www.cultuurfonds.nl/aanvragen/voorwaarden",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "website",
+      "url": "https://www.cultuurfonds.nl/fondsen",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "Voor projecten op het gebied van de cultuur en het natuurbehoud in Nederland.",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "“Ruim 500 bevlogen schenkers hebben bij het Cultuurfonds een eigen fonds ingesteld, met een zelfgekozen naam en doelstelling. (…) Het Cultuurfonds behandelt de aanvragen en informeert de insteller over de bestede gelden en de betrokken projecten.” Aanvragen loopt dus via het gewone Cultuurfonds-aanvraagportaal, niet bij het fonds op naam zelf. Drempels: “Je organisatie staat ingeschreven bij de Kamer van Koophandel”, “Je organisatie heeft cultuur of natuur in de statutaire doelstelling” en “Je totale projectbegroting is minimaal € 15.000”.",
+  "aanvrager_type": "beide",
+  "geo_niveau": "landelijk",
+  "geo_waarden": [
+    "Nederland"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": "Geen bedragen gepubliceerd per fonds op naam. Wel een drempel aan de projectkant: “Je totale projectbegroting is minimaal € 15.000.”",
+  "cofinanciering_vereist": null,
+  "uitsluitingen": [
+    "“Je project heeft geen polariserend effect en is niet primair religieus, sociaal-maatschappelijk of politiek.”",
+    "“Je project is geen reguliere activiteit”",
+    "“Het project betreft niet groot of regulier onderhoud” (voorwaarde bij Restauratie)",
+    "“Je organisatie heeft dit jaar nog geen toekenning ontvangen van het Cultuurfonds”",
+    "“Je hebt voor dit project nog niet eerder een aanvraag gedaan bij het Cultuurfonds”",
+    "Natuuraanleg: “Het project gaat niet om de aanleg van recreatieve infrastructuur (zoals bruggen en paden)”"
+  ],
+  "kostensoort": [
+    "investering",
+    "restauratie"
+  ],
+  "landgoed_relevantie": {
+    "route": "zelf",
+    "onderbouwing": "Brede doelstelling “cultuur en het natuurbehoud in Nederland”; de toekenningenlijst bevat natuurbehoud- en erfgoedprojecten. Een landgoedplan dat onder Behoud (restauratie/groen erfgoed) of Natuuraanleg valt past hierbinnen, mits de rechtsvormeis wordt gehaald: “Het erfgoed is in bezit van een stichting, vereniging of religieus genootschap. Uitzondering: in het geval van historische buitenplaatsen mag het erfgoed ook in bezit zijn van een familie-B.V. die verbonden is aan de Natuurschoonwet.”",
+    "partnertype": "Indien het landgoed geen stichting/vereniging is en ook geen NSW-familie-B.V.: aanvragen via een stichting (bijv. een eigen erfgoed- of vriendenstichting) of via een landschapsorganisatie."
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "Geen fondsspecifieke aanvraagcriteria, bedragen, deadlines of cofinancieringseis gepubliceerd — de fondspagina op cultuurfonds.nl geeft alleen één zin doelstelling plus de toekenningenlijst; verder gelden alleen de algemene Cultuurfonds-voorwaarden.",
+    "Geen apart beleidsplan of jaarverslag per fonds op naam gevonden op cultuurfonds.nl."
+  ]
+}

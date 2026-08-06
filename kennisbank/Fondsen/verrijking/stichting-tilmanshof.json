@@ -1,0 +1,39 @@
+{
+  "naam": "Stichting Tilmanshof",
+  "bronnen": [
+    {"soort":"website","url":"https://tilmanshof.nl/","jaar":2026,"gelezen":true},
+    {"soort":"aanvraagvoorwaarden","url":"https://tilmanshof.nl/doel/","jaar":2026,"gelezen":true}
+  ],
+  "doelstelling": "\"Kleinschalige projecten op het gebied van charitas, milieu, cultuur, recreatie en religie kunnen een beroep doen op de Stichting Tilmanshof voor financiele ondersteuning.\" Doelgroep: \"instellingen of initiatieven met een algemeen maatschappelijk belang, bij voorkeur een katholieke signatuur, die werkzaam zijn (of hun wortels hebben) in de regio Den Bosch.\"",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "\"Als u een verzoek heeft dat aan het uitkeringsbeleid lijkt te voldoen, kunt u het aanvraagformulier op deze website downloaden en ingevuld indienen. Aanvragen moeten altijd zijn voorzien van een volledig ingevuld aanvraag formulier en kunnen alleen digitaal worden ingestuurd via de website of per mail aan info@tilmanshof.nl.\" Drempel zit in de frequentie en de nood-eis: \"Het bestuur van de Stichting Tilmanshof komt slechts 2 keer per jaar samen begin april en begin november\" en \"De financiele nood of behoefte dient middels cijfers aangetoond te worden.\"",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "regio",
+  "geo_waarden": ["regio Den Bosch ('s-Hertogenbosch)"],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": "Geen bedragen gepubliceerd; het beleid spreekt uitsluitend van \"Kleinschalige projecten\".",
+  "cofinanciering_vereist": null,
+  "uitsluitingen": [
+    "\"persoonlijke aanvragen voor individuele ondersteuning\"",
+    "\"aanvragen ter dekking van algemene exploitatie of met vermogensvorming tot doel\"",
+    "\"instellingen met grote overhead\"",
+    "\"instellingen die een uitgesproken luxe project wensen te realiseren\"",
+    "\"uitkeringen met karakter van een jaarlijks abonnement\"",
+    "\"herhaling van financiele steun aan eerder gehonoreerde doelen en/of projecten\""
+  ],
+  "kostensoort": ["investering"],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Het fonds financiert geen eigenaren maar instellingen, en de thema's milieu, cultuur en recreatie sluiten inhoudelijk aan bij een landgoed: \"Kleinschalige projecten op het gebied van charitas, milieu, cultuur, recreatie en religie kunnen een beroep doen op de Stichting Tilmanshof voor financiele ondersteuning.\" Een maatschappelijke, natuur-, cultuur- of zorgorganisatie in de regio Den Bosch met een project op een landgoed (natuureducatie, dagbesteding, een kleinschalige recreatieve of culturele voorziening) kan dus aanvragen, met het landgoed als post in haar projectbegroting. Het landgoed zelf komt niet in aanmerking: het beleid richt zich op \"instellingen of initiatieven met een algemeen maatschappelijk belang, bij voorkeur een katholieke signatuur\", sluit \"persoonlijke aanvragen voor individuele ondersteuning\" uit en eist dat \"De financiele nood of behoefte... middels cijfers aangetoond\" wordt - een toets die op een vermogend landgoed slecht uitpakt. Ook let op: \"instellingen die een uitgesproken luxe project wensen te realiseren\" zijn uitgesloten, wat een restauratie van een buitenplaats snel raakt.",
+    "partnertype": "Maatschappelijke instelling of initiatief met algemeen maatschappelijk belang, bij voorkeur van katholieke signatuur, werkzaam in of geworteld in de regio Den Bosch - bijvoorbeeld een natuur-, cultuur-, zorg- of welzijnsorganisatie zonder grote overhead"
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "Bedragen (min/max/indicatie): nergens gepubliceerd op tilmanshof.nl",
+    "Beleidsplan, ANBI-publicatie, jaarverslag of RSIN: niet aangetroffen; de site bestaat uit vier pagina's (Algemeen, Uitkeringsbeleid, Formulieren, Aanvragen)",
+    "Harde indieningsdeadlines: alleen 'De aanvragen die tijdig en compleet zijn ingediend' voor de vergaderingen van begin april en begin november; geen sluitingsdatum genoemd",
+    "Cofinancieringseis: niet als eis gesteld, wel wordt gevraagd om 'opgave van aanvragen bij / toezeggingen van andere steungevers en fondsen'",
+    "Expliciete uitspraak over restauratie of monumentenzorg: niet gepubliceerd"
+  ]
+}

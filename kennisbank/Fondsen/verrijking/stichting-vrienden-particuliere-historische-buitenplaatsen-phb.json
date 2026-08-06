@@ -1,0 +1,69 @@
+{
+  "naam": "Stichting Vrienden Particuliere Historische Buitenplaatsen (PHB)",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://vriendenphb.nl/over-ons/",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "website",
+      "url": "https://vriendenphb.nl/historiografie/",
+      "jaar": 2024,
+      "gelezen": true
+    },
+    {
+      "soort": "website",
+      "url": "https://vriendenphb.nl/",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "“De belangrijkste doelstelling is het bevorderen van de belangstelling voor de instandhouding van kastelen en andere historische huizen, die bij voorkeur voorkomen op de lijst van beschermde monumenten en die zijn aangemerkt als landgoed in de zin van de Natuurschoonwet 1928. Daarbij gaat het om huizen en kastelen die op de één of andere wijze in bezit zijn van particuliere eigenaren. Dat kan in de vorm van rechtstreeks particulier eigendom, maar ook bijvoorbeeld in een (familie)stichting of een Natuurschoonwetvennootschap.”",
+  "benaderbaarheid": "onbekend",
+  "benaderwijze_notitie": "Het fonds zegt wél financieel te steunen — “Het beschikbaar stellen van financiële middelen aan particuliere buitenplaatsen voor kleine restauraties” en “verstrekt incidenteel subsidies voor projecten op particuliere buitenplaatsen” — maar publiceert geen aanvraagpagina, formulier, criteria of deadline. Het woord “incidenteel” en het ontbreken van een loket wijzen op een besloten, bestuursgedreven werkwijze. Enige ingang: secretaris@vriendenphb.nl.",
+  "aanvrager_type": "landgoedeigenaar",
+  "geo_niveau": "landelijk",
+  "geo_waarden": [
+    "Nederland"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": "Geen bedragen gepubliceerd. Wel de schaal: “voor kleine restauraties” en “incidenteel subsidies”. Het fonds wordt gevoed door begunstigers (“Voor een jaarlijkse bijdrage van minimaal € 35 wordt u begunstiger”), dus het gaat om bescheiden bedragen.",
+  "cofinanciering_vereist": null,
+  "uitsluitingen": [
+    "Geen uitsluitingenlijst gepubliceerd. Impliciete afbakening: buitenplaatsen in niet-particulier bezit (de doelgroep is uitdrukkelijk particulier eigendom, (familie)stichting of NSW-vennootschap), en grote restauraties (“kleine restauraties”)."
+  ],
+  "kostensoort": [
+    "restauratie"
+  ],
+  "landgoed_relevantie": {
+    "route": "zelf",
+    "onderbouwing": "Dit is een van de weinige fondsen waarvan de doelgroep exact samenvalt met een NSW-landgoed in particulier bezit: “kastelen en andere historische huizen, die bij voorkeur voorkomen op de lijst van beschermde monumenten en die zijn aangemerkt als landgoed in de zin van de Natuurschoonwet 1928 (…) in bezit (…) van particuliere eigenaren. Dat kan in de vorm van rechtstreeks particulier eigendom, maar ook bijvoorbeeld in een (familie)stichting of een Natuurschoonwetvennootschap.” Precies waar de meeste erfgoedfondsen afhaken (rechtsvorm), begint dit fonds. Het derde middel is expliciet financieel: “Het beschikbaar stellen van financiële middelen aan particuliere buitenplaatsen voor kleine restauraties.” De beperking zit in schaal en toegankelijkheid: het gaat om kleine bedragen, “incidenteel”, en er is geen gepubliceerd loket. Naast geld is de niet-financiële waarde groot: het is een netwerk van particuliere eigenaren, met excursies “in de particuliere leefwereld van de eigenaren (…) voorgelicht te worden over het beheer ervan” en het tijdschrift Het Buiten.",
+    "partnertype": null
+  },
+  "onderliggende_fondsen": [
+    {
+      "naam": "Vereniging van eigenaren van Particuliere Historische Buitenplaatsen (VPHB)",
+      "relevant": true,
+      "reden": "Geen fonds maar de belangenvereniging van particuliere buitenplaatseigenaren, opvolger van de in 2010 opgeheven Stichting PHB. Relevant als netwerk- en kennisingang; stond niet in de werklijst."
+    },
+    {
+      "naam": "Nederlandse Kastelen Stichting (NKS)",
+      "relevant": true,
+      "reden": "Mede-uitgever van Het Buiten; landelijke kastelenorganisatie, mogelijk zelf ook fondsdrager. Niet apart onderzocht."
+    },
+    {
+      "naam": "Stichting Landgoedvrienden / Stichting Vrienden Nederlandse Landgoederen",
+      "relevant": true,
+      "reden": "Verwante vriendenstichtingen die eveneens begunstigers van Het Buiten bedienen; mogelijk ook eigen steunmiddelen. Niet apart onderzocht."
+    }
+  ],
+  "niet_gevonden": [
+    "Geen aanvraagprocedure, criteria, bedragen of deadlines voor de “financiële middelen (…) voor kleine restauraties” — de site heeft geen aanvraagpagina.",
+    "De ANBI-pagina is in het menu aanwezig maar de URL's /anbi/, /anbi-gegevens/ en /over-ons/anbi/ leveren allemaal de homepage op; geen ANBI-cijfers of beleidsplan gevonden.",
+    "Geen jaarverslag of lijst met gesteunde restauraties gevonden.",
+    "Onduidelijk of het fonds op eigen initiatief steunt of op aanvraag."
+  ]
+}

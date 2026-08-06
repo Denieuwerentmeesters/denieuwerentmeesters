@@ -1,0 +1,87 @@
+{
+  "naam": "Fonds Alphen en omstreken (Stichting Fonds Alphen e.o.)",
+  "bronnen": [
+    {
+      "soort": "anbi_publicatie",
+      "url": "https://fondseninnederland.nl/fonds/fonds-alphen-en-omstreken",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "beleidsplan",
+      "url": "https://fondseninnederland.nl/storage/Fondsbestanden/SLWbdMurhCfj59EUI8A6xNwvYKmJDtZ2uqOImFCh.pdf",
+      "jaar": 2025,
+      "gelezen": true
+    },
+    {
+      "soort": "website",
+      "url": "https://www.fondsalphen.nl/",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://www.fondsalphen.nl/criteria-en-richtlijnen/",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "website",
+      "url": "https://www.fondsalphen.nl/sectoren/natuur-en-milieu/",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "\"Stichting Fonds Alphen en omstreken verleent financiële steun aan: concrete, benoembare projecten in de regio Alphen aan den Rijn, die ten goede komen aan de hedendaagse lokale samenleving op het gebied van kunst, cultuur, sport & recreatie, natuur & milieu, sociaal-maatschappelijk/ideëel en educatie.\" Missie: \"Het Fonds beheert haar vermogen en draagt met de opbrengst ervan bij aan projecten die de samenleving duurzaam verbinden en versterken.\"",
+  "benaderbaarheid": "open",
+  "benaderwijze_notitie": "Open loket met digitaal aanvraagformulier en zes bestuursvergaderingen per jaar. Snelle toets op de homepage: \"Uw project bevindt zich in de gemeente Alphen a/d Rijn, Nieuwkoop of Kaag en Braassem. U bent verbonden aan een vereniging of stichting zonder winstoogmerk. Het project is nog niet gestart. Uw project dient een breed maatschappelijk belang.\" Wel harde drempels: \"Het Fonds behandelt in principe alleen aanvragen van rechtspersonen zonder winstoogmerk (stichtingen/verenigingen)\" en \"Moet de aanvrager aantonen, niet zelf te beschikken over (voldoende) middelen om het project te kunnen financieren.\" Geen beroepsmogelijkheid: \"Het is ter bindende beoordeling aan het (dagelijks) bestuur van het Fonds om een aanvraag wel dan wel niet te honoreren zonder mogelijkheid van beroep.\"",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "gemeente",
+  "geo_waarden": [
+    "Alphen aan den Rijn",
+    "Nieuwkoop",
+    "Kaag en Braassem",
+    "Groene Hart"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": 20000,
+  "bedrag_indicatie": "Alleen richtbedragen voor de sector cultuur en amateurkunst gepubliceerd (beleidsplan 2025, hoofdstuk 4): publicaties EUR 5.000; tentoonstellingen EUR 5.000-10.000; (amateur)theaterproducties EUR 5.000-10.000; jubileum-/lustrumconcerten max EUR 2.000; festivals max EUR 7.500 (groot) of EUR 2.500 (klein); digitalisering museale collectie max 50% tot EUR 10.000 voor apparatuur plus max 50% tot EUR 10.000 voor professionele ondersteuning; instrumenten max 50% tot EUR 6.500; kleding max 50% tot EUR 5.500; geluidsapparatuur max 75% tot EUR 5.700-6.500; licht-/geluidapparatuur en podiumattributen max 75% tot EUR 10.000 (theatergezelschappen) of EUR 20.000 (podia/musea). Voor de andere sectoren, waaronder natuur & milieu, zijn geen richtbedragen gepubliceerd. Bevoegdheidsgrens: het dagelijks bestuur beslist tot en met EUR 15.000, daarboven het voltallige bestuur. Praktijkvoorbeeld: \"Hospicegroep verduurzaamt met EUR 10.000 van Fonds Alphen e.o.\"",
+  "cofinanciering_vereist": true,
+  "uitsluitingen": [
+    "individuen (of aanvragen ten behoeve van individuen)",
+    "institutionele (particuliere) vermogensfondsen",
+    "projecten met een (hoofdzakelijk) inter/nationaal karakter",
+    "projecten waarvan de uitvoering al is gestart",
+    "(jubileum)feesten en partijen",
+    "instellingen die (overwegend) door een overheid worden gesubsidieerd",
+    "commerciële instellingen; instellingen/projecten met een politiek, commercieel of religieus karakter",
+    "serviceclubs",
+    "het uitgeven/produceren van boeken",
+    "projecten van organisaties die zelf over voldoende eigen vermogen of middelen beschikken",
+    "exploitatiekosten en structurele exploitatiekosten (\"zoals huur, reguliere huisvesting, salarissen, onderhoud, energielasten\")",
+    "overheadkosten (\"algemene & administratieve kosten, afschrijving, energie, administratie, verzekering, huur- en nutskosten\")",
+    "salariskosten (uitgezonderd de sector cultuur en amateurkunst)",
+    "reiskosten, congressen en symposia, studiebeurzen en -reizen",
+    "kosten van levensonderhoud",
+    "kosten verbonden aan normale activiteiten van een organisatie",
+    "permanente/structurele steun (\"de steun heeft nimmer een permanent karakter\", maximaal 3 à 4 jaar)"
+  ],
+  "kostensoort": [
+    "investering",
+    "restauratie",
+    "onderzoek"
+  ],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Natuur & milieu is een van de vijf sectoren en de toekenningen laten zien dat fysiek erfgoed- en landschapswerk binnen bereik ligt: \"Stichting Rijnenburgermolen - Herstel De Vijfde Wiek: De molenaarswoning 'De Vijfde Wiek' is gerenoveerd\", \"Realisering wandelpad Kroft\", \"Landschapsfonds Alphen aan den Rijn e.o. - De educatieve inrichting van het project IJsvogel\" en \"Verbeteren paden Natuurbelevingstuin De Bult (...) Tijd voor groot onderhoud\". De criteriapagina bevestigt bovendien: \"Eenmalige investerings- of projectgebonden huisvestingskosten (bijv. verbouwing, inrichting, aanpassing t.b.v. project) vallen binnen ons toekenningsbeleid.\" Route is via_partner en niet zelf, om twee redenen: (1) het fonds \"behandelt in principe alleen aanvragen van rechtspersonen zonder winstoogmerk (stichtingen/verenigingen)\" die \"niet gericht zijn op belangen van één of enkele personen\" - een landgoed in particulier bezit of in een B.V. valt daarbuiten; (2) \"Moet de aanvrager aantonen, niet zelf te beschikken over (voldoende) middelen om het project te kunnen financieren.\" Bovendien is het werkgebied strikt: alleen de gemeenten Alphen aan den Rijn, Nieuwkoop en Kaag en Braassem, en het project moet zich richten op de inwoners daarvan - een publiek toegankelijk landgoedproject in dat gebied kwalificeert, een besloten instandhoudingsvraag niet. Let op de breuklijn: eenmalige investering en verbouwing wel, onderhoud en exploitatie expliciet niet.",
+    "partnertype": "Een stichting of vereniging zonder winstoogmerk uit Alphen aan den Rijn, Nieuwkoop of Kaag en Braassem met een breed samengesteld bestuur: een landgoed- of vriendenstichting, het Landschapsfonds Alphen aan den Rijn e.o. (aantoonbaar eerdere ontvanger), IVN, een natuur- of erfgoedstichting, of een historische vereniging/oudheidkamer (die laatste ook voor de digitaliseringsregeling voor collecties)."
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "Richtbedragen of maximumbedragen voor de sector natuur & milieu: het beleidsplan geeft richtbedragen uitsluitend voor cultuur en amateurkunst.",
+    "Een expliciet cofinancieringspercentage buiten de cultuurrichtbedragen; wel de eis dat \"ook bij andere partijen een financiële ondersteuning aangevraagd\" is en dat eigen inbreng wordt getoetst.",
+    "De inhoud van de per 1 juli 2026 gewijzigde Algemene voorwaarden (https://www.fondsalphen.nl/wp-content/uploads/2026/05/Algemene-voorwaarden-01-07-2026.pdf) - niet apart uitgelezen; de criteriapagina is de gebruikte bron.",
+    "Deadlines: het fonds werkt met circa zes bestuursvergaderingen per jaar (vergaderdata op /vergaderdata/), niet met vaste rondes; de concrete data zijn niet uitgelezen.",
+    "Of erfgoed of monumenten een eigen categorie vormen: erfgoed komt alleen terug via de digitaliseringsregeling voor musea/oudheidkamers en via toekenningen aan een molenstichting."
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "naam": "Bomenfonds (Bomenstichting)",
+  "bronnen": [
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://www.bomenstichting.nl/monumentalebomen/bomenfonds.html",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "Eigenaren van monumentale bomen financieel steunen in de onderhoudskosten van die bomen.",
+  "benaderbaarheid": "open",
+  "benaderwijze_notitie": "'Eigenaren van monumentale bomen die particulier eigendom zijn of behoren tot kleine verenigingen, stichtingen of kerkgenootschappen' kunnen aanvragen, via het formulier op monumentalebomen.nl.",
+  "aanvrager_type": "landgoedeigenaar",
+  "geo_niveau": "landelijk",
+  "geo_waarden": [
+    "Nederland"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": null,
+  "cofinanciering_vereist": false,
+  "uitsluitingen": [
+    "potentieel monumentale bomen (alleen bomen met de status monumentaal in het Landelijk Register van Monumentale Bomen)",
+    "bomen met een verwachte levensduur na onderhoud van minder dan 15 jaar",
+    "aanvragen waarin al andere subsidies of bijdragen zijn betrokken",
+    "werkzaamheden die al zijn uitgevoerd voor de goedkeuring"
+  ],
+  "kostensoort": [
+    "regulier_onderhoud"
+  ],
+  "landgoed_relevantie": {
+    "route": "zelf",
+    "onderbouwing": "Dit is een van de weinige fondsen die juist regulier onderhoud financiert, en de doelgroep is letterlijk de particuliere eigenaar: 'eigenaren van monumentale bomen die particulier eigendom zijn'. Landgoederen hebben vaak meerdere bomen in het Landelijk Register van Monumentale Bomen. Let op de eis dat er geen andere subsidie in dezelfde aanvraag zit.",
+    "partnertype": null
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "bedragen (minimum/maximum bijdrage) en het percentage van de onderhoudskosten dat wordt vergoed",
+    "aantal aanvraagrondes per jaar"
+  ]
+}

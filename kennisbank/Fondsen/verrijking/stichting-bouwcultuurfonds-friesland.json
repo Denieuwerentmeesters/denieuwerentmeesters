@@ -1,0 +1,46 @@
+{
+  "naam": "Stichting Bouwcultuurfonds Friesland (SBF)",
+  "bronnen": [
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://www.bouwcultuurfondsfriesland.nl/aanvragen",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "Financiele bijdragen voor \"het restaureren/renoveren (geen nieuwbouw) van een gebouw of bouwsel of een onderdeel daarvan staande in de Provincie Fryslan\", gericht op \"de instandhouding van de cultuurhistorische en technische waarden\".",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "\"Met dit formulier kunt u een aanvraag indienen ... Aanvragen via post of e-mail worden in beginsel niet in behandeling genomen.\" Beoordeling door een Raad van Advies die tweemaal per jaar vergadert; \"Aanvragen dienen drie weken voor die vergaderingen binnen zijn.\" Vergaderdata 2026: RvA 5 maart en 24 september, bestuur 8 april en 27 oktober.",
+  "aanvrager_type": "beide",
+  "geo_niveau": "provincie",
+  "geo_waarden": [
+    "Friesland"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": "Geen bedragen gepubliceerd. Wel expliciet: \"SBF zal slechts positief oordelen over een bijdrage als uit de aanvraag blijkt dat het om een 'restbijdrage' gaat in relatie tot de dekking van de totale kosten van de plannen.\"",
+  "cofinanciering_vereist": true,
+  "uitsluitingen": [
+    "nieuwbouw (expliciet: 'geen nieuwbouw')",
+    "gebouwen buiten de provincie Fryslan",
+    "aanvragen per post of e-mail",
+    "projecten waarbij de gevraagde bijdrage geen restbijdrage is maar een hoofdfinanciering",
+    "gebouwen zonder evidente cultuurhistorische waarde"
+  ],
+  "kostensoort": [
+    "restauratie",
+    "investering"
+  ],
+  "landgoed_relevantie": {
+    "route": "zelf",
+    "onderbouwing": "Direct relevant en zonder rechtsvormbeperking in de gepubliceerde criteria: het gaat om \"het restaureren/renoveren ... van een gebouw of bouwsel of een onderdeel daarvan\" waarbij \"de stedenbouwkundige en landschappelijke waarde ... bijzonder\" moet zijn en \"de relatieve waarde van kenmerkende gebouwen met haar elementen in hun historische context\" meetelt. Dat is exact de argumentatie waarmee een landgoedensemble (state, stins, koetshuis, poortgebouw, boerderij) beoordeeld wordt. Ook \"publieke waarde\" en \"of het gebouw voor publiek toegankelijk is\" wegen mee: openstelling van het landgoed is dus een pluspunt in de aanvraag. Let op: alleen een restbijdrage, dus de rest van de financiering moet al rond zijn.",
+    "partnertype": null
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "Bedragrange of maximumbijdrage: nergens gepubliceerd.",
+    "Of particuliere eigenaren (natuurlijk persoon/BV) mogen aanvragen: de criteria gaan uitsluitend over het gebouw, niet over de aanvrager; geen expliciete beperking gevonden.",
+    "Of niet-rijksmonumenten in aanmerking komen: het formulier vraagt 'gegevens rijksmonument', maar de criteria spreken breder over 'kenmerkende gebouwen'; tegenstrijdig, niet opgelost.",
+    "Beleidsplan/jaarverslag: niet aangetroffen op de site."
+  ]
+}

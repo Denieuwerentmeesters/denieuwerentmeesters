@@ -1,0 +1,60 @@
+{
+  "naam": "Dina Altena Fonds (Cultuurfonds Gelderland)",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://www.cultuurfonds.nl/fondsen/dina-altena-fonds",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://www.cultuurfonds.nl/aanvragen/voorwaarden",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "\"Voor cultuurprojecten in de provincie Gelderland, in het bijzonder in de Gelderse Achterhoek en op de Veluwe. Denk aan bijvoorbeeld theatervoorstellingen met thema's uit de regionale geschiedenis, tentoonstellingen en publicaties.\"",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "Fonds op naam zonder eigen loket: \"Het Cultuurfonds behandelt de aanvragen en informeert de insteller over de bestede gelden en de betrokken projecten.\" Aanvragen loopt via het reguliere Cultuurfonds-aanvraagportaal met drempels: \"Je organisatie staat ingeschreven bij de Kamer van Koophandel\", cultuur of natuur in de statutaire doelstelling, en \"Je totale projectbegroting is minimaal EUR 15.000\".",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "regio",
+  "geo_waarden": [
+    "Gelderland",
+    "Gelderse Achterhoek",
+    "Veluwe"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": 10000,
+  "bedrag_indicatie": "Geen eigen bedragen gepubliceerd voor dit fonds op naam. Algemene Cultuurfonds-route: provinciale projecten maximaal 25% van de kosten met plafond EUR 10.000; minimale projectbegroting EUR 15.000.",
+  "cofinanciering_vereist": true,
+  "uitsluitingen": [
+    "reguliere exploitatie- en structurele kosten (\"alleen voor projectkosten, niet voor exploitatie- of reguliere kantoorkosten\")",
+    "regulier onderhoud van accommodaties",
+    "projecten met een politieke of religieuze hoofddoelstelling",
+    "polariserende projecten",
+    "solotentoonstellingen van hedendaagse kunstenaars",
+    "tijdelijke apps en reguliere websites",
+    "artist-in-residence-programma's",
+    "album-/EP-opnames",
+    "projecten met een begroting onder EUR 15.000",
+    "projecten buiten Nederland",
+    "projecten die binnen de reguliere activiteiten van de organisatie vallen"
+  ],
+  "kostensoort": [
+    "investering",
+    "restauratie",
+    "onderzoek"
+  ],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Het fonds richt zich op \"cultuurprojecten in de provincie Gelderland, in het bijzonder in de Gelderse Achterhoek en op de Veluwe\" - precies het gebied met een hoge landgoeddichtheid. Uit de toekenningenlijst blijkt landgoedaffiniteit: gesteund werd onderzoek en publicatie \"Kastelen, historische buitenplaatsen en landgoederen langs de Oude IJssel\" en de bouw van de Plaggenhut Zelhem (erfgoed & monumentenzorg). Route is via_partner omdat de Cultuurfonds-voorwaarden een stichting of vereniging met cultuur of natuur in de statutaire doelstelling eisen; alleen bij historische buitenplaatsen mag het erfgoed ook in bezit zijn van \"een familie-B.V. die verbonden is aan de Natuurschoonwet\". Accent ligt op publieksgerichte cultuur/erfgoedprojecten, niet op fysiek herstel van groen.",
+    "partnertype": "Stichting of vereniging met cultuur of natuur in de statutaire doelstelling: landgoedstichting, vriendenstichting, historische vereniging of streekmuseum. Bij een historische buitenplaats kan ook een NSW-familie-B.V. zelf aanvragen."
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "Eigen bedragen, deadlines, criteria of uitsluitingen van dit fonds op naam: cultuurfonds.nl publiceert alleen een doelstelling van twee zinnen plus de toekenningenlijst.",
+    "Apart beleidsplan of jaarverslag van het Dina Altena Fonds: niet aangetroffen op cultuurfonds.nl.",
+    "Cofinancieringspercentage specifiek voor dit fonds; alleen de algemene 25%-regel van de provinciale route is bekend."
+  ]
+}

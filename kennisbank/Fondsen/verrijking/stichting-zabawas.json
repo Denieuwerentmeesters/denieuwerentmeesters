@@ -1,0 +1,41 @@
+{
+  "naam": "Stichting Zabawas",
+  "bronnen": [
+    {"soort": "website", "url": "https://www.zabawas.nl/over-zabawas", "jaar": 2026, "gelezen": true},
+    {"soort": "aanvraagvoorwaarden", "url": "https://www.zabawas.nl/donatie-aanvraag", "jaar": 2026, "gelezen": true},
+    {"soort": "beleidsplan", "url": "https://www.zabawas.nl/sites/default/files/2026-07/Beleidsplan%20Zabawas%20juli%202026%20educatie%20deel%20aangepast.pdf", "jaar": 2026, "gelezen": true},
+    {"soort": "website", "url": "https://fondseninnederland.nl/fonds/stichting-zabawas", "jaar": 2026, "gelezen": true}
+  ],
+  "doelstelling": "De Stichting heeft ten doel het verlenen van geldelijke steun aan personen en/of instellingen die een algemeen belang beogen met name op het gebied van Cultuur, Natuur, Geneeskunde, Sport en Educatie, en voorts alles wat daarmee in de meest uitgebreide zin des woords verband houdt of daartoe bevorderlijk kan zijn.",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "\"Voordat wij u een aanvraagformulier toezenden, stellen wij u eerst een aantal vragen om te beoordelen of uw aanvraag passend is binnen onze beleidsmatige uitgangspunten.\" en \"In principe wordt door Zabawas alleen aan organisaties gedoneerd die een ANBI status hebben.\"",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "landelijk",
+  "geo_waarden": ["Nederland", "Caribische rijksdelen"],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": null,
+  "cofinanciering_vereist": false,
+  "uitsluitingen": [
+    "Geen financiering van investering in onroerend goed",
+    "Het aangevraagde bedrag mag niet binnen de reguliere exploitatie vallen",
+    "Geen financiering van FTE's, gages e.d. (behalve projectgebonden loonkosten)",
+    "Festivals, onderhoud/verbouwingen/inrichtingen van cultureel erfgoed en culturele instellingen vallen buiten onze scope",
+    "Organisaties met een negatief eigen vermogen",
+    "Projecten die al door de overheid worden gefinancierd of daar onder vallen (educatie)",
+    "Reguliere scholen (basisscholen en middelbare scholen)",
+    "Verbouwingen en/of verbeteringen aan ziekenhuisgebouwen of zorgtehuizen"
+  ],
+  "kostensoort": ["investering", "onderzoek"],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Het donatiegebied Natuur past bij landgoedopgaven: \"Zabawas wil bijdragen aan (i) natuur(behoud), (ii) activiteiten gericht op kennis over natuur(behoud) en (iii) activiteiten die gericht zijn om de natuur te beschermen. Uitgangspunt is dat de natuur (en niet de mens) de ontvanger is van onze donatie.\" Ook: \"natuurprojecten die een link hebben met de zee of binnenwateren in Nederland een pré\" - relevant voor waterpartijen, poelen, sloten op landgoederen. Maar twee harde drempels blokkeren de directe route van een particulier landgoed: \"In principe wordt door Zabawas alleen aan organisaties gedoneerd die een ANBI status hebben\" en \"Geen financiering van investering in onroerend goed\". Erfgoedherstel is expliciet uitgesloten: \"Festivals, onderhoud/verbouwingen/inrichtingen van cultureel erfgoed en culturele instellingen vallen buiten onze scope.\" Een natuurprojectaanvraag loopt daarom via een ANBI-natuur- of educatieorganisatie die het project op het landgoed uitvoert.",
+    "partnertype": "ANBI-natuurorganisatie (provinciaal landschap, natuurvereniging) of educatie-organisatie die een natuur- of leerproject op het landgoed uitvoert"
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "Bedragen (min/max/indicatie): niet genoemd in beleidsplan juli 2026, niet op donatie-aanvraagpagina, niet op over-zabawas",
+    "Deadlines/indieningsrondes: alleen 'alle gevraagde stukken uiterlijk 4 maanden vóór de aanvang van het project'; geen vaste rondes gepubliceerd",
+    "Doelstellingstekst op fondseninnederland.nl: FIN-pagina bevat geen eigen beleidstekst"
+  ]
+}

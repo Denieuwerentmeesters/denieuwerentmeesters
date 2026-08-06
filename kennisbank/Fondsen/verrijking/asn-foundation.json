@@ -1,0 +1,36 @@
+{
+  "naam": "ASN Foundation",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://www.asnbank.nl/over-asn-bank/asn-foundation.html",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "'De ASN Foundation ondersteunt projecten die Nederland duurzamer en eerlijker maken', langs de thema's duurzaamheid (natuur, klimaat, duurzame leefomgeving), goed wonen en financieel welzijn.",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "'Alleen Nederlandse stichtingen met ANBI-status kunnen een aanvraag indienen'; aanvragen worden per kwartaal door het bestuur beoordeeld.",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "landelijk",
+  "geo_waarden": [
+    "Nederland"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": null,
+  "cofinanciering_vereist": false,
+  "uitsluitingen": [],
+  "kostensoort": [
+    "investering"
+  ],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Thema duurzaamheid omvat 'initiatieven die natuur, klimaat en een duurzame leefomgeving ondersteunen'. Een landgoed-BV of particuliere eigenaar valt buiten de eis 'Nederlandse stichting met ANBI-status', dus de route loopt via een stichting.",
+    "partnertype": "Nederlandse stichting met ANBI-status (natuur-, landschaps- of leefomgevingsstichting)"
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "bedragen, uitsluitingen en inhoudelijke beoordelingscriteria - staan niet op de ASN-pagina; alleen aanvraagformulier achter aparte pagina"
+  ]
+}

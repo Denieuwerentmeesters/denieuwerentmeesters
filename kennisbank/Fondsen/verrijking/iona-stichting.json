@@ -1,0 +1,119 @@
+{
+  "naam": "Iona Stichting",
+  "bronnen": [
+    {
+      "soort": "anbi_publicatie",
+      "url": "https://fondseninnederland.nl/fonds/iona-stichting",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "beleidsplan",
+      "url": "https://fondseninnederland.nl/storage/Fondsbestanden/SllSX1SwKG4Kq3aTdQST1RzR9oyCPryNVgPlHixa.pdf",
+      "jaar": 2022,
+      "gelezen": true
+    },
+    {
+      "soort": "website",
+      "url": "https://iona.nl/",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://iona.nl/aanvragen/projectaanvraag/",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://iona.nl/aanvragen/aanvragen-algemeen/",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "\"De Iona Stichting wil bezielde initiatiefkracht vergroten waar hart, hoofd en handen bijdragen aan een gezonde wereld waarin mens, aarde en geest onlosmakelijk met elkaar verbonden zijn.\" Beleidsplan: \"Het doel is het bevorderen van geestelijke, culturele en maatschappelijke ontwikkeling door te faciliteren, te steunen, ontwikkelingen mogelijk te maken. De Iona stichting richt zich op initiatieven van algemeen nut, in het bijzonder op het gebied van de antroposofie en haar aandachtsgebieden, waaronder pedagogie, gezondheidszorg, gehandicaptenzorg, landbouw, natuurwetenschappen, euritmie, en het actief waarnemen van kunst; de religieuze dimensie van het leven; architectuur, monumentale kunsten, tuin- en landschapsarchitectuur, muzische en beeldende kunsten.\"",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "Open online aanvraagsysteem, maar met een uitgesproken relationele drempel: \"We vinden persoonlijk contact belangrijk. Vandaar dat we iedere aanvrager willen leren kennen. Dat is anders dan bij de meeste stichtingen en fondsen.\" En in het beleidsplan: \"Met nieuwe aanvragers gaan we fysieke kennismakings-bijeenkomsten organiseren als eerste stap van een mogelijke aanvraag.\" Verder: \"We nemen geen vooraanvragen in behandeling\", \"We nemen alleen aanvragen in behandeling die aan ons gericht zijn. Algemene aanvragen (bijvoorbeeld 'beste geïnteresseerde') worden niet in behandeling genomen\", \"we nemen alleen aanvragen in behandeling voor projecten of initiatieven die nog niet gestart zijn\" en \"we ondersteunen één aanvraag per organisatie/aanvrager per jaar\". Reactietermijn: \"In principe krijgt de aanvrager binnen 6 weken een reactie.\"",
+  "aanvrager_type": "beide",
+  "geo_niveau": "landelijk",
+  "geo_waarden": [
+    "Nederland",
+    "internationaal (met de eis dat Iona voldoende lokale contacten heeft voor advies)"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": null,
+  "cofinanciering_vereist": null,
+  "uitsluitingen": [
+    "gebouwen",
+    "restauratie van kerken en orgels",
+    "financiering van vastgoed (\"In beginsel zijn financiering achteraf, exploitatiefinanciering en financiering van vastgoed uitgesloten. Vastgoed kan wel gefinancierd worden uit gerichte schenkingen.\")",
+    "exploitatiefinanciering",
+    "financiering achteraf; projecten die al afgesloten zijn",
+    "projecten die al begonnen zijn bij het indienen van de aanvraag",
+    "sociaal maatschappelijke projecten zonder antroposofische achtergrond",
+    "schoolpleinen",
+    "boekuitgaven",
+    "vakantiekampen",
+    "patiëntenverenigingen",
+    "verzoeken om individuele noodhulp",
+    "schuldhulpverlening",
+    "podiumkunsten (professioneel)",
+    "exploitatiekosten van euritmiegezelschappen buiten Nederland",
+    "films en documentaires",
+    "buitenlandse concertreizen",
+    "artist in residence programma's",
+    "meer dan één aanvraag per organisatie/aanvrager per jaar"
+  ],
+  "kostensoort": [
+    "investering",
+    "onderzoek"
+  ],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Inhoudelijk raakt Iona de landgoedagenda op de groene en programmatische kant, niet op de stenen. Statutair noemt het beleidsplan uitdrukkelijk \"landbouw, natuurwetenschappen\" en \"tuin- en landschapsarchitectuur\" als aandachtsgebieden, en het eerste van de vier meerjarenthema's is \"Verduurzaming van de landbouw, voedselketens, natuur en economie - AARDE\". Iona wil bovendien \"bij uitstek\" initiatieven steunen \"waarbij de gebieden landbouw/natuur/voeding, kunst, onderwijs, en/of zorg zich met elkaar verweven ontwikkelen en er nieuw sociaal weefsel ontstaat\" - dat is precies het profiel van een landgoed dat biologische landbouw, zorg, educatie en cultuur combineert. Harde grens aan de andere kant: op de lijst 'onderwerpen die wij niet ondersteunen' staan letterlijk \"gebouwen\" en \"restauratie van kerken en orgels\", en het beleidsplan zegt \"In beginsel zijn financiering achteraf, exploitatiefinanciering en financiering van vastgoed uitgesloten\". Restauratie van een koetshuis, hoofdhuis of kapel valt daar dus buiten - met één opening: \"Vastgoed kan wel gefinancierd worden uit gerichte schenkingen\", dus via een fonds op naam of een gerichte schenkingsactie (Iona voerde in 2026 zichtbaar actie onder de titel 'Behoud het Koetshuis op de Reehorst'). Route is via_partner en niet zelf omdat een reguliere landgoedexploitatie zonder antroposofische signatuur afvalt op \"sociaal maatschappelijke projecten zonder antroposofische achtergrond\"; de aanvrager is in de praktijk een initiatief met antroposofische wortels dat zich op het landgoed vestigt of ontwikkelt.",
+    "partnertype": "Een initiatief met antroposofische achtergrond dat op of met het landgoed werkt: een biologisch-dynamisch of natuurinclusief landbouwinitiatief, een zorgboerderij of zorginitiatief, een vrijeschool of natuureducatie-initiatief, een kunstinitiatief in relatie tot natuur, of een gemeenschapsinitiatief rond nieuw grondeigendom (vergelijk Iona's eigen project 'Eigendom anders'). Voor het gebouwde deel: een gerichte schenking of fonds op naam bij Iona in plaats van een projectaanvraag."
+  },
+  "onderliggende_fondsen": [
+    {
+      "naam": "Studiefonds Herrad van Landsberg",
+      "relevant": false,
+      "reden": "studiebeurzen voor studenten aan antroposofische opleidingen"
+    },
+    {
+      "naam": "Beroepsontwikkeling (regeling)",
+      "relevant": false,
+      "reden": "cursus/training op antroposofisch werkgebied, individueel gericht"
+    },
+    {
+      "naam": "Iona Leningen",
+      "relevant": true,
+      "reden": "aparte leningfaciliteit met eigen voorwaarden - mogelijk wel bruikbaar voor vastgoed of grond waar de gift-route dat uitsluit; voorwaarden niet uitgelezen"
+    },
+    {
+      "naam": "Vriendenfonds Vrije Hogeschool",
+      "relevant": false,
+      "reden": "onderwijsinstelling-specifiek"
+    },
+    {
+      "naam": "Earth Charter Nederland - Deelgenootschap",
+      "relevant": true,
+      "reden": "duurzaamheid/aarde-thema; denkbare route voor een landschaps- of gemeenschapsinitiatief op een landgoed"
+    },
+    {
+      "naam": "Fonds Vrijplaats voor kinderen",
+      "relevant": true,
+      "reden": "kinderen en vrije ruimte; denkbare route voor natuur- of speelinitiatief op een landgoed via een antroposofische partner"
+    }
+  ],
+  "niet_gevonden": [
+    "Bedragen: nergens een minimum, maximum of richtbedrag gepubliceerd - niet op de aanvraagpagina's, niet in het beleidsplan 2022-2026.",
+    "Cofinancieringseis: alleen \"De stichting kan binnen haar netwerk zoeken naar cofinanciering\" - geen verplichting geformuleerd.",
+    "Deadlines: geen rondes of sluitingsdata; wel een reactietermijn van circa 6 weken.",
+    "Voorwaarden van Iona Leningen: de pagina wordt genoemd op /aanvragen/aanvragen-algemeen/ maar is niet uitgelezen.",
+    "De deelfondsen ('Iona themafondsen' en doelfondsen op naam) zijn grotendeels niet openbaar: \"Deze zijn nu naar buiten toe niet zichtbaar. Ze staan niet op de website of in het jaarverslag en worden alleen gebruikt 'achter de schermen'.\" Een eventueel landgoed- of natuurfonds op naam is daardoor niet te achterhalen.",
+    "De inhoud van het nieuwsbericht 'Behoud het Koetshuis op de Reehorst' (13 juli 2026): de detailpagina gaf geen tekst terug; alleen de titel is vastgesteld.",
+    "Of 'gebouwen' als uitsluiting ook nieuwbouw/herbestemming omvat of alleen verwerving: niet nader toegelicht."
+  ]
+}

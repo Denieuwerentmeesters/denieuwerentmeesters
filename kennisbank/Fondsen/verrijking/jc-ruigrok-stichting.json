@@ -1,0 +1,51 @@
+{
+  "naam": "J.C. Ruigrok Stichting / J.C. Ruigrok Fonds",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://jcruigrokfonds.nl/",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "anbi_publicatie",
+      "url": "https://fondseninnederland.nl/fonds/jc-ruigrok-stichting",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "Steun aan projecten van maatschappelijke organisaties in de regio Kennemerland die bijdragen aan 'een sterke en betrokken samenleving'; projecten brengen mensen bij elkaar, zijn tijdelijk van aard en creeren blijvende waarde voor anderen.",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "De aanvraag begint met een QuickScan, gevolgd door een formele aanvraag via het portaal; het fonds richt zich op 'maatschappelijke organisaties' in de regio.",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "regio",
+  "geo_waarden": [
+    "Kennemerland",
+    "Haarlem",
+    "Bloemendaal",
+    "Heemstede",
+    "Haarlemmermeer",
+    "Bollenstreek"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": null,
+  "cofinanciering_vereist": false,
+  "uitsluitingen": [
+    "projecten die niet tijdelijk van aard zijn",
+    "projecten buiten de regio Kennemerland"
+  ],
+  "kostensoort": [
+    "investering"
+  ],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "De doelstelling is sociaal-maatschappelijk ('een sterke en betrokken samenleving', projecten die 'mensen bij elkaar brengen'), niet erfgoed of natuur. Kennemerland is wel dicht bezet met buitenplaatsen: de route loopt via een maatschappelijke organisatie die een publieksactiviteit, dagbesteding of ontmoetingsprogramma op een landgoed organiseert; het landgoed komt als locatiepost in haar begroting.",
+    "partnertype": "maatschappelijke organisatie in Kennemerland (welzijn, zorg, buurt- of vrijwilligersorganisatie)"
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "de aparte criteriapagina met bedragen en uitsluitingen - alleen naar verwezen vanaf de homepage",
+    "of erfgoed of landschap onder de doelstelling valt"
+  ]
+}

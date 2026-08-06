@@ -1,0 +1,46 @@
+{
+  "naam": "Carel Nengerman Fonds",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://carelnengermanfonds.nl/Het-fonds",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://carelnengermanfonds.nl/Aanvragen",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "'Deze stichting stelt zich de bevordering van cultuur en natuur ten doel.'",
+  "benaderbaarheid": "open",
+  "benaderwijze_notitie": "'Een aanvraag kan ingediend worden door het toesturen van een projectplan, voorzien van kostenbegroting en dekkingsplan.'",
+  "aanvrager_type": "onbekend",
+  "geo_niveau": "onbekend",
+  "geo_waarden": [
+    "zetel Utrecht; werkgebied niet gepubliceerd"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": null,
+  "cofinanciering_vereist": false,
+  "uitsluitingen": [],
+  "kostensoort": [
+    "investering",
+    "restauratie",
+    "onderzoek"
+  ],
+  "landgoed_relevantie": {
+    "route": "zelf",
+    "onderbouwing": "De doelstelling 'de bevordering van cultuur en natuur' dekt beide hoofdlijnen van een landgoed (erfgoed en natuur), de aanvraagdrempel is laag (projectplan, begroting, dekkingsplan) en er is geen gepubliceerde eis van rechtsvorm of ANBI. Het ontbreken van uitsluitingen maakt de kans reeel maar niet toetsbaar; benaderen loont.",
+    "partnertype": null
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "de pagina /Voorwaarden gaf HTTP 404 - voorwaarden, uitsluitingen en bedragen niet vastgesteld",
+    "vergaderdata",
+    "het geografische werkgebied (in de werklijst genoemd als Utrecht, niet bevestigd op de eigen site)"
+  ]
+}

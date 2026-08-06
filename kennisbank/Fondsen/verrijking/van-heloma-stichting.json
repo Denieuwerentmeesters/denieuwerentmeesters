@@ -1,0 +1,61 @@
+{
+  "naam": "Van Heloma Stichting",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://vanhelomastichting.nl/site/",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "website",
+      "url": "https://vanhelomastichting.nl/site/de-stichting/",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://vanhelomastichting.nl/site/aanvragen/",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "\"De Van Heloma Stichting is opgericht in 1952. De stichting houdt de naam en het gedachtegoed van het Friese geslacht Van Heloma in ere en ondersteunt initiatieven voor behoud van cultureel erfgoed, natuur en landschap in Friesland.\"",
+  "benaderbaarheid": "open",
+  "benaderwijze_notitie": "\"Rechtspersonen zonder winstdoelstelling kunnen een aanvraag indienen voor ondersteuning.\" Aanvraag per e-mail (\"Het aanvraagformulier is op dit moment off-line. U kunt een e-mail sturen naar info@vanhelomastichting.nl\") met projectplan, begroting en dekkingsoverzicht. Bericht binnen twee tot vier maanden. \"De Van Heloma Stichting ontvangt jaarlijks meer aanvragen dan kunnen worden toegekend.\"",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "provincie",
+  "geo_waarden": [
+    "Friesland",
+    "Heerenveen en omstreken (ruimere interpretatie van de doelstelling)"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": "\"Giften varieren van enkele honderden euro's tot een paar duizend euro per jaar. Het bestedingsbudget is jaarlijks circa honderdduizend euro.\"",
+  "cofinanciering_vereist": false,
+  "uitsluitingen": [
+    "initiatieven buiten Friesland ('worden niet in behandeling genomen')",
+    "club- en buurthuiswerk",
+    "exploitatie en renovatie van dorpshuizen",
+    "hedendaags toneel",
+    "hedendaagse muziekbeoefening",
+    "cd-opnames",
+    "aanvragen van natuurlijke personen (alleen rechtspersonen zonder winstdoelstelling)"
+  ],
+  "kostensoort": [
+    "investering",
+    "restauratie"
+  ],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "De drie kerndoelen zijn letterlijk \"behoud van cultureel erfgoed\", \"behoud van natuur\" en \"behoud van karakteristiek landschap\" in Friesland - samen precies de landgoedopgave. Het fonds beheert bovendien zelf een historisch familieverblijf (Huize Voormeer, 1755) en financierde de restauratie van het cultuurhistorische Van Helomasluisje, dus restauratie van historisch gebouwd erfgoed is aantoonbaar in scope. Route via_partner omdat alleen \"rechtspersonen zonder winstdoelstelling\" mogen indienen: een landgoed in particulier eigendom of BV-vorm moet via een stichting of vereniging. Let op de schaal: giften van enkele honderden tot een paar duizend euro - dit is een aanvullend, geen dragend fonds.",
+    "partnertype": "Rechtspersoon zonder winstdoelstelling: landgoedstichting, vriendenstichting, historische vereniging, of een Friese natuur-/landschapsorganisatie."
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "Deadlines of vergaderdata: niet gepubliceerd.",
+    "Of cofinanciering vereist is: er wordt een dekkingsoverzicht gevraagd, maar geen maximumpercentage genoemd.",
+    "Beleidsplan of jaarverslag: de ANBI-pagina is niet apart uitgelezen.",
+    "Werkend online aanvraagformulier: dat is blijkens de site offline."
+  ]
+}

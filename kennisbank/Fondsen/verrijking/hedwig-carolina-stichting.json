@@ -1,0 +1,43 @@
+{
+  "naam": "Hedwig Carolina Stichting",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://www.itfryskegea.nl/organisatie/steun-ons/fondsen-en-stichtingen/",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "\"De Hedwig Carolina Stichting heeft als doel het natuurbeschermingswerk van It Fryske Gea en Landschap Overijssel te steunen.\"",
+  "benaderbaarheid": "gesloten",
+  "benaderwijze_notitie": "De doelstelling bindt de stichting aan twee benoemde begunstigden: \"het natuurbeschermingswerk van It Fryske Gea en Landschap Overijssel\". Een aanvraagprocedure voor derden wordt op de enige gevonden vindplaats niet genoemd. De stichting heeft geen eigen website die is aangetroffen.",
+  "aanvrager_type": "nvt",
+  "geo_niveau": "provincie",
+  "geo_waarden": [
+    "Friesland",
+    "Overijssel"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": null,
+  "cofinanciering_vereist": false,
+  "uitsluitingen": [
+    "alles buiten het natuurbeschermingswerk van It Fryske Gea en Landschap Overijssel"
+  ],
+  "kostensoort": [
+    "investering",
+    "restauratie"
+  ],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "De genoemde bestedingen zijn opvallend landgoed-achtig: \"financiering van een hooibergschuur bij It Fryske Gea in Earnewald\" en \"bijdrage aan de restauratie van de Slottun in Rijs\" - de Slottun is de historische tuin bij het voormalige Huize Rijs, dus historisch groen bij een buitenplaats. Een landgoed dat in eigendom, beheer of samenwerking is met It Fryske Gea of Landschap Overijssel kan langs deze weg dus wel degelijk gefinancierd worden, inclusief opstallen en historische tuinaanleg. Er is geen route waarlangs een derde rechtstreeks aanvraagt.",
+    "partnertype": "It Fryske Gea (Friesland) of Landschap Overijssel; het landgoed moet in hun bezit, beheer of in een gezamenlijk project zitten."
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "Een eigen website, beleidsplan of ANBI-publicatie van de Hedwig Carolina Stichting: niet gevonden; de itfryskegea.nl-pagina is de enige vindplaats.",
+    "Bedragen of jaarlijks budget.",
+    "Of er een aanvraagprocedure bestaat, of dat de stichting uitsluitend op eigen initiatief uitkeert aan de twee genoemde organisaties.",
+    "Contactgegevens van de stichting zelf."
+  ]
+}

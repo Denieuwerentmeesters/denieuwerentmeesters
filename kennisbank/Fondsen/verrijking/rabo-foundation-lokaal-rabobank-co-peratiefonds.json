@@ -1,0 +1,41 @@
+{
+  "naam": "Rabo Foundation / lokaal Rabobank Cooperatiefonds",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://www.rabobank.nl/lokale-bank/rotterdam/cooperatiefonds",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "Het Rabo Cooperatiefonds ondersteunt verenigingen en stichtingen die een maatschappelijk project starten dat aansluit bij de thema's/transities van de maatschappelijke agenda van Rabobank (o.a. energietransitie en voedseltransitie), gefinancierd uit het cooperatief dividend.",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "'De aanvragende partij moet een lokale vereniging of stichting zijn die een bankrelatie heeft met Rabobank' en 'het project moet toegankelijk zijn voor een breed publiek in de regio'.",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "regio",
+  "geo_waarden": [
+    "per lokale Rabobank-vestiging; landelijk dekkend netwerk"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": "verschilt per lokale Rabobank; niet gepubliceerd op de centrale pagina",
+  "cofinanciering_vereist": false,
+  "uitsluitingen": [
+    "projecten die niet aansluiten bij een van de vijf thema's van de maatschappelijke agenda",
+    "projecten die niet toegankelijk zijn voor een breed publiek"
+  ],
+  "kostensoort": [
+    "investering",
+    "onderzoek"
+  ],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Het fonds keert uit aan 'een lokale vereniging of stichting'; een landgoedeigenaar zelf voldoet daar meestal niet aan. Wel is een publiek toegankelijk landschaps-, voedsel- of energieproject op een landgoed goed te plaatsen binnen de transitie-thema's, aangevraagd door een lokale vereniging/stichting.",
+    "partnertype": "lokale vereniging of stichting met bankrelatie bij de betreffende Rabobank (bijv. dorpsvereniging, landschapsvereniging, streekfonds)"
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "de centrale pagina rabobank.nl/lokale-bank/cooperatiefonds en rabobank.nl/over-ons/rabo-foundation gaven HTTP 403; beleid Rabo Foundation (landelijk/internationaal) niet vastgesteld",
+    "bedragen en deadlines - deze verschillen per lokale bank en zijn alleen daar te vinden"
+  ]
+}

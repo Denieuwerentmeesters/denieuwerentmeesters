@@ -1,0 +1,42 @@
+{
+  "naam": "Van den Hazel Fonds (Van den Hazel-Stapelkamp Fonds), fonds op naam bij Geldersch Landschap & Kasteelen",
+  "bronnen": [
+    {
+      "soort": "jaarverslag",
+      "url": "https://static.cbf.nl/documents/Geldersch%20Landschap%20&%20Kasteelen/2024/jaarverslag.pdf",
+      "jaar": 2024,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "\"Het fonds heeft primair tot doel het behoud en herstel in de omgeving van Winterswijk van landschapselementen en monumentale historische agrarische gebouwen, die cultuurhistorisch van belang zijn; het verbeteren van de kwaliteit van de natuur door het creëren van (meer) synergie met landbouw bijvoorbeeld door middel van grondaankoop en herinrichting en/of herverkaveling.\"",
+  "benaderbaarheid": "gesloten",
+  "benaderwijze_notitie": "\"Betreft een fonds op naam, gevormd in 2022 uit jaarlijkse schenkingen en/of via een testament.\" Het is een bestemmingsfonds binnen de jaarrekening van Geldersch Landschap & Kasteelen, geen zelfstandige stichting met aanvraagloket; er is nergens een aanvraagprocedure gepubliceerd. De middelen worden door GLK zelf besteed aan eigen verwervingen.",
+  "aanvrager_type": "nvt",
+  "geo_niveau": "regio",
+  "geo_waarden": [
+    "omgeving Winterswijk, Gelderland"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": "Stand per 1 januari 2024 € 20.000; toevoeging boekjaar € 10.000; onttrekking boekjaar € 30.000; stand per 31 december 2024 nihil. Jaarlijkse toevoeging € 10.000 (2023 en 2024).",
+  "cofinanciering_vereist": null,
+  "uitsluitingen": [
+    "besteding buiten de omgeving van Winterswijk",
+    "besteding buiten de eigen doelen van Geldersch Landschap & Kasteelen"
+  ],
+  "kostensoort": [
+    "investering",
+    "restauratie"
+  ],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Het doel raakt de kern van landgoedbeheer: \"het behoud en herstel in de omgeving van Winterswijk van landschapselementen en monumentale historische agrarische gebouwen, die cultuurhistorisch van belang zijn\" en \"het verbeteren van de kwaliteit van de natuur door het creëren van (meer) synergie met landbouw bijvoorbeeld door middel van grondaankoop en herinrichting en/of herverkaveling\". Maar het geld zit in de jaarrekening van GLK en wordt besteed aan GLK-verwervingen (in 2024: hoeve Kössink, historische Enk). Voor een Achterhoeks landgoed is de enige denkbare route een samenwerking of grondtransactie met Geldersch Landschap & Kasteelen zelf — bijvoorbeeld het afstaan of ruilen van landbouwgrond ten gunste van natuurontwikkeling, zoals de pachter van hoeve Kössink deed. Rechtstreeks aanvragen kan niet.",
+    "partnertype": "Geldersch Landschap & Kasteelen (Stichting Het Geldersch Landschap / Stichting Vrienden der Geldersche Kasteelen)"
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "een eigen website, aanvraagpagina of contactgegevens van het fonds — bestaat niet; het fonds komt alleen voor als bestemmingsfonds in de GLK-jaarrekening",
+    "de identiteit van de schenker(s) en of de jaarlijkse schenking van € 10.000 doorloopt",
+    "of GLK een procedure kent waarmee derden een beroep op dit fonds kunnen doen"
+  ]
+}

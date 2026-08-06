@@ -1,0 +1,39 @@
+{
+  "naam": "Jeugdfonds Sport & Cultuur",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://www.allekinderendoenmee.nl/",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "Kinderen uit gezinnen met weinig geld laten meedoen aan sport- en cultuuractiviteiten door contributie en lesgeld te betalen.",
+  "benaderbaarheid": "via_intermediair",
+  "benaderwijze_notitie": "\"Ouders en sport- en cultuuraanbieders kunnen zelf geen aanvraag doen\" - alleen aangewezen intermediairs (Meerkracht) kunnen indienen.",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "landelijk",
+  "geo_waarden": [
+    "Nederland (regionale afdelingen)"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": null,
+  "cofinanciering_vereist": null,
+  "uitsluitingen": [
+    "aanvragen door ouders zelf",
+    "aanvragen door sport- en cultuuraanbieders zelf"
+  ],
+  "kostensoort": [
+    "exploitatie"
+  ],
+  "landgoed_relevantie": {
+    "route": "niet_relevant",
+    "onderbouwing": "Het fonds betaalt uitsluitend individuele contributie en lesgeld, rechtstreeks \"aan de sportclub of culturele instelling\", en alleen op aanvraag van een aangewezen intermediair. Er is geen projectfinanciering en dus geen denkbare route naar een landgoedproject; hooguit kan een kind lesgeld betaald krijgen voor een cursus die toevallig op een landgoed plaatsvindt, maar dat is geen financiering van het landgoed.",
+    "partnertype": null
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "bedragen, uitsluitingen en formele doelstelling - staan op jeugdfondssportencultuur.nl, niet op de geraadpleegde pagina"
+  ]
+}

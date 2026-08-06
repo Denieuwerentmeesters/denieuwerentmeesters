@@ -1,0 +1,66 @@
+{
+  "naam": "Elisabeth Strouven Fonds",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://www.elisabethstrouvenfonds.nl/natuur/",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://www.elisabethstrouvenfonds.nl/aanvragen/bijdrageregeling-van-het-fonds",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://www.elisabethstrouvenfonds.nl/aanvragen/",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "\"Een privaat vermogensfonds dat financiele ondersteuning biedt aan initiatieven van organisaties en instellingen in Maastricht en omstreken. Dat gebeurt binnen drie aandachtsgebieden: mens, cultuur en natuur.\" Binnen natuur: \"We werken mee aan het behoud, beheer en ontwikkeling van de natuur. Daarnaast stimuleren we biodiversiteit voor een mooie en gezonde leefomgeving.\"",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "\"Een aanvraag voor financiele ondersteuning kan uitsluitend via het digitaal aanvraagformulier op deze website\", voorafgegaan door een verplichte quickscan; reactietijd maximaal acht weken. \"Alleen rechtspersonen, organisaties en instellingen mogen een aanvraag indienen.\" En: \"Een financiele ondersteuning van het Elisabeth Strouven Fonds is een voorrecht en geen recht.\"",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "gemeente",
+  "geo_waarden": [
+    "Maastricht",
+    "Meerssen",
+    "Valkenburg aan de Geul",
+    "Eijsden-Margraten",
+    "Gulpen-Wittem",
+    "Vaals",
+    "Euregio Maas-Rijn (alleen voor cultuur)"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": "Geen maximum gepubliceerd. Staffel: bijdragen t/m EUR 2.500 zijn een gift zonder verantwoordingsplicht; bijdragen tussen EUR 2.501 en EUR 5.000 worden direct na toekenning in hun geheel uitbetaald. Boven EUR 5.000 geldt: \"De financiele ondersteuning van het fonds zal dan niet meer dan 25% zijn.\"",
+  "cofinanciering_vereist": true,
+  "uitsluitingen": [
+    "strikt levensbeschouwelijke aangelegenheden of uitgesproken religieuze of politieke doelstellingen",
+    "(wetenschappelijk) onderzoek",
+    "fysieke infrastructurele elementen zoals gebouwen, buurt- en clubhuizen, verbouwingen en inrichtingen, tenzij er een sterk aantoonbaar verband is met een doelstelling van het fonds of ze essentieel zijn voor zinvolle activiteiten",
+    "structurele aanvulling van exploitatietekorten",
+    "reguliere, door de overheid betaalde activiteiten van organisaties en (zorg)instellingen",
+    "aanvragen van natuurlijke personen zonder onderbrenging in een rechtsvorm",
+    "initiatieven buiten het werkgebied van het betreffende aandachtsgebied",
+    "initiatieven gericht op financieel voordeel voor de aanvrager of derden"
+  ],
+  "kostensoort": [
+    "investering",
+    "restauratie"
+  ],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Inhoudelijk sterk passend: het aandachtsgebied natuur richt zich op \"behoud, beheer en ontwikkeling van de natuur\" en op biodiversiteit \"via leefgebiedherstel\", plus expliciet natuurinclusieve landbouw met \"steun voor pachters bij investeringen in bodemgezondheid, waterbeheer en natuurontwikkeling\" - een landgoed met pachtboeren in het Heuvelland past daar direct in. Het fonds beheert bovendien zelf gronden \"waar het initiatief neemt samen met pachters en agrariers\". Kritische breuklijn: \"Fysieke infrastructurele elementen, zoals gebouwen ... verbouwingen en inrichtingen\" worden IN DE REGEL NIET ondersteund - restauratie van een landgoedpand valt dus buiten beeld tenzij het aantoonbaar essentieel is voor de activiteit. Een landgoedvraag moet hier dus als natuur-, biodiversiteits- of educatievraag geformuleerd worden, niet als restauratievraag. Route via_partner omdat alleen rechtspersonen mogen indienen.",
+    "partnertype": "Rechtspersoon, organisatie of instelling: landgoedstichting, natuurorganisatie, agrarische natuurvereniging, educatie- of welzijnsinstelling die het initiatief op het landgoed uitvoert."
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "De volledige bedragenstaffel boven EUR 5.000: de pagina liep bij het ophalen af midden in de tekst over bijdragen tussen EUR 2.501 en EUR 5.000.",
+    "Het jaarlijkse bestedingsbudget: niet op de bijdrageregeling; wel is er een jaarverslag 2025 op de site, niet uitgelezen.",
+    "Deadlines: het fonds werkt met doorlopende indiening en 8 weken reactietijd; geen rondes gevonden."
+  ]
+}

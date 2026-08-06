@@ -1,0 +1,76 @@
+{
+ "naam": "De Dullertstichting",
+ "bronnen": [
+  {
+   "soort": "website",
+   "url": "https://www.fondseninnederland.nl/fonds/dullertsstichting",
+   "jaar": null,
+   "gelezen": true
+  },
+  {
+   "soort": "anbi_publicatie",
+   "url": "https://www.dullertsstichting.nl/over-de-stichting/anbi-gegevens",
+   "jaar": null,
+   "gelezen": true
+  },
+  {
+   "soort": "aanvraagvoorwaarden",
+   "url": "https://www.dullertsstichting.nl/aanvraag",
+   "jaar": null,
+   "gelezen": true
+  },
+  {
+   "soort": "website",
+   "url": "https://www.dullertsstichting.nl/maak-kennis/wat-doen-wij",
+   "jaar": null,
+   "gelezen": true
+  },
+  {
+   "soort": "website",
+   "url": "https://www.dullertsstichting.nl/heij-konijnfonds",
+   "jaar": null,
+   "gelezen": true
+  }
+ ],
+ "doelstelling": "De stichting heeft ten doel het doen van eenmalige giften- alsmede het verlenen van langdurige jaarlijkse ondersteuning aan natuurlijke personen die wonen in het werkgebied van de stichting en die daarvoor wegens hun financiele of maatschappelijke omstandigheden in aanmerking komen. Daarnaast verleent de stichting - binnen het werkgebied - eenmalige giften aan instellingen van liefdadigheid of met sociale doeleinden die naar het oordeel van het bestuur daarvoor in aanmerking komen.",
+ "benaderbaarheid": "open_met_drempel",
+ "benaderwijze_notitie": "Voor particulieren geldt een harde voorwaarde vooraf: 'Financiele hulp aan de aanvrager is door de volgende voorziening(en), voor zover van toepassing schriftelijk afgewezen: Bijzondere Bijstand, afdeling schuldhulpverlening van de gemeente, Wet maatschappelijke ondersteuning, zorgverzekering.' Voor projecten is er geen digitaal loket: 'Als u een bijdrage voor een project zou willen aanvragen neem dan contact met ons op. Het is niet mogelijk om hiervoor een digitale aanvraag in te dienen.'",
+ "aanvrager_type": "derde_partij",
+ "geo_niveau": "gemeente",
+ "geo_waarden": [
+  "Arnhem",
+  "Duiven",
+  "Renkum",
+  "Rheden",
+  "Rozendaal",
+  "Westervoort",
+  "voormalige gemeente Huissen"
+ ],
+ "bedrag_min": null,
+ "bedrag_max": null,
+ "bedrag_indicatie": "Alleen voor het Heij-Konijnfonds (jonge kunstenaars) is een bedrag gepubliceerd: 'Het Heij Konijn fonds kan u op weg helpen met een eenmalige bijdrage van maximaal € 2.500,-'. Voor de overige giften zijn geen bedragen gepubliceerd; bovendien: 'De Dullertsstichting geeft in principe geen contant geld.'",
+ "cofinanciering_vereist": null,
+ "uitsluitingen": [
+  "'Voor goederen die al zijn aangeschaft, wordt een hulpvraag niet in behandeling genomen.'",
+  "'een particulier die al een keer hulp heeft ontvangen, [moet] 24 maanden ... wachten voordat een nieuwe aanvraag kan worden ingediend'",
+  "Buiten het werkgebied: 'De aanvrager woont in ons werkgebied (Het werkgebied bestaat uit de gemeenten Arnhem, Duiven, Renkum, Rheden, Rozendaal, Westervoort en de voormalige gemeente Huissen.)'",
+  "Contant geld: 'Als de aanvraag is goedgekeurd, betrekt U de goederen of zorg bij een door ons aangewezen leverancier, die wij zelf rechtstreeks betalen.'"
+ ],
+ "kostensoort": [
+  "investering",
+  "exploitatie"
+ ],
+ "landgoed_relevantie": {
+  "route": "via_partner",
+  "onderbouwing": "Het fonds geeft niet aan landgoederen of erfgoed, maar wel aan sociale en welzijnsinstellingen in de regio Arnhem, inclusief projecten met een groene, locatiegebonden component: 'Wij ondersteunen voorts diverse projecten op het gebied van schuld-hulpverlening en preventie, maar ook organisaties als Stichting Leergeld, Stichting Kledingbank, Stichting Refugee Company (opvang vluchtelingen) en Stadslandbouw Mooieweg (combinatie van ondermeer bevordering van sociale cohesie, dagbesteding en gezonde bevoorrading van de Voedselbank).' Dat laatste voorbeeld laat zien dat dagbesteding op een groene locatie binnen het beleid past. Een landgoed in Arnhem, Duiven, Renkum, Rheden, Rozendaal, Westervoort of Huissen kan dus als locatie in de begroting van een zorg- of welzijnsorganisatie meeliften; het landgoed zelf is geen aanvrager ('De stichting biedt ondersteuning aan diverse instellingen, waaronder zorg- en welzijnorganisaties, dagopvang, wijkorganisaties en vakantiekampen').",
+  "partnertype": "Zorg- of welzijnsorganisatie, dagopvang, wijkorganisatie, vakantiekamp of stadslandbouw-/dagbestedingsinitiatief gevestigd in het werkgebied, dat een programma op het landgoed organiseert. Daarnaast kan een jonge kunstenaar (tot 30 jaar) die in het werkgebied woont of werkt via het Heij-Konijnfonds een project op een landgoed financieren."
+ },
+ "niet_gevonden": [
+  "De FIN-pagina https://www.fondseninnederland.nl/fonds/dullertsstichting bevat geen doelstelling, strategie, sectoren of aanvraagprocedure - alleen KVK 40412123, RSIN 8016.21.069 en een Jaarlijkse Verklaring-PDF (/storage/Fondsbestanden/JV/Dullertstichting JV24 extern.pdf). De slugs 'de-dullertsstichting' en 'stichting-de-dullertsstichting' geven 404.",
+  "Beleidsplan: op /over-de-stichting/anbi-gegevens staat een link 'Beleidsplan', maar het onderliggende document is niet uitgelezen",
+  "Bedragen voor particulieren en instellingen: niet gepubliceerd",
+  "Cofinancieringseis: niet aangetroffen",
+  "Naamverschil met de catalogus: bronlijst zegt 'De Dullertstichting', het fonds zelf 'Dullertsstichting'. Naam gelijkgetrokken om te kunnen koppelen; de actuele naam staat in naam_actueel."
+ ],
+ "naam_actueel": "Dullertsstichting"
+}

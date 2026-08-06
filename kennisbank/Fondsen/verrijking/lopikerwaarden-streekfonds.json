@@ -1,0 +1,34 @@
+{
+  "naam": "Lopikerwaarden Streekfonds",
+  "bronnen": [
+    {"soort": "website", "url": "https://www.lopikerwaarden.nl/", "jaar": 2026, "gelezen": true},
+    {"soort": "website", "url": "https://www.lopikerwaarden.nl/over-ons/", "jaar": 2026, "gelezen": true},
+    {"soort": "website", "url": "https://www.lopikerwaarden.nl/doe-mee/", "jaar": 2026, "gelezen": true}
+  ],
+  "doelstelling": "Lopikerwaarden Streekfonds zoekt verbindingen tussen ideeën, mensen en bedrijven in de Lopikerwaard om de omgeving mooier, vitaler, duurzamer en fijn te maken en te houden. Het Streekfonds Lopikerwaarden heeft als doel om met projecten (met een glimlach) de streek aantrekkelijker, bewuster en spannender te maken.",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "Er is geen aanvraagloket, wel een uitnodiging voor ideeën: \"Kunt u ons helpen? Heeft u vragen? Of een goed idee? Neemt u dan contact op met onze coördinator.\" Belangrijk voorbehoud: \"Projecten krijgen zelden direct financiële steun van het Lopikerwaarden Streekfonds. Maar onze inzet heeft wel financiële steun nodig om onderdelen van projecten in gang te zetten.\" Het fonds werkt als aanjager/verbinder: \"Projecten worden van buiten aangedragen of door ons bedacht, maar altijd overgedragen aan de streek en haar gebruikers.\"",
+  "aanvrager_type": "beide",
+  "geo_niveau": "regio",
+  "geo_waarden": ["Lopikerwaard", "provincie Utrecht"],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": null,
+  "cofinanciering_vereist": null,
+  "uitsluitingen": [
+    "directe projectfinanciering is de uitzondering, niet de regel (\"Projecten krijgen zelden direct financiële steun van het Lopikerwaarden Streekfonds.\")",
+    "projecten die permanent afhankelijk blijven van het fonds (\"samenwerkingsverbanden van organisaties die er samen voor zorgen dat projecten zelfstandig door kunnen gaan zonder dat ze het Lopikerwaarden Streekfonds nog nodig hebben\")"
+  ],
+  "kostensoort": ["investering"],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Het fonds geeft zelden geld maar organiseert projecten in het landschap van de Lopikerwaard, waarbij een landgoed locatie, partner of drager kan zijn: \"Het Lopikerwaarden Streekfonds maakt en steunt samen met u projecten met een glimlach, om de streek vitaler, leuker, duurzamer en mooier te maken.\" De bestaande projecten (Klompenmakerij, Van Lieshout Collectie/museum met landbouw van toen, Natuurspeelplaatsen, Ons landschap, 50 Dingen Boekje) zijn precies het type erfgoed-, natuur- en publieksproject dat op een landgoed kan landen. De route loopt via het aandragen van een idee bij de coördinator en het vormen van een samenwerkingsverband; het geld komt daarna elders vandaan.",
+    "partnertype": "streekorganisatie, museum, natuur- of erfgoedvereniging of gemeente die samen met het Streekfonds een project draagt; het Streekfonds fungeert daarbij als verbinder en aanjager"
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "Bedragen, criteria of een aanvraagprocedure: niet gepubliceerd. Gezocht op /, /over-ons/ en /doe-mee/.",
+    "Het beleidsplan en Jaarverslag 2024 worden op /over-ons/ genoemd maar de bijbehorende bestandslinks staan niet als href in de HTML; niet gelezen.",
+    "Deadlines of rondes: bestaan niet; het fonds werkt projectmatig en doorlopend."
+  ]
+}

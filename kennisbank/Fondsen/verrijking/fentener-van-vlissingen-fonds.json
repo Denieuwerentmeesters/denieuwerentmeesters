@@ -1,0 +1,51 @@
+{
+  "naam": "Fentener van Vlissingen Fonds",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://www.fentenervanvlissingenfonds.nl/",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://fentenervanvlissingenfonds.nl/aanvragen/criteria",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "\"Het Fentener van Vlissingen Fonds stimuleert kunst en cultuur in de provincie Utrecht met donaties, beurzen en met de Fentener van Vlissingen Cultuurprijs. Het bevordert de vernieuwing en verdieping van muziek, theater, dans, film en audiovisueel, beeldende kunst, literaire activiteiten en alle mogelijke mengvormen daarvan.\"",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "\"Alleen amateurkunstenaars- en gezelschappen kunnen zelf aanvragen bij ons fonds. Professioneel werkzame kunstenaars en makers kunnen alleen een aanvraag indienen na voordracht door een van onze culturele samenwerkingspartners. Andere aanvragen worden niet in behandeling genomen.\"",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "provincie",
+  "geo_waarden": [
+    "Utrecht"
+  ],
+  "bedrag_min": 750,
+  "bedrag_max": 1500,
+  "bedrag_indicatie": "\"Bent u een amateurkunstenaar/-gezelschap, dan kunt u bij uw aanvraag kiezen tussen twee bedragen: EUR 750 (klein) of EUR 1.500 (groot). Bij het verstrekken van subsidie wijken wij niet af van deze bedragen.\"",
+  "cofinanciering_vereist": false,
+  "uitsluitingen": [
+    "erfgoed",
+    "materiaal",
+    "apparatuur",
+    "renovatie",
+    "publicaties",
+    "professionele culturele organisaties",
+    "aanvragers met betaalde medewerkers in dienst",
+    "aanvragen via een professioneel fondsenwerver of boekingsbureau"
+  ],
+  "kostensoort": [
+    "investering"
+  ],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Het fonds sluit landgoedwerk voor de eigenaar expliciet uit: \"U kunt niet aanvragen als u een aanvraag doet voor erfgoed, materiaal, apparatuur, renovatie of een publicatie betreft.\" De enige route is een amateurgezelschap (koor, theater, dans) dat een voorstelling of concert op het landgoed maakt; het landgoed is dan locatie, niet aanvrager. Bedragen zijn klein (EUR 750-1.500), dus de route is marginaal maar bestaat.",
+    "partnertype": "amateurkunstgezelschap of amateurkunstenaar met KvK-rechtspersoon, gevestigd in stad of provincie Utrecht"
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "De regeling voor professionele kunstenaars via samenwerkingspartners: de lijst van partners is niet uitgelezen"
+  ]
+}

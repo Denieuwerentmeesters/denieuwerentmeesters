@@ -1,0 +1,37 @@
+{
+  "naam": "Stichting Renesse",
+  "bronnen": [
+    {"soort":"aanvraagvoorwaarden","url":"https://stichtingrenesse.nl/financiele-steun","jaar":2024,"gelezen":true}
+  ],
+  "doelstelling": "\"In artikel 4 van de statuten van Stichting Renesse is opgenomen dat geldelijke steun kan worden gegeven ten behoeve van activiteiten, binnen de gemeente Schouwen-Duiveland, van recreatieve, toeristische, culturele, educatieve, sociaal maatschappelijke of sportieve aard of een combinatie van deze activiteiten.\" Historisch: \"Stichting Renesse werd opgericht om recreatie in de regio te ontwikkelen, met behoud van het karakter en de kwaliteiten van de Schouwse kust.\" Na de statutenwijziging van 1997: \"Stichting Renesse ging zich bezig houden met activiteiten op recreatief, toeristisch, cultureel, educatief of sportief vlak op het gehele eiland Schouwen-Duiveland.\"",
+  "benaderbaarheid": "open",
+  "benaderwijze_notitie": "\"Een aanvraag om subsidie kan via een e-mail of schriftelijk worden ingediend\" en \"Voor een eenmalige bijdrage kan een verzoek worden ingediend.\" De volledige subsidieregeling (vastgesteld 11 november 2024) staat openbaar op de site, met termijnen: \"Aanvragen voor een subsidie tot een bedrag van EUR 50.000,= worden tenminste twee maanden voor aanvang van de activiteit waarvoor de subsidie wordt aangevraagd ingediend; Aanvragen voor een subsidie van EUR 50.000,= of meer worden voor 1 juli van het jaar, voorafgaand aan het jaar waarin de activiteit zal plaatsvinden, ingediend.\"",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "gemeente",
+  "geo_waarden": ["Schouwen-Duiveland"],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": "Geen maximum genoemd, wel een knip in de procedure bij EUR 50.000: aanvragen onder dat bedrag minimaal twee maanden voor aanvang (beslistermijn twee maanden), aanvragen van EUR 50.000 of meer voor 1 juli van het voorafgaande jaar (beslistermijn zes maanden). Verder geldt een jaarlijks plafond: \"Het bestuur van de Stichting stelt jaarlijks het subsidieplafond vast... De aanvragen worden door het bestuur in volgorde van binnenkomst in behandeling genomen en beoordeeld. Subsidies worden en verleend/toegekend tot dat het subsidieplafond is bereikt.\"",
+  "cofinanciering_vereist": null,
+  "uitsluitingen": [
+    "Natuurlijke personen: \"Subsidie wordt uitsluitend verstrekt aan instellingen, organisaties of andere rechtspersonen en niet aan natuurlijke personen. Slechts in zeer bijzondere gevallen, zulks ter beoordeling van het bestuur, kan hiervan worden afgeweken.\"",
+    "Activiteiten buiten Schouwen-Duiveland: de regeling geldt alleen voor \"instellingen, organisaties en andere rechtspersonen binnen de gemeente Schouwen-Duiveland\"",
+    "Doorgeven aan derden: \"Het is de verkrijger niet toegestaan verleende subsidies aan derden ter beschikking te stellen, behoudens in geval van het bestuur van Stichting Renesse vooraf verkregen toestemming\"",
+    "Activiteiten zonder algemeen belang: \"De in lid 1 genoemde activiteiten dienen een algemeen belang.\""
+  ],
+  "kostensoort": ["investering", "restauratie", "exploitatie"],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "De doelstelling omvat recreatie, toerisme, cultuur en educatie op heel Schouwen-Duiveland, en het fonds is historisch juist opgericht rond landschap en kust: \"Stichting Renesse werd opgericht om recreatie in de regio te ontwikkelen, met behoud van het karakter en de kwaliteiten van de Schouwse kust.\" Recreatieve en toeristische voorzieningen, wandel- en natuurpaden, cultuurhistorische presentatie en educatieprogramma's op een landgoed op Schouwen-Duiveland vallen daar rechtstreeks onder. Ook exploitatie is niet uitgesloten: \"In bijzondere gevallen wordt structureel bijgedragen in de exploitatie.\" De reden dat de route via_partner is en niet zelf: \"Subsidie wordt uitsluitend verstrekt aan instellingen, organisaties of andere rechtspersonen en niet aan natuurlijke personen\" en de activiteiten \"dienen een algemeen belang\" - een landgoed in prive-eigendom of als eenmanszaak valt daarmee af, tenzij het als stichting of vereniging is ondergebracht (dan kan het wel zelf indienen). De hardheidsclausule laat ruimte: \"Slechts in zeer bijzondere gevallen, zulks ter beoordeling van het bestuur, kan hiervan worden afgeweken.\" Let op de omvang: dit is een van de weinige lokale fondsen waar aanvragen boven EUR 50.000 een eigen procedure hebben, dus grotere landschapsinvesteringen zijn hier denkbaar.",
+    "partnertype": "Rechtspersoon op Schouwen-Duiveland met een recreatief, toeristisch, cultureel, educatief, sociaal-maatschappelijk of sportief doel dat een algemeen belang dient - bijvoorbeeld een landgoed- of natuurstichting, streekmuseum, wandelpadenstichting of lokale cultuurorganisatie"
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "Het 'subsidiebeleid van Stichting Renesse' waarnaar de subsidieregeling verwijst (artikel 2 daarvan bevat de doelstellingen waaraan activiteiten moeten aansluiten): dit document is niet gevonden op stichtingrenesse.nl en is niet gelezen",
+    "Statuten (menu-item 'Statuten' op de site): niet uitgelezen; artikel 4 wordt alleen geparafraseerd in de inleiding van de subsidieregeling",
+    "Hoogte van het jaarlijkse subsidieplafond: niet gepubliceerd ('Het bestuur van de Stichting stelt jaarlijks het subsidieplafond vast... en neemt de raming daarvan op in de begroting')",
+    "Uitsluitingslijst per thema (politiek, religie, commercieel): de regeling kent geen inhoudelijke uitsluitingscatalogus, anders dan bij vergelijkbare fondsen",
+    "Cofinancieringseis: niet als eis gesteld; wel moet worden meegestuurd 'Een overzicht van de instanties waarbij (eveneens) een subsidie is aangevraagd'",
+    "Expliciete uitspraak over monumentenrestauratie of regulier onderhoud: niet in de regeling opgenomen"
+  ]
+}

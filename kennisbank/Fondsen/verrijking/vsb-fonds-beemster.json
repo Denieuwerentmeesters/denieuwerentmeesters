@@ -1,0 +1,39 @@
+{
+  "naam": "Stichting VSB Fonds Beemster",
+  "bronnen": [
+    {"soort": "website", "url": "https://www.vsbfondsbeemster.nl/", "jaar": 2026, "gelezen": true},
+    {"soort": "website", "url": "https://www.vsbfondsbeemster.nl/beleid/", "jaar": 2026, "gelezen": true},
+    {"soort": "aanvraagvoorwaarden", "url": "https://www.vsbfondsbeemster.nl/aanvragen/", "jaar": 2026, "gelezen": true},
+    {"soort": "website", "url": "https://www.vsbfondsbeemster.nl/ontstaan/", "jaar": 2026, "gelezen": true},
+    {"soort": "website", "url": "https://www.landschapnoordholland.nl/doe-mee/fondsen-en-stichtingen", "jaar": 2026, "gelezen": true}
+  ],
+  "doelstelling": "\"Het fonds is uitsluitend werkzaam in het voormalig werkgebied van de Bondsspaarbank Beemster en heeft ten doel het financieel ondersteunen van maatschappelijke projecten met een sociaal, cultureel en/of educatief karakter.\" Beleid: \"Het VSB Fonds Beemster is geen gespecialiseerd fonds. Het Fonds heeft gekozen voor een breed uitgavenbeleid, waarbinnen een zestal hoofdgroepen zijn te onderscheden: kunst en cultuur, gezondheid, natuur en milieu, sport en recreatie, maatschappelijk ideeel, educatie, veiligheid.\"",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "\"Met het aanvraagformulier kunt u een verzoek om financiele steun indienen bij het VSB Fonds Beemster, mits de instelling is gevestigd in een van de volgende (en voormalige) gemeenten: Beemster, Purmerend, Edam/Volendam, Graft/De Rijp en Zeevang.\" Drempel: alleen instellingen, geen individuen, en aanvraag moet \"ruim voor aanvang van een project -compleet- zijn ingediend\".",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "gemeente",
+  "geo_waarden": ["Beemster", "Purmerend", "Edam/Volendam", "Graft/De Rijp", "Zeevang"],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": null,
+  "cofinanciering_vereist": true,
+  "uitsluitingen": [
+    "Overheden, individuen en instellingen met een commerciele, politieke of religieuze doelstelling: \"Het VSB Fonds Beemster verleent binnen het werkgebied financiele steun aan instellingen, maar niet aan overheden, individuen of instellingen met een commerciele, politieke of religieuze doelstelling.\"",
+    "Exploitatie, salaris en regulier werk: \"Exploitatiekosten, salariskosten, kosten van levensonderhoud, studiereizen, bezoeken aan symposia en kosten verbonden aan de normale activiteiten van een organisatie zijn in principe van steun uitgesloten.\"",
+    "Reeds gestarte of afgeronde projecten: \"Het VSB Fonds verstrekt nimmer achteraf een bijdrage. Reeds aangevangen of voltooide projecten komen niet voor steun in aanmerking.\"",
+    "Permanente/structurele steun: \"heeft nimmer een permanent karakter\"",
+    "Kosten van externe bureaus: \"Deze vergoedingen vallen niet onder een eventuele toezegging.\""
+  ],
+  "kostensoort": ["investering", "onderzoek"],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "\"natuur en milieu\" en \"kunst en cultuur\" zijn twee van de hoofdgroepen, en het fonds financierde aantoonbaar een natuurproject in het landschap: \"VSB Fonds Beemster - Watersnippen project in Ilperveld\". Een landgoedeigenaar kan echter niet zelf aanvragen: steun gaat naar \"instellingen, maar niet aan overheden, individuen of instellingen met een commerciele, politieke of religieuze doelstelling\", wat een particuliere eigenaar en een commercieel geexploiteerd landgoed uitsluit.",
+    "partnertype": "Niet-commerciele instelling (vereniging/stichting) gevestigd in Beemster, Purmerend, Edam/Volendam, Graft/De Rijp of Zeevang: natuur- of landschapsorganisatie, historische vereniging, of een steunstichting van het landgoed. Het landgoed is dan projectlocatie."
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "Bedragen (min/max/indicatie): nergens op vsbfondsbeemster.nl genoemd",
+    "Indieningsdeadlines of vergaderdata: alleen 'ruim voor aanvang van een project'",
+    "Beleidsplan-PDF of jaarverslag als download: niet aangetroffen; wel een menu-item 'Winst- en verliesrekening'"
+  ]
+}

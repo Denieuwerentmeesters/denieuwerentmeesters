@@ -1,0 +1,47 @@
+{
+  "naam": "Stichting De Versterking",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://www.de-versterking.nl/",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://de-versterking.nl/financiele-ondersteuning/",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "'Financiele steun aan wensen, ideeen en initiatieven van instellingen op het gebied van cultuur(educatie) en natuurbehoud', met als natuurspoor landschapsbeheer en natuurbehoud.",
+  "benaderbaarheid": "op_uitnodiging",
+  "benaderwijze_notitie": "'Stichting De Versterking zoekt zelf actief naar projecten die aansluiten op de doelstellingen. Aanvragen worden in principe niet in behandeling genomen.'",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "landelijk",
+  "geo_waarden": [
+    "Nederland; voorkeur buiten de Randstad voor kunsteducatie en leesbevordering"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": null,
+  "cofinanciering_vereist": false,
+  "uitsluitingen": [
+    "ongevraagde aanvragen worden in principe niet in behandeling genomen"
+  ],
+  "kostensoort": [
+    "investering",
+    "regulier_onderhoud"
+  ],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Het natuurspoor is 'landschapsbeheer en natuurbehoud' en een genoemde prioriteit is 'professionele kunst in landschappen plaatsen' - beide direct te koppelen aan een landgoed. Maar het fonds steunt 'instellingen' en neemt aanvragen in principe niet in behandeling, dus zichtbaarheid via een landschapsorganisatie (de werklijst noemt LandschappenNL als kanaal) is de enige realistische route.",
+    "partnertype": "landschaps- of natuurorganisatie, of culturele instelling; de werklijst noemt LandschappenNL als kanaal (niet bevestigd op de eigen site)"
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "bedragen, uitsluitingen en procedure",
+    "het Beleidsplan 2026-2029 is op de site aangekondigd maar de inhoud is niet opgehaald",
+    "de in de werklijst genoemde route 'via LandschappenNL' is op de eigen site niet bevestigd"
+  ]
+}

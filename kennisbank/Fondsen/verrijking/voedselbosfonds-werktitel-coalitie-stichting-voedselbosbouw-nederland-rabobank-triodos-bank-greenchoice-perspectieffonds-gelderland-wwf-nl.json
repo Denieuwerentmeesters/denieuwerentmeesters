@@ -1,0 +1,35 @@
+{
+  "naam": "Voedselbosfonds (werktitel; coalitie Stichting Voedselbosbouw Nederland, Rabobank, Triodos Bank, Greenchoice, Perspectieffonds Gelderland, WWF-NL)",
+  "bronnen": [
+    {"soort": "website", "url": "https://www.greenchoice.nl/nieuws/artikelen/nieuwe-coalitie-aan-de-slag-voor-agrarische-voedselbossen/", "jaar": 2025, "gelezen": true},
+    {"soort": "website", "url": "https://www.nieuweoogst.nl/nieuws/2025/06/24/nieuw-fonds-neemt-drempel-weg-in-opstartfase-voedselbos", "jaar": 2025, "gelezen": true}
+  ],
+  "doelstelling": "Dit brede samenwerkingsverband heeft als doel de trage terugverdientijd van voedselbossen te overbruggen. Samen willen we financiering van een groeiend aantal professionele voedselbosprojecten in Nederland realiseren. Deze samenwerking wil deze drempel wegnemen en met een op te richten fonds agrariërs ondersteunen in de overgang naar deze toekomstbestendige vorm van landbouw.",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "\"Op agrarische productie gerichte projecten met een omvang van minimaal 5 hectare kunnen voor financiering in aanmerking komen. Het gaat hierbij om voedselbosprojecten met grondaankoop en om projecten waarvoor aankoop van grond niet nodig is. De plannen worden beoordeeld op inhoud en haalbaarheid. Geïnteresseerde agrariërs kunnen zich melden via stichting@voedselbosbouw.org.\" Er is nog geen loket, reglement of formulier: Greenchoice spreekt van \"een op te richten fonds\" en van \"de reeds ondertekende intentieverklaring\".",
+  "aanvrager_type": "landgoedeigenaar",
+  "geo_niveau": "landelijk",
+  "geo_waarden": ["Nederland"],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": "Geen bedrag per project gepubliceerd; wel de fondsomvang: \"In de reeds ondertekende intentieverklaring is vastgelegd voor de eerste fase gezamenlijk 5 miljoen euro bijeen te brengen.\" Financieringsvorm: \"Met geld uit het fonds kunnen boeren worden ondersteund in de eerste jaren met aantrekkelijke leningen.\"",
+  "cofinanciering_vereist": null,
+  "uitsluitingen": [
+    "projecten kleiner dan 5 hectare (\"projecten met een omvang van minimaal 5 hectare kunnen voor financiering in aanmerking komen\")",
+    "projecten die niet op agrarische productie gericht zijn (\"Op agrarische productie gerichte projecten\")"
+  ],
+  "kostensoort": ["investering", "exploitatie"],
+  "landgoed_relevantie": {
+    "route": "zelf",
+    "onderbouwing": "Een landgoed met minimaal 5 hectare landbouwgrond kan zich rechtstreeks melden. De regeling dekt precies het knelpunt van een landgoed dat land omzet naar voedselbos: \"Het fonds biedt ondersteuning om de eerste jaren te overbruggen waarin het voedselbos nog geen of nauwelijks opbrengst oplevert\" en \"Een voedselbos is pas na vijf tot acht jaar rendabel. Die lange opstarttijd maakt het voor boeren lastig de activiteit gefinancierd te krijgen.\" Ook grondaankoop is mogelijk: \"We hebben nu ook een oplossing voor projecten waarbij de grond moet worden aangekocht.\" Twee kanttekeningen: het gaat om leningen, niet om giften, en het fonds is nog in oprichting met een eerste fase van 5 miljoen euro voor heel Nederland.",
+    "partnertype": null
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "Eigen website, reglement, criteria, aanvraagformulier of definitieve fondsnaam: bestaan nog niet. Het fonds is per juni 2025 aangekondigd op basis van een intentieverklaring; Greenchoice spreekt van 'een op te richten fonds'. Gezocht via zoekmachine en via de berichtgeving van coalitiepartner Greenchoice en Nieuwe Oogst.",
+    "Bedrag per project, rentepercentage, looptijd en zekerhedeneisen van de 'aantrekkelijke leningen': niet gepubliceerd.",
+    "Cofinancieringseis: niet gepubliceerd.",
+    "Deadlines of rondes: niet gepubliceerd; aanmelden kan doorlopend via stichting@voedselbosbouw.org.",
+    "Of Oost NL formeel coalitiepartner is: wel genoemd door Greenchoice, niet in het bericht van Nieuwe Oogst (dat wel Perspectieffonds Gelderland noemt, dat door Oost NL wordt beheerd). Niet opgelost."
+  ]
+}

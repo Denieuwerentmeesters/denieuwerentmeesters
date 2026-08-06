@@ -1,0 +1,65 @@
+{
+  "naam": "Themafonds Kastelen en Historische Buitenplaatsen (Cultuurfonds + sKBL)",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://www.skbl.nl/themafonds-kastelen-en-historische-buitenplaatsen/",
+      "jaar": 2020,
+      "gelezen": true
+    },
+    {
+      "soort": "website",
+      "url": "https://www.skbl.nl/eerste-toekenningen-themafonds/",
+      "jaar": 2020,
+      "gelezen": true
+    },
+    {
+      "soort": "website",
+      "url": "https://www.skbl.nl/historische-buitenplaatsen-krijgen-ruim-100-000-euro/",
+      "jaar": 2022,
+      "gelezen": true
+    },
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://www.cultuurfonds.nl/aanvragen/voorwaarden",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "Het Themafonds richt zich op de ondersteuning van projecten en restauraties van publiekstoegankelijke kastelen en buitenplaatsen. Jaarlijks wordt een specifiek aandachtsgebied gekozen, zoals educatie, klimaatbestendigheid, immaterieel erfgoed, vrijwilligers, kennis & ambacht, talentontwikkeling en -stimulans.",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "Geen eigen aanvraagloket gevonden; aanvragen loopt via het Cultuurfonds (fondspagina op cultuurfonds.nl geeft 404). sKBL: \"Als u in vragen heeft of wilt bijdragen aan het fonds, neemt u dan contact op met Jennemie Stoelhorst, directeur sKBL\" - dat is een geef-, geen aanvraagroute. Cultuurfonds-basisvoorwaarden gelden: \"Je organisatie staat ingeschreven bij de Kamer van Koophandel. Je organisatie heeft cultuur of natuur in de statutaire doelstelling. (...) Je totale projectbegroting is minimaal EUR 15.000.\"",
+  "aanvrager_type": "beide",
+  "geo_niveau": "landelijk",
+  "geo_waarden": [
+    "Nederland"
+  ],
+  "bedrag_min": 1700,
+  "bedrag_max": 5000,
+  "bedrag_indicatie": "Geen gepubliceerd maximum. Waargenomen toekenningen: EUR 1.700 (Dekema/Martena State), EUR 2.850 (Huys ter Horst), EUR 3.350 (Duivenvoorde), EUR 5.000 (Middachten). \"Het Cultuurfonds verdubbelt de opbrengst van iedere schenking.\"",
+  "cofinanciering_vereist": true,
+  "uitsluitingen": [
+    "reguliere activiteiten van de organisatie",
+    "projecten met polariserend effect of primair religieus, sociaal-maatschappelijk of politiek karakter",
+    "projecten die zich alleen op fondsenwerving richten",
+    "projecten buiten Nederland",
+    "totale projectbegroting onder EUR 15.000 (algemene Cultuurfonds-voorwaarde)"
+  ],
+  "kostensoort": [
+    "investering",
+    "restauratie",
+    "onderzoek"
+  ],
+  "landgoed_relevantie": {
+    "route": "zelf",
+    "onderbouwing": "\"Het Themafonds richt zich op de ondersteuning van projecten en restauraties van publiekstoegankelijke kastelen en buitenplaatsen.\" Toekenningen gingen rechtstreeks naar kasteel- en landgoedorganisaties zelf: \"Gelderland: Kasteel en Landgoed Middachten, De Steeg\", \"Landgoed Huis Sevenaer te Zevenaar realiseert een digitale audiotour\", \"Landgoed Verhildersum in Leens\". Voorwaarde is wel publiekstoegankelijkheid en een rechtspersoon met cultuur of natuur in de statuten; het accent ligt in de praktijk op publieks-, educatie- en digitaliseringsprojecten, niet op fysiek herstel.",
+    "partnertype": null
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "een actuele fondspagina op cultuurfonds.nl - /fondsen/themafonds-kastelen-en-historische-buitenplaatsen geeft 404, evenals varianten (-1, -skbl, /themafondsen/kastelen-en-historische-buitenplaatsen); mogelijk is het fonds opgegaan in de reguliere Cultuurfonds-routes",
+    "het jaarlijkse aandachtsgebied van de huidige ronde",
+    "deadlines/openstellingsdata",
+    "een eigen reglement of criteriadocument van het Themafonds (gezocht op skbl.nl en cultuurfonds.nl)"
+  ]
+}

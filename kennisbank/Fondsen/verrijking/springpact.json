@@ -1,0 +1,65 @@
+{
+  "naam": "Springpact",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://springpact.org/",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "website",
+      "url": "https://springpact.org/missie/",
+      "jaar": 2025,
+      "gelezen": true
+    },
+    {
+      "soort": "anbi_publicatie",
+      "url": "https://springpact.org/anbi/",
+      "jaar": 2024,
+      "gelezen": true
+    },
+    {
+      "soort": "website",
+      "url": "https://springpact.org/portfolio/",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "beleidsplan",
+      "url": "https://springpact.org/anbi/ (link 'Het beleidsplan uit 2024 is hier te downloaden')",
+      "jaar": 2024,
+      "gelezen": false
+    }
+  ],
+  "doelstelling": "“De stichting streeft naar een eerlijkere en duurzamere wereld door lokaal en regionaal duurzaam leven en consumeren te bevorderen, ecosystemen in balans te brengen en de onderliggende oorzaken van ongelijkheid en onduurzaamheid aan te pakken. Dit doet zij door eerlijke eigendoms- en bestuursvormen te ontwikkelen, impact-ondernemerschap te stimuleren en te investeren in initiatieven die ecologische, sociale en economische doelen in balans brengen. Als katalysator ondersteunt de stichting innovatieve organisaties en verstrekt zij financiering, waaronder impact-investeringen, om haar missie te realiseren.”",
+  "benaderbaarheid": "onbekend",
+  "benaderwijze_notitie": "Er staat nergens op de site of en hoe je een aanvraag kunt indienen — geen aanvraagpagina, geen criteria, geen formulier, alleen “Contact — info@springpact.org”. Wel is duidelijk dat het geen giftenfonds is maar een investeerder: “Sinds 2014 investeerde ifund in ondernemers die de duurzaamheidstransitie versnellen. In 2024 is ifund voorlopig gestopt met nieuwe investeringen en is ifund getransformeerd tot Springpact, die dit portfolio nu onder beheer heeft.” Die zin (“voorlopig gestopt met nieuwe investeringen”) is de belangrijkste beperking.",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "landelijk",
+  "geo_waarden": [
+    "Nederland (kantoor BlueCity, Rotterdam; portfolio overwegend Nederlands)"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": null,
+  "cofinanciering_vereist": null,
+  "uitsluitingen": [
+    "Geen uitsluitingenlijst gepubliceerd. Feitelijke drempel: het gaat om investeringen (leningen/participaties) in ondernemingen, niet om giften aan eigenaren of stichtingen, en “In 2024 is ifund voorlopig gestopt met nieuwe investeringen”."
+  ],
+  "kostensoort": [
+    "investering"
+  ],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Springpact is geen subsidiefonds maar een impact-investeerder, en het portfolio (BlueCity, Bundles, Chainable, Kitepower, NEFFA, Reliving, ReSolved, Tiny Library, Vet & Lazy, ZonnepanelenDelen) bevat geen enkel land-, natuur- of erfgoedproject. Toch is er een denkbare aanknoping, en die zit in de eigendomsvorm: het fonds zoekt organisaties die “Steward Ownership als model voor eigendom en zeggenschap” hanteren en “horizontaal georganiseerd of zelfsturend” zijn, en wil “eerlijke eigendoms- en bestuursvormen ontwikkelen”. Voor een landgoed dat zijn eigendom wil verduurzamen via steward ownership, een coöperatie of een rentmeesterschapsconstructie — een vraag die op landgoederen speelt bij opvolging — is Springpact eerder een kennis- en financieringspartner dan een fonds. Ook de visie noemt “verbinding met natuur” en “duurzame consumptie (…) volledige levenscyclus” en een “duurzaam voedselsysteem en het sluiten van kringlopen”, wat aansluit bij een landgoedonderneming met korte-keten-landbouw. Ik markeer dit als via_partner en niet als niet_relevant, maar de route is smal en op dit moment geblokkeerd door de investeringsstop.",
+    "partnertype": "Een onderneming (B.V./coöperatie) op of rond het landgoed met een impactmodel — korte-keten voedsel, circulaire verwerking, energie — die investering zoekt, niet het landgoed als monument of natuurterrein."
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "Geen aanvraagprocedure of -criteria gepubliceerd; de site heeft geen aanvraagpagina.",
+    "Geen bedragen, financieringsvormen of ticketgrootte gepubliceerd.",
+    "Het beleidsplan 2024 en het jaarverslag 2024 zijn wel als download aangekondigd op de ANBI-pagina, maar de downloadlinks zijn niet uitgelezen binnen het tijdsbudget.",
+    "Niet gepubliceerd of en wanneer de investeringsstop (“voorlopig gestopt met nieuwe investeringen”) wordt opgeheven."
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "naam": "Brabants Heemfonds (Stichting Brabants Heem)",
+  "bronnen": [
+    {"soort":"website","url":"https://www.brabantsheem.nl/brabants-heemfonds/","jaar":2025,"gelezen":true},
+    {"soort":"aanvraagvoorwaarden","url":"https://brabantsheem.nl/wp-content/uploads/2025/04/Reglement-Brabants-Heemfonds_2025_v1.pdf","jaar":2025,"gelezen":true}
+  ],
+  "doelstelling": "\"Het Brabants-Heemfonds heeft tot doel bij Brabants Heem aangesloten heemkundekringen en erfgoedorganisaties te stimuleren eenmalige vernieuwende projecten te realiseren ter versterking, verbreding en vernieuwing.\" Op de website: \"Brabants Heem wil met het nieuwe fonds aangesloten heemkundekringen en erfgoedorganisaties stimuleren eenmalige vernieuwende projecten te realiseren ter versterking, verbreding en vernieuwing van de activiteiten en de verenigingen.\"",
+  "benaderbaarheid": "via_intermediair",
+  "benaderwijze_notitie": "\"Het Brabants-Heemfonds heeft tot doel bij Brabants Heem aangesloten heemkundekringen en erfgoedorganisaties te stimuleren...\" - alleen aangeslotenen kunnen aanvragen. \"Aanvragen voor steun vanuit het fonds kunnen worden gestuurd naar: secretaris@brabantsheem.nl\". \"Er zijn twee aanvraagmomenten: 1 februari en 1 augustus van elk jaar.\"",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "provincie",
+  "geo_waarden": ["Noord-Brabant"],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": "\"Een normbedrag voor een project is 1000 euro. Mocht er heel veel beroep op het fonds worden gedaan, dan heeft het bestuur van Brabants Heem de optie aan goedgekeurde projecten een lager bedrag toe te kennen... Voor uitzonderlijke projecten volgt het bestuur van Brabants Heem separate besluitvorming.\"",
+  "cofinanciering_vereist": null,
+  "uitsluitingen": [
+    "\"Subsidies worden alleen gegeven voor niet reguliere activiteiten van kringen e.d. Onder reguliere activiteiten verstaan we: excursies, lezingen, periodiek, nieuwsbrief, website, e.d.\"",
+    "Digitalisering op de heemlocatie \"met uitzondering van Memorix Maior, waarvoor een aparte subsidieregeling van toepassing is\"",
+    "Niet-eenmalige/structurele projecten: het fonds financiert uitsluitend \"eenmalige vernieuwende projecten\"",
+    "Aanvragers die niet zijn aangesloten bij Brabants Heem"
+  ],
+  "kostensoort": ["investering", "onderzoek"],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Het fonds financiert geen fysiek erfgoedherstel maar wel kennis-, publicatie-, educatie- en digitaliseringsprojecten over lokaal erfgoed, uitgevoerd door heemkundekringen. Subsidiabel zijn onder meer \"Voor het eerst een historisch onderzoek vastleggen door middel van een boekpublicatie\", \"Digitaliseren historische geografie\", \"thematische websites (bijv. monumentenwebsites)\", \"Eenmalige tentoonstellingen: met een speciale doelgroep / bijzonder materiaal / samenwerking met andere kringen of erfgoedinstellingen\" en \"Projecten in de ruimte met behulp van QR-codes en AR\". Een Brabants landgoed kan onderwerp en locatie zijn van zo'n project (historisch onderzoek naar het landgoed, digitalisering van de historische geografie ervan, een QR-/AR-route over het terrein), maar de aanvraag moet worden ingediend door een bij Brabants Heem aangesloten heemkundekring of erfgoedorganisatie - het landgoed zelf kan geen aanvrager zijn.",
+    "partnertype": "Een bij Stichting Brabants Heem aangesloten heemkundekring of erfgoedorganisatie in Noord-Brabant (127 aangesloten kringen)"
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "Cofinancieringseis: niet genoemd in reglement of op de website",
+    "Harde minimum- of maximumbedragen naast het normbedrag van 1000 euro: niet gepubliceerd",
+    "Expliciete uitspraak over fysieke restauratie/onderhoud: het reglement noemt uitsluitend immateriele/project-activiteiten, maar sluit fysiek herstel niet met zoveel woorden uit"
+  ]
+}

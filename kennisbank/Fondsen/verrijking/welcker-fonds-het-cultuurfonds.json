@@ -1,0 +1,46 @@
+{
+  "doelstelling": "Projecten op het gebied van cultuur en natuurbehoud in Nederland, met een voorkeur voor het doopsgezinde erfgoed.",
+  "kostensoort": [
+    "restauratie"
+  ],
+  "landgoed_relevantie": {
+    "route": "zelf",
+    "onderbouwing": "De doelomschrijving noemt letterlijk \"cultuur en natuurbehoud in Nederland\" en het zwaartepunt van de toekenningen ligt bij \"erfgoed & monumentenzorg\". Dat is de combinatie die een landgoed kenmerkt. De voorkeur voor doopsgezind erfgoed maakt de kans sterk afhankelijk van die link, maar sluit andere projecten niet uit.",
+    "partnertype": null
+  },
+  "niet_gevonden": [
+    "bedragen, cofinancieringspercentage en deadlines van dit fonds op naam",
+    "of de voorkeur voor doopsgezind erfgoed een harde eis is"
+  ],
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://www.cultuurfonds.nl/fondsen/welcker-fonds",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://www.cultuurfonds.nl/aanvragen",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "naam": "Welcker Fonds (het Cultuurfonds)",
+  "benaderbaarheid": "open",
+  "benaderwijze_notitie": "Fonds op naam van het Cultuurfonds; aanvragen via het openbare portaal aanvragen.cultuurfonds.nl. \"Het Cultuurfonds dekt de kosten van projecten altijd gedeeltelijk.\"",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "landelijk",
+  "geo_waarden": [
+    "Nederland"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": "Geen eigen bedragen gepubliceerd; algemene Cultuurfonds-maxima lopen van EUR 1.500 tot EUR 50.000 per route, met 25-50% dekking.",
+  "cofinanciering_vereist": true,
+  "uitsluitingen": [
+    "projecten die binnen 4-6 weken na aanvraag starten",
+    "publicaties met een oplage onder 1.000 (landelijk) of 750 (regionaal) exemplaren"
+  ],
+  "onderliggende_fondsen": []
+}

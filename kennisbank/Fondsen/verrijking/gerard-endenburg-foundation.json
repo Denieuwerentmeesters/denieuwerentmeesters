@@ -1,0 +1,37 @@
+{
+  "naam": "Gerard Endenburg Foundation",
+  "bronnen": [
+    {"soort": "website", "url": "https://www.fondseninnederland.nl/fonds/gerard-endenburg-foundation", "jaar": null, "gelezen": true},
+    {"soort": "beleidsplan", "url": "https://www.fondseninnederland.nl/storage/Fondsbestanden/5VTTziuZ9XTOeVBzvDx3ABGMdlK8Vr89pg0qipSR.pdf", "jaar": 2020, "gelezen": true},
+    {"soort": "website", "url": "https://www.gerardendenburgfoundation.nl/", "jaar": null, "gelezen": true},
+    {"soort": "aanvraagvoorwaarden", "url": "https://www.gerardendenburgfoundation.nl/criteria/9-aanvragen/9-criteria-voor-aanvragen", "jaar": null, "gelezen": true},
+    {"soort": "aanvraagvoorwaarden", "url": "https://www.gerardendenburgfoundation.nl/criteria", "jaar": null, "gelezen": true},
+    {"soort": "aanvraagvoorwaarden", "url": "https://www.gerardendenburgfoundation.nl/images/documenten/GEF_folder_Aanvragers.pdf", "jaar": null, "gelezen": true}
+  ],
+  "doelstelling": "\"De Gerard Endenburg Foundation wil initieren en initiatieven, van anderen, op het vlak van sociale innovatie en participatie en sociale cohesie stimuleren en ondersteunen, in het bijzonder die projecten waarbij de sociocratische methode wordt toegepast en ontwikkeld.\" (beleidsplan) - op FIN samengevat als: \"De GEF wil organisaties die werken of willen werken met de Sociocratische Kringorganisatie Methode (SKM) financieel ondersteunen.\"",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "\"Vraag dan voor uw project of activiteit financiele ondersteuning aan bij de Gerard Endenburg Foundation.\" en \"Attentie: we werken met deadlines voor het indienen van aanvragen! voor 2026: 16 september en 11 november!\" - de drempel zit in de harde inhoudelijke eis: \"Het daadwerkelijk (gaan)werken met die methode is voor ons gelijk een voorwaarde voor financiele ondersteuning.\"",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "landelijk",
+  "geo_waarden": ["Nederland"],
+  "bedrag_min": null,
+  "bedrag_max": 20000,
+  "bedrag_indicatie": "\"De GEF heeft haar maximale financiele bijdrage vooralsnog gesteld op € 20.000 per aanvraag.\"",
+  "cofinanciering_vereist": null,
+  "uitsluitingen": [
+    "\"niet aan overheden of aan instellingen waarbij commerciele, politieke of religieuze doelen prevaleren boven het sociale belang\"",
+    "\"de GEF [geeft] in principe geen financiele ondersteuning aan individuen sec, er moet altijd een samenhang met het organisatorisch verband zijn\"",
+    "steun \"heeft nimmer een permanent karakter\" (geen structurele/permanente financiering)"
+  ],
+  "kostensoort": ["investering", "onderzoek"],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Het fonds financiert geen vastgoed, natuur of erfgoed maar uitsluitend het invoeren van een besluitvormingsmethode: \"De steun van Stichting GEF is met name gericht op concrete, benoembare projecten in de voorbereidende fase gericht op het zich (verder) bekwamen in het gebruik van de sociocratische kringorganisatiemethode\". Een landgoed kan hier alleen via de organisatievorm bij: het fonds steunt \"organisatorische verbanden ... (werkgroep, projectgroep, vereniging, stichting, cooperatie, etc)\", en noemt expliciet \"Waarde toevoegen binnen publiek-private samenwerking door besluitvorming waarbij elke stem telt\". Een landgoedstichting, cooperatie of gebiedscollectief dat zijn bestuur/participatie sociocratisch wil inrichten (bijv. bewoners, pachters en vrijwilligers rond een landgoed) is een denkbare aanvrager - de bijdrage betreft dan scholing/coaching/certificering, niet het landgoed zelf.",
+    "partnertype": "Een organisatorisch verband rond het landgoed (stichting, cooperatie, gebiedscollectief, vereniging van bewoners/vrijwilligers) dat de sociocratische kringorganisatiemethode gaat toepassen; of een gemeente-/samenwerkingsverband dat participatie rond een gebied sociocratisch organiseert (let op: overheden zijn zelf uitgesloten als ontvanger)."
+  },
+  "niet_gevonden": [
+    "Actueel beleidsplan: het als 'Beleidsplan' op FIN gepubliceerde PDF is 'Jaarverslag 2019 / Jaarplan 2020' (concept mei 2020); een recenter beleidsplan is niet gevonden op FIN noch op gerardendenburgfoundation.nl",
+    "Minimum-bijdrage en of cofinanciering verplicht is - niet vermeld op de criteria-pagina, in de folder of in het beleidsplan; wel wordt bij de aanvraag een dekkingsplan gevraagd",
+    "Geografische beperking anders dan 'in Nederland' (website 'Aanvragen'); FIN noemt sector 'Lokaal' zonder specificatie"
+  ]
+}

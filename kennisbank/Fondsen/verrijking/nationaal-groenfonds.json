@@ -1,0 +1,46 @@
+{
+  "naam": "Nationaal Groenfonds",
+  "bronnen": [
+    {"soort": "aanvraagvoorwaarden", "url": "https://www.nationaalgroenfonds.nl/financieringen-soorten-financieringen/", "jaar": 2026, "gelezen": true},
+    {"soort": "website", "url": "https://www.nationaalgroenfonds.nl/financieringen/", "jaar": 2026, "gelezen": true},
+    {"soort": "website", "url": "https://www.nationaalgroenfonds.nl/", "jaar": 2026, "gelezen": true}
+  ],
+  "doelstelling": "\"Het Nationaal Groenfonds verstrekt leningen aan organisaties en ondernemingen die zich inzetten voor de verbetering van de kwaliteit van onze groene leefomgeving.\" Focus op vier sectoren: duurzame landbouw, voedsel, water, en natuur en landschap (\"Meer en robuustere natuur, meer samenhang en vergroten biodiversiteit\"). \"Wij financieren projecten die de kwaliteit van onze groene leefomgeving verbeteren. Denk daarbij aan natuur en landschap, maar ook aan lucht en water, biodiversiteit en beleving. Onze mensen zetten al hun kennis en ervaring in om ecologie en economie op een vernieuwende manier te verbinden.\"",
+  "benaderbaarheid": "via_intermediair",
+  "benaderwijze_notitie": "Geen aanvraagformulier of loket: \"Voldoet jouw project aan bovenstaande voorwaarden? Neem dan contact op met een van onze investment managers. Wanneer duidelijk is geworden dat jouw project onder de doelstellingen van het Nationaal Groenfonds – of een van de fondsen – valt, vertelt de investment manager je meer over het vervolg van de aanvraag. We vragen je dan bijvoorbeeld om je businessplan, begroting, jaarstukken etc. aan te leveren.\" De route loopt dus via een gesprek met een investment manager, gevolgd door een maatwerk-kredietbeoordeling.",
+  "aanvrager_type": "landgoedeigenaar",
+  "geo_niveau": "landelijk",
+  "geo_waarden": ["Nederland"],
+  "bedrag_min": 200000,
+  "bedrag_max": null,
+  "bedrag_indicatie": "\"Het Nationaal Groenfonds verstrekt leningen met een minimum omvang van € 200.000,= (m.u.v. IDL-leningen).\" Geen maximum gepubliceerd. \"Per financiering worden aanvullende voorwaarden op maat vastgesteld.\"",
+  "cofinanciering_vereist": false,
+  "uitsluitingen": [
+    "Subsidies of giften: \"Het Nationaal Groenfonds verstrekt leningen, eventueel achtergesteld en in enkele gevallen equity, maar geen subsidies.\"",
+    "Particulieren: \"Het Nationaal Groenfonds verstrekt nooit leningen, producten, subsidie of vergoedingen aan particulieren, ook niet via derden.\"",
+    "Financieringen onder € 200.000 (uitgezonderd IDL-leningen)",
+    "Projecten zonder aantoonbaar rendement voor de groene leefomgeving"
+  ],
+  "kostensoort": ["investering"],
+  "landgoed_relevantie": {
+    "route": "zelf",
+    "onderbouwing": "Het thema 'Natuur en landschap' (\"Meer en robuustere natuur, meer samenhang en vergroten biodiversiteit\") en 'Duurzame landbouw' (\"Behoud natuurlijk kapitaal en reserves, natuur-inclusief\") sluiten direct aan bij landgoedopgaven: natuurontwikkeling, omschakeling naar natuurinclusieve landbouw, waterberging, biodiversiteitsherstel. Cruciale randvoorwaarde is de rechtsvorm: \"Nationaal Groenfonds financiert uitsluitend organisaties en ondernemingen\" en \"Het Nationaal Groenfonds verstrekt nooit leningen, producten, subsidie of vergoedingen aan particulieren, ook niet via derden.\" Een landgoed dat als onderneming (BV, maatschap, NSW-BV) of stichting is georganiseerd kan zelf aanvragen; een puur particulier landgoed niet. Tweede randvoorwaarde: minimaal € 200.000 en het is een lening met hypothecaire of andere zekerheid, geen gift — dus alleen bruikbaar bij een investering met terugverdiencapaciteit.",
+    "partnertype": null
+  },
+  "onderliggende_fondsen": [
+    {"naam": "Investeringsfonds Duurzame Landbouw (IDL)", "relevant": true, "reden": "Expliciet uitgezonderd van de minimumomvang van € 200.000, dus de enige ingang voor kleinere bedragen. Gericht op boeren die omschakelen naar duurzame/natuurinclusieve landbouw — direct relevant voor landgoedpachters en landgoedbedrijven. Eigen fondsmanager."},
+    {"naam": "Ontwikkelfonds voor energiecoöperaties", "relevant": true, "reden": "Relevant als een landgoed samen met een lokale energiecoöperatie een duurzame-energieproject ontwikkelt; de coöperatie is dan de aanvrager."},
+    {"naam": "HHNK Waterinnovatiefonds", "relevant": true, "reden": "Waterinnovatie via Hoogheemraadschap Hollands Noorderkwartier; kan raken aan waterberging/-kwaliteit op landgoederen in dat beheergebied. Geografisch beperkt."},
+    {"naam": "NWB Waterinnovatiefonds", "relevant": true, "reden": "Waterinnovatiefonds van de Nederlandse Waterschapsbank; potentieel relevant voor waterprojecten op landgoederen, maar innovatiegericht."},
+    {"naam": "Revolverend fonds", "relevant": false, "reden": "Alleen als naam in de navigatie aangetroffen; geen inhoudelijke tekst opgehaald, relevantie onbekend."},
+    {"naam": "Rabo Transitiefonds", "relevant": false, "reden": "Alleen als naam in de navigatie aangetroffen; geen inhoudelijke tekst opgehaald."},
+    {"naam": "Klimaatfonds voor de landbouw", "relevant": false, "reden": "Op de site gemarkeerd als (Gesloten)."},
+    {"naam": "Visserij Investeringsfonds Nederland (VIN)", "relevant": false, "reden": "Op de site gemarkeerd als (Gesloten); en visserij is niet landgoedrelevant."}
+  ],
+  "niet_gevonden": [
+    "Rentetarieven en looptijden: nergens gepubliceerd; \"Per financiering worden aanvullende voorwaarden op maat vastgesteld.\"",
+    "Of erfgoed/cultuurhistorisch landschap (lanen, historische parkaanleg) onder 'natuur en landschap' valt — de site spreekt uitsluitend in ecologische termen (biodiversiteit, natuurlijk kapitaal), niet over cultuurhistorie.",
+    "De afzonderlijke voorwaarden van de onderliggende fondsen (IDL, waterinnovatiefondsen, Ontwikkelfonds energiecoöperaties, Rabo Transitiefonds) zijn niet opgehaald — die staan op eigen subpagina's en verdienen aparte verrijking.",
+    "Of NSW-landgoederen of particuliere landgoedeigenaren met een onderneming expliciet in aanmerking komen: niet benoemd; alleen de generieke eis 'organisaties en ondernemingen'."
+  ]
+}

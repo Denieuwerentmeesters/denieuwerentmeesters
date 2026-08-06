@@ -1,0 +1,47 @@
+{
+  "naam": "Contribute Foundation",
+  "bronnen": [
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://www.contribute.nl/portal-contribute/aanvraag-doen",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "Steun aan projecten 'die ons hart raken' en waar Contribute 'echt het verschil kan maken', met voorkeur voor duurzame initiatieven die na afloop van de steun zelfstandig verder kunnen.",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "'Alleen Nederlandse stichtingen met ANBI-status kunnen aanvragen'; aanvraag moet minimaal vier maanden voor de start van het project binnen zijn.",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "landelijk",
+  "geo_waarden": [
+    "Nederland (aanvrager); besteding mag internationaal"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": "kleine projecten tot EUR 5.000; grotere projecten vanaf EUR 5.000; meerjarige projecten tot 3 jaar",
+  "cofinanciering_vereist": false,
+  "uitsluitingen": [
+    "stichtingen zonder ANBI-status",
+    "projecten met cofinanciering (behalve met AFAS Foundation of Stichting Pharus)",
+    "te complexe juridische constructies",
+    "individuele aanvragers en crowdfunding",
+    "commercieel gemotiveerde projecten",
+    "primair religieuze of politieke doelstellingen",
+    "interne organisatieverbeteringen",
+    "projecten zonder duidelijke start- en einddatum",
+    "sponsorverzoeken"
+  ],
+  "kostensoort": [
+    "investering",
+    "onderzoek"
+  ],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Het fonds sluit 'individuele aanvragers' en 'commercieel gemotiveerde projecten' expliciet uit; een landgoed als onderneming valt daarmee af. Er is geen inhoudelijke themabeperking genoemd, dus een maatschappelijk project op een landgoed (zorg, educatie, natuur) is denkbaar via een ANBI-stichting. Let op: Contribute steunt in beginsel geen projecten waarin ook een ander fonds meefinanciert.",
+    "partnertype": "Nederlandse ANBI-stichting die het project uitvoert en waarvoor geen andere cofinancier is aangetrokken"
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "inhoudelijke themavoorkeuren van het fonds - de pagina blijft bij 'projecten die ons hart raken'"
+  ]
+}

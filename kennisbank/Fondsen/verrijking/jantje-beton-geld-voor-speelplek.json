@@ -1,0 +1,56 @@
+{
+  "naam": "Jantje Beton - Geld voor Speelplek",
+  "bronnen": [
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://jantjebeton.nl/ik-wil-spelen/geld-om-te-spelen/een-speelplek",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "Samen met kinderen werken aan meer en uitdagender speelruimte in Nederland, via het Buitenspeelfonds, de jaarlijkse collecte, het SamenSpeelFonds en (voorheen) steun voor groene schoolpleinen.",
+  "benaderbaarheid": "open",
+  "benaderwijze_notitie": "Aanvragen via het Buitenspeelfonds staan open van 15 juni tot 14 september 2026, tot EUR 10.000 per project; buiten de genoemde programma's neemt Jantje Beton geen financieringsverzoeken in behandeling.",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "landelijk",
+  "geo_waarden": [
+    "Nederland"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": 10000,
+  "bedrag_indicatie": "Buitenspeelfonds: tot EUR 10.000 per project. Collecte: deelnemers houden 50% van de opbrengst.",
+  "cofinanciering_vereist": false,
+  "uitsluitingen": [
+    "financieringsverzoeken buiten de genoemde programma's",
+    "nieuwe schoolpleinaanvragen na 2026"
+  ],
+  "kostensoort": [
+    "investering"
+  ],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Het fonds financiert 'lokale speelplekken die buitenspelen mogelijk maken'. Een natuurspeelplek, speelbos of avonturenpad op een opengesteld landgoed past daarbinnen, maar de aanvraag hoort te komen van een lokale organisatie (speeltuinvereniging, school, buurtinitiatief) die de plek beheert of gebruikt; het landgoed levert dan de grond.",
+    "partnertype": "speeltuinvereniging, school, kinderopvang, buurt- of jeugdorganisatie"
+  },
+  "onderliggende_fondsen": [
+    {
+      "naam": "Buitenspeelfonds",
+      "relevant": true,
+      "reden": "tot EUR 10.000 voor lokale speelplekken; bruikbaar voor een natuurspeelplek op een opengesteld landgoed"
+    },
+    {
+      "naam": "SamenSpeelFonds (met Stichting het Gehandicapte Kind)",
+      "relevant": true,
+      "reden": "inclusieve speelplekken in gemeenten zonder zo'n voorziening; denkbaar op een toegankelijk landgoedterrein"
+    },
+    {
+      "naam": "Jantje Beton Collecte",
+      "relevant": false,
+      "reden": "opbrengstdeling voor deelnemende speeltuinen en scholen, geen projectsubsidie"
+    }
+  ],
+  "niet_gevonden": [
+    "de gedetailleerde voorwaarden van het Buitenspeelfonds (achter een aparte pagina)",
+    "of grondeigendom door een particulier de aanvraag in de weg staat"
+  ]
+}

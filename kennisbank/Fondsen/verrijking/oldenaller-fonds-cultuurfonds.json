@@ -1,0 +1,50 @@
+{
+  "naam": "Oldenaller Fonds (Cultuurfonds)",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://www.cultuurfonds.nl/fondsen/oldenaller-fonds",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://www.cultuurfonds.nl/aanvragen/voorwaarden",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "Restauraties van historische buitenplaatsen worden uit dit fonds ondersteund, met een voorkeur voor tuin- en park en historische interieurs.",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "Fonds op naam bij het Cultuurfonds; geen eigen aanvraagloket. Algemene basisvoorwaarden: \"Je organisatie staat ingeschreven bij de Kamer van Koophandel. Je organisatie heeft cultuur of natuur in de statutaire doelstelling. (...) Je totale projectbegroting is minimaal EUR 15.000.\"",
+  "aanvrager_type": "beide",
+  "geo_niveau": "landelijk",
+  "geo_waarden": [
+    "Nederland"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": null,
+  "cofinanciering_vereist": true,
+  "uitsluitingen": [
+    "projecten met polariserend effect of primair religieus, sociaal-maatschappelijk of politiek karakter",
+    "reguliere activiteiten van de organisatie",
+    "projecten die zich alleen op fondsenwerving richten",
+    "projecten buiten Nederland",
+    "totale projectbegroting onder EUR 15.000",
+    "organisaties zonder cultuur of natuur in de statutaire doelstelling"
+  ],
+  "kostensoort": [
+    "restauratie"
+  ],
+  "landgoed_relevantie": {
+    "route": "zelf",
+    "onderbouwing": "\"Restauraties van historische buitenplaatsen worden uit dit fonds ondersteund, met een voorkeur voor tuin- en park en historische interieurs.\" Gehonoreerde projecten zijn buitenplaats- en kasteelstichtingen, bv. \"Stichting Buitenplaats Huis te Jaarsveld - restauratie uurwerk koetshuis\" en \"Stichting tot Behoud van Cultuurhistorische Buitenplaatsen - restauratie twee leifruit-tuinmuren, Buitenplaats Berbice\"."
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "eigen bedragen, deadlines of aanvullende criteria van dit fonds op naam - niet gepubliceerd op cultuurfonds.nl; fondsen op naam bij het Cultuurfonds publiceren die niet",
+    "eigen beleidsplan/ANBI-publicatie van het fonds op naam (valt onder de ANBI van het Prins Bernhard Cultuurfonds)",
+    "expliciete uitspraak over regulier onderhoud vs. restauratie voor dit fonds"
+  ]
+}

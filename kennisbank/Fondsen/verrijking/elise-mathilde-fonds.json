@@ -1,0 +1,54 @@
+{
+  "naam": "Elise Mathilde Fonds",
+  "bronnen": [
+    {"soort": "aanvraagvoorwaarden", "url": "https://elisemathilde.nl/aanvragen/richtlijnen/", "jaar": 2026, "gelezen": true},
+    {"soort": "beleidsplan", "url": "https://elisemathilde.nl/aanvragen/onze-themas/", "jaar": 2026, "gelezen": true}
+  ],
+  "doelstelling": "\"Stichting Elise Mathilde Fonds geeft sinds 1935 steun aan instellingen zonder winstoogmerk die een sociaal, cultureel of groen doel nastreven, waardoor de maatschappijstructuur in de gemeentes Utrecht, Rotterdam, Schiedam, Vlaardingen en Maassluis wordt verbeterd/verstevigd.\" Zes thema's: Kunst & cultuur, Sociaal & maatschappij, Volksgezondheid, Onderzoek & onderwijs, Erfgoed & monumenten, Natuur & duurzaamheid.",
+  "benaderbaarheid": "open",
+  "benaderwijze_notitie": "\"De aanvraag is via ons aanvragensysteem ingediend.\" Met aanvraagrondes en deadlines: \"Voor aanvragen van meer dan €2.000 geldt dat je project nog niet begonnen mag zijn op de datum van beoordelen. Check daarom goed onze deadlines voor aanvragenrondes!\" En een frequentiegrens: \"Elke instelling kan maximaal 1x per kalenderjaar een aanvraag indienen.\"",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "gemeente",
+  "geo_waarden": ["Utrecht", "Rotterdam", "Schiedam", "Vlaardingen", "Maassluis"],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": "Geen minimum of maximum gepubliceerd, maar €2.000 is de scharnierdrempel in de regels: onder €2.000 een lichtere documentenset maar géén structurele of exploitatiekosten; boven €2.000 verplichte cofinanciering, statuten, jaarverslag en aanvraagrondes met deadlines.",
+  "cofinanciering_vereist": true,
+  "uitsluitingen": [
+    "Aanvragen als individu of eenmanszaak",
+    "Aanvragen als overheidsorganisatie",
+    "Aanvragen als bedrijf",
+    "Aanvragen als werkgroep of commissie",
+    "Aanvragen als organisatie die fondsen werft voor andere organisaties",
+    "Organisaties of initiatieven buiten de gemeentes Utrecht, Rotterdam, Schiedam, Vlaardingen en Maassluis",
+    "Festivals (voor maatschappelijke festivals kan een uitzondering worden gemaakt)",
+    "Projecten met een politiek of religieus karakter",
+    "Een prijs of prijsuitreiking",
+    "Individuele kunstenaars (\"er wordt nooit een individuele kunstenaar ondersteund\", behoudens de stipendia aan de Rijksakademie)",
+    "Bouwkunst, architectuur, grafische vormgeving en filmkunst worden in de regel niet ondersteund",
+    "Totstandkoming of productie van een boek, podcast, website of film: \"In de meeste gevallen worden dergelijke aanvragen afgewezen.\"",
+    "Bij aanvragen t/m €2.000: structurele of exploitatiekosten",
+    "Projecten zonder inzet van vrijwilligers (uitzondering voor wetenschappelijk onderzoek, ziekenhuizen, grote gerenommeerde culturele instellingen)",
+    "Projecten die niet voor een brede doelgroep toegankelijk zijn",
+    "Dubbelfinanciering met KIEM of het Cultuur Innovatie Platform Utrecht (CIPU)"
+  ],
+  "kostensoort": ["restauratie", "investering"],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Twee thema's raken landgoederen direct. Erfgoed & monumenten: \"Het Elise Mathilde Fonds kan restauraties van historische gebouwen of objecten in de regio's Rotterdam en Utrecht ondersteunen met een financiële bijdrage. Het object dient van (kunst-)historische, wetenschappelijke of artistieke waarde te zijn of een sociaal-culturele waarde te vertegenwoordigen.\" Opvallend ruim geformuleerd: géén eis van rijksmonumentstatus, en 'objecten' naast gebouwen — een theekoepel, hekwerk, brug, ijskelder of oranjerie past daar tekstueel in. Natuur & duurzaamheid: \"Wij ondersteunen initiatieven die zich inzetten voor een meer harmonieus leven met de natuur [...] initiatieven zoals buurtboeren of voedselbossen horen tot de mogelijkheden\", plus partnerschappen \"vooral gericht op de circulaire landbouw en korte keten projecten\" — relevant voor landgoedlandbouw. De route is echter altijd via een partner, want de aanvrager-eis is hard: \"Alleen stichtingen en verenigingen zonder winstoogmerk kunnen een aanvraag indienen. Je kunt niet indienen: als individu of eenmanszaak [...] als bedrijf.\" Bovendien: \"De inzet van vrijwilligers bij je organisatie en het project is een must\" en \"Je project is voor een brede doelgroep toegankelijk.\" Let op de routering van natuurvragen: \"Het Elise Mathilde Fonds voert samen met K.F. Hein Fonds en Cultuurfonds Utrecht een loket voor natuurinitiatieven, genaamd KIEM. Via dit loket behandelen wij aanvragen in deze categorie.\" Geografisch smal: alleen de gemeenten Utrecht, Rotterdam, Schiedam, Vlaardingen en Maassluis — dus vrijwel alleen stedelijke landgoederen en buitenplaatsen binnen die gemeentegrenzen.",
+    "partnertype": "Stichting of vereniging zonder winstoogmerk met vrijwilligersinzet: een stichting tot behoud van het landgoed, een monumenten-, natuur- of buurtstichting. Voor natuurprojecten loopt de aanvraag via KIEM."
+  },
+  "onderliggende_fondsen": [
+    {"naam": "P.J. Verhoeff Fonds (fonds op naam)", "relevant": false, "reden": "Drie doelen: muziekbegrip en concertbezoek onder de jeugd; betere positionering van alternatieve geneeskunde; vormen van basis- en middelbaar onderwijs die bijdragen aan ontplooiing van de jeugd. Geen erfgoed- of natuurdoel, dus geen landgoedroute anders dan als locatie voor een jeugdconcert."},
+    {"naam": "KIEM (met K.F. Hein Fonds en Cultuurfonds Utrecht)", "relevant": true, "reden": "Gezamenlijk loket voor natuurinitiatieven in Utrecht; alle natuuraanvragen van Elise Mathilde lopen hierlangs. Voor natuur- en landschapswerk op een Utrechts landgoed is dit de ingang. Verdient aparte verrijking (www.kiemutrecht.nl)."},
+    {"naam": "Cultuur Innovatiefonds Provincie Utrecht / Cultuur Innovatie Platform Utrecht (CIPU)", "relevant": false, "reden": "Partnerprogramma; projecten die door CIPU worden gesteund kunnen niet óók van Elise Mathilde krijgen. Cultureel-innovatief, niet erfgoedfysiek."},
+    {"naam": "Noorderheide", "relevant": true, "reden": "Als menu-item op de site aangetroffen: het fonds is zelf verbonden aan landgoed Noorderheide. Geen financieringsroute, maar wel een aanwijzing van affiniteit met landgoedbeheer en mogelijk een gespreks-/netwerkingang. Inhoud niet opgehaald."}
+  ],
+  "niet_gevonden": [
+    "Bedragen: geen minimum/maximum of gemiddelde bijdrage gepubliceerd; alleen de €2.000-drempel in de procedureregels.",
+    "De concrete deadlines van de aanvraagrondes: de richtlijnenpagina verwijst ernaar maar noemt ze niet (staan vermoedelijk op de Kalender-pagina, niet opgehaald).",
+    "Of historische groenaanleg (parkbos, lanen, tuinaanleg) onder 'Erfgoed & monumenten' valt of onder 'Natuur & duurzaamheid'/KIEM — de tekst spreekt van 'historische gebouwen of objecten', wat groen niet uitsluit maar ook niet noemt.",
+    "Of regulier onderhoud subsidiabel is: het thema noemt alleen 'restauraties'.",
+    "De pagina Noorderheide en het Beoordelingsproces zijn niet opgehaald."
+  ]
+}

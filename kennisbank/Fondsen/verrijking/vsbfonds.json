@@ -1,0 +1,41 @@
+{
+  "naam": "VSBfonds",
+  "bronnen": [
+    {"soort": "website", "url": "https://vsbfonds.nl/donaties/wat-we-doen", "jaar": 2026, "gelezen": true},
+    {"soort": "aanvraagvoorwaarden", "url": "https://vsbfonds.nl/donaties/mens-maatschappij", "jaar": 2026, "gelezen": true},
+    {"soort": "website", "url": "https://vsbfonds.nl/donaties/kunst-cultuur", "jaar": 2026, "gelezen": true},
+    {"soort": "aanvraagvoorwaarden", "url": "https://vsbfonds.nl/donaties/hulp-en-kennis/alle-veelgestelde-vragen", "jaar": 2026, "gelezen": true}
+  ],
+  "doelstelling": "\"VSBfonds droomt van een sociale, inclusieve en creatieve samenleving. Een samenleving waarin iedereen meedoet.\" Twee thema's: Mens & Maatschappij (\"Ontwikkeling van mensen en buurten\" — \"initiatieven die zich inzetten voor meer sociale samenhang, en die zorgen dat mensen zelf en samen verder komen\") en Kunst & Cultuur (\"Ruimte en toegang voor iedereen\" — \"culturele initiatieven, die kunst en cultuur inclusiever en toegankelijker maken, zorgen voor verbinding en de samenleving mooier maken\").",
+  "benaderbaarheid": "open",
+  "benaderwijze_notitie": "\"Bij VSBfonds kun je het hele jaar door een donatie aanvragen [...] Je kunt doorlopend aanvragen indienen. We werken niet met deadlines.\" Wel eerst een verplichte quickscan: \"Voldoe je aan de voorwaarden? Start dan de quickscan. Deze vertelt je of je een aanvraag kunt starten.\" Bovendien nadrukkelijk toegankelijk vooraf: \"We kijken heel graag mee of je aanvraag kansrijk is, voordat je deze indient. [...] Meld je dan aan voor een speeddate via onze contactpagina.\"",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "landelijk",
+  "geo_waarden": ["Europees deel van Nederland"],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": "\"Er is geen minimum- of maximumbedrag als je een donatie bij VSBfonds aanvraagt. We vinden het wel belangrijk dat het bedrag dat je bij ons aanvraagt, in goede verhouding is met andere financieringsbronnen. We willen namelijk graag dat je van meerdere financiers geld krijgt voor je initiatief.\"",
+  "cofinanciering_vereist": true,
+  "uitsluitingen": [
+    "Initiatieven buiten het Europese deel van Nederland, of organisaties die daarbuiten gevestigd zijn",
+    "Publieke rechtspersonen en commerciële partijen: het fonds ondersteunt \"private rechtspersonen, zoals stichtingen en verenigingen\" plus aanvragers zonder rechtsvorm",
+    "Initiatieven \"die worden georganiseerd vanuit een specifieke politieke of religieuze beweging\"",
+    "Initiatieven zonder duidelijke begin- en einddatum (dus geen structurele exploitatie)",
+    "Aanvragen die minder dan vier maanden voor de startdatum worden ingediend (amateurkunstimpuls: twee maanden)",
+    "Organisaties met een bestuur van minder dan drie onafhankelijke natuurlijke personen, met bestuursleden die familie van elkaar zijn, of die direct/indirect betrokken zijn bij de uitvoering met financieel belang"
+  ],
+  "kostensoort": ["investering", "personeel"],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Er is geen erfgoed-, monumenten- of natuurspoor bij VSBfonds; het beleid is volledig sociaal-maatschappelijk en cultureel-inclusief. Een landgoedeigenaar kan bovendien zelf niet aanvragen: \"VSBfonds ondersteunt initiatieven van private rechtspersonen, zoals stichtingen en verenigingen\", met een bestuur van \"minimaal drie onafhankelijke natuurlijke personen\" die \"zelf niet direct of indirect betrokken zijn bij de uitvoering\". De partnerroute is echter concreet en breed. De programmalijn 'Ontmoetingsplekken' — \"Zorgen voor ontmoeting en verbinding tussen buurtbewoners in een dorpshuis, buurtkamer of een andere plek\" — en 'Samen leven in de buurt' maken het mogelijk dat een buurt-, welzijns- of zorgstichting een ontmoetingsprogramma op het landgoed financiert (landgoedlocatie als kostenpost in háár begroting). Ook 'Inzet van vrijwilligers' (\"Vrijwilligers werven, trainen of binden\") past bij een vrijwilligersorganisatie rond een landgoed. Binnen Kunst & Cultuur is een cultureel programma op het landgoed denkbaar via een culturele stichting. Belangrijke beperking: \"VSBfonds ondersteunt initiatieven met een duidelijke begin- en einddatum\" — dus projectmatig, geen structurele instandhouding.",
+    "partnertype": "Private rechtspersoon zonder winstoogmerk (stichting of vereniging) met een onafhankelijk driehoofdig bestuur: buurt- of dorpshuisstichting, welzijns- of zorgorganisatie, vrijwilligersorganisatie of culturele stichting. Ook een groep zonder rechtsvorm kan via een aparte procedure aanvragen."
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "De programmalijnen binnen Kunst & Cultuur zijn niet volledig uitgelezen (de pagina laadt ze dynamisch); alleen de amateurkunstimpuls is expliciet aangetroffen.",
+    "Een expliciete uitsluitingslijst met kostensoorten (bouw, restauratie, exploitatie, vastgoed) is nergens gepubliceerd — VSBfonds werkt met programmalijnen en zes basisvoorwaarden, niet met een negatieve lijst.",
+    "Bedragen: geen minimum/maximum, en ook geen gemiddelde donatie of jaarbudget genoemd op de aanvraagpagina's.",
+    "De werklijst-URL /over-vsbfonds/aanvragen/veelgestelde-vragen-over-beleid bestaat niet meer en redirect naar /donaties/hulp-en-kennis/alle-veelgestelde-vragen.",
+    "De Algemene voorwaarden (aparte pagina /donaties/hulp-en-kennis/hulpmiddelen/algemene-voorwaarden) zijn niet opgehaald."
+  ]
+}

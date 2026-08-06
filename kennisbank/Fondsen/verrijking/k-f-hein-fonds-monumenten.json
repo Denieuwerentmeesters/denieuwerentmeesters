@@ -1,0 +1,66 @@
+{
+  "naam": "K.F. Hein Fonds Monumenten",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://kfhein.nl/wat-doen-wij/monumenten",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "website",
+      "url": "https://kfhein.nl/wat-doen-wij/voor-initiatieven",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "website",
+      "url": "https://www.skbl.nl/erfgoedfondsen/",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "Het doel van dit fonds is om monumenten en beeldbepalende panden in de regio Utrecht aan te kopen, te restaureren en waar dat kan te verhuren aan instellingen die werken binnen de aandachtsgebieden van het K.F. Hein Fonds.",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "\"Wil je een rijksmonument laten restaureren? Dan kun je hiervoor een financiële bijdrage aanvragen. Het is dan belangrijk dat het monument voor een breed publiek toegankelijk is.\" — via het K.F. Hein Fonds met QuickScan, vaste indieningsdata en spreekuur op afspraak. Het K.F. Hein Fonds Monumenten zélf koopt en verhuurt panden en verstrekt geen giften.",
+  "aanvrager_type": "beide",
+  "geo_niveau": "provincie",
+  "geo_waarden": [
+    "Utrecht"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": "\"In 2025 konden we als K.F. Hein Fonds ruim € 3,6 miljoen toekennen aan meer dan 700 initiatieven en projecten in de provincie Utrecht.\" (fondsbreed, niet alleen monumenten; geen maximum per aanvraag gepubliceerd)",
+  "cofinanciering_vereist": null,
+  "uitsluitingen": [
+    "monumenten die niet voor een breed publiek toegankelijk zijn (bij de restauratiebijdrage)",
+    "projecten buiten de regio/provincie Utrecht, tenzij van meer dan lokaal belang"
+  ],
+  "kostensoort": [
+    "restauratie",
+    "investering",
+    "regulier_onderhoud"
+  ],
+  "landgoed_relevantie": {
+    "route": "zelf",
+    "onderbouwing": "\"Wil je een rijksmonument laten restaureren? Dan kun je hiervoor een financiële bijdrage aanvragen. Het is dan belangrijk dat het monument voor een breed publiek toegankelijk is.\" Een Utrechts landgoed met een rijksmonumentaal huis, koetshuis, oranjerie of tuinmuur kan dus zelf een restauratiebijdrage aanvragen bij het K.F. Hein Fonds, mits publieke toegankelijkheid geregeld is. Bovendien noemt het moederfonds \"natuurbehoud\" als eigen aandachtsgebied. De aankoop-/verhuurroute van K.F. Hein Fonds Monumenten zelf betreft in de praktijk stadspanden in Utrecht, niet landgoederen.",
+    "partnertype": null
+  },
+  "onderliggende_fondsen": [
+    {
+      "naam": "K.F. Hein Fonds (moederfonds)",
+      "relevant": true,
+      "reden": "\"Het Fonds richt zich op het bevorderen van monumentenzorg, natuurbehoud, volksgezondheid, cultuur, volksontwikkeling en maatschappelijk werk\" — monumentenzorg én natuurbehoud, regio Utrecht; dit is de feitelijke subsidieroute"
+    },
+    {
+      "naam": "K.F. Hein Stichting",
+      "relevant": null,
+      "reden": "moederstichting waaruit het fonds in 1989 ontstond; eigen beleid niet opgehaald"
+    }
+  ],
+  "niet_gevonden": [
+    "bedragmaxima en cofinancieringspercentages voor restauratiebijdragen — niet gepubliceerd op kfhein.nl",
+    "de concrete indieningsdata en de inhoud van de QuickScan-criteria (achter formulier)",
+    "een beleidsplan-PDF; de pagina /het-fonds/visie-en-beleid en /het-fonds/documenten-en-publicaties zijn niet doorgenomen"
+  ]
+}

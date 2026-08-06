@@ -1,0 +1,58 @@
+{
+  "naam": "Stichting Pharus",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://www.stichtingpharus.nl/",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "beleidsplan",
+      "url": "https://www.stichtingpharus.nl/portal-pharus/beleid",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "“Het initiëren, bevorderen en ondersteunen van projecten op het gebied van welzijn, cultuur, onderwijs, wetenschap, onderzoek, bescherming van milieu en natuur, gezondheidszorg, jeugd- en ouderenzorg, dierenwelzijn, religie, levensbeschouwing, spiritualiteit en/of de bevordering van de democratische rechtsorde.” Toelichting: “We hebben onze doelstelling breed geformuleerd. Dat is omdat we niemand op voorhand willen uitsluiten. Liever laten we ons overtuigen door een goed projectplan.”",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "“Organisaties met een ANBI status kunnen een aanvraag indienen via onze website www.stichtingpharus.nl. Aanvragen op papier nemen we niet in behandeling.” Drempel is de ANBI-eis plus de nadruk op persoonlijke klik: “We vinden het belangrijk dat er een goede connectie is tussen organisaties die we steunen en ons bestuur.”",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": null,
+  "geo_waarden": [
+    "Geen geografische beperking gepubliceerd; feitelijk “circa 80 projecten in 26 verschillende landen”. Kantoor Amersfoort."
+  ],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": "“Over aanvragen met een maximum van 5.000 Euro nemen bestuursleden snel een besluit in een informeel overleg. Aanvragen voor hogere bedragen worden in de bestuursvergadering besproken.” En: “Onder eenmalige giften verstaan we een eenmalige bijdrage van meer dan 5.000 Euro aan een concreet project. Is het bedrag lager? Dan zien we het niet als een gift of toekenning, maar als een stimuleringsbijdrage.” Meerjarig: “We spreken in principe een maximale looptijd van vijf jaar voor projecten af.”",
+  "cofinanciering_vereist": false,
+  "uitsluitingen": [
+    "“Stichtingen zonder ANBI status”",
+    "“Projecten van individuele mensen”",
+    "“Grote of kapitaalkrachtige stichtingen waarvoor wij het verschil niet kunnen maken”",
+    "“Projecten met een direct of indirect commercieel belang”",
+    "“Projecten met cofinanciering”",
+    "“Fondswerving van of voor anderen”",
+    "“Projecten zonder duidelijke verantwoording aan Pharus”",
+    "“Projecten waar geen goed plan aan ten grondslag ligt”",
+    "“Organisaties die toezeggingen complex maken en willen juridiseren vallen af.”",
+    "Gelden voor reserveringen: “Ze mogen niet worden gebruikt voor bijvoorbeeld het vormen van voorzieningen.”"
+  ],
+  "kostensoort": [
+    "investering",
+    "exploitatie",
+    "onderzoek"
+  ],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "De statutaire doelstelling noemt “bescherming van milieu en natuur”, “cultuur”, “onderzoek” en “jeugd- en ouderenzorg” — thema's die op een landgoed samenkomen. Maar drie uitsluitingen blokkeren de directe route hard: “Stichtingen zonder ANBI status”, “Projecten met een direct of indirect commercieel belang” en — zeer ongebruikelijk — “Projecten met cofinanciering”. Een landgoed-B.V. of particuliere eigenaar valt daarmee af; een landgoed dat zijn plan met meerdere fondsen wil financieren óók. Wat overblijft is een ANBI-stichting die een op zichzelf staand, volledig door Pharus te dekken project op het landgoed uitvoert: een zorg-, jeugd- of natuureducatieproject, of een groenherstelproject van een ANBI-natuurstichting. Het fonds zoekt uitdrukkelijk “Kleine projecten die impact hebben” en “Kleine initiatieven gedreven door passie én werkelijkheidszin”. Let ook op de levensbeschouwelijke voorkeur: “Projecten waarin de boodschap van Gods liefde verkondigd wordt.”",
+    "partnertype": "Een ANBI-stichting: zorg-/welzijnsorganisatie, natuur- of landschapsstichting, of een aan het landgoed verbonden vriendenstichting met ANBI-status. Die moet het project volledig kunnen dragen zonder aanvullende cofinanciering."
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "Geen projectenlijst met namen online gevonden — de site verwijst naar “Overzicht met alle lopende projecten, in totaal circa 80 projecten in 26 verschillende landen” maar het overzicht zelf gaf geen leesbare inhoud; daardoor geen precedent te toetsen op landgoed- of erfgoedprojecten.",
+    "Geen jaarverslag of ANBI-standaardformulier gevonden op de site, terwijl het beleid zegt: “Elk jaar publiceren we een jaarverslag.”",
+    "Geen geografische afbakening gepubliceerd (wel of niet Nederland-only) — het beleid zwijgt hierover.",
+    "Geen totaalbudget per jaar gepubliceerd; alleen “De stichting bouwt een redelijk eigen vermogen van maximaal vijf miljoen euro op.”"
+  ]
+}

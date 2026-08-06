@@ -1,0 +1,66 @@
+{
+  "naam": "Stichting OPNB - Ondersteuning Particulier Natuurbeheer",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://opnb.org/",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "website",
+      "url": "https://opnb.org/over-stichting-opnb/",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://opnb.org/aanvraag-doen/",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://opnb.org/wp-content/uploads/2026/01/OPNB-Ondersteuningsreglement.pdf",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "“Stichting Ondersteuning Particulier Natuurbeheer (hierna: “OPNB”) is in 2024 opgericht en heeft als doel particuliere grondbezitters, niet zijnde (particuliere) terrein-beherende organisaties (\"TBO's\") en daaraan gelieerde of daarmee verbonden entiteiten, (financieel) te ondersteunen bij het verkrijgen (inclusief afrondingsaankopen), ontwikkelen, herstellen, inrichten en beheren van bestaande en nieuwe natuur en landschapsgronden met het oog op het duurzaam in stand houden hiervan in Nederland voor onbepaalde tijd.”",
+  "benaderbaarheid": "open",
+  "benaderwijze_notitie": "“Een aanvraag kan gedurende het gehele jaar worden ingediend. Elke aanvraag, die voldoet aan de voorwaarden, zal tijdens de eerst mogelijke vergadering van het bestuur van de Stichting worden behandeld en beoordeeld.” en “Zowel natuurlijke personen als rechtspersonen kunnen een aanvraag indienen.” Wél één harde gedragsregel: “Het contact zoeken (op welke wijze dan ook) met (leden van) het Bestuur voorafgaande aan de aanvraag of naar aanleiding van de beoordeling van het Project is niet toegestaan, op straffe van volledige uitsluiting.” Algemene vragen kunnen wel naar info@opnb.org.",
+  "aanvrager_type": "landgoedeigenaar",
+  "geo_niveau": "landelijk",
+  "geo_waarden": [
+    "Nederland"
+  ],
+  "bedrag_min": 10000,
+  "bedrag_max": 200000,
+  "bedrag_indicatie": "Tegenstrijdig gepubliceerd. Website (/aanvraag-doen): “Maximale bijdrage: € 200.000,- / minimale bijdrage: € 20.000,-. Eigen bijdrage 30% van het totale projectbedrag.” Reglement art. 4.1: “Het maximumbedrag voor een eenmalige Ondersteuningsbijdrage bedraagt € 200.000,-. Het minimale aan te vragen bedrag voor een eenmalige Ondersteuningsbijdrage bedraagt € 10.000,-.” Ondergrens dus € 10.000 óf € 20.000 — navragen. Daarnaast leningen: “de minimale Lening bedraagt € 100.000,- en de maximale Lening bedraagt € 1.000.000,-”, maar: “Aanvragen voor een lening zullen in 2026 niet in behandeling worden genomen.”",
+  "cofinanciering_vereist": true,
+  "uitsluitingen": [
+    "“(particuliere) terreinbeherende organisaties (TBO's) en daaraan gelieerde entiteiten, nimmer voor financiële ondersteuning door OPNB in aanmerking komen”",
+    "Publieke entiteiten (uit de definitie van Aanvrager: “particuliere grondbezitters, niet zijnde (particuliere) terrein-beherende organisaties en daaraan gelieerde of daarmee verbonden entiteiten of publieke entiteiten”)",
+    "“Ondersteuningsbijdragen en Leningen worden niet met terugwerkende kracht verstrekt.”",
+    "“Zodra een aanvraag voor een Project is afgewezen, kan deze aanvraag niet opnieuw worden ingediend, tenzij het Bestuur anders beslist.”",
+    "Vooraf contact zoeken met bestuursleden: “op straffe van volledige uitsluiting”",
+    "Leningen in 2026: “Aanvragen voor een lening zullen in 2026 niet in behandeling worden genomen.”"
+  ],
+  "kostensoort": [
+    "investering",
+    "regulier_onderhoud",
+    "onderzoek"
+  ],
+  "landgoed_relevantie": {
+    "route": "zelf",
+    "onderbouwing": "Dit fonds is letterlijk gebouwd voor particuliere grondeigenaren en sluit terreinbeherende organisaties juist uit — het spiegelbeeld van de meeste natuurfondsen. “OPNB ondersteunt particulieren bij natuurbeheer. Stichting Ondersteuning Particulier Natuurbeheer (OPNB) biedt financiële ondersteuning aan particuliere grondeigenaren bij het ontwikkelen en inrichten van nieuwe natuur en het herstellen en eventueel beheren van bestaande natuur.” De opsomming van gefinancierde ingrepen leest als een landgoedwerkplan: “aanleggen of revitaliseren van bossen, heide, (kruidenrijke) graslanden of wetlands; aanleggen van landschapselementen (hagen, houtwallen, beek begeleidende beplanting); graven van poelen, vijvers, beken of rivierarmen; plaatsen van natuurvriendelijke oevers; creëren van verbindingen tussen natuurgebieden; onderhoud en aanleg (historische) bomenlanen, (historische) moestuinen, voedselbos, agroforestry of (hoogstam) boomgaarden.” Bedragen (tot € 200.000) liggen een orde hoger dan bij de meeste particuliere fondsen. Herkomst verklaart de focus: het fonds is gevuld uit de schikking rond de aankoopsubsidies die alleen Natuurmonumenten en de Provinciale Landschappen kregen, na de klacht van de Vereniging Gelijkberechtiging Grondbezitters. Let op de mogelijke kettingbeding-voorwaarde: “kan het Bestuur (…) als voorwaarde voor ondersteuning stellen dat een en ander wordt verzekerd via één of meer (notarieel vastgelegde) kwalitatieve verplichtingen.”",
+    "partnertype": null
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "Geen jaarverslag of jaarrekening op opnb.org gevonden (stichting opgericht oktober 2024; de nieuwspagina bevat nog lorem-ipsum plaatsteksten).",
+    "Geen jaarlijks bestedingsplafond gepubliceerd, terwijl het reglement wel verwijst naar “het financiële plafond van het betreffende kalenderjaar” (art. 7.3).",
+    "Geen ANBI-publicatie of statuten online gevonden.",
+    "Tegenstrijdige ondergrens (€ 10.000 in het reglement vs. € 20.000 op de website) — niet op te lossen uit de bronnen."
+  ]
+}

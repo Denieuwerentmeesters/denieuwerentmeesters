@@ -1,0 +1,64 @@
+{
+  "naam": "Marke van Streukel / Marke van Berkum Fonds (Cultuurfonds Overijssel)",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://www.cultuurfonds.nl/fondsen/marke-van-streukel-marke-van-berkum-fonds",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "website",
+      "url": "https://www.cultuurfonds.nl/provinciale-afdelingen/overijssel",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://www.cultuurfonds.nl/aanvragen/voorwaarden",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "\"Stimuleert natuurbehoud, (rechts)wetenschap en monumentenzorg binnen het grondgebied van de huidige provincie Overijssel. Aanvragen worden behandeld door het Cultuurfonds Overijssel.\"",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "\"Aanvragen worden behandeld door het Cultuurfonds Overijssel.\" Er is geen eigen loket; aanvragen loopt via het Cultuurfonds-aanvraagportaal met vooraanvraag op vaste deadlines en de algemene drempels: KvK-inschrijving, cultuur of natuur in de statutaire doelstelling, minimale projectbegroting EUR 15.000.",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "provincie",
+  "geo_waarden": [
+    "Overijssel"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": 10000,
+  "bedrag_indicatie": "Geen eigen bedragen gepubliceerd. Algemene provinciale route: maximaal 25% van de kosten met plafond EUR 10.000; minimale projectbegroting EUR 15.000.",
+  "cofinanciering_vereist": true,
+  "uitsluitingen": [
+    "reguliere exploitatie- en structurele kosten (\"alleen voor projectkosten, niet voor exploitatie- of reguliere kantoorkosten\")",
+    "regulier onderhoud van accommodaties",
+    "aanleg van recreatieve infrastructuur zoals bruggen en paden (bij de route Natuuraanleg)",
+    "projecten met een politieke of religieuze hoofddoelstelling",
+    "polariserende projecten",
+    "solotentoonstellingen van hedendaagse kunstenaars",
+    "tijdelijke apps en reguliere websites",
+    "artist-in-residence-programma's",
+    "album-/EP-opnames",
+    "projecten met een begroting onder EUR 15.000",
+    "projecten buiten Nederland"
+  ],
+  "kostensoort": [
+    "investering",
+    "restauratie",
+    "onderzoek"
+  ],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Dit is een van de meest landgoed-relevante fondsen op naam bij het Cultuurfonds: de doelstelling is \"natuurbehoud, (rechts)wetenschap en monumentenzorg binnen het grondgebied van de huidige provincie Overijssel\" - de drie-eenheid groen, erfgoed en historie die een landgoed juist kenmerkt. De toekenningenlijst bevestigt het letterlijk: \"Stichting Landschap Overijssel - herbouw duiventil Landgoed De Horte, Dalfsen\" en \"Stichting Landschap Overijssel - aanleg Berceau-boogconstructie Landgoed de Eversberg\", beide onder erfgoed & monumentenzorg. Route is via_partner: de Cultuurfonds-voorwaarden eisen een stichting of vereniging met cultuur of natuur in de statutaire doelstelling; in de praktijk trad Landschap Overijssel op als aanvrager voor werk op landgoederen. Uitzondering: \"in het geval van historische buitenplaatsen mag het erfgoed ook in bezit zijn van een familie-B.V. die verbonden is aan de Natuurschoonwet\" - dan kan het landgoed zelf aanvragen. Let op de breuklijn: herstel en herbouw zijn subsidiabel, regulier onderhoud niet.",
+    "partnertype": "Provinciale landschapsorganisatie (Landschap Overijssel is de feitelijke aanvrager bij eerdere landgoedprojecten), of een eigen landgoed-/vriendenstichting of historische vereniging. Bij een historische buitenplaats kan een NSW-familie-B.V. zelf aanvragen."
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "Eigen bedragen, deadlines of criteria van dit fonds op naam: cultuurfonds.nl publiceert alleen een doelstelling van twee zinnen plus de toekenningenlijst.",
+    "Apart beleidsplan of jaarverslag van het Marke van Streukel / Marke van Berkum Fonds.",
+    "Toelichting op het element '(rechts)wetenschap' in de doelstelling; alleen af te leiden uit toekenningen aan de Vereeniging tot Beoefening van Overijsselsch Regt en Geschiedenis."
+  ]
+}

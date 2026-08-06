@@ -1,0 +1,39 @@
+{
+  "naam": "Stichting Fonds A.H. Martens van Sevenhoven",
+  "bronnen": [
+    {
+      "soort": "anbi_publicatie",
+      "url": "https://fondseninnederland.nl/fonds/stichting-fonds-ah-martens-van-sevenhoven",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "Volgens aggregatorbronnen (niet bij de bron bevestigd): giften aan organisaties werkzaam op het gebied van monumentenzorg en natuurbescherming in Gelderland, aan wetenschappelijke verenigingen, en aan instellingen ten behoeve van hervormd kerkenwerk of christelijke belangen, bij voorkeur in Gelderland; daarnaast beperkte subsidies voor kunsthistorisch onderzoek. De FIN-pagina noemt alleen de sectoren Cultuur, Natuur en Religie.",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "Aggregatorbron: 'Subsidies kunnen per e-mail of schriftelijk worden aangevraagd.' Op de eigen vindplaatsen (FIN-pagina, eigen domein) is geen procedure aangetroffen; het eigen domein was niet bereikbaar.",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "provincie",
+  "geo_waarden": [
+    "Gelderland"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": null,
+  "cofinanciering_vereist": false,
+  "uitsluitingen": [],
+  "kostensoort": [
+    "restauratie",
+    "investering",
+    "onderzoek"
+  ],
+  "landgoed_relevantie": {
+    "route": "zelf",
+    "onderbouwing": "De combinatie 'monumentenzorg en natuurbescherming in Gelderland' is precies het profiel van een Gelders landgoed, en het fonds is zelf gevestigd op landgoed Marienwaerdt in Beesd - een sterke indicatie dat landgoederen tot het blikveld behoren. Wel is de doelstelling alleen via aggregatoren gevonden; de aggregatorformulering spreekt van 'organisaties en instellingen', wat op een rechtspersoon als aanvrager kan duiden.",
+    "partnertype": "bij twijfel: Gelderse monumenten- of natuurstichting"
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "een eigen publicatie van de doelstelling: martensvansevenhoven.nl gaf een verlopen certificaat en daarna alleen de tekst 'Geregistreerd' (geparkeerd domein); de FIN-pagina bevat geen doelstellingstekst",
+    "bedragen, uitsluitingen, vergaderdata en eisen aan de rechtsvorm van de aanvrager"
+  ]
+}

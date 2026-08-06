@@ -1,0 +1,47 @@
+{
+  "doelstelling": "Het in stand houden en restaureren van (familie-)graven in de ruimste zin van het woord; het ordenen, beschrijven, restaureren en conserveren van particuliere archieven; het uitgeven van egodocumenten.",
+  "kostensoort": [
+    "restauratie",
+    "onderzoek"
+  ],
+  "landgoed_relevantie": {
+    "route": "zelf",
+    "onderbouwing": "Twee van de drie doelen raken landgoederen rechtstreeks: \"Het in stand houden en restaureren van (familie-) graven in de ruimste zin van het woord\" (veel landgoederen hebben een familiegrafkelder, grafheuvel of begraafplaats op het terrein) en \"Het ordenen en beschrijven, alsmede het restaureren en conserveren van particuliere archieven\" - het huisarchief van een landgoed is daarvan het schoolvoorbeeld.",
+    "partnertype": null
+  },
+  "niet_gevonden": [
+    "eigen bedragen, criteria en deadlines",
+    "of een particuliere eigenaar rechtstreeks kan aanvragen dan wel een stichting nodig is"
+  ],
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://www.cultuurfonds.nl/fondsen/fonds-eindbestemming",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://www.cultuurfonds.nl/aanvragen",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "naam": "Fonds Eindbestemming (het Cultuurfonds)",
+  "benaderbaarheid": "open",
+  "benaderwijze_notitie": "Fonds op naam van het Cultuurfonds; aanvragen via het openbare portaal aanvragen.cultuurfonds.nl. \"Het Cultuurfonds dekt de kosten van projecten altijd gedeeltelijk.\"",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "landelijk",
+  "geo_waarden": [
+    "Nederland"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": "Geen eigen bedragen gepubliceerd; algemene Cultuurfonds-maxima lopen van EUR 1.500 tot EUR 50.000 per route, met 25-50% dekking.",
+  "cofinanciering_vereist": true,
+  "uitsluitingen": [
+    "projecten die binnen 4-6 weken na aanvraag starten",
+    "publicaties met een oplage onder 1.000 (landelijk) of 750 (regionaal) exemplaren"
+  ],
+  "onderliggende_fondsen": []
+}

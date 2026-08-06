@@ -1,0 +1,90 @@
+{
+  "naam": "SBNL Fonds Groene Landschapselementen",
+  "bronnen": [
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://www.sbnlnatuurfonds.nl/aanvraagpagina-landschaps-en-natuurbeheer",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "website",
+      "url": "https://www.sbnlnatuurfonds.nl/nieuws-detailpagina/2026/07/01/van-idee-naar-impact-dien-nu-uw-aanvraag-in-voor-natuur-landschap-of-weidevogels",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://www.sbnlnatuurfonds.nl/l/library/download/urn:uuid:a82ecb92-fa9f-4e32-aa92-93b1bb2ac9e9/20260630+aanvragen+projecten+en+voorwaarden.pdf",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "website",
+      "url": "https://www.sbnlnatuurfonds.nl/fondsen-overzicht",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "“Voor deze fondsen honoreert SBNL Natuurfonds projectaanvragen op het gebied van: Particulier en/of agrarisch beheer en versterking van het landschap en de natuur/biodiversiteit; Cultuurhistorische landschapselementen en erfgoed; Gevestigd in de provincies Utrecht, Gelderland en/of Overijssel; Met een financiële bijdrage tussen de €3.000 – €20.000.” En: “Dan gaat het onder meer om aanleg, herstel en herinrichting van (kleine) landschapselementen; beheer van natuurterreinen en landschapselementen en natuur- en landschapseducatie.”",
+  "benaderbaarheid": "open",
+  "benaderwijze_notitie": "“Aanvraagperiode voor 2026: 1 juli tot 1 september 2026” en “Particulieren en rechtspersonen (o.a. vennootschappen, stichtingen, coöperaties en verenigingen) kunnen een aanvraag indienen. Nieuwe aanvragers krijgen de voorkeur.” Let op: “u kunt de aanvraag niet tussentijds opslaan”.",
+  "aanvrager_type": "landgoedeigenaar",
+  "geo_niveau": "provincie",
+  "geo_waarden": [
+    "Utrecht",
+    "Gelderland",
+    "Overijssel"
+  ],
+  "bedrag_min": 3000,
+  "bedrag_max": 20000,
+  "bedrag_indicatie": "“Met een financiële bijdrage tussen de €3.000 – €20.000”",
+  "cofinanciering_vereist": true,
+  "uitsluitingen": [
+    "“Initiatieven met louter commerciële doelstellingen”",
+    "“Initiatieven van overheden, overheidsinstellingen en Initiatieven van de terrein beherende organisaties (TBO's)”",
+    "“Projecten die ook volledig gerealiseerd kunnen worden met bestaande subsidieregelingen zoals agrarische natuurbeheer, groene en blauwe diensten en BRIM”",
+    "“Regulier onderwijs”",
+    "“Financiering van een exploitatietekort”",
+    "“Op zichzelf staande seminars, workshops, symposia, conferenties en excursies”",
+    "“Initiatieven waarbij de financiële inbreng van SBNL Natuurfonds maar een zeer beperkt onderdeel is van de totale financiering.”",
+    "“Audiovisueel materiaal, waaronder drones en camera's”"
+  ],
+  "kostensoort": [
+    "investering",
+    "restauratie",
+    "regulier_onderhoud"
+  ],
+  "landgoed_relevantie": {
+    "route": "zelf",
+    "onderbouwing": "“Wij helpen particuliere eigenaren van landgoederen en natuurterreinen, Agrarische Natuurverenigingen en andere organisaties op het gebied van natuur- en landschapsbeheer en de aanleg van landschapselementen om hun ambities waar te maken in het veld.” Het thema “Cultuurhistorische landschapselementen en erfgoed” dekt lanen, houtwallen, hakhout, poelen, hagen en singels — de kern van veel landgoedplannen. Aandachtspunt: uitgesloten zijn “Projecten die ook volledig gerealiseerd kunnen worden met bestaande subsidieregelingen zoals agrarische natuurbeheer, groene en blauwe diensten en BRIM”; het plan moet dus iets doen wat het bestaande subsidiestelsel niet dekt.",
+    "partnertype": null
+  },
+  "onderliggende_fondsen": [
+    {
+      "naam": "Van Hemert tot Dingshof-Coldeweij Fonds",
+      "relevant": true,
+      "reden": "“Overijssel en Gelderland ten oosten van de IJssel”; noemt particuliere landgoedeigenaren expliciet als doelgroep. Apart verrijkt."
+    },
+    {
+      "naam": "Fonds West-Gelderland",
+      "relevant": true,
+      "reden": "“Gelderland ten westen van de IJssel” — zelfde thematiek landschapselementen, ander werkgebied. Stond niet in de werklijst."
+    },
+    {
+      "naam": "Lida Jannink Fonds",
+      "relevant": true,
+      "reden": "Een van de vier fondsen achter dit loket voor aanleg van groene landschapselementen. Geen apart werkgebied vermeld op de aanvraagpagina. Stond niet in de werklijst."
+    },
+    {
+      "naam": "Natuur om de Hoek Fonds",
+      "relevant": true,
+      "reden": "“voor gebiedsgerichte projecten” — bruikbaar voor landgoedplannen die met de omgeving samenwerken. Stond niet in de werklijst."
+    }
+  ],
+  "niet_gevonden": [
+    "Geen aparte fondspagina's met eigen criteria voor Fonds West-Gelderland, Lida Jannink Fonds en Natuur om de Hoek Fonds; op de aanvraagpagina staan alleen naam + werkgebied.",
+    "Geen jaarbudget of aantal toekenningen per jaar gepubliceerd.",
+    "Geen expliciete cofinancieringseis met percentage; wel indirect via de uitsluiting “Initiatieven waarbij de financiële inbreng van SBNL Natuurfonds maar een zeer beperkt onderdeel is van de totale financiering” en de pluspunt “Katalyserend”."
+  ]
+}

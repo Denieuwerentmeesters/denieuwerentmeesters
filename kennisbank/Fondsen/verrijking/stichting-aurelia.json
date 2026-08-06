@@ -1,0 +1,31 @@
+{
+  "naam": "Stichting Aurelia",
+  "bronnen": [
+    {"soort": "beleidsplan", "url": "https://fondseninnederland.nl/storage/Fondsbestanden/ITLJibMww58sslCgSUKC5SOTpPUpbREHgPR601Sv.pdf", "jaar": 2024, "gelezen": true},
+    {"soort": "website", "url": "https://fondseninnederland.nl/fonds/stichting-aurelia", "jaar": 2026, "gelezen": true}
+  ],
+  "doelstelling": "Stichting Aurelia beoogt volledig het algemeen nut in de zin van de wet en heeft meer in het bijzonder tot doel het ondersteunen van projecten, al dan niet van andere goede doelen, op het gebied van (a) natuur en milieubescherming, (b) cultuur(behoud) en (c) menselijke ontwikkeling en welzijn. De Stichting streeft daarbij naar een duurzame impact op natuur, cultuur en mens.",
+  "benaderbaarheid": "onbekend",
+  "benaderwijze_notitie": "Er is geen aanvraagprocedure gepubliceerd. Het beleidsplan zegt: \"Gezien de huidige ontwikkelingsfase van de stichting is ervoor gekozen om onze middelen en inspanningen vooralsnog volledig te richten op het financieel ondersteunen van andere algemeen nut beogende instellingen (ANBI's) die een of meer doelen van de Stichting nastreven.\" Een beleidskader voor projectselectie bestaat nog niet: \"Indien en voor zover deze stap wordt gezet, zal de Stichting een helder beleidskader ontwikkelen waarin onder meer wordt vastgelegd hoe zij projecten selecteert, monitort en evalueert.\" Ook: \"De Stichting heeft thans nog geen vermogen\" (stand december 2024).",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": null,
+  "geo_waarden": [],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": null,
+  "cofinanciering_vereist": false,
+  "uitsluitingen": [],
+  "kostensoort": [],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "De doelstelling raakt landgoedopgaven op twee van de drie focusgebieden: \"(a) natuur en milieubescherming, (b) cultuur(behoud)\", met onder natuur \"Biodiversiteit: Het behoud van soorten en ecosystemen is essentieel voor ecologische stabiliteit\" en onder cultuur \"Identiteit en Erfgoed: Cultuur vormt de basis van onze identiteit. Het behoud van culturele tradities en erfgoed versterkt de verbinding tussen generaties\". Maar het fonds geeft in deze fase uitsluitend aan ANBI's: \"Stichting Aurelia zal zich in eerste instantie richten op de ondersteuning van andere algemeen nut beogende instellingen (ANBI's) die een of meer doelen van de Stichting nastreven.\" Een particulier landgoed komt dus alleen in beeld via een ANBI-natuur- of erfgoedorganisatie. Een directe route kan op termijn ontstaan (\"Op de langere termijn zou de Stichting haar rol uit kunnen breiden naar het ondersteunen van projecten\"), maar is nu niet gepubliceerd.",
+    "partnertype": "ANBI-natuurorganisatie of ANBI-erfgoedorganisatie die een project op het landgoed uitvoert"
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "Eigen website: bestaat niet; beleidsplan verwijst naar fondseninnederland.nl als website van de stichting",
+    "Aanvraagprocedure, formulier, deadlines: nergens gepubliceerd (FIN-pagina, beleidsplan)",
+    "Bedragen en uitsluitingen: niet vastgelegd; fonds had bij vaststelling beleidsplan nog geen vermogen",
+    "Jaarverslag: niet aangetroffen (stichting opgericht 21 oktober 2024)"
+  ]
+}

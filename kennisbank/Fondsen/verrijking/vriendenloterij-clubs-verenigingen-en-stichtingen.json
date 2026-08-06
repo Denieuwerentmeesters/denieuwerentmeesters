@@ -1,0 +1,32 @@
+{
+  "naam": "VriendenLoterij - clubs, verenigingen en stichtingen",
+  "bronnen": [
+    {"soort": "aanvraagvoorwaarden", "url": "https://www.vriendenloterij.nl/goede-doelen/clubs-verenigingen/meld-uw-club-aan", "jaar": 2026, "gelezen": true},
+    {"soort": "website", "url": "https://www.vriendenloterij.nl/goede-doelen/culturele-partners/aanvraagprocedure/", "jaar": 2026, "gelezen": true}
+  ],
+  "doelstelling": "\"Uw club, vereniging of stichting kan kosteloos samenwerken met de VriendenLoterij. Leden en supporters spelen mee met een lot voor uw club, waarbij minimaal 40% van de lotprijs direct naar uw club gaat. Zo genereert u eenvoudig extra inkomsten!\" Daarnaast: \"De VriendenLoterij steunt via de actie 'Clubs van de Week' dit jaar 100 clubs, verenigingen of stichtingen met een bijdrage van EUR 5.000,-.\"",
+  "benaderbaarheid": "open",
+  "benaderwijze_notitie": "\"Klik op partner worden, vul het formulier in en klik op versturen. Onze medewerkers hebben een aantal dagen nodig om uw club te beoordelen en toe te voegen.\" Dit is geen subsidieaanvraag maar een aanmelding voor een wervingssamenwerking; de opbrengst hangt af van hoeveel deelnemers voor de club meespelen.",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "landelijk",
+  "geo_waarden": ["Nederland"],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": "Geen toekenning maar een opbrengstdeel: \"Van elk meespelend lot komt minimaal 40% ten goede aan uw club of stichting\", \"Dit kan oplopen tot wel duizenden euro's per jaar.\" Aparte actie: \"'Clubs van de Week' ... 100 clubs, verenigingen of stichtingen met een bijdrage van EUR 5.000,-\"",
+  "cofinanciering_vereist": false,
+  "uitsluitingen": [],
+  "kostensoort": ["exploitatie", "investering", "regulier_onderhoud"],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "De doelgroep is uitdrukkelijk verenigingsleven: \"Uw club, vereniging of stichting kan kosteloos samenwerken met de VriendenLoterij.\" Een landgoed als eigenaar/onderneming kan zich niet aanmelden, maar een vriendenstichting, steunstichting of vrijwilligersvereniging rond een landgoed of buitenplaats wel; de opbrengst is vrij besteedbaar en dus inzetbaar voor onderhoud of een project op het landgoed. Ook de actie 'Clubs van de Week' (EUR 5.000 voor een \"(maatschappelijk) clubproject\") is via zo'n stichting bereikbaar. Kenmerk: de inkomsten komen uit de eigen achterban die meespeelt, dus het rendement hangt af van hoe groot en betrokken die achterban is.",
+    "partnertype": "Vriendenstichting, steunstichting of vrijwilligersvereniging rond het landgoed/de buitenplaats, met een achterban die bereid is voor de club mee te spelen."
+  },
+  "onderliggende_fondsen": [
+    {"naam": "Clubs van de Week (VriendenLoterij)", "relevant": true, "reden": "Echte toekenning van EUR 5.000 aan 100 clubs per jaar voor een \"(maatschappelijk) clubproject\"; aanmelding via formulier"}
+  ],
+  "niet_gevonden": [
+    "Inhoudelijke toekenningscriteria voor de clubs-route: alleen 'Onze medewerkers hebben een aantal dagen nodig om uw club te beoordelen en toe te voegen', waarop beoordeeld wordt staat er niet",
+    "Uitsluitingen, rechtsvormeisen anders dan 'club, vereniging of stichting', bestedingsbeperkingen voor de ontvangen 40%",
+    "Criteria en deadline voor 'Clubs van de Week'"
+  ]
+}

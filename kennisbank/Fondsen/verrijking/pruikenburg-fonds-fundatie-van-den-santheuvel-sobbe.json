@@ -1,0 +1,43 @@
+{
+  "naam": "Pruikenburg Fonds (Fundatie Van den Santheuvel, Sobbe)",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://www.fundatiesobbe.nl/fondsen",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "Historisch en kunsthistorisch onderzoek, restauratie van culturele monumenten, behoud van kunsthistorische objecten en wetenschappelijke uitgaven op historisch of kunsthistorisch gebied.",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "Aanvraag loopt via de Fundatie Van den Santheuvel, Sobbe: alleen \"rechtspersonen (doorgaans een Stichting), waarvan de doelstellingen aansluiten bij die van de Fundatie\", maximaal een aanvraag per organisatie per jaar.",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "landelijk",
+  "geo_waarden": [
+    "Nederland tot 1-1-2027",
+    "Amsterdam vanaf 1-1-2027"
+  ],
+  "bedrag_min": 1000,
+  "bedrag_max": null,
+  "bedrag_indicatie": "Giften \"meestal varierend van duizend tot enkele tienduizenden euro's\" (algemene Fundatie-indicatie).",
+  "cofinanciering_vereist": null,
+  "uitsluitingen": [
+    "eenmanszaken, B.V.'s, N.V.'s en individuen",
+    "buitenlandse projecten",
+    "volgens de algemene Fundatie-lijst ook bouw-, verbouw- en restauratiewerkzaamheden en wetenschappelijk onderzoek - in tegenspraak met de eigen doelomschrijving van dit fonds"
+  ],
+  "kostensoort": [
+    "restauratie",
+    "onderzoek"
+  ],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Doelomschrijving noemt letterlijk \"restauratie van culturele monumenten\" en \"wetenschappelijke uitgaven op historisch of kunsthistorisch gebied\" - dat raakt monumentale landgoedbebouwing, interieurs en historisch onderzoek naar een landgoed direct. Aanvraag moet echter door een stichting; een landgoed-BV of particuliere eigenaar kan niet zelf indienen.",
+    "partnertype": "erfgoed- of vriendenstichting met rechtspersoonlijkheid, of een landgoedstichting"
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "eigen bedragen en criteria van het Pruikenburg Fonds los van de Fundatie",
+    "of de restauratie-uitsluiting van de Fundatie voor dit fonds geldt"
+  ]
+}

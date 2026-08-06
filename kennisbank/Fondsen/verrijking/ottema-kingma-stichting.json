@@ -1,0 +1,49 @@
+{
+  "naam": "Ottema-Kingma Stichting",
+  "bronnen": [
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://www.oks.nl/subsidie/subsidiecriteria/",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "Het bevorderen van kunst en cultuurhistorie in Friesland, door financiele steun aan onder meer aankopen, wetenschappelijk onderzoek, restauraties, herinrichting van vaste collectiepresentaties, educatie- en erfgoedprojecten, archeologie, publicaties en hedendaagse beeldende kunst met een Friese relatie.",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "'Aanvragen kunnen worden ingediend door stichtingen of verenigingen met ANBI-status; particulieren kunnen uitsluitend aanvragen voor publicaties.'",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "provincie",
+  "geo_waarden": [
+    "Friesland"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": null,
+  "cofinanciering_vereist": false,
+  "uitsluitingen": [
+    "tijdelijke tentoonstellingen",
+    "restauratie van rijksmonumenten in overheidsbezit",
+    "restauratie van niet-toegankelijke monumenten",
+    "restauratie van kerkorgels",
+    "regulier onderhoud van monumenten",
+    "projecten die al substantieel in uitvoering zijn",
+    "podiumkunsten",
+    "liefdadigheid",
+    "projecten binnen de reguliere bedrijfsvoering"
+  ],
+  "kostensoort": [
+    "restauratie",
+    "onderzoek",
+    "investering"
+  ],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Restauratie staat expliciet op de lijst van wat wel wordt gefinancierd, maar 'regulier onderhoud van monumenten' en 'restauratie van niet-toegankelijke monumenten' zijn uitgesloten: een Fries landgoed moet zijn monument dus openstellen en het als restauratie (niet als onderhoud) formuleren. Omdat alleen ANBI-stichtingen en -verenigingen mogen aanvragen (particulieren alleen voor publicaties), loopt de route voor een particulier landgoed via een eigen of samenwerkende ANBI-stichting.",
+    "partnertype": "Friese stichting of vereniging met ANBI-status (bijv. eigen landgoedstichting of een erfgoedvereniging)"
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "bedragen (minimum/maximum bijdrage)",
+    "exacte vergaderdata en indieningstermijnen"
+  ]
+}

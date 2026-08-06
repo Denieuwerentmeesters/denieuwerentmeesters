@@ -1,0 +1,45 @@
+{
+  "naam": "Landschapsfonds Holland Rijnland",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://web.archive.org/web/20220121152333/https://www.landschapsfondshollandrijnland.nl/",
+      "jaar": 2022,
+      "gelezen": true
+    },
+    {
+      "soort": "website",
+      "url": "https://www.fonds1818.nl/aanvragen/voor-organisaties/andere-fondsen",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "\"Een oer-Hollands landschap met koeien en schapen in de wei, bloeiende weides, oude boomgaarden, boerenheggen en sfeervolle wandelpaadjes. Dat is wat de streek Holland Rijnland zo bijzonder maakt. Wij vinden het belangrijk dat de rust en schoonheid van het platteland behouden blijft. Daarom ondersteunen we met ons fonds projecten die onze streek duurzaam ontwikkelen en aantrekkelijk houden voor bewoners, bedrijven en bezoekers.\" (Wayback 2022)",
+  "benaderbaarheid": "onbekend",
+  "benaderwijze_notitie": "In 2022 open via een vouchersysteem: \"Heeft u een goed idee om het landschap nog mooier te maken in onze streek? Dien uw plan in en krijg tot 1.000 euro ondersteuning!\" Huidige status onduidelijk: het eigen domein landschapsfondshollandrijnland.nl is inmiddels in gebruik door een niet-verwant fonds (Stichting Koepelfonds, Leidschendam-Voorburg, capture mei 2025) en daarvoor tijdelijk door een gokwebsite. Fonds 1818 verwijst er nog wel naar: \"Dit fonds ondersteunt projecten die het oer-Hollandse landschap aantrekkelijk houden in het Holland-Rijnlandgebied.\"",
+  "aanvrager_type": "beide",
+  "geo_niveau": "regio",
+  "geo_waarden": [
+    "Holland Rijnland (14 gemeenten, Leidse regio, Duin- en Bollenstreek, Rijn- en Veenstreek)"
+  ],
+  "bedrag_min": 250,
+  "bedrag_max": 1000,
+  "bedrag_indicatie": "\"Vanuit het Landschapsfonds Holland Rijnland ondersteunen we uw plannen graag met een financiele bijdrage, tot maximaal 1000 euro.\" (vouchers van 250, 500 of 1000 euro)",
+  "cofinanciering_vereist": false,
+  "uitsluitingen": [],
+  "kostensoort": [
+    "investering",
+    "regulier_onderhoud"
+  ],
+  "landgoed_relevantie": {
+    "route": "zelf",
+    "onderbouwing": "Inhoudelijk zeer dicht op landgoedbeheer: \"Wilt u het landschap nog mooier maken door het aanleggen of herstellen van een klein landschapselement? Denk aan knotwilgen, bloemrijke weides, waterpoelen of fruitboomgaarden.\" Dat is exact het werk aan een landgoedbuitenrand. Bedragen zijn zeer klein (max EUR 1.000) en de actuele status van het fonds is onzeker - eerst verifieren of het nog bestaat.",
+    "partnertype": null
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "Actuele website: eigen domein is overgenomen door een ander fonds; geen actueel eigen webadres gevonden",
+    "Actuele status (bestaat het fonds nog in 2026?), actuele voucherbedragen en aanvraagtermijnen",
+    "Volledige spelregels/voucherreglement - de wayback-subpagina /voucher-aanvragen/ gaf 404"
+  ]
+}

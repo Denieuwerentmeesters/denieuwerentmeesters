@@ -1,0 +1,42 @@
+{
+  "naam": "Monumentenfonds - Vereniging Stad en Lande (Groningen)",
+  "bronnen": [
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://www.verenigingstadenlande.nl/monumentenfonds/",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "\"Met dit fonds willen we specifieke restauraties bekostigen. Het geld is bestemd voor kleine restauraties waaraan de vereniging herkenbaar kan deelnemen.\"",
+  "benaderbaarheid": "open",
+  "benaderwijze_notitie": "Aanvragen door het aanvraagformulier in te vullen en \"per e-mail (info@verenigingstadenlande.nl) of per post\" in te dienen. Geen drempels naar rechtsvorm of vooraanvraag gepubliceerd. Enige harde voorwaarde: het object moet \"publiekelijk toegankelijk cq zichtbaar\" zijn.",
+  "aanvrager_type": "beide",
+  "geo_niveau": "provincie",
+  "geo_waarden": [
+    "Groningen"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": "Geen bedragen gepubliceerd; het fonds noemt zichzelf bestemd voor \"kleine restauraties\".",
+  "cofinanciering_vereist": false,
+  "uitsluitingen": [
+    "objecten die niet publiekelijk toegankelijk of zichtbaar zijn",
+    "grote restauratieprojecten (het fonds richt zich op 'kleine restauraties')"
+  ],
+  "kostensoort": [
+    "restauratie"
+  ],
+  "landgoed_relevantie": {
+    "route": "zelf",
+    "onderbouwing": "Het fonds financierde blijkens de eigen pagina historisch \"rouwborden, kerkinterieurs, boerderijversieringen en bouwkundige elementen\" - precies het type onderdeel dat op een Gronings landgoed of borg voorkomt: een poortje, een gevelsteen, een hekwerk, een rouwbord in de bijbehorende kerk, versieringen aan een schuur. Aanvragen kan direct met een formulier, zonder rechtsvormeis. De harde voorwaarde is publieke zichtbaarheid: een object aan de openbare weg of in een opengesteld deel van het landgoed kwalificeert, iets binnen het besloten huis niet. Schaal: kleine restauraties, dus geschikt voor een deelonderdeel, niet voor een hoofdopgave.",
+    "partnertype": null
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "Bedragen, budgetplafond of gemiddelde toekenning: niet gepubliceerd.",
+    "Beoordelingscriteria buiten de eis van publieke zichtbaarheid.",
+    "Deadlines of vergaderfrequentie.",
+    "Of het fonds cofinanciering verlangt."
+  ]
+}

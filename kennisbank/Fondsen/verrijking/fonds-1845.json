@@ -1,0 +1,53 @@
+{
+  "naam": "Fonds 1845 (Stichting Fonds 1845 Barneveld)",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://www.fonds1845.nl/",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://fonds1845.nl/donatie-aanvragen/",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "\"Stichting Fonds 1845 steunt projecten van organisaties, stichtingen en verenigingen in de gemeente Barneveld. Wij steunen projecten op het gebied van Zorg & Welzijn, Natuur & Milieu, Kunst & Cultuur en Sport & Vrije tijd.\" \"Het Fonds is voortgekomen uit de vroegere Spaarbank van 1845 en verstrekt donaties op een breed maatschappelijk terrein.\"",
+  "benaderbaarheid": "open",
+  "benaderwijze_notitie": "\"Wij geloven in transparantie en objectiviteit. Daarom kan iedereen een aanvraag voor een project indienen, mits deze aansluit bij onze duidelijke en zorgvuldige criteria.\" Wel: \"In alle gevallen is het ter bindende beoordeling aan het bestuur van het Fonds om een aanvraag, zonder mogelijkheden van beroep, wel dan niet te honoreren.\"",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "gemeente",
+  "geo_waarden": [
+    "Barneveld"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": 2500,
+  "bedrag_indicatie": "\"Donaties worden verstrekt tot een maximum van EUR 2.500,- per aanvraag\"",
+  "cofinanciering_vereist": true,
+  "uitsluitingen": [
+    "stenen",
+    "meubilair",
+    "inventaris",
+    "speeltoestellen",
+    "(muziek)instrumenten",
+    "koorkleding",
+    "uniformen",
+    "bekostiging van jubilea",
+    "verenigingsgebonden aanvragen",
+    "activiteiten buiten de gemeente Barneveld"
+  ],
+  "kostensoort": [
+    "investering"
+  ],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Het thema Natuur & Milieu past bij landgoedwerk, maar het fonds sluit bouwkundige besteding hard uit: \"er komen geen middelen beschikbaar voor stenen, meubilair, inventaris...\". Ook: \"De ANBI ruling is van toepassing op elke aanvraag\" en de aanvraag mag niet verenigingsgebonden zijn. Een landgoed in de gemeente Barneveld kan dus alleen meeliften via een ANBI-organisatie met een natuur-, educatie- of welzijnsproject op het landgoed. Bedragen zijn klein (max EUR 2.500).",
+    "partnertype": "ANBI-stichting of vereniging met een project dat een breed deel van de Barneveldse bevolking ten goede komt"
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "Let op: de werklijst noemt als regio 'Noord- en Oost-Veluwe'. Het fonds zelf zegt uitsluitend gemeente Barneveld: 'De aanvraag mag uitsluitend bestemd zijn voor activiteiten binnen of mensen uit de gemeente Barneveld'. Mogelijk verwarring met een ander Fonds 1845 - geen tweede fonds met deze naam gevonden."
+  ]
+}

@@ -1,0 +1,60 @@
+{
+  "naam": "FNO (Fonds NutsOhra)",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://fnozorgvoorkansen.nl/",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "FNO zet zich in voor en met mensen in kwetsbare situaties in Nederland, zodat zij blijvend kansen krijgen op betere gezondheid, kwaliteit van leven en toekomstperspectief.",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "\"Vraag subsidie aan bij Klein Geluk\" - aanvragen kan alleen binnen een lopend programma, niet via een algemeen loket; per programma gelden eigen criteria en openstellingen.",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "landelijk",
+  "geo_waarden": [
+    "Nederland"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": null,
+  "cofinanciering_vereist": null,
+  "uitsluitingen": [],
+  "kostensoort": [
+    "investering",
+    "exploitatie",
+    "personeel"
+  ],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Het programma Klein Geluk richt zich op \"mensen met langdurige beperkingen\" en betere kwaliteit van leven; een zorgorganisatie die een groene dagbesteding, aangepaste wandelroute of belevingstuin op een landgoed realiseert kan daar aanvragen. Het landgoed zelf past niet in de doelstelling.",
+    "partnertype": "zorg- of gehandicaptenorganisatie, sociale onderneming"
+  },
+  "onderliggende_fondsen": [
+    {
+      "naam": "Klein Geluk",
+      "relevant": true,
+      "reden": "kwaliteit van leven van mensen met langdurige beperkingen - route voor groene dagbesteding/belevingstuin op een landgoed"
+    },
+    {
+      "naam": "Samen Kansrijk en Gezond",
+      "relevant": false,
+      "reden": "gezinnen in kwetsbare situaties, gezondheid"
+    },
+    {
+      "naam": "Ruimte voor Geestkracht",
+      "relevant": false,
+      "reden": "mentale gezondheid jongvolwassenen"
+    },
+    {
+      "naam": "Impact door Groei",
+      "relevant": false,
+      "reden": "groei van sociale ondernemingen"
+    }
+  ],
+  "niet_gevonden": [
+    "criteria, bedragen en uitsluitingen per programma (staan op programma-pagina's, niet binnen budget geopend)",
+    "of aanvragen op dit moment openstaan"
+  ]
+}

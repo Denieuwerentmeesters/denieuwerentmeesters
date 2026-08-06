@@ -1,0 +1,37 @@
+{
+  "naam": "Katalys",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://katalys.nl/",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "Samen werken aan krachtige dorpen en buurten in heel Nederland; bewonersinitiatieven ondersteunen die het leven in de buurt beter, groener, gezonder of gezelliger maken.",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "\"In sommige gevallen ondersteunen wij zelfs met financiering\" - de hoofdroute is advies en de wedstrijd Kern met Pit (\"EUR 1.000 voor je project\"), niet een open subsidieloket.",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "landelijk",
+  "geo_waarden": [
+    "Nederland"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": "Kern met Pit: \"EUR 1.000 voor je project\". Overige financiering niet gespecificeerd.",
+  "cofinanciering_vereist": null,
+  "uitsluitingen": [],
+  "kostensoort": [
+    "investering"
+  ],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Katalys richt zich op bewonersinitiatieven die de buurt \"beter, groener, gezonder of gezelliger\" maken; een dorpsbelang of vrijwilligersgroep die een groen- of ontmoetingsproject op of rond een landgoed opzet past daarbinnen. Het landgoed zelf is geen bewonersinitiatief.",
+    "partnertype": "bewonersinitiatief, dorpsbelang, vereniging van dorpsbewoners"
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "formele aanvraagvoorwaarden en uitsluitingen voor de financieringstak (niet gepubliceerd op de homepage)",
+    "beleidsplan"
+  ]
+}

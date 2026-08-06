@@ -1,0 +1,33 @@
+{
+  "naam": "Ribbink van den Hoek Familie Stichting",
+  "bronnen": [
+    {"soort": "website", "url": "https://www.fondseninnederland.nl/fonds/ribbink-van-den-hoek-familie-stichting", "jaar": null, "gelezen": true},
+    {"soort": "website", "url": "https://www.rihofoundation.com/", "jaar": null, "gelezen": true},
+    {"soort": "beleidsplan", "url": "https://www.rihofoundation.com/_files/ugd/6476d1_3aebc064052b49db9a1d8fa4d1370961.pdf", "jaar": 2025, "gelezen": true},
+    {"soort": "jaarverslag", "url": "https://www.rihofoundation.com/_files/ugd/6476d1_c58d67429d3845fdb9e4b3227fcb67f2.pdf", "jaar": 2025, "gelezen": true},
+    {"soort": "anbi_publicatie", "url": "https://www.rihofoundation.com/_files/ugd/6476d1_674f99780d2147428f0f307704f32c19.pdf", "jaar": 2025, "gelezen": true}
+  ],
+  "doelstelling": "\"Het vermogen en de opbrengsten worden gebruikt voor donaties aan projecten op de volgende maatschappelijke thema's, zoals Informed Citizens, Milieu/Klimaat en Vluchtelingen (immigratie/integratie).\" Statutair: \"De stichting heeft ten doel: het ondersteunen van culturele instellingen, wetenschappelijke instellingen en andere algemeen nut beogende charitatieve of levensbeschouwelijke instellingen ... alles in de ruimste zin van het woord.\" Naast de hoofddoelstelling: \"Nevendoelstelling: In dit traject vallen alle overige projecten. Dit zijn aanvragen van culturele en maatschappelijke organisaties die onder andere uit het netwerk van bestuursleden en toehoorders komen. Er is een voorkeur voor projecten die nog net 'het laatste duwtje nodig hebben' ... Ook is er ruimte voor medische projecten.\"",
+  "benaderbaarheid": "gesloten",
+  "benaderwijze_notitie": "\"It does not consider requests for financial help, it actively looks for projects itself. The foundation does not raise funds externally.\" (rihofoundation.com, home); de contactpagina heet letterlijk \"(DO NOT) CONTACT US\". Let op de spanning met het beleidsplan 2025-2030, dat wel een aanvraagprocedure beschrijft: \"Aanvragen dienen altijd schriftelijk te worden ingediend. Alle projecten worden ter goedkeuring aan het bestuur voorgelegd.\" en \"Nevendoelstelling ... Dit zijn aanvragen van culturele en maatschappelijke organisaties die onder andere uit het netwerk van bestuursleden en toehoorders komen.\" De publieke boodschap is niet-benaderbaar; feitelijk loopt selectie via het eigen netwerk.",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": null,
+  "geo_waarden": [],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": "\"Per jaar is er circa € 400.000 beschikbaar voor de doelstelling.\" en \"Hiervan is bij benadering 80% bestemd voor projecten uit de hoofddoelstelling. De overige 20% van de uitgaven komt ten goede aan overige projecten\". Besluitdrempel: \"Besluiten tot het doen van uitgaven aan te ondersteunen projecten onder € 5.000 mag het bestuurslid zijnde een van de oprichters dan wel hun afstammelingen zelfstandig nemen ... Deze donaties mogen slechts maximaal acht maar per jaar gedaan worden (en/of maximaal € 40.000 in totaal bedragen per jaar).\"",
+  "cofinanciering_vereist": null,
+  "uitsluitingen": [],
+  "kostensoort": ["investering", "exploitatie", "onderzoek"],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Het fonds noemt geen erfgoed, landgoed of landschapsbeheer, maar wel \"Milieu/Klimaat\" als hoofdthema en op FIN de sector \"Natuur\", en de nevendoelstelling laat ruimte voor \"alle overige projecten ... aanvragen van culturele en maatschappelijke organisaties\". Een klimaat- of natuurorganisatie, of een cultureel/maatschappelijk initiatief dat een landgoed als locatie of werkgebied gebruikt, is een denkbare ontvanger; het landgoed zelf komt dan als post in de begroting van die organisatie. Directe benadering is echter niet mogelijk: \"It does not consider requests for financial help, it actively looks for projects itself.\"",
+    "partnertype": "Professionele, meerjarig steunbare natuur-/klimaatorganisatie of culturele/maatschappelijke stichting die het bestuur zelf benadert of die uit het netwerk van het bestuur komt (\"Bij het selecteren van organisaties en projecten is er gekeken naar: de ervaring en professionaliteit van de organisatie [en] de mogelijkheid om het project meerjarig te steunen\")."
+  },
+  "niet_gevonden": [
+    "Geen aanvraagvoorwaarden of aanvraagformulier gepubliceerd - gezocht op rihofoundation.com (home, about, key-documents) en op de FIN-fondspagina",
+    "Geen geografische afbakening gepubliceerd in beleidsplan, website of FIN-profiel (uit het activiteitenverslag 2025 blijkt zowel binnen- als buitenlandse steun, maar dat is beschrijving achteraf, geen beleid)",
+    "Geen uitsluitingenlijst gepubliceerd",
+    "Beleidsplan-PDF is niet via FIN beschikbaar: FIN toont voor dit fonds alleen de 'Jaarlijkse Verklaring' - het beleidsplan is alleen op de eigen website te vinden"
+  ]
+}

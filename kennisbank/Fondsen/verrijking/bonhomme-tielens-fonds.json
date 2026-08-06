@@ -1,0 +1,61 @@
+{
+  "naam": "Stichting Bonhomme Tielens (Bonhomme Tielens Fonds)",
+  "bronnen": [
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://www.bonhommetielens.nl/subsidie-aanvragen/voorwaarden",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "beleidsplan",
+      "url": "https://www.bonhommetielens.nl/over-ons/beleidsplan",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "website",
+      "url": "https://www.bonhommetielens.nl/over-ons/doelstellingen",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "anbi_publicatie",
+      "url": "https://www.bonhommetielens.nl/over-ons/anbi-status",
+      "jaar": 2025,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "De stichting Bonhomme Tielens zet zich in voor het behoud van kunst- en cultuurbezit. (...) Het doneren van gelden onder door het bestuur nader vast te stellen voorwaarden voor de restauratie van kunstvoorwerpen en antiquiteiten in Nederland aan instellingen/(rechts)personen die daartoe de financiele middelen geheel of gedeeltelijk ontbreken; voor zover het objecten betreft die (door aard, bestemming of anderszins) onroerend zijn, evenwel enkel, indien het object een decoratief onderdeel is van een interieur ensemble. (met uitzondering van overheidsinstellingen). Hierbij gaat de voorkeur uit naar projecten in Limburg.",
+  "benaderbaarheid": "open",
+  "benaderwijze_notitie": "\"Middels onderstaand formulier kunt u een subsidie aanvraag indienen bij de stichting Bonhomme Tielens. Nadat uw aanvraag is ontvangen neemt het bestuur deze in behandeling.\" Geen rondes of deadlines genoemd. Particulieren zijn expliciet welkom: \"het financieel ondersteunen van de restauratie van roerende kunstvoorwerpen en antiquiteiten in Nederland, in het bezit van instellingen, rechtspersonen en particulieren.\"",
+  "aanvrager_type": "beide",
+  "geo_niveau": "landelijk",
+  "geo_waarden": [
+    "Nederland",
+    "voorkeur: Limburg"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": "Jaarlijks ontvangt de stichting zo'n 15 aanvragen voor subsidie, waarvan er ongeveer 10 gehonoreerd worden. Het gemiddelde subsidiebedrag is EUR 5.000 per project.",
+  "cofinanciering_vereist": null,
+  "uitsluitingen": [
+    "Buitenlandse aanvragen zijn uitgesloten van deelname; het project moet Nederlands zijn",
+    "De Rijksoverheid, provinciale of gemeentelijke overheden en instellingen komen niet in aanmerking voor subsidie",
+    "Onroerende objecten, tenzij het een decoratief nagelvast onderdeel van een interieurensemble is ('Het te herstellen object moet een roerend goed zijn of een decoratief nagelvast onderdeel van een interieurensemble')",
+    "Restauratiewerkzaamheden die niet binnen 2 jaar na toekenning worden uitgevoerd"
+  ],
+  "kostensoort": [
+    "restauratie"
+  ],
+  "landgoed_relevantie": {
+    "route": "zelf",
+    "onderbouwing": "Het fonds financiert restauratie van roerend kunstbezit en vaste interieuronderdelen, ook van particulieren: \"Het te herstellen object moet een roerend goed zijn of een decoratief nagelvast onderdeel van een interieurensemble\" en \"in het bezit van instellingen, rechtspersonen en particulieren\". Voor een landgoed betekent dit: de inboedel en het interieur (schilderijen, meubilair, klokken, kroonluchters, wandschilderingen, orgels, rijtuigen) wel; het gebouw, de laan of het park niet. Gehonoreerde voorbeelden liggen precies in die hoek: \"een vierspantuig voor het Koetshuis Museum Van Loon in Amsterdam\" en \"Kasteel Museum Sypesteyn, Natuurstenen tuinornamenten\". Aandachtspunt: \"In geval van verkoop geldt voor particuliere objecten dat stichting Bonhomme Tielens het eerste recht van koop heeft gedurende drie jaar na verstrekking van de subsidie.\"",
+    "partnertype": null
+  },
+  "niet_gevonden": [
+    "Het fonds staat NIET op fondseninnederland.nl (volledige FIN-lijst van 342 fondsen doorlopen op 2026-08-05).",
+    "Minimum- en maximumbedrag worden niet gepubliceerd; alleen het gemiddelde van circa EUR 5.000 per project.",
+    "Geen uitspraak over cofinanciering; het aanvraagformulier vraagt wel 'Heeft u bij andere fondsen subsidie aangevraagd voor dit object?', maar cofinanciering wordt nergens verplicht gesteld."
+  ]
+}

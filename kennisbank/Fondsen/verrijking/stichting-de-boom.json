@@ -1,0 +1,35 @@
+{
+  "naam": "Stichting De Boom",
+  "bronnen": [
+    {"soort":"website","url":"https://www.fondseninnederland.nl/fonds/stichting-de-boom","jaar":null,"gelezen":true},
+    {"soort":"beleidsplan","url":"https://www.fondseninnederland.nl/storage/Fondsbestanden/nSAu0VLdJDyKld2kf7ak9SWOwAmbxYOR9fcTQKEw.docx","jaar":2025,"gelezen":true},
+    {"soort":"jaarverslag","url":"https://www.fondseninnederland.nl/storage/Fondsbestanden/bG6XgPgjPVHwF54cNuoGd12xMjb2Ve8bVVAH8zmF.pdf","jaar":2025,"gelezen":true},
+    {"soort":"aanvraagvoorwaarden","url":"https://stichtingdeboom.nl/goede-doelen/","jaar":2026,"gelezen":true}
+  ],
+  "doelstelling": "Stichting De Boom heeft als primaire doelstelling de bevordering van de geestelijke en stoffelijke belangen van personen, die wonen in de gemeenten, waar de goederen van het Landgoed 'De Boom' gelegen zijn of daarbij betrokken zijn, en het steunen van in die gemeenten gevestigde instellingen, welke gelijk doel beogen, alles in de meest uitgebreide zin van het woord; het beheer van het landgoed maakt daar deel van uit. De Stichting mag haar werkingssfeer ook uitstrekken tot andere personen en/of instellingen, mits daardoor het algemeen maatschappelijk belang op Christelijke grondslag gediend wordt.",
+  "benaderbaarheid": "open",
+  "benaderwijze_notitie": "'De aanvraag kan via het platform FindNFund worden ingediend: https://www.findnfund.com/funders/stichting-de-boom' en 'Bent u geen stichting of verenigingen maar heeft u wel een mooi initiatief dat plaatsvindt in een van de gemeenten van ons doelgebied dat kunt u ook contact opnemen met ons via deboom@schoutenhuisbv.nl'. Het bestuur vergadert vier keer per jaar; besluit binnen 4 tot 6 weken na de indieningsdeadline.",
+  "aanvrager_type": "beide",
+  "geo_niveau": "gemeente",
+  "geo_waarden": ["Leusden", "Woudenberg", "Barneveld", "Rhenen", "Bunschoten-Spakenburg"],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": null,
+  "cofinanciering_vereist": null,
+  "uitsluitingen": [
+    "Buiten het doelgebied: 'financiele steun ... in de gemeenten waar landgoed de Boom gelegen is. Dit zijn de gemeenten Leusden, Woudenberg, Barneveld, Rhenen en Bunschoten-Spakenburg.'",
+    "Natuur en milieu heeft lagere prioriteit: 'Natuur en milieu (waarbij uitdrukkelijk is aangegeven dat door de vanzelfsprekende instandhouding en versterking van de natuurwaarden en landschapselementen van het landgoed deze categorie wellicht minder prioriteit heeft binnen het giftenbeleid)'",
+    "Primair gericht op 'instellingen zonder winstoogmerk die zich inzetten voor de maatschappij'"
+  ],
+  "kostensoort": ["investering", "exploitatie", "restauratie"],
+  "landgoed_relevantie": {
+    "route": "zelf",
+    "onderbouwing": "Dit fonds IS zelf een landgoed en beschrijft landgoedbeheer als onderdeel van zijn doel: 'De Stichting beheert een landgoed. Dat betekent het duurzaam beheren, beschermen en benutten van de natuurlijke, cultuurhistorische en economische mogelijkheden en waarden van het terrein. Het beheer omvat onder meer bosbouw, landbouw, natuur- en landschapsbeheer, recreatie, jacht en verhuur en verpachting van gebouwen en gronden.' Voor derden staat de categorie 'Natuur en milieu' open, en uit de charitas-lijst 2025 blijkt dat ook restauratie van gebouwen wordt gefinancierd (bv. 'Prot. Gem Maarn tbv restauratie', 'De Vosheuvel kinderboerderij, tbv hooiberg'). Een landgoed of landgoedstichting in Leusden, Woudenberg, Barneveld, Rhenen of Bunschoten-Spakenburg kan dus zelf aanvragen; let wel op de lagere prioriteit voor natuur/landschap en op het maatschappelijke karakter dat het fonds eist ('Het initiatief komt op een relatief directe manier ten goede aan de doelgroep').",
+    "partnertype": null
+  },
+  "niet_gevonden": [
+    "Bedragen: geen minimum of maximum gepubliceerd; wel is uit 'Bijdragen charitas 2025' af te leiden dat toekenningen varieren van enkele honderden euro's tot enkele tienduizenden - dat is realisatie, geen gepubliceerd beleid",
+    "Expliciete cofinancieringseis: niet aangetroffen; wel wordt een 'financierings-/dekkingsplan' gevraagd",
+    "Formulier publicatieplicht ANBI en statuten (op FIN beschikbaar) zijn niet ingelezen"
+  ]
+}

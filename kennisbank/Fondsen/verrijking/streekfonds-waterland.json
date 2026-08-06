@@ -1,0 +1,39 @@
+{
+  "naam": "Streekfonds Waterland (Stichting Streekfonds Waterland)",
+  "bronnen": [
+    {"soort": "website", "url": "https://web.archive.org/web/20221006175624/http://streekfondswaterland.nl/", "jaar": 2022, "gelezen": true},
+    {"soort": "aanvraagvoorwaarden", "url": "https://web.archive.org/web/2022/http://streekfondswaterland.nl/?page_id=199", "jaar": 2022, "gelezen": true},
+    {"soort": "website", "url": "https://web.archive.org/web/2022/http://streekfondswaterland.nl/?page_id=490", "jaar": 2022, "gelezen": true}
+  ],
+  "doelstelling": "De Stichting Streekfonds Waterland heeft als doel het behoud en versterken van het kwetsbare landschap van Waterland, een uniek cultuurhistorisch erfgoed. De stichting beheert het Streekfonds. Projecten die binnen de doelstelling van het fonds vallen kunnen rekenen op morele en, indien nodig, financiële steun.",
+  "benaderbaarheid": "onbekend",
+  "benaderwijze_notitie": "Volgens het laatste bruikbare snapshot (2022) open: \"Projecten die binnen de doelstelling van het fonds vallen kunnen rekenen op morele en, indien nodig, financiële steun. Voor het toekennen van projectgelden uit het Streekfonds zijn criteria opgesteld. Voorstellen worden hieraan getoetst. Indien u vragen of opmerkingen heeft kunt u contact opnemen met het bestuur door een e-mail te sturen naar: info@streekfondswaterland.nl\" MAAR: het domein streekfondswaterland.nl is sinds uiterlijk september 2023 gekaapt door een spamsite; de fondswebsite bestaat niet meer. Of de stichting nog actief is en of het e-mailadres nog werkt, is niet vast te stellen. Daarom 'onbekend'.",
+  "aanvrager_type": "beide",
+  "geo_niveau": "regio",
+  "geo_waarden": ["Waterland", "Noord-Holland"],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": "\"Het Streekfonds financiert maximaal 50% van de totale projectsom. Aanvragers kunnen de eigen bijdrage ook leveren in de vorm van werkzaamheden voor bijvoorbeeld onderhoud.\"",
+  "cofinanciering_vereist": true,
+  "uitsluitingen": [
+    "projecten die in aanmerking komen voor subsidies van overheden (\"Het project komt niet in aanmerking voor subsidies van overheden.\")",
+    "projecten die al zijn uitgevoerd (\"Het project moet nog worden uitgevoerd.\")",
+    "projecten die niet verder strekken dan het privébelang van de aanvragers (\"Het project levert een maatschappelijk voordeel op en strekt verder dan het privébelang van de aanvragers.\")",
+    "meer dan 50% van de totale projectsom",
+    "structurele/doorlopende bijdragen (\"Bijdragen zijn in principe eenmalig.\")"
+  ],
+  "kostensoort": ["investering", "regulier_onderhoud"],
+  "landgoed_relevantie": {
+    "route": "zelf",
+    "onderbouwing": "De criteria sluiten rechtstreeks aan op landgoedbeheer in Waterland: \"Het project heeft te maken met de inrichting, het beheer of de ontwikkeling van het landschap in Waterland\" en \"De uitvoering van het project leidt tot het behoud en/of de versterking van de kwaliteiten van Waterland op het gebied van natuur, landschap, cultuurhistorie of de beleving daarvan.\" Ook recreatieve ontsluiting past: \"Het project leidt tot versterking van de recreatieve mogelijkheden zonder de kwaliteiten van het gebied (rust, ruimte en openheid) in gevaar te brengen.\" Eigen inzet mag als cofinanciering gelden: \"Aanvragers kunnen de eigen bijdrage ook leveren in de vorm van werkzaamheden voor bijvoorbeeld onderhoud.\" Twee harde beperkingen voor een landgoed: het project moet maatschappelijk voordeel opleveren en verder strekken dan het privébelang, en er mag geen overheidssubsidie voor beschikbaar zijn. Praktisch voorbehoud: onzeker of het fonds nog bestaat (domein gekaapt).",
+    "partnertype": null
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "Actuele status van het fonds: het eigen domein streekfondswaterland.nl is sinds uiterlijk september 2023 gekaapt door een Arabischtalige spamsite (steenbrekermachines). Gecontroleerd via directe curl (verbinding faalt/omgeleid) en via Wayback-snapshots 20231004, 20240221 en 20240430 - alle drie tonen de spamsite. Laatste schone snapshot: 6 oktober 2022.",
+    "Pagina's 'Doel', 'Gebied' en 'Procedure en toekenning': wel in het oude menu aanwezig, maar niet los gearchiveerd in de Wayback Machine (alleen de homepage en ?page_id=-varianten zijn bewaard).",
+    "Concrete bedragen (minimum/maximum bijdrage): niet gepubliceerd; alleen de 50%-grens.",
+    "Financiële jaarverslagen: als menupunt aanwezig, niet gearchiveerd.",
+    "Deadlines of indieningsrondes: niet gepubliceerd."
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "naam": "Biesbosch Streekfonds",
+  "bronnen": [
+    {"soort":"website","url":"https://www.biesboschstreekfonds.nl/organisatie/missie-visie/","jaar":null,"gelezen":true},
+    {"soort":"website","url":"https://www.biesboschstreekfonds.nl/organisatie/werkgebied/","jaar":null,"gelezen":true},
+    {"soort":"aanvraagvoorwaarden","url":"https://www.biesboschstreekfonds.nl/projecten/project-indienen/","jaar":null,"gelezen":true},
+    {"soort":"anbi_publicatie","url":"https://www.biesboschstreekfonds.nl/doneren/anbi/","jaar":null,"gelezen":true}
+  ],
+  "doelstelling": "Het behoud en het versterken van de bijzondere kwaliteiten van de Biesboschregio staat centraal. Het fraaie landschap, de rijkdom aan natuur en cultuurhistorie dragen als het ware dit fantastische gebied. Door het bevorderen van duurzame vrije tijdseconomie in de Biesboschregio is het mogelijk het gebied meer onder de aandacht te brengen, de kwaliteiten van het gebied te versterken en de voorzieningen voor de bezoekers naar een hoger plan te brengen.",
+  "benaderbaarheid": "open",
+  "benaderwijze_notitie": "'Het Biesbosch Streekfonds richt zich op stichtingen, verenigingen, instellingen, organisaties, bedrijven en individuele personen.' en 'U ontvangt bericht dat de aanvraag is ontvangen, met daarbij een vermelding van de termijn waarop de aanvraag wordt behandeld. De ontvangen aanvragen worden in principe op de eerstvolgende (maandelijkse) bestuursvergadering behandeld.'",
+  "aanvrager_type": "beide",
+  "geo_niveau": "regio",
+  "geo_waarden": ["Altena", "Dordrecht", "Drimmelen", "Geertruidenberg", "Oosterhout", "gebied tussen A16, N3, Boven- en Beneden Merwede, Afgedamde Maas, Bergse Maas tot de A27 en de A59; hart is Nationaal Park De Biesbosch"],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": "Per geval bekijkt het Biesbosch Streekfonds of en zo ja, welke mate van bijdrage noodzakelijk is. Projecten waarbij de bijdragen en inzet vanuit eigen middelen en andere partijen samen meer dan 50% zijn, hebben de voorkeur.",
+  "cofinanciering_vereist": null,
+  "uitsluitingen": [
+    "'Het Biesbosch Streekfonds financiert geen arbeidsloon, en draagt in principe niet bij aan onderzoeksprojecten.'",
+    "Buiten het werkgebied: 'Donaties kunnen aangevraagd worden voor projecten die plaats vinden in het werkgebied van het Biesbosch Streekfonds.'",
+    "Buiten het hoofdthema: 'Het project moet passend zijn in het hoofdthema duurzame vrijetijdsecenomie.'",
+    "Te late indiening: 'De aanvraag dient uiterlijk twee maanden voordat het project van start gaat te worden ingediend bij het secretariaat.'",
+    "Projecten die niet binnen een jaar starten: 'Het project moet binnen een jaar na indiening van de donatie-aanvraag van start gaan.'"
+  ],
+  "kostensoort": ["investering", "restauratie"],
+  "landgoed_relevantie": {
+    "route": "zelf",
+    "onderbouwing": "Het fonds accepteert expliciet ook aanvragen van bedrijven en particulieren - 'Het Biesbosch Streekfonds richt zich op stichtingen, verenigingen, instellingen, organisaties, bedrijven en individuele personen' - en de thema's raken direct aan landgoedwerk: 'Projecten dienen betrekking te hebben op het hoofdthema Duurzame vrije tijdseconomie, daaronder vallen deelaspecten zoals Natuur, Water, Milieu, Landschap, Cultuurhistorie, Toerisme & recreatie.' Een landgoed in Altena, Dordrecht, Drimmelen, Geertruidenberg of Oosterhout kan dus zelf indienen voor bijvoorbeeld landschapsherstel, wandelpaden, bankjes of publieksvoorzieningen. Beperking: geen arbeidsloon en geen onderzoek.",
+    "partnertype": null
+  },
+  "niet_gevonden": [
+    "FIN-pagina: slugs 'biesbosch-streekfonds', 'streekfonds-biesbosch' en 'stichting-biesbosch-streekfonds' geven alle HTTP 404 op fondseninnederland.nl - fonds staat er niet op",
+    "Beleidsplan als los document: niet aangetroffen; de pagina /organisatie/documenten/ is geraadpleegd maar bevatte geen beleidsplan-PDF in de uitgelezen tekst",
+    "Minimum- en maximumbedragen per toekenning: niet gepubliceerd ('Per geval bekijkt het Biesbosch Streekfonds of en zo ja, welke mate van bijdrage noodzakelijk is')"
+  ]
+}

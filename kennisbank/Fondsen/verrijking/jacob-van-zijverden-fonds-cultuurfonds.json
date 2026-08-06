@@ -1,0 +1,37 @@
+{
+  "naam": "Jacob van Zijverden Fonds (Cultuurfonds)",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://www.cultuurfonds.nl/fondsen/jacob-van-zijverden-fonds",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "'Projecten op het gebied van natuurbehoud in Nederland, met een voorkeur voor de bevordering en ondersteuning van de ecologische landbouw en veeteelt in de ruimste zin.'",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "Aanvragen via het Aanvraagportaal van het Cultuurfonds; de fondspagina noemt geen eigen voorwaarden of deadlines.",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "landelijk",
+  "geo_waarden": [
+    "Nederland"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": null,
+  "cofinanciering_vereist": false,
+  "uitsluitingen": [],
+  "kostensoort": [
+    "investering",
+    "onderzoek"
+  ],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "De formulering 'natuurbehoud in Nederland, met een voorkeur voor de bevordering en ondersteuning van de ecologische landbouw en veeteelt in de ruimste zin' raakt de kern van een landgoed met pachtbedrijf: omschakeling naar biologische of natuurinclusieve landbouw. Via de Cultuurfonds-portaalvoorwaarden is een rechtspersoon zonder winstoogmerk nodig.",
+    "partnertype": "stichting of vereniging zonder winstoogmerk actief in natuurbehoud of ecologische landbouw"
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "bedragen, deadlines en specifieke eisen aan de aanvrager - niet gepubliceerd op de fondspagina"
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "naam": "Van der Wijck - de Kempenaer Stichting (Stichting Van der Wyck-de Kempenaer)",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://stichtingvanderwyck-dekempenaer.nl/over-ons/",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "website",
+      "url": "https://stichtingvanderwyck-dekempenaer.nl/leerstoel/",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "website",
+      "url": "https://www.skbl.nl/erfgoedfondsen/",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "Het beheren, tentoonstellen en publiek toegankelijk maken van de collectie en het archief van de familie Van der Wyck-de Kempenaer, bij voorkeur in de Fraeylemaborg te Slochteren; het stimuleren van onderzoek van de historie van Nederlandse kastelen en buitenplaatsen en het verzamelen van schilderijen, prenten, documenten en boeken die kastelen en buitenplaatsen betreffen; het zoveel mogelijk instandhouden van de onroerende goederen in eigendom van de stichting.",
+  "benaderbaarheid": "onbekend",
+  "benaderwijze_notitie": "Op de eigen website staat nergens een aanvraagpagina, aanvraagformulier of aanvraagprocedure; de site kent alleen Over ons / Leerstoel / Collectie / Fraeylemaborg / Bruiklenen / Nieuws / Contact. Er is wel een pagina 'Bruiklenen' (collectie-uitleen, geen geld). De stichting presenteert zich als beherende en onderzoek-stimulerende erfgoedstichting, niet als subsidiefonds.",
+  "aanvrager_type": "onbekend",
+  "geo_niveau": "landelijk",
+  "geo_waarden": [
+    "Nederland",
+    "Groningen (vestiging Slochteren, Fraeylemaborg)"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": null,
+  "cofinanciering_vereist": null,
+  "uitsluitingen": [],
+  "kostensoort": [
+    "onderzoek"
+  ],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Statutair doel: \"het stimuleren van onderzoek van de historie van Nederlandse kastelen en buitenplaatsen en het verzamelen van schilderijen, prenten, documenten en boeken, die kastelen en buitenplaatsen betreffen\". Dat is direct landgoedgericht, maar de uitvoering loopt via de bijzondere leerstoel Historische buitenplaatsen en landgoederen aan de RUG: \"De leerstoel is de enige in zijn soort in Nederland. Hij richt zich zowel op de geschiedenis van de bewoners van de buitenplaatsen als op de architectuur en interieurs van de huizen en het landschap van de bijbehorende tuinen, parken en landgoederen.\" Voor een landgoed is dit geen geldbron voor herstel, maar wel een route voor historisch/landschapshistorisch onderzoek naar het eigen landgoed, en voor uitleen/plaatsing van collectie. Geen aanvraagprocedure gepubliceerd, dus benaderen via info@ of via de leerstoel/Kenniscentrum Landschap RUG.",
+    "partnertype": "universiteit of onderzoeksinstelling — de leerstoelgroep Historische buitenplaatsen en landgoederen / Kenniscentrum Landschap, Rijksuniversiteit Groningen; of de Fraeylemaborg als museale partner"
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "een aanvraagprocedure, aanvraagformulier, criteria of bedragen — de website heeft geen aanvraagpagina (gecontroleerd: sitemap-links van de homepage, /over-ons/, /leerstoel/)",
+    "een beleidsplan- of jaarverslag-PDF; de ANBI-informatie op /over-ons/ beperkt zich tot de status zelf en de statutaire doelen, zonder financiële cijfers",
+    "het punt uit ANBI-registerbeschrijvingen over 'het bewaren van grond die ooit tot het familielandgoed bij Archem (Ommen) behoorde' staat niet op de eigen website en is daarom niet als bronmateriaal overgenomen"
+  ]
+}

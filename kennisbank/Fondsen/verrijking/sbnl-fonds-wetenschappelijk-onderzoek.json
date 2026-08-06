@@ -1,0 +1,71 @@
+{
+  "naam": "SBNL Fonds Wetenschappelijk Onderzoek",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://www.sbnlnatuurfonds.nl/fondsen-overzicht",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "website",
+      "url": "https://www.sbnlnatuurfonds.nl/nieuws-detailpagina/2026/07/01/van-idee-naar-impact-dien-nu-uw-aanvraag-in-voor-natuur-landschap-of-weidevogels",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://www.sbnlnatuurfonds.nl/page/718",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://www.sbnlnatuurfonds.nl/l/library/download/urn:uuid:a82ecb92-fa9f-4e32-aa92-93b1bb2ac9e9/20260630+aanvragen+projecten+en+voorwaarden.pdf",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "website",
+      "url": "https://www.sbnlnatuurfonds.nl/fondsen-overzicht",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "“wetenschappelijk onderzoek ten behoeve van de natuur in Nederland”. Uit het reglement: “In het verlengde is ook het bevorderen van praktijkkennis over het beheer en verantwoord gebruik van natuur en landschap een doel.”",
+  "benaderbaarheid": "open",
+  "benaderwijze_notitie": "“Aanvragen voor wetenschappelijk onderzoek kunnen worden ingediend tot 1 oktober 2026.” Aanvragen via het formulier ‘Aanvraag Wetenschappelijk Onderzoek 2026-2027’ op de site. “Particulieren en rechtspersonen (o.a. vennootschappen, stichtingen, coöperaties en verenigingen) kunnen een aanvraag indienen. Nieuwe aanvragers krijgen de voorkeur.”",
+  "aanvrager_type": "beide",
+  "geo_niveau": "landelijk",
+  "geo_waarden": [
+    "Nederland"
+  ],
+  "bedrag_min": 3000,
+  "bedrag_max": 20000,
+  "bedrag_indicatie": "“De financiële bijdragen variëren van € 3.000 tot € 20.000 per project.”",
+  "cofinanciering_vereist": true,
+  "uitsluitingen": [
+    "“Initiatieven met louter commerciële doelstellingen”",
+    "“Initiatieven van overheden, overheidsinstellingen en Initiatieven van de terrein beherende organisaties (TBO's)”",
+    "“Projecten die ook volledig gerealiseerd kunnen worden met bestaande subsidieregelingen zoals agrarische natuurbeheer, groene en blauwe diensten en BRIM”",
+    "“Regulier onderwijs”",
+    "“Financiering van een exploitatietekort”",
+    "“Op zichzelf staande seminars, workshops, symposia, conferenties en excursies”",
+    "“Initiatieven waarbij de financiële inbreng van SBNL Natuurfonds maar een zeer beperkt onderdeel is van de totale financiering.”",
+    "“Audiovisueel materiaal, waaronder drones en camera's”"
+  ],
+  "kostensoort": [
+    "onderzoek"
+  ],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "SBNL richt zijn fondsen expliciet op “natuur, landschap en erfgoed beheerd door particulieren en/of agrariërs”, en dit thema financiert onderzoek dat daaraan bijdraagt: “het bevorderen van praktijkkennis over het beheer en verantwoord gebruik van natuur en landschap”. Voor een landgoed is dit bruikbaar voor beheersondersteunend onderzoek (bodem, hydrologie, soortmonitoring, laanbomen-vitaliteit) — in de praktijk meestal aangevraagd door of samen met een onderzoekspartij, want SBNL noemt “onderzoekers” als doelgroep. Een landgoed kan formeel ook zelf aanvragen (“Particulieren en rechtspersonen … kunnen een aanvraag indienen”), maar de inhoudelijke lat is wetenschappelijk onderzoek. Let op de uitsluiting van “Op zichzelf staande seminars, workshops, symposia, conferenties en excursies”.",
+    "partnertype": "Universiteit, hogeschool, kennisinstelling of gespecialiseerd ecologisch onderzoeksbureau; het landgoed als onderzoekslocatie en medeaanvrager."
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "Geen eigen inhoudelijke fondspagina met criteria voor wetenschappelijk onderzoek — de link gaat direct naar een aanvraagformulier zonder beleidstekst (/page/718, gecontroleerd).",
+    "Niet gevonden uit welk(e) fonds(en) op naam dit thema wordt gefinancierd, terwijl dat bij Groene Landschapselementen wél is vermeld.",
+    "Geen aparte criteria voor wetenschappelijke kwaliteit, promovendi, publicatieplicht of open access gepubliceerd; alleen het algemene reglement geldt."
+  ]
+}

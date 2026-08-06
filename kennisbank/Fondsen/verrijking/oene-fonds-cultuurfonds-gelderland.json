@@ -1,0 +1,74 @@
+{
+  "naam": "Oene Fonds (Cultuurfonds Gelderland)",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://www.cultuurfonds.nl/fondsen/oene-fonds",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "website",
+      "url": "https://www.cultuurfonds.nl/provinciale-afdelingen/gelderland",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://www.cultuurfonds.nl/aanvragen/voorwaarden",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "Het Oene Fonds ondersteunt financieel projecten op de terreinen cultuur en natuur in de Noord-Oost Veluwe met een voorkeur voor kleine kernen.",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "“Het jaarbudget is € 5.000 en de aanvragen worden behandeld door het Cultuurfonds Gelderland.” Geen eigen loket: “Het bestuur bepaalt welke bijdragen uit welk budget worden gesteund. Je kan in je aanvraag wel een suggestie doen.” Extra inhoudelijke drempel: “De projecten hebben gemeen dat ze zonder steun niet van de grond komen omdat ze geen overheidssteun krijgen.”",
+  "aanvrager_type": "beide",
+  "geo_niveau": "regio",
+  "geo_waarden": [
+    "Noord-Oost Veluwe",
+    "Oene",
+    "Epe",
+    "Heerde",
+    "Veessen",
+    "Vorchten",
+    "Welsum",
+    "Nijbroek",
+    "Vaassen",
+    "Niersen",
+    "Gortel",
+    "Emst",
+    "Tongeren"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": "“Het jaarbudget is € 5.000” — dat is het totale jaarbudget van het fonds, niet een maximum per project. Tegenstrijdig met de landelijke basisvoorwaarde “Je totale projectbegroting is minimaal € 15.000”; de gehonoreerde projecten (aankoop instrument, gereedschap, touchscreen) passen eerder bij de landelijke route “Aankopen (aanvraag tot en met € 5.000)”. Beide teksten hier dubbel genoteerd, niet opgelost.",
+  "cofinanciering_vereist": null,
+  "uitsluitingen": [
+    "“Het project betreft niet groot of regulier onderhoud.” (voorwaarde bij Restauratie)",
+    "“Je project is geen reguliere activiteit”",
+    "“Je project heeft geen polariserend effect en is niet primair religieus, sociaal-maatschappelijk of politiek.”",
+    "“Je project richt zich op andere doelen dan alleen fondsenwerving.”",
+    "“Je organisatie heeft dit jaar nog geen toekenning ontvangen van het Cultuurfonds”",
+    "“Je hebt voor dit project nog niet eerder een aanvraag gedaan bij het Cultuurfonds”",
+    "Natuuraanleg: “Het project gaat niet om de aanleg van recreatieve infrastructuur (zoals bruggen en paden).”",
+    "“De projecten hebben gemeen dat ze zonder steun niet van de grond komen omdat ze geen overheidssteun krijgen.” — projecten met overheidssteun passen niet bij dit fonds.",
+    "Buiten de kernen: “De insteller heeft een band met de kernen Epe, Heerde, Veessen, Vorchten, Welsum, Nijbroek, Vaassen, Niersen, Gortel, Emst en Tongeren.”"
+  ],
+  "kostensoort": [
+    "investering",
+    "restauratie"
+  ],
+  "landgoed_relevantie": {
+    "route": "zelf",
+    "onderbouwing": "“Alle projecten op het brede terrein van cultuur, educatie, natuur tot erfgoed komen in aanmerking” en als voorbeeldproject staat er letterlijk “het herstel van een cultuurhistorische bomenrij” — precies een landgoedlaanherstel. Het werkgebied (Epe, Vaassen, Emst, Niersen, Gortel, Tongeren) is landgoedrijk Veluwegebied. Beperking: het jaarbudget is € 5.000, dus alleen voor een klein deelproject of als cofinanciering.",
+    "partnertype": "Bij een groter herstelproject: een lokale erfgoed-/natuurstichting of historische vereniging (zoals Historische Vereniging Ampt Epe) die het deelproject indient; het landgoed is dan de locatie."
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "Geen maximum bijdrage per project gepubliceerd — alleen het jaarbudget van € 5.000.",
+    "Geen eigen deadlines; alleen de afdelingsdeadlines van Cultuurfonds Gelderland (1 april / 1 juli / 1 oktober / 8 januari).",
+    "Geen expliciete cofinancieringseis gevonden.",
+    "Geen apart beleidsplan of jaarverslag van het Oene Fonds gevonden op cultuurfonds.nl."
+  ]
+}

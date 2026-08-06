@@ -1,0 +1,52 @@
+{
+  "naam": "Gerrit Jeurissen Fonds (voorheen Love & Light)",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://www.gerritjeurissenfonds.nl/",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://www.gerritjeurissenfonds.nl/richtlijnen",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "Het verhogen van de kwaliteit van de samenleving door financiele steun te verlenen aan projecten op het gebied van kunst, cultuur, sport en maatschappelijk welzijn.",
+  "benaderbaarheid": "open",
+  "benaderwijze_notitie": "\"Aanvragen dienen voor aanvang van de projecten ingediend te worden\"; steun aan \"instellingen, groeperingen en individuen\", met een aanvraagprocedure op de site en \"een totale behandelingsduur van circa 2 maanden\".",
+  "aanvrager_type": "beide",
+  "geo_niveau": "landelijk",
+  "geo_waarden": [
+    "Nederland",
+    "Huissen (bijzondere aandacht, via de Gerrit Jeurissen Award)"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": null,
+  "cofinanciering_vereist": null,
+  "uitsluitingen": [
+    "overheden",
+    "instellingen met een commerciele, politieke of religieuze doelstelling",
+    "exploitatiekosten",
+    "salariskosten",
+    "kosten voor levensonderhoud",
+    "kosten verbonden aan de normale activiteiten van een organisatie"
+  ],
+  "kostensoort": [
+    "investering"
+  ],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Breed maatschappelijk fonds voor \"concrete en benoembare projecten\" in kunst, cultuur, sport en maatschappelijk welzijn. Een landgoed als BV/onderneming valt onder de uitsluiting van commerciele instellingen; een culturele of welzijnsstichting die een project op een landgoed uitvoert kan wel aanvragen.",
+    "partnertype": "stichting of vereniging op het gebied van kunst, cultuur, sport of welzijn"
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "bedragen/maxima (niet gepubliceerd op richtlijnenpagina)",
+    "cofinancieringseis",
+    "beleidsplan-PDF"
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "naam": "Streekfonds Achterhoek (Stichting Streekfonds Achterhoek)",
+  "bronnen": [
+    {"soort": "website", "url": "https://streekfondsachterhoek.nl/", "jaar": 2026, "gelezen": true},
+    {"soort": "aanvraagvoorwaarden", "url": "https://streekfondsachterhoek.nl/werkwijze/", "jaar": 2026, "gelezen": true},
+    {"soort": "anbi_publicatie", "url": "https://streekfondsachterhoek.nl/anbi/", "jaar": 2026, "gelezen": true}
+  ],
+  "doelstelling": "Streekfonds Achterhoek realiseert een mooi en modern landschap. Van, voor en met de grondgebruikers. Om gezond in te leven. Op de fiets en te voet. Voor trots en rust. Voor versterking van flora en fauna, water- en luchtkwaliteit. Het geeft de Achterhoek haar eigen intrinsieke waarde: het coulissenlandschap. Wij streven naar een versterking en duurzaam beheer van het Achterhoekse landschap.",
+  "benaderbaarheid": "open",
+  "benaderwijze_notitie": "\"Het Streekfonds brengt mensen bij elkaar. Elk plan is welkom: van houtwal tot struweel of beekdal. Van singel of poel tot boomgaard.\" en \"Wij gaan graag in gesprek over je plan.\" Er is geen formulier of ronde; het loopt via gesprek en e-mail (info@streekfondsachterhoek.nl, 06 - 51 38 04 35).",
+  "aanvrager_type": "beide",
+  "geo_niveau": "regio",
+  "geo_waarden": ["Achterhoek", "Aalten", "Berkelland", "Bronckhorst", "Doesburg", "Doetinchem", "Lochem", "Montferland", "Oost Gelre", "Oude IJsselstreek", "Winterswijk", "Zutphen"],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": "Geen bedragen, wel percentages: \"Bij projecten, die hieronder vallen kunnen wij vaak een extra impuls geven tot 50 % van de niet subsidiabele kosten.\" en \"Voor projecten die (deels) niet onder een andere regeling passen, kunnen we tot wel 75 % bijdragen in de kosten, afhankelijk van de aard en omvang. Soms ook voor het beheer.\"",
+  "cofinanciering_vereist": true,
+  "uitsluitingen": [
+    "aanplant die verplicht is bij bestemmingswijziging (\"Als aanplant verplicht is bij bestemmingswijziging draagt het Streekfonds niet bij.\")",
+    "projecten waarvan de uitvoering al is begonnen voordat de aanvraag is ingediend (\"Vóórdat je met de uitvoering begint, moet je je aanvraag bij ons hebben ingediend.\")",
+    "het opstellen van inrichtingsplannen (\"Het Streekfonds stelt zelf geen inrichtingsplannen op.\")"
+  ],
+  "kostensoort": ["investering", "regulier_onderhoud"],
+  "landgoed_relevantie": {
+    "route": "zelf",
+    "onderbouwing": "Het fonds richt zich rechtstreeks op grondgebruikers in de Achterhoek en op precies de landschapselementen die op een landgoed liggen: \"Elk plan is welkom: van houtwal tot struweel of beekdal. Van singel of poel tot boomgaard.\" en \"Streekfonds Achterhoek realiseert een mooi en modern landschap. Van, voor en met de grondgebruikers.\" Bovendien uitdrukkelijk óók voor beheer: \"Niet alleen voor nieuwe aanleg, ook voor het beheer van het bestaande.\" Een landgoedeigenaar in een van de 11 gemeenten kan zelf aankloppen. Het fonds werkt daarbij aanvullend op provinciale, gemeentelijke en anlb-regelingen en dekt juist de niet-subsidiabele rest.",
+    "partnertype": null
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "Concrete bedragen (minimum/maximum bijdrage): niet gepubliceerd; alleen percentages (50% / 75%). Gezocht op /werkwijze/, /anbi/ en de homepage.",
+    "Aanvraagformulier, indieningsrondes of deadlines: bestaan niet als zodanig; enige procedure-eis is dat de aanvraag vóór aanvang van de uitvoering is ingediend.",
+    "Beleidsplan-PDF: niet als losse link op de site aangetroffen; /jaarverslagen/ bestaat wel als menupunt maar is niet geraadpleegd."
+  ]
+}

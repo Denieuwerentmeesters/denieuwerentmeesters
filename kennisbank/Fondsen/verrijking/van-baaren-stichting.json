@@ -1,0 +1,56 @@
+{
+  "naam": "Van Baaren Stichting",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://www.vanbaarenstichting.nl/",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://vanbaarenstichting.nl/aanvragen/",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "\"De stichting heeft ten doel om met de haar ter beschikking staande middelen, ten behoeve van de samenleving noden te lenigen, alsmede het ontwikkelen en ondersteunen van initiatieven, met name op het gebied van de zorg voor en gezondheid van ouderen en kinderen, pastoraat en cultureel erfgoed, en al hetgeen daarmee rechtstreeks of zijdelings verband houdt of daartoe bevorderlijk kan zijn, alles in de meest ruime zin van het woord. De doelgroep is gelegen in de stad Utrecht of de directe omgeving daarvan en heeft bij voorkeur een raakvlak met de Rooms Katholieke Kerkgemeenschap.\"",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "\"De aanvragende partij moet in principe de ANBI-status hebben.\" en \"Aanvragen worden vier keer per jaar behandeld tijdens de bestuursvergaderingen. Aanvragen dienen volledig en uiterlijk een maand voorafgaand aan een vergadering ingezonden te zijn door het aanvraagformulier dat op deze site te vinden is.\" Er is een quickscan als voorportaal.",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "regio",
+  "geo_waarden": [
+    "Stad Utrecht",
+    "Stichtse Vecht (Maarssen, Breukelen, Loenen aan de Vecht, Kockengen, Loenersloot, Nieuwer ter Aa, Nieuwersluis, Nigtevecht, Oud-Zuilen, Tienhoven/Molenpolder, Vreeland)",
+    "De Meern",
+    "Vleuten",
+    "Haarzuilens",
+    "IJsselstein",
+    "Zeist (Den Dolder, Austerlitz, Bosch en Duin, Huis ter Heide)"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": null,
+  "cofinanciering_vereist": false,
+  "uitsluitingen": [
+    "aanvragen met betrekking tot individuele noden",
+    "projecten of activiteiten buiten het werkgebied",
+    "projecten die al van start zijn gegaan op het moment van besluitvorming",
+    "indirecte financiering (\"we kennen alleen rechtstreekse steun toe\")",
+    "projecten of activiteiten met een commercieel en/of recreatief karakter"
+  ],
+  "kostensoort": [
+    "investering",
+    "restauratie"
+  ],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Cultureel erfgoed staat expliciet in de doelstelling (\"met name op het gebied van de zorg voor en gezondheid van ouderen en kinderen, pastoraat en cultureel erfgoed\") en het werkgebied is bij uitstek buitenplaatsengebied: de Vechtstreek (Nieuwersluis, Loenen, Vreeland, Oud-Zuilen), Haarzuilens en Zeist. Maar: \"De aanvragende partij moet in principe de ANBI-status hebben\" en \"Projecten of activiteiten die een commercieel en/of recreatief karakter hebben\" zijn uitgesloten - een particulier landgoed met exploitatie valt daar buiten. Route loopt dus via een ANBI-stichting rond het landgoed of een zorg-/erfgoedorganisatie.",
+    "partnertype": "ANBI-stichting - landgoed- of erfgoedstichting, zorg- of welzijnsorganisatie, kerkelijke instelling"
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "Bedragen: geen minimum, maximum of indicatie gepubliceerd",
+    "Jaarverslag/beleidsplan: niet als los document gevonden"
+  ]
+}

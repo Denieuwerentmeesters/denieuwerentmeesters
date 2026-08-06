@@ -1,0 +1,47 @@
+{
+  "naam": "RCOAK",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://rcoak.nl/",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "website",
+      "url": "https://rcoak.nl/aanvragen/",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "Stichting RCOAK versterkt initiatieven voor een menswaardig bestaan - voor ouderen (landelijk) en voor Amsterdammers met weinig financiele middelen.",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "Openbaar aanvraagportaal (portal.rcoak.nl), maar met een recent aangescherpt regime: het \"donatiebeleid gericht op ouderen\" is \"aangepast\" met \"nieuwe criteria\", en aanvragen boven EUR 15.000 vereisen een beleidsplan.",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "landelijk",
+  "geo_waarden": [
+    "Nederland (ouderen)",
+    "Amsterdam (armoede)"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": "Aanvragen boven EUR 15.000 vereisen een beleidsplan (drempel, geen maximum).",
+  "cofinanciering_vereist": null,
+  "uitsluitingen": [],
+  "kostensoort": [
+    "investering",
+    "exploitatie"
+  ],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "RCOAK \"versterkt initiatieven voor een menswaardig bestaan\" voor ouderen. Een ouderenorganisatie die dagbesteding, natuurbeleving of ontmoeting voor ouderen op een landgoed organiseert kan aanvragen; het landgoed is locatie in haar begroting. Het landgoed zelf valt buiten de doelstelling.",
+    "partnertype": "ouderenorganisatie, zorg- of welzijnsstichting"
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "de nieuwe criteria zelf - /criteria/ gaf 404 en de criteriapagina was niet vindbaar vanaf de homepage",
+    "uitsluitingen",
+    "bedragmaxima",
+    "cofinancieringseis"
+  ]
+}

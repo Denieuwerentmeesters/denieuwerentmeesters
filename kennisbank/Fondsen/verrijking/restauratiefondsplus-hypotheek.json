@@ -1,0 +1,43 @@
+{
+  "naam": "Restauratiefondsplus-hypotheek",
+  "bronnen": [
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://www.restauratiefonds.nl/zakelijk/financieren/alle-zakelijke-financieringen/restauratiefondsplus-hypotheek",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "Laagrentende lening voor grootschalige restauratie en/of onderhoud van rijksmonumenten die niet als woonhuis zijn geregistreerd. \"Gaat u binnenkort een rijksmonument dat niet is geregistreerd als woonhuis volgens www.monumentenregister.nl omvangrijk restaureren en/of onderhouden? Dan kunt u een laagrentende Restauratiefondsplus-hypotheek aanvragen.\"",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "\"Op dit moment is de vraag groter dan de beschikbare middelen. Daarom bekijken we per opgave wat binnen de huidige mogelijkheden past.\" en \"Neem dan altijd eerst contact met een accountmanager. Samen kijkt u welke stappen verstandig zijn, voordat u een nieuwe aanvraag indient.\"",
+  "aanvrager_type": "landgoedeigenaar",
+  "geo_niveau": "landelijk",
+  "geo_waarden": [
+    "Nederland"
+  ],
+  "bedrag_min": 300000,
+  "bedrag_max": 10000000,
+  "bedrag_indicatie": "\"Uw lening bedraagt minimaal 300.000 euro. Wanneer een rijksmonumentaal complex kadastraal voor de start van een herbestemming wordt gesplitst in kleinere zelfstandige eenheden geldt een minimum van 25.000 euro per lening.\" / \"per bedrijf, stichting of particulier is het maximale uitstaande leningbedrag aan Restauratiefondsplus-hypotheek en Restauratiefonds-hypotheek samen 10 miljoen euro\" (verlaagd wegens overvraag; zie tabel 1 op de site)",
+  "cofinanciering_vereist": false,
+  "uitsluitingen": [
+    "rijksmonumenten in de categorie 'woonhuizen'",
+    "monumenten in eigendom van een decentrale overheid (provincie, gemeente, waterschap of ander openbaar lichaam)",
+    "werkzaamheden waarvoor al subsidie is aangevraagd",
+    "werkzaamheden waarmee al is begonnen"
+  ],
+  "kostensoort": [
+    "investering",
+    "restauratie",
+    "regulier_onderhoud"
+  ],
+  "landgoed_relevantie": {
+    "route": "zelf",
+    "onderbouwing": "Landgoedeigenaren met niet-woonhuis rijksmonumenten (koetshuis, orangerie, schuur, kerk, kasteel) vallen exact in de doelgroep: \"Het beschermde monument of het zelfstandig onderdeel van het beschermde monument behoort niet tot de categorie 'woonhuizen'.\" Ook onderhoud is financierbaar, anders dan bij de meeste erfgoedfondsen.",
+    "partnertype": null
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "Exacte nieuwe maximumbedragen per organisatie (tabel 1) - de tabel is op de pagina aanwezig maar niet als tekst uitleesbaar"
+  ]
+}

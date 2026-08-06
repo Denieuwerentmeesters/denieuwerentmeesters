@@ -1,0 +1,75 @@
+{
+  "naam": "SBNL Natuurfonds",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://www.sbnlnatuurfonds.nl/sbnl-natuurfonds",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "website",
+      "url": "https://www.sbnlnatuurfonds.nl/fondsen-overzicht",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://www.sbnlnatuurfonds.nl/nieuws-detailpagina/2026/07/01/van-idee-naar-impact-dien-nu-uw-aanvraag-in-voor-natuur-landschap-of-weidevogels",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "SBNL Natuurfonds is de landelijke natuurorganisatie die zich sinds 1981 inzet voor het beheer en behoud van natuur en landschap op particuliere gronden in Nederland. (...) SBNL werft en beheert fondsen waarmee particuliere initiatieven - van agrariers tot landgoedeigenaren - en wetenschappelijk onderzoek worden ondersteund.",
+  "benaderbaarheid": "open",
+  "benaderwijze_notitie": "\"Plannen voor een project waarbij SBNL Natuurfonds u zou kunnen helpen? Dien dan uw project in! Kies hieronder het thema van uw aanvraag.\" En uit het nieuwsbericht: aanvragen staat open voor \"particuliere grondeigenaren, natuurinitiatieven, onderzoekers en geinteresseerde initiatiefnemers\".",
+  "aanvrager_type": "beide",
+  "geo_niveau": "landelijk",
+  "geo_waarden": [
+    "Nederland",
+    "Utrecht (Groene Landschapselementen)",
+    "Gelderland (Groene Landschapselementen)",
+    "Overijssel (Groene Landschapselementen)"
+  ],
+  "bedrag_min": 3000,
+  "bedrag_max": 20000,
+  "bedrag_indicatie": "EUR 3.000 tot EUR 20.000 per project (ronde 2026/2027, projecten uit te voeren in 2027)",
+  "cofinanciering_vereist": null,
+  "uitsluitingen": [],
+  "kostensoort": [
+    "investering",
+    "onderzoek"
+  ],
+  "landgoed_relevantie": {
+    "route": "zelf",
+    "onderbouwing": "\"SBNL Natuurfonds is de enige landelijke natuurorganisatie die haar fondsen ten goede laat komen aan natuur, landschap en erfgoed beheerd door particulieren en/of agrariers\", en: \"SBNL werft en beheert fondsen waarmee particuliere initiatieven - van agrariers tot landgoedeigenaren - (...) worden ondersteund.\" Landgoedeigenaren worden letterlijk als doelgroep genoemd; de aanvraagroute staat expliciet open voor particuliere grondeigenaren.",
+    "partnertype": null
+  },
+  "onderliggende_fondsen": [
+    {
+      "naam": "Fonds Groene Landschapselementen",
+      "relevant": true,
+      "reden": "herstel/aanleg van landschapselementen op particuliere grond in Utrecht, Gelderland en Overijssel - kernactiviteit van een landgoed (apart verrijkt: sbnl-fonds-groene-landschapselementen)"
+    },
+    {
+      "naam": "Fonds Wetenschappelijk Onderzoek",
+      "relevant": true,
+      "reden": "onderzoek ten behoeve van natuurbehoud in Nederland; landgoed als onderzoekslocatie, aanvraag doorgaans door onderzoeker (apart verrijkt)"
+    },
+    {
+      "naam": "Weidevogelfonds Vanellus Vanellus",
+      "relevant": true,
+      "reden": "weidevogelbeschermingsprojecten; relevant voor landgoederen met graslanden (apart verrijkt)"
+    },
+    {
+      "naam": "Baron en Barones van Hemert tot Dingshof-Coldeweij Fonds",
+      "relevant": true,
+      "reden": "fonds op naam onder SBNL (apart verrijkt)"
+    }
+  ],
+  "niet_gevonden": [
+    "een integrale uitsluitingslijst of reglement per fonds op sbnlnatuurfonds.nl (de fondsen-overzichtpagina verwijst alleen door naar de drie aanvraagformulieren)",
+    "of cofinanciering vereist is",
+    "beleidsplan/ANBI-publicatie-PDF (niet gelinkt vanaf de bekeken pagina's)"
+  ]
+}

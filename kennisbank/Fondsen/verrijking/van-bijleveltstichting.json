@@ -1,0 +1,31 @@
+{
+  "naam": "Van Bijleveltstichting",
+  "bronnen": [
+    {"soort": "website", "url": "https://vanbijleveltstichting.nl/doelstelling/", "jaar": 2026, "gelezen": true},
+    {"soort": "anbi_publicatie", "url": "https://vanbijleveltstichting.nl/anbi/", "jaar": 2024, "gelezen": true}
+  ],
+  "doelstelling": "Statutair: \"Het verleenen van geldelijke en zedelijke steun aan personen die een bestaan zoeken in het beoefenen van de schoone kunsten en wetenschappen, op welk gebied ook, daaronder ook begrepen het tooneel en dergelijke\". In eigen woorden: \"Het steunen van talentvolle professionals op het gebied van toneel, beeldende kunst, muziek en letterkunde alsmede tussenliggende interdisciplinaire velden, tijdens het begin van hun loopbaan. Een relatie met wetenschap is daarbij belangwekkend.\"",
+  "benaderbaarheid": "op_uitnodiging",
+  "benaderwijze_notitie": "De site heeft wel een menu-item 'Aanvraag' en de ANBI-tekst zegt: \"De besteding vindt plaats door een actief bestuur dat in gemeenschappelijkheid aanvragen voor initiatieven beoordeeld en selecteert op basis van de doelstellingen van de stichting.\" Maar het feitelijke beleid is meerjarige binding aan een vaste lijst instellingen: \"De Van Bijleveltstichting heeft zich voor een bepaalde periode verbonden aan de volgende instellingen: [...]\" en het toekenningenoverzicht 2024 bestaat vrijwel volledig uit die vaste partners. Het bestuur wordt bovendien gevormd door vertegenwoordigers namens vier kunstorganisaties (Nederlands Toneel Verbond, Rijksakademie, Maatschappij der Nederlandse Letterkunde, Maatschappij tot bevordering der Toonkunst). \"De stichting werft niet actief geld of goederen onder derden.\"",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "landelijk",
+  "geo_waarden": ["Nederland"],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": null,
+  "cofinanciering_vereist": false,
+  "uitsluitingen": [],
+  "kostensoort": ["personeel", "investering"],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Geen enkel erfgoed-, monumenten-, natuur- of landschapsdoel; de doelstelling is uitsluitend \"steun aan personen die een bestaan zoeken in het beoefenen van de schoone kunsten en wetenschappen\", gericht op beginnende professionals in toneel, beeldende kunst, muziek en letterkunde. Een landgoed kan hier alleen indirect bij: als locatie voor een muziek- of theaterfestival of een residentie voor jonge makers, waarbij het festival of de kunstinstelling aanvraagt en het landgoed als speelplek/locatiepost in die begroting staat. Dat is geen theoretische route — in de lijst van gesteunde projecten 2024 staan meerdere locatiegebonden festivals (Kamermuziek festival Schiermonnikoog, Noordwijk Kamermuziekfestival, Zeeland Klassiek, Cello Academie Zutphen, Lunchtheater Singer Laren). De praktische drempel is dat het bestuur zich meerjarig aan een vaste kring instellingen heeft verbonden. Terzijde en niet als financieringsroute: de stichting is zelf grondbezitter — \"De stichting verkrijgt haar inkomsten uit het belegd vermogen en de in het beheer zijnde stukken grond gelegen in Haarzuilens, gemeente Utrecht\" en \"De stukken grond worden verpacht\" — dus zij is potentieel eerder verpachter dan financier.",
+    "partnertype": "Culturele instelling of festivalorganisatie die jonge professionele makers in toneel, beeldende kunst, muziek of letterkunde programmeert; het landgoed is dan speel- of werklocatie"
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "Aanvraagcriteria, procedure en deadlines: de pagina /aanvraag/ leverde geen inhoudelijke criteria op; alleen contactgegevens en de instellingenlijst.",
+    "Bedragen: geen minimum, maximum of gemiddelde donatie gepubliceerd; ook geen jaarbudget in de ANBI-tekst zelf (wel jaarrekeningen als PDF, niet uitgelezen).",
+    "Een uitsluitingslijst ontbreekt volledig op de site.",
+    "Of aanvragen van buiten de vaste kring instellingen daadwerkelijk in behandeling worden genomen — dat is niet expliciet gemaakt en zou een telefoontje vergen."
+  ]
+}

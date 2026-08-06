@@ -1,0 +1,53 @@
+{
+  "naam": "Themafonds Erfgoedvrijwilligers (Cultuurfonds)",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://www.cultuurfonds.nl/fondsen/themafonds-erfgoedvrijwilligers",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://www.cultuurfonds.nl/aanvragen/voorwaarden",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "Gericht op het stimuleren van vrijwilligerswerk in de erfgoedsector. Met het themafonds kan het Cultuurfonds bijdragen aan projecten voor en door erfgoedvrijwilligers in Nederland.",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "\"Je organisatie staat ingeschreven bij de Kamer van Koophandel. Je organisatie heeft cultuur of natuur in de statutaire doelstelling. (...) Je organisatie heeft een onafhankelijk en breed samengesteld bestuur of Raad van Toezicht\" — plus: de regeling is gericht op kleine erfgoedorganisaties met maximaal 3 fte waar vrijwilligers het kloppend hart vormen.",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "landelijk",
+  "geo_waarden": [
+    "Nederland"
+  ],
+  "bedrag_min": 500,
+  "bedrag_max": 5000,
+  "bedrag_indicatie": "Bijdrage tussen € 500 en € 5.000; tot 100% van de totale projectkosten. Let op tegenstrijdigheid met de algemene basisvoorwaarde 'Je totale projectbegroting is minimaal € 15.000'.",
+  "cofinanciering_vereist": false,
+  "uitsluitingen": [
+    "projecten met polariserend effect of primair religieus, sociaal-maatschappelijk of politiek karakter",
+    "reguliere activiteiten van de organisatie",
+    "projecten die zich alleen op fondsenwerving richten",
+    "projecten buiten Nederland",
+    "organisaties zonder cultuur of natuur in de statutaire doelstelling",
+    "ontwikkeling van een reguliere website of een tijdelijke app (bij digitale media)",
+    "vervaardigen van nieuwe kunstwerken (bij tentoonstellingen)"
+  ],
+  "kostensoort": [
+    "investering",
+    "onderzoek"
+  ],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Het fonds financiert \"projecten voor en door erfgoedvrijwilligers\"; de gehonoreerde projecten zijn stichtingen en verenigingen, waaronder \"Stichting Geldersch Landschap & Kasteelen, ARNHEM — Herinrichting grote museumzaal van kasteel Ammersoyen\" en \"Boerderijenstichting Land van Vollenhove\". Een landgoed komt in aanmerking wanneer een vrijwilligers-/erfgoedstichting rond het landgoed (vriendenstichting, historische vereniging, boerderijenstichting) de aanvraag doet; de organisatie moet cultuur of natuur in haar statutaire doelstelling hebben en een onafhankelijk bestuur.",
+    "partnertype": "kleine erfgoedorganisatie of vrijwilligersstichting/-vereniging (max. 3 fte) met cultuur of natuur in de statuten, bijvoorbeeld een vriendenstichting of historische vereniging verbonden aan het landgoed"
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "een eigen, integrale regelingstekst of PDF van de Erfgoedvrijwilligersregeling — gezocht op cultuurfonds.nl (fondspagina, /aanvragen/voorwaarden, /hulp-bij-aanvraag-erfgoedvrijwilligersregeling → 404); de bedragen € 500–€ 5.000 en de 3-fte-grens komen uit Cultuurfonds-nieuwsberichten via zoekresultaat, niet uit een integraal opgehaalde regelingstekst",
+    "openstellingsdata/deadlines van de huidige tranche",
+    "expliciete uitsluitingslijst specifiek voor dit themafonds"
+  ]
+}

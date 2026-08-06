@@ -1,0 +1,51 @@
+{
+  "naam": "P.W. Janssen's Friesche Stichting",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://pwjanssen.nl/stichting/",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://pwjanssen.nl/aanvragen/",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "\"Charitatief vermogensfonds voor de ondersteuning van maatschappelijke initiatieven\" met als doel \"organisaties te ondersteunen die zich inzetten voor de bevordering van maatschappelijke ontwikkeling\". Drie projectcategorieen: culturele projecten, welzijnsprojecten en erfgoedrestauratie.",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "\"Alleen verenigingen en stichtingen kunnen indienen; particulieren zijn uitgesloten.\" \"Voor alle aanvragen geldt dat het project moet plaatsvinden in de regio Amsterdam of de provincie Fryslan.\" Aanvragen minimaal 3 maanden voor de projectstart; bestuur vergadert minstens tweemaal per jaar; uitbetaling na voltooiing en verantwoording.",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "regio",
+  "geo_waarden": [
+    "provincie Fryslan",
+    "regio Amsterdam"
+  ],
+  "bedrag_min": 250,
+  "bedrag_max": 5000,
+  "bedrag_indicatie": "EUR 250 tot EUR 5.000 (uitzonderingen mogelijk). Cofinanciering verplicht; meerdere financieringsbronnen vereist blijkens het dekkingsplan.",
+  "cofinanciering_vereist": true,
+  "uitsluitingen": [
+    "aanvragen van particulieren",
+    "projecten buiten de regio Amsterdam of de provincie Fryslan",
+    "aanvragen die minder dan 3 maanden voor de projectstart worden ingediend"
+  ],
+  "kostensoort": [
+    "restauratie",
+    "investering"
+  ],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "De categorie erfgoedrestauratie is expliciet ruim geformuleerd: \"projecten met sociale, historische, kunstzinnige of ambachtelijke waarde; niet beperkt tot onroerend goed\". Voor een Fries landgoed (state, stins) of een landgoed in de regio Amsterdam (buitenplaats langs de Amstel of het Gooi) is dat een bruikbare ingang, ook voor roerend erfgoed, interieur of ambachtelijk herstelwerk. Route via_partner omdat alleen verenigingen en stichtingen kunnen indienen. Let op de schaal: EUR 250 tot EUR 5.000 - een aanvullend, niet dragend fonds, geschikt voor een deelpost of een ambachtelijk onderdeel.",
+    "partnertype": "Vereniging of stichting: landgoedstichting, vriendenstichting, historische vereniging of erfgoedorganisatie in Fryslan of de regio Amsterdam."
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "Expliciete uitsluitingenlijst (wat het fonds NIET financiert): niet als zodanig gepubliceerd; alleen de beperkingen naar aanvragerstype, geografie en termijn zijn te vinden.",
+    "Concrete vergaderdata of deadlines.",
+    "Jaarlijks bestedingsbudget.",
+    "De inhoud van de statuten-PDF: niet apart uitgelezen."
+  ]
+}

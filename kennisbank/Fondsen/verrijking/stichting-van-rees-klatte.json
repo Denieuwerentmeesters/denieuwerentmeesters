@@ -1,0 +1,38 @@
+{
+  "naam": "Stichting Van Rees-Klatte",
+  "bronnen": [
+    {"soort": "website", "url": "https://www.fondseninnederland.nl/fonds/stichting-van-rees-klatte", "jaar": null, "gelezen": true},
+    {"soort": "beleidsplan", "url": "https://www.fondseninnederland.nl/storage/Fondsbestanden/EK5z0WxQ8f0Xh6gC5BfczNVxhWCi4lMJgOHDxM8m.pdf", "jaar": 2025, "gelezen": true},
+    {"soort": "website", "url": "https://www.vanreesklatte.nl/", "jaar": null, "gelezen": true},
+    {"soort": "aanvraagvoorwaarden", "url": "https://www.vanreesklatte.nl/assets/files/vanrees-klatte-vooraanvraag-donatie-2.pdf", "jaar": null, "gelezen": false}
+  ],
+  "doelstelling": "Statutair: \"De Stichting heeft ten doel het als algemeen nut beogende instelling ... geven van financiele steun aan algemeen nut beogende instellingen, werkzaam op het terrein van de kunst, de cultuur of de bescherming van mens en natuur, en voorts al hetgeen met een en ander verband houdt of daartoe bevorderlijk kan zijn, alles in de ruimste zin van het woord.\" Uitwerking: \"Het werkterrein van de Stichting is breed en omvat doelen in de gezondheidszorg, kunst, cultuur, maatschappelijke zorg en de bescherming van mens en natuur. Hierbij heeft de Stichting nadrukkelijk aandacht voor educatie op deze terreinen.\"",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "\"Aanvragen vinden plaats via de website van Stichting van Rees-Klatte. Voor het ontvangen van een aanvraagformulier voor een donatie kan de aanvrager een vooraanvraag doen op de website van de Stichting.\" (beleidsplan) en op de site: \"Na ontvangst van de ingevulde vooraanvraag zult u binnen 10 werkdagen een reactie ontvangen.\" De drempel: een verplichte vooraanvraag voorafgaand aan het echte formulier, plus \"de Stichting streeft naar een hekenbare donatie en daarom dient de aanvrager de totale projectbegroting en dekkingsplan inzichtelijk te maken.\"",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "landelijk",
+  "geo_waarden": [
+    "Nederland",
+    "Den Haag (voorkeur voor een deel van de donaties: \"Gezien het feit dat de heer Van Rees een groot deel van zijn leven in Den Haag heeft gewoond, zal met een belangrijk deel van de donaties een Haagse band worden gehouden.\")"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": "\"Het bestuur heeft ten doel jaarlijks circa 3 a 4 % van het vermogen in de vorm van schenkingen uit te keren.\" en \"De Stichting heeft sinds het begin van 2014 een vermogen van ca. € 5 mln.\" - \"In de periode van de oprichting in 2004 tot begin 2025 heeft de Stichting een bedrag van circa € 2,6 miljoen aan goede doelen overgemaakt.\" Geen bedrag per aanvraag gepubliceerd.",
+  "cofinanciering_vereist": null,
+  "uitsluitingen": [
+    "\"Bijdragen van de Stichting moeten niet anoniem opgaan in een grotere geldstroom noch besteed worden aan marginale doelen (niches).\"",
+    "\"De Stichting mag geen uitkeringen doen aan een oprichter of aan een bestuurder.\""
+  ],
+  "kostensoort": ["investering", "restauratie", "exploitatie", "onderzoek"],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Het doel omvat letterlijk \"de bescherming van mens en natuur\" en \"kunst, cultuur\", en FIN noemt de sectoren Cultuur, Zorg en Natuur - dat raakt landgoedthema's als natuurherstel, cultuurhistorie en educatie (\"Hierbij heeft de Stichting nadrukkelijk aandacht voor educatie op deze terreinen\"). De statutaire beperking is echter dat steun gaat naar ANBI's: \"het geven van financiele steun aan algemeen nut beogende instellingen, werkzaam op het terrein van de kunst, de cultuur of de bescherming van mens en natuur\". Een landgoed in particuliere/BV-vorm valt daar niet onder; een landgoedstichting met ANBI-status wel, of anders een natuur- of erfgoedorganisatie die een project op het landgoed uitvoert. Het fonds wil bovendien zichtbaarheid: \"Binnen deze statutaire bepalingen tracht de Stichting haar doelen voornamelijk te realiseren door het geven van herkenbare bijdragen aan doelen met een specifiek karakter\" - een afgebakend, benoembaar landgoedproject (laanherstel, educatieprogramma, restauratie van een specifiek object) past bij die eis.",
+    "partnertype": "ANBI-instelling op het terrein van kunst, cultuur of bescherming van mens en natuur - bijvoorbeeld een landgoedstichting met ANBI-status, een natuur-/landschapsorganisatie of een erfgoed- of educatiestichting die het project uitvoert. Extra kans bij een Haagse band."
+  },
+  "niet_gevonden": [
+    "Bedragen per donatie (minimum/maximum) - niet vermeld in beleidsplan, op de website of op de FIN-pagina",
+    "Expliciete uitspraak over cofinanciering - wel wordt een 'totale projectbegroting en dekkingsplan' gevraagd, maar nergens staat dat cofinanciering verplicht is",
+    "Deadlines of aanvraagrondes - niet gepubliceerd; besluitvorming vindt plaats 'tijdens een vergadering'",
+    "De inhoud van het vooraanvraagformulier (PDF) is niet uitgelezen; alleen de verwijzing ernaar is vastgelegd"
+  ]
+}

@@ -1,0 +1,66 @@
+{
+  "naam": "Van der Hucht De Beukelaar Stichting",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://vdhdb.nl/",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "beleidsplan",
+      "url": "https://vdhdb.nl/beleidsplan/",
+      "jaar": 2024,
+      "gelezen": true
+    },
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://vdhdb.nl/richtlijnen/",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "anbi_publicatie",
+      "url": "https://vdhdb.nl/financieel/",
+      "jaar": 2024,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "“De ‘Van der Hucht de Beukelaar Stichting’ heeft tot doel het bevorderen van gezondheid en welzijn van mens en dier. Dit doen wij door het verstrekken van financiële bijdragen aan kleinschalige projecten van derden, bij voorkeur waar sprake is van inzet van vrijwilligers.” Beleidsplan: “financiële bijdragen (…) aan kleinschalige projecten ter bevordering van gezondheid en welzijn van mens en dier of hun leefomgeving.”",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "“De aanvraagronde loopt jaarlijks van 1 januari tot en met 1 maart.” en “Een aanvraag kunt u vervolgens doen via ons digitale aanvraagformulier (…). Deze is alleen zichtbaar in de perioden dat de jaarlijkse aanvraagtermijn opengesteld is. Aanvragen die ons op een andere wijze bereiken, worden niet in behandeling genomen.”",
+  "aanvrager_type": "beide",
+  "geo_niveau": "landelijk",
+  "geo_waarden": [
+    "Nederland"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": "Geen bedragen per aanvraag gepubliceerd. Wel de omvang van het jaarbudget: “Uitkeringen aan derden 110.655” (2024), tegenover “Opbrengst beleggingen 28.655” — het fonds keert dus meer uit dan het rendeert en teert bewust in (“Exploitatietekort (ten laste van eigen vermogen) 89.200”). Verwacht dus bedragen in de orde van enkele duizenden euro's per project.",
+  "cofinanciering_vereist": null,
+  "uitsluitingen": [
+    "“Personele kosten en reiskosten komen in principe niet voor subsidie in aanmerking.”",
+    "“De opvang van dieren wordt niet ondersteund.”",
+    "“Individuele hulpverlening komt in principe niet voor subsidie in aanmerking.”",
+    "Structurele/meerjarige steun: “Aanvragen komen in principe alleen in aanmerking voor eenmalige bijdragen.”",
+    "Aanvragen buiten het digitale formulier of buiten de openstellingsperiode: “Aanvragen die ons op een andere wijze bereiken, worden niet in behandeling genomen.”",
+    "“Er zullen geen aanvragen van instellingen in behandeling genomen worden waarin bestuurders van de stichting zakelijke belangen hebben of recent hebben gehad.”"
+  ],
+  "kostensoort": [
+    "investering",
+    "onderzoek"
+  ],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "De aangrijpingspunten zijn de dier- en leefgebied-clausule en de mens-clausule. Letterlijk: “Projecten met betrekking tot dieren kunnen zich richten op de instandhouding van wilde soorten of hun leefgebied (…) dan wel op de interactie tussen mens, dier en hun natuurlijke leefomgeving.” Biotoopherstel op een landgoed voor een bedreigde soort — poelen voor amfibieën, nestgelegenheid voor steenuil of kerkuil, patrijzenrand — valt daar zonder gewrongen redenering onder, zeker met de uitgesproken voorkeur voor “kleinschalige projecten met inzet van voornamelijk vrijwilligers met een grote persoonlijke betrokkenheid”. De tweede route loopt via de mens-clausule: “Projecten met betrekking tot mensen kunnen ten goede komen aan lichamelijk, geestelijk of economisch zwakkere mensen of groepen” — zorgboerderij- of dagbestedingsactiviteit op het landgoed, aangevraagd door de zorg- of welzijnsorganisatie, met het landgoed als locatiepost. Beperkingen: “De begunstigde dient (bij voorkeur) een in Nederland gevestigde rechtspersoon te zijn” (met KvK-uittreksel en statuten), en personeelskosten vallen af — dus vooral materiaal en aanleg.",
+    "partnertype": "Een vrijwilligers- of soortenbeschermingsorganisatie (vogelwerkgroep, RAVON-groep, IVN-afdeling) of een zorg-/welzijnsorganisatie die op het landgoed werkt; als de eigenaar een stichting of B.V. is kan hij ook zelf aanvragen."
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "Het volledige meerjarig beleidsplan 2025-2030 is niet als document gepubliceerd — alleen vier hoofdlijnen op de website.",
+    "Geen jaarverslag over 2024 of 2025 online: “Het jaarverslag en de cijfers over 2024 zullen zo snel mogelijk na goedkeuring door het bestuur op deze website worden gepubliceerd.”",
+    "Geen lijst met gehonoreerde projecten gepubliceerd, dus geen precedent te toetsen.",
+    "Geen minimum- of maximumbedrag per aanvraag gepubliceerd.",
+    "De pagina /aanvragen/ gaf 404 op de ophaaldatum (buiten de openstellingsperiode)."
+  ]
+}

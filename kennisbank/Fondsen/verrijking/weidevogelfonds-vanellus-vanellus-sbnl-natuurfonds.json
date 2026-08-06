@@ -1,0 +1,39 @@
+{
+  "naam": "Weidevogelfonds Vanellus Vanellus (SBNL Natuurfonds)",
+  "bronnen": [
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://www.sbnlnatuurfonds.nl/weidevogelbeheer",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "'Bijdragen aan de bescherming en versterking van de positie van de Nederlandse akker- en weidevogels.'",
+  "benaderbaarheid": "open",
+  "benaderwijze_notitie": "'Particulieren of groepen particulieren kunnen een projectvoorstel indienen'; aanvraagperiode 1 juli tot 1 september 2026 voor uitvoering in 2027.",
+  "aanvrager_type": "beide",
+  "geo_niveau": "landelijk",
+  "geo_waarden": [
+    "Nederland"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": null,
+  "cofinanciering_vereist": false,
+  "uitsluitingen": [],
+  "kostensoort": [
+    "investering",
+    "regulier_onderhoud",
+    "onderzoek"
+  ],
+  "landgoed_relevantie": {
+    "route": "zelf",
+    "onderbouwing": "Het fonds staat uitdrukkelijk open voor 'particulieren of groepen particulieren' - ongebruikelijk gunstig voor een particuliere landgoedeigenaar - en beoordeelt op 'het effect op weidevogelhabitats'. Een landgoed met graslanden of akkers kan zelf een plan indienen voor plas-drasplekken, kruidenrijk grasland, predatiebeheer of maaibeheer.",
+    "partnertype": null
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "bedragen (minimum/maximum) - staan mogelijk in het criteriadocument op de aanvraagpagina, die pas vanaf 1 juli open is",
+    "uitsluitingen"
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "naam": "Cultuurfonds voor Monumenten / Cultuurfonds-Hypotheek",
+  "bronnen": [
+    {"soort": "aanvraagvoorwaarden", "url": "https://www.restauratiefonds.nl/particulier/financieren/alle-financieringen/cultuurfonds-hypotheek", "jaar": 2026, "gelezen": true},
+    {"soort": "website", "url": "https://www.cultuurfonds.nl/monumentenzorg", "jaar": 2026, "gelezen": true},
+    {"soort": "aanvraagvoorwaarden", "url": "https://www.cultuurfonds.nl/aanvragen/voorwaarden", "jaar": 2026, "gelezen": true}
+  ],
+  "doelstelling": "Een lening met een lage rente voor 'niet-rijksmonumenten' - gemeentelijke en provinciale monumenten en karakteristieke/beeldbepalende panden - ten behoeve van restauratie, herbestemming en verduurzaming. Het Cultuurfonds voor Monumenten is een revolverend fonds van het Cultuurfonds samen met negen provincies, uitgevoerd door het Nationaal Restauratiefonds.",
+  "benaderbaarheid": "open",
+  "benaderwijze_notitie": "\"Bent u eigenaar van een gemeentelijk of provinciaal monument ... dan komt u mogelijk in aanmerking voor een Cultuurfonds-hypotheek\"; aanvraag via een achtstappenprocedure online bij het Restauratiefonds. Wel met drempel per provincie: beschikbaar in Friesland, Overijssel en Noord-Brabant; \"niet beschikbaar\" in Groningen, Gelderland, Utrecht, Noord-Holland, Zuid-Holland en Zeeland omdat de vraag het beschikbare budget overtreft.",
+  "aanvrager_type": "landgoedeigenaar",
+  "geo_niveau": "provincie",
+  "geo_waarden": ["Groningen", "Friesland", "Overijssel", "Gelderland", "Utrecht", "Zuid-Holland", "Noord-Brabant", "Noord-Holland", "Zeeland"],
+  "bedrag_min": 10000,
+  "bedrag_max": 200000,
+  "bedrag_indicatie": "Lening van minimaal EUR 10.000 tot maximaal EUR 200.000, looptijd maximaal 30 jaar, rente 4,5% onder marktrente met een minimum van 1,5% (ten tijde van raadplegen 1,5%, 30 jaar vast), minimale maandtermijn EUR 100. Dit is een lening, geen gift.",
+  "cofinanciering_vereist": false,
+  "uitsluitingen": [
+    "rijksmonumenten (die vallen onder andere Restauratiefonds-producten)",
+    "werk dat al is gestart: de eigenaar mag nog niet met de werkzaamheden zijn begonnen",
+    "monumenten in eigendom van de overheid",
+    "panden die alleen via gebiedsbescherming (beschermd stads- of dorpsgezicht) beschermd zijn zonder eigen monumentale of beeldbepalende aanwijzing",
+    "provincies waar op dat moment onvoldoende fondsruimte is",
+    "lening is niet overdraagbaar aan een volgende eigenaar",
+    "bij de giftenkant van het Cultuurfonds: projecten die primair religieus, sociaal-maatschappelijk of politiek zijn, reguliere organisatie-activiteiten, en projecten met uitsluitend fondsenwerving als doel"
+  ],
+  "kostensoort": ["investering", "restauratie"],
+  "landgoed_relevantie": {
+    "route": "zelf",
+    "onderbouwing": "Een landgoedeigenaar met een gemeentelijk of provinciaal monument, een karakteristiek pand aangewezen in een ruimtelijk plan of ander lokaal beschermd erfgoed kan zelf een Cultuurfonds-hypotheek aanvragen: \"Eigenaren van een monument die restauratie, herbestemming en/of verduurzaming willen uitvoeren en nog niet met de werkzaamheden zijn begonnen.\" Dit is bij uitstek relevant voor de vele landgoedopstallen (koetshuizen, boerderijen, oranjerieën, tuinmanswoningen) die geen rijksmonument maar wel gemeentelijk monument of karakteristiek pand zijn. Let op: het is een lening, geen subsidie, en per provincie kan het loket dicht zijn.",
+    "partnertype": null
+  },
+  "onderliggende_fondsen": [
+    {"naam": "Cultuurfonds voor Monumenten Friesland", "relevant": true, "reden": "provinciaal revolverend fonds, ten tijde van raadplegen beschikbaar"},
+    {"naam": "Cultuurfonds voor Monumenten Overijssel", "relevant": true, "reden": "beschikbaar"},
+    {"naam": "Cultuurfonds voor Monumenten Noord-Brabant", "relevant": true, "reden": "beschikbaar"},
+    {"naam": "Cultuurfonds voor Monumenten Groningen", "relevant": true, "reden": "bestaat, maar loket ten tijde van raadplegen dicht wegens overvraag"},
+    {"naam": "Cultuurfonds voor Monumenten Gelderland", "relevant": true, "reden": "bestaat, loket dicht wegens overvraag"},
+    {"naam": "Cultuurfonds voor Monumenten Utrecht", "relevant": true, "reden": "bestaat, loket dicht wegens overvraag"},
+    {"naam": "Cultuurfonds voor Monumenten Noord-Holland", "relevant": true, "reden": "bestaat, loket dicht wegens overvraag"},
+    {"naam": "Cultuurfonds voor Monumenten Zuid-Holland", "relevant": true, "reden": "bestaat, loket dicht wegens overvraag"},
+    {"naam": "Cultuurfonds voor Monumenten Zeeland", "relevant": true, "reden": "bestaat, loket dicht wegens overvraag"},
+    {"naam": "Drents Monumentenfonds", "relevant": true, "reden": "Drenthe doet niet mee aan het Cultuurfonds voor Monumenten en heeft dit eigen fonds; apart verrijkt"}
+  ],
+  "niet_gevonden": [
+    "Een eigen pagina cultuurfonds.nl/cultuurfonds-voor-monumenten - die URL geeft 404; het product wordt beschreven op restauratiefonds.nl",
+    "Exacte openstellingsdata/deadlines per provinciaal fonds - niet gepubliceerd; beschikbaarheid wordt per provincie op de Restauratiefonds-pagina getoond en wisselt",
+    "Rentetarief-historie en actuele fondsruimte per provincie in cijfers - niet gepubliceerd"
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "naam": "Stichting Vrienden van de Leidse Hortus",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://hortusleiden.nl/steun-de-hortus/de-stichting",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "anbi_publicatie",
+      "url": "https://fondseninnederland.nl/fonds/stichting-vrienden-van-de-leidse-hortus",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "Het steunen van 'de oudste botanische tuin van Nederland', de Hortus botanicus Leiden, zodat die 'kan blijven groeien en bloeien' en haar kennis en collecties kan inzetten 'voor mens en natuur, nu en in de toekomst'.",
+  "benaderbaarheid": "gesloten",
+  "benaderwijze_notitie": "Er is geen aanvraagroute gepubliceerd: de pagina beschrijft uitsluitend hoe men aan de Hortus kan schenken (Vriendschappen, adoptie van bomen en banken, giften, Fondsen op Naam vanaf EUR 100.000, nalatenschappen). Het is een steunstichting met een enkele begunstigde, geen uitkerend fonds voor derden.",
+  "aanvrager_type": "nvt",
+  "geo_niveau": "plaats",
+  "geo_waarden": [
+    "Leiden"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": "Fonds op Naam vanaf EUR 100.000 (schenkingszijde, niet uitkeringszijde)",
+  "cofinanciering_vereist": false,
+  "uitsluitingen": [
+    "alles buiten de Hortus botanicus Leiden zelf"
+  ],
+  "kostensoort": [
+    "investering",
+    "regulier_onderhoud"
+  ],
+  "landgoed_relevantie": {
+    "route": "niet_relevant",
+    "onderbouwing": "Het is een steunstichting met precies een begunstigde: de Hortus botanicus Leiden. Alle gepubliceerde informatie gaat over schenken aan de Hortus; er bestaat geen aanvraagloket en geen doelstelling die buiten de tuin reikt. Er is geen denkbare route naar een landgoed.",
+    "partnertype": null
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "een aanvraagprocedure - die bestaat niet; gezocht op de FIN-pagina en de eigen pagina bij hortusleiden.nl",
+    "de jaarrekening 2024 (PDF via FIN) is niet uitgelezen"
+  ]
+}

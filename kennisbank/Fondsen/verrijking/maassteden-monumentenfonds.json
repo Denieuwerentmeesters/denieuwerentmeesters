@@ -1,0 +1,41 @@
+{
+  "naam": "Maassteden Monumentenfonds",
+  "bronnen": [
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://www.restauratiefonds.nl/zakelijk/financieren/alle-zakelijke-financieringen/maassteden-monumentenfonds-hypotheek-schiedam",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "\"Het Maassteden Monumentenfonds is een samenwerking tussen Fonds Schiedam Vlaardingen e.o. en het Nationaal Restauratiefonds met als doel maatschappelijk relevante monumentale panden te behouden.\" \"Het Maassteden Monumentenfonds is met name bedoeld om herbestemmingsprojecten mogelijk te maken, waardoor de panden behouden blijven voor de gemeenschap en een nieuwe toekomst tegemoet gaan.\"",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "\"Neem contact op met het Maassteden Monumentenfonds voordat u een financiering bij ons aanvraagt. Zij bepalen de hoogte van de lening.\" Fonds Schiedam Vlaardingen e.o. stelt de subsidiabele kosten vooraf vast.",
+  "aanvrager_type": "beide",
+  "geo_niveau": "gemeente",
+  "geo_waarden": [
+    "Schiedam",
+    "Vlaardingen",
+    "Maassluis"
+  ],
+  "bedrag_min": 10000,
+  "bedrag_max": 1000000,
+  "bedrag_indicatie": "\"Het minimale leningsbedrag is 10.000 euro. Het maximale bedrag is 1.000.000 euro per organisatie en/of natuurlijk persoon/personen; voor stadsherstel Maassteden geldt dit maximum niet.\"",
+  "cofinanciering_vereist": false,
+  "uitsluitingen": [
+    "panden waarvan de uiteindelijke gebruikersfunctie hoofdzakelijk (meer dan de helft) bewoning is, tenzij groot maatschappelijk belang",
+    "overheidseigendom",
+    "bij rijksmonumenten: restauratie- en verduurzamingskosten (alleen herbestemmingskosten financierbaar)"
+  ],
+  "kostensoort": [
+    "investering",
+    "restauratie"
+  ],
+  "landgoed_relevantie": {
+    "route": "zelf",
+    "onderbouwing": "Geografisch zeer smal (Schiedam, Vlaardingen, Maassluis) maar inhoudelijk goed passend bij landgoed-herbestemming: \"U kunt een lening aanvragen als natuurlijk persoon, stichting of andere privaatrechtelijk rechtspersoon\". Voor een landgoed in dit gebied (bv. buitenplaatsen langs de Maas) een reele route; daarbuiten niet.",
+    "partnertype": null
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": []
+}

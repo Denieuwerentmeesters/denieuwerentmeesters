@@ -1,0 +1,45 @@
+{
+  "doelstelling": "Projecten op het gebied van beeldhouwkunst en moderne dans, met een voorkeur voor talentontwikkeling van vrouwelijke kunstenaars.",
+  "aanvrager_type": "derde_partij",
+  "kostensoort": [
+    "investering"
+  ],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Beeldhouwkunst is de aanknoping: landgoederen en buitenplaatsen zijn een gangbare plek voor beeldententoonstellingen en opdrachten voor buitenbeelden. De aanvrager moet echter een vrouwelijke beeldhouwer, danser of choreograaf zijn; het landgoed kan alleen als locatiepartner meedoen.",
+    "partnertype": "vrouwelijke beeldhouwer of choreograaf, of een beeldententoonstellingsorganisatie"
+  },
+  "niet_gevonden": [
+    "bedragen, deadlines en formele criteria"
+  ],
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://www.cultuurfonds.nl/fondsen/pruijt-prins-beeld-en-dansfonds",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://www.cultuurfonds.nl/aanvragen",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "naam": "Pruijt Prins Beeld en Dansfonds (Cultuurfonds)",
+  "benaderbaarheid": "open",
+  "benaderwijze_notitie": "Fonds op naam van het Cultuurfonds; aanvragen via het openbare portaal aanvragen.cultuurfonds.nl. \"Het Cultuurfonds dekt de kosten van projecten altijd gedeeltelijk.\"",
+  "geo_niveau": "landelijk",
+  "geo_waarden": [
+    "Nederland"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": "Geen eigen bedragen gepubliceerd; algemene Cultuurfonds-maxima lopen van EUR 1.500 tot EUR 50.000 per route, met 25-50% dekking.",
+  "cofinanciering_vereist": true,
+  "uitsluitingen": [
+    "projecten die binnen 4-6 weken na aanvraag starten",
+    "publicaties met een oplage onder 1.000 (landelijk) of 750 (regionaal) exemplaren"
+  ],
+  "onderliggende_fondsen": []
+}

@@ -1,0 +1,86 @@
+{
+ "naam": "Bouwfonds Cultuurfonds (BPD)",
+ "bronnen": [
+  {
+   "soort": "aanvraagvoorwaarden",
+   "url": "https://www.bpdcultuurfonds.nl/media/push34vj/bpd-cultuurfonds_reglement-2025_2026.pdf",
+   "jaar": 2025,
+   "gelezen": true
+  },
+  {
+   "soort": "aanvraagvoorwaarden",
+   "url": "https://www.bpdcultuurfonds.nl/voorwaarden",
+   "jaar": 2026,
+   "gelezen": true
+  },
+  {
+   "soort": "website",
+   "url": "https://www.bpdcultuurfonds.nl/over-bpd-cultuurfonds",
+   "jaar": 2026,
+   "gelezen": true
+  },
+  {
+   "soort": "website",
+   "url": "https://www.bpdcultuurfonds.nl/aanvraag-indienen",
+   "jaar": 2026,
+   "gelezen": true
+  }
+ ],
+ "doelstelling": "BPD Cultuurfonds levert een bijdrage aan de kwaliteit en de beleving van de openbare ruimte in Nederland. We ondersteunen kunst- en cultuurprojecten die raakvlakken hebben met architectuur, bouwen, de gebouwde omgeving, stedelijke ontwikkeling, gebiedsontwikkeling, maatschappelijke vraagstukken, natuur & landschap en kunst in de openbare ruimte.",
+ "benaderbaarheid": "open_met_drempel",
+ "benaderwijze_notitie": "\"Voor het aanvragen van een sponsorbijdrage komen in aanmerking: publiekrechtelijke lichamen en privaatrechtelijke rechtspersonen, bijvoorbeeld: provincies, gemeenten, stichtingen en verenigingen\" en \"Uitgesloten van aanvragen van een sponsorbijdrage zijn natuurlijke personen (individuen).\" Bovendien: \"Het contact zoeken (op welke wijze dan ook) met (leden van) het bestuur voorafgaande aan de aanvraag of naar aanleiding van de beoordeling van het project is niet toegestaan, op straffe van volledige uitsluiting.\"",
+ "aanvrager_type": "derde_partij",
+ "geo_niveau": "landelijk",
+ "geo_waarden": [
+  "Nederland"
+ ],
+ "bedrag_min": null,
+ "bedrag_max": 70000,
+ "bedrag_indicatie": "Voor een project of onderdeel van een project kan in beginsel maximaal een bedrag van EUR 70.000,- exclusief btw worden aangevraagd.",
+ "cofinanciering_vereist": true,
+ "uitsluitingen": [
+  "Natuurlijke personen (individuen) en organisaties met een winstoogmerk",
+  "Verenigingen van eigenaren, huurdersverenigingen, winkeliersverenigingen, woningbouwverenigingen en woningbouwcorporaties",
+  "(Regulier) onderhoud van bestaande objecten (o.a. bruggen, gebouwen, monumenten, architectonische objecten)",
+  "(Regulier) onderhoud van monumenten waar professionele organisaties voor monumentenbehoud in voorzien",
+  "(Regulier) onderhoud van natuur-, landschap- en milieugerelateerde projecten waar professionele organisaties voor natuurbehoud in voorzien",
+  "Projecten die bijdragen aan lopende en/of exploitatiekosten",
+  "Honoraria van de Aanvrager(s)",
+  "Projecten in relatie tot vastgoed in privebezit, met een primaire functie als permanente woonbestemming",
+  "Louter openstellingen van monumenten en historische gebouwen",
+  "Onderzoeken, waaronder studies, vooronderzoeken, haalbaarheidsonderzoeken, ontwikkelingstrajecten, masterplannen, vergunningstrajecten",
+  "Molens",
+  "Mobiel erfgoed (o.a. rijtuigen, auto's, motoren, bussen, trams, treinen, boten, schepen, vliegtuigen)",
+  "Aanschaf kunstobjecten of archeologische objecten voor musea, erfgoedinstellingen, archieven",
+  "Aanschaf facilitaire zaken zoals (geluids)apparatuur, elektra, liften, sanitair, verlichting, tekstborden, routing",
+  "Amateurkunst",
+  "Begraafplaatsen en daaraan gelieerde activiteiten en/of gebouwen",
+  "Projecten in relatie tot buurthuizen, buurtcentra, wijkgebouwen, multifunctionele centra, verenigingsruimten",
+  "Podiumkunsten en samenhangende activiteiten zoals decorontwerp",
+  "Theatrale wandelingen, kunst- en cultuurwandelingen, optochten, parades, fietstochten, bustours",
+  "Projecten met een politiek, sociaal-cultureel of voornamelijk religieus karakter",
+  "Projecten met een duidelijke link met sport, gezondheidszorg en/of onderwijs",
+  "Projecten die op het moment van beoordeling in een vergevorderd stadium verkeren",
+  "Projecten waarbij een culturele functie wordt gecombineerd met een commerciele functie",
+  "Prijsvragen, prijsuitreikingen; louter (media)campagnes; congressen en symposia; louter lezingen, talkshows, podcasts, audiotours, apps, games",
+  "(Digitale) tijdschriften en periodieken; handboeken, handleidingen, instructieboeken",
+  "Realisatie/exploitatie van museumwinkels, museumcafes, horecavoorzieningen",
+  "Muziekkoepels en muziekinstrumenten (waaronder kerkorgels en carillons)"
+ ],
+ "kostensoort": [
+  "investering",
+  "restauratie"
+ ],
+ "landgoed_relevantie": {
+  "route": "via_partner",
+  "onderbouwing": "De werkterreinen sluiten inhoudelijk goed aan bij een landgoed: \"Bouwen (o.a. verbouw, herbestemming, renovatie, restauratie, herinrichting)\", \"Natuur & Landschap\" en \"Kunstwerk(en) in de (semi-)openbare ruimte\". Maar de eigenaar kan niet zelf aanvragen (\"Uitgesloten van aanvragen van een sponsorbijdrage zijn natuurlijke personen (individuen)\", \"De Aanvrager dient een instantie te zijn zonder winstoogmerk\") en het landgoed als woonhuis is uitgesloten (\"Projecten in relatie tot vastgoed in privebezit, met een primaire functie als permanente woonbestemming\"). De route loopt dus via een stichting/vereniging zonder winstoogmerk met een publiek toegankelijk kunst- of cultuurproject op het landgoed - denk aan een buitenkunsttentoonstelling of de herbestemming/restauratie van een bijgebouw met culturele kernactiviteit. Het fonds noemt zelf dat het \"een rol [speelt] in herbestemming en instandhouding van monumenten\". Regulier onderhoud moet dan wel herkaderd worden naar restauratie of herbestemming binnen een cultureel project: \"(Regulier) onderhoud van bestaande objecten\" is expliciet uitgesloten, terwijl \"restauratie\" onder werkterrein 'Bouwen' juist wel wordt genoemd.",
+  "partnertype": "Een Nederlandse stichting of vereniging zonder winstoogmerk (culturele instelling, erfgoedstichting, kunstorganisatie of een aparte landgoedstichting), niet zijnde een VvE of woningbouwcorporatie."
+ },
+ "niet_gevonden": [
+  "Het fonds staat NIET op fondseninnederland.nl (volledige FIN-lijst van 342 fondsen doorlopen op 2026-08-05).",
+  "Aparte ANBI-publicatie of jaarverslag op bpdcultuurfonds.nl: /anbi en /over-ons bestaan niet; de sitemap kent alleen /over-bpd-cultuurfonds, /voorwaarden, /aanvraag-indienen, /projecten, /actueel.",
+  "Minimumbedrag wordt niet gepubliceerd.",
+  "Naamverschil met de catalogus: bronlijst zegt 'Bouwfonds Cultuurfonds (BPD)', het fonds zelf 'BPD Cultuurfonds (Stichting BPD Cultuurfonds, voorheen Bouwfonds Cultuurfonds)'. Naam gelijkgetrokken om te kunnen koppelen; de actuele naam staat in naam_actueel."
+ ],
+ "naam_actueel": "BPD Cultuurfonds (Stichting BPD Cultuurfonds, voorheen Bouwfonds Cultuurfonds)"
+}

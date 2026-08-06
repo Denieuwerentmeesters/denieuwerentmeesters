@@ -1,0 +1,42 @@
+{
+  "naam": "Spiering Fonds (Spieringfonds), bestemmingsfonds bij Geldersch Landschap & Kasteelen",
+  "bronnen": [
+    {
+      "soort": "jaarverslag",
+      "url": "https://static.cbf.nl/documents/Geldersch%20Landschap%20&%20Kasteelen/2024/jaarverslag.pdf",
+      "jaar": 2024,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "\"Het vermogen dient te worden aangewend voor aankoop van historische landgoederen, cultuur- en bosgronden, alsmede herstel van landgoedkernen en buitenplaatsen.\"",
+  "benaderbaarheid": "gesloten",
+  "benaderwijze_notitie": "\"Het bestuur heeft in 2019 besloten om de stichting te ontbinden. Het liquiditeitssaldo is verdeeld onder de drie beneficiënten, waaronder de Stichting.\" De zelfstandige stichting bestaat dus niet meer; wat resteert is een bestemmingsfonds binnen de jaarrekening van Geldersch Landschap & Kasteelen, zonder aanvraagprocedure.",
+  "aanvrager_type": "nvt",
+  "geo_niveau": "provincie",
+  "geo_waarden": [
+    "Gelderland"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": "Stand per 31 december 2024: € 1.286.300 (per 1 januari 2024 € 1.505.800; onttrekking boekjaar € 219.500).",
+  "cofinanciering_vereist": null,
+  "uitsluitingen": [
+    "besteding buiten de testamentaire bestemming (aankoop historische landgoederen, cultuur- en bosgronden, herstel landgoedkernen en buitenplaatsen)",
+    "besteding buiten het werkgebied en de eigen doelen van Geldersch Landschap & Kasteelen"
+  ],
+  "kostensoort": [
+    "investering",
+    "restauratie"
+  ],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "De bestemmingsclausule is letterlijk landgoed-gericht en zeldzaam expliciet: \"Het vermogen dient te worden aangewend voor aankoop van historische landgoederen, cultuur- en bosgronden, alsmede herstel van landgoedkernen en buitenplaatsen.\" Met € 1,29 miljoen is dit bovendien een substantieel bedrag. Maar het geld ligt in de boeken van Geldersch Landschap & Kasteelen en de oorspronkelijke stichting is ontbonden; er is geen loket. De route voor een Gelders landgoed loopt via GLK zelf: een verwerving, gedeeltelijke overdracht, grondruil of gezamenlijk herstelproject van een landgoedkern of buitenplaats waarbij GLK partij wordt. Twee van de drie beneficiënten van de ontbonden stichting zijn niet in het verslag genoemd — mogelijk zijn dat andere landschaps-/erfgoedorganisaties met eenzelfde bestemmingsclausule.",
+    "partnertype": "Geldersch Landschap & Kasteelen (Stichting Het Geldersch Landschap / Stichting Vrienden der Geldersche Kasteelen)"
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "wie de andere twee beneficiënten van de ontbonden Stichting Spieringfonds zijn — het jaarverslag noemt alleen 'de drie beneficiënten, waaronder de Stichting'",
+    "een aanvraagprocedure of criteria — die bestaan niet meer sinds de ontbinding in 2019",
+    "de volledige testamentaire tekst van mevrouw Spiering (1969)"
+  ]
+}

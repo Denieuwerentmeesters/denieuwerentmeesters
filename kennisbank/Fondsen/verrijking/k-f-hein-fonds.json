@@ -1,0 +1,44 @@
+{
+  "naam": "K.F. Hein Fonds",
+  "bronnen": [
+    {"soort": "website", "url": "https://kfhein.nl/wat-doen-wij/monumenten", "jaar": 2026, "gelezen": true},
+    {"soort": "beleidsplan", "url": "https://kfhein.nl/het-fonds/visie-en-beleid", "jaar": 2026, "gelezen": true},
+    {"soort": "website", "url": "https://kfhein.nl/wat-doen-wij/voor-initiatieven", "jaar": 2026, "gelezen": true}
+  ],
+  "doelstelling": "\"Het K.F. Hein Fonds steunt goede doelen in de provincie Utrecht. Op het gebied van monumentenzorg, natuur en duurzaamheid, cultuur en volksontwikkeling, podiumkunsten, volksgezondheid en sociaal-maatschappelijke projecten. Dit doen we door geld te geven of door garant te staan voor een tekort. Heel af en toe steunen we ook projecten buiten de provincie. Dat doen we als die heel bijzonder zijn en van nationale betekenis.\" En: \"Wij maken de regio Utrecht graag mooier en sterker. We geven inwoners graag de kans om verder te komen.\"",
+  "benaderbaarheid": "open",
+  "benaderwijze_notitie": "\"Financiële ondersteuning vraag je altijd aan via ons digitale aanvraagsysteem. Doe je voor het eerst een aanvraag? Maak dan eerst een account aan.\" \"Aanvragen behandelen wij op volgorde van binnenkomst.\" Uitdrukkelijk toegankelijk vooraf: \"We zijn altijd toegankelijk. We denken graag mee met onze aanvragers en staan open voor overleg. Bijvoorbeeld tijdens ons spreekuur.\" \"Voor initiatiefnemers van projecten hebben wij spreekuur op afspraak.\"",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "provincie",
+  "geo_waarden": ["Utrecht (provincie)", "nadruk op stad en regio Utrecht"],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": "Geen bedragen gepubliceerd. Wel: \"Bij projectondersteuning kun je een voorschot vragen van maximaal 50% van het toegezegde bedrag\" en de gift wordt pas uitbetaald \"nadat je het project volgens plan en met succes hebt uitgevoerd\". Het fonds kan ook \"garant staan voor een tekort\" in plaats van geld geven.",
+  "cofinanciering_vereist": false,
+  "uitsluitingen": [
+    "Aanvragen van particulieren voor projecten: alleen \"Stichtingen, verenigingen en uitgevers: voor projecten\" (particulieren alleen voor studiebeurzen en buurtinitiatieven)",
+    "Restauraties van monumenten die niet publiek toegankelijk zijn: \"Het is dan belangrijk dat het monument voor een breed publiek toegankelijk is.\"",
+    "Projecten buiten de provincie Utrecht, behoudens uitzondering: \"Heel af en toe steunen we ook projecten buiten de provincie. Dat doen we als die heel bijzonder zijn en van nationale betekenis.\"",
+    "Aanvragen die niet aan de eisen voldoen worden 'niet ontvankelijk' verklaard en niet behandeld",
+    "De regeling 'Vier je Vrijwilliger' is per 24 maart 2026 gesloten"
+  ],
+  "kostensoort": ["restauratie", "investering"],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Inhoudelijk sterk passend: het fonds noemt \"monumentenzorg\" én \"natuur en duurzaamheid\" als aandachtsgebieden en zegt expliciet \"Wil je een rijksmonument laten restaureren? Dan kun je hiervoor een financiële bijdrage aanvragen\" en \"Het K.F. Hein Fonds ondersteunt regelmatig restauraties van monumenten in de provincie Utrecht met een financiële bijdrage.\" Voor een Utrechts landgoed met rijksmonumentale opstallen is dat direct raak. Twee harde randvoorwaarden maken de route echter indirect: (1) rechtsvorm — \"Stichtingen, verenigingen en uitgevers: voor projecten\", particulieren kunnen alleen voor studiebeurzen en buurtinitiatieven aanvragen, dus een landgoed in privébezit, BV of maatschap moet via een stichting; (2) publieke toegankelijkheid — \"Het is dan belangrijk dat het monument voor een breed publiek toegankelijk is.\" Daarnaast is er een tweede spoor via natuur: \"Met het Elise Mathilde Fonds en het Cultuurfonds Utrecht geven we via KIEM geld aan natuurprojecten\" (KIEM Utrecht is het gezamenlijke loket voor natuurinitiatieven). Let ook op de eigen vastgoedtak: het K.F. Hein Fonds Monumenten koopt zelf monumenten aan, restaureert en verhuurt ze — bij een landgoedpand dat te zwaar is om zelf te dragen is dat een denkbare gesprekspartner in plaats van een subsidiegever.",
+    "partnertype": "Stichting of vereniging (bv. een eigen stichting tot behoud van het landgoed, een monumenten- of natuurstichting); voor kerkgebouwen ook kerkorganisaties. Het monument moet publiek toegankelijk zijn."
+  },
+  "onderliggende_fondsen": [
+    {"naam": "Stichting K.F. Hein Fonds Monumenten", "relevant": true, "reden": "Dochterstichting sinds 1996. \"Het doel van dit fonds is om monumenten en beeldbepalende panden in de regio Utrecht aan te kopen, te restaureren en waar dat kan te verhuren aan instellingen die werken binnen de aandachtsgebieden van het K.F. Hein Fonds.\" Geen subsidieloket maar een eigenaar/exploitant — een mogelijke overname- of samenwerkingspartner voor een onhoudbaar monumentaal pand. Werkt met meerjarenonderhoudsplannen, Monumentenwacht Utrecht en de Utrechtse Maatschappij voor Stadsherstel."},
+    {"naam": "KIEM (samen met Elise Mathilde Fonds en Cultuurfonds Utrecht)", "relevant": true, "reden": "Gezamenlijk loket voor natuurinitiatieven in Utrecht: \"Met het Elise Mathilde Fonds en het Cultuurfonds Utrecht geven we via KIEM geld aan natuurprojecten.\" Dit is de route voor natuur- en landschapsvragen op een Utrechts landgoed. Verdient aparte verrijking (www.kiemutrecht.nl)."},
+    {"naam": "Commissie K.F. Hein Fonds Studie en Individuele Noden", "relevant": false, "reden": "Studiebeurzen en individuele noden; \"Alleen organisaties voor maatschappelijk werk kunnen een aanvraag doen voor individuele noden.\" Geen landgoedroute."},
+    {"naam": "Kunstcommissie / K.F. Hein Stipendium / Kunstparticipatieproject", "relevant": false, "reden": "Gericht op individuele kunstenaars uit de provincie Utrecht en kunstopdrachten; wel worden \"kunstopdrachten op bijzondere plekken in de provincie\" begeleid, wat een landgoed als plek denkbaar maakt, maar het geld gaat naar de kunstenaar."}
+  ],
+  "niet_gevonden": [
+    "Bedragen (minimum, maximum, gemiddelde gift, jaarbudget): nergens op de site gepubliceerd.",
+    "Deadlines: niet gepubliceerd; wel 'op volgorde van binnenkomst' en commissies die vier keer per jaar vergaderen.",
+    "Een expliciete uitsluitingslijst per regeling: de site verwijst daarvoor naar de pagina's 'wat doen wij' per regeling, die niet allemaal zijn uitgelezen (de subpagina's Sociaal-maatschappelijk, Natuurbehoud en Buurtinitiatieven zijn niet opgehaald).",
+    "Of regulier onderhoud (naast restauratie) van monumenten van derden subsidiabel is: de pagina spreekt alleen over restauraties; meerjarenonderhoudsplannen gelden voor het eigen bezit.",
+    "Of historische groenaanleg (parken, lanen, tuinen) onder 'monumentenzorg' of onder 'natuur' valt."
+  ]
+}

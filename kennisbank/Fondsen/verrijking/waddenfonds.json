@@ -1,0 +1,54 @@
+{
+  "naam": "Waddenfonds",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://waddenfonds.nl/",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://waddenfonds.nl/subsidie-aanvragen/",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "website",
+      "url": "https://waddenfonds.nl/themas/werelderfgoed-cultuurhistorie-en-landschapsontwikkeling/",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "\"Wij investeren in initiatieven en projecten die de ecologie en duurzame economische ontwikkeling van het Waddengebied versterken.\" Thema Werelderfgoed, cultuurhistorie en landschapsontwikkeling: \"Behouden en versterken van voor het Waddengebied typische cultuurhistorische- en landschappelijke elementen; Toevoegen van toekomstbestendige functies aan cultuurhistorisch erfgoed van het Waddengebied; Behouden en versterken van kernwaarden Waddengebied.\"",
+  "benaderbaarheid": "open",
+  "benaderwijze_notitie": "\"Inwoners, bedrijven en organisaties kunnen daarvoor bij ons een subsidie aanvragen.\" \"Het Waddenfonds is een Gemeenschappelijke Regeling en wordt bestuurd door de drie Waddenprovincies Noord-Holland, Fryslan en Groningen.\" Let op: dit is een publieke subsidieregeling, geen particulier vermogensfonds.",
+  "aanvrager_type": "beide",
+  "geo_niveau": "regio",
+  "geo_waarden": [
+    "Waddengebied (werkingsgebied Waddenfonds: delen van Noord-Holland, Fryslan en Groningen)"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": 1000000,
+  "bedrag_indicatie": "Drie regelingen: Budget Lokale Innovaties (BLI) \"Kleinschalige projecten... Looptijd 1 jaar... Max. EUR 50.000,- subsidie\"; STUW \"Passend bij thema's Waddenfonds... Bovenlokaal... Looptijd 3-5 jaar... Max. EUR 1.000.000,- subsidie\"; IKW \"Passend bij thema's IKW... Waddenbreed of mogelijkheid tot uitrol... Looptijd circa 5 jaar... Minstens EUR 500.000,- subsidie\". \"Het Waddenfonds verstrekt tot eind 2029 subsidies voor de drie onderstaande subsidieregelingen.\"",
+  "cofinanciering_vereist": true,
+  "uitsluitingen": [
+    "projecten buiten het werkingsgebied van het Waddenfonds",
+    "projecten die niet passen binnen de hoofddoelen en doelspecificaties"
+  ],
+  "kostensoort": [
+    "investering",
+    "restauratie",
+    "onderzoek"
+  ],
+  "landgoed_relevantie": {
+    "route": "zelf",
+    "onderbouwing": "Het thema WCL noemt letterlijk \"Toevoegen van toekomstbestendige functies aan cultuurhistorisch erfgoed van het Waddengebied\" - dat is herbestemming. Het fonds honoreert aantoonbaar dit type project: \"De historische boerderij Unia Zathe in Ee krijgt naast de B&B nu ook een theetuin en een educatieve belevingsruimte met aandacht voor cultuurhistorie, het landschap en traditionele ambachten. Het Waddenfonds ondersteunt het initiatief met een subsidie van ruim EUR 29.000,-.\" Voor landgoederen en states in het Waddengebied (Groningen, Fryslan, kop van Noord-Holland) een directe route; het BLI is de laagdrempelige ingang.",
+    "partnertype": null
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "Uitvoeringsprogramma 2024-2027 (PDF, hoofdstuk 4.2) niet uitgelezen",
+    "Exacte cofinancieringspercentages per regeling"
+  ]
+}

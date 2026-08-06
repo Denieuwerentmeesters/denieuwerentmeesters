@@ -1,0 +1,46 @@
+{
+  "naam": "Van der Mandele Stichting",
+  "bronnen": [
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://vandermandele.org/richtlijnen-giften.html",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "Financiele steun aan instellingen die op maatschappelijk, sociaal en cultureel gebied een positieve bijdrage leveren.",
+  "benaderbaarheid": "open",
+  "benaderwijze_notitie": "Gepubliceerde richtlijnen met open aanvraagroute; \"Aanvragen moeten 9 maanden vooraf ingediend worden\" en verantwoording via standaardformulier.",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "provincie",
+  "geo_waarden": [
+    "Zuid-Holland",
+    "Delft",
+    "Dordrecht",
+    "Leiden",
+    "Rotterdam"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": "Prioriteit voor projecten tot maximaal EUR 5.000; bedragen variabel afhankelijk van onderbouwing.",
+  "cofinanciering_vereist": null,
+  "uitsluitingen": [
+    "kosten van initiatieven of activiteiten die reeds hebben plaatsgevonden",
+    "exploitatieverliezen achteraf",
+    "vervolgaanvraag voor hetzelfde evenement binnen twee jaar"
+  ],
+  "kostensoort": [
+    "investering"
+  ],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Steun aan \"instellingen die op maatschappelijk, sociaal en cultureel gebied een positieve bijdrage leveren\", met eis van \"Open karakter en toegankelijk voor het bredere publiek\". Een publiek toegankelijk cultureel of maatschappelijk project op een Zuid-Hollands landgoed past daarbinnen; aanvrager moet een instelling zijn, bij voorkeur met ANBI.",
+    "partnertype": "culturele of maatschappelijke instelling met ANBI, gevestigd in Zuid-Holland"
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "expliciete uitsluitingslijst per thema",
+    "cofinancieringspercentage",
+    "of erfgoed/restauratie onder \"cultureel gebied\" valt"
+  ]
+}

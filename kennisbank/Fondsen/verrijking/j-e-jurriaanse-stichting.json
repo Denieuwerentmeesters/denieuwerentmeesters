@@ -1,0 +1,49 @@
+{
+  "naam": "J.E. Jurriaanse Stichting",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://www.volkskracht.nl/de-volkskracht-stichtingen/aangesloten-stichtingen/j-e-jurriaanse-stichting/",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "Ondersteunt projecten op gebieden die Jan Jurriaanse na aan het hart lagen: \"geschiedenis, letterkunde, archeologie, natuur, geografie, monumentenzorg of maatschappelijke ontwikkeling en emancipatie.\"",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "\"Online aanvraagapplicatie verplicht\", formulier in het Nederlands, \"minimaal 3 maanden voor projectstart of promotiedatum indienen\", behandeling 1 tot 3 maanden. Maximale bijdrage 50% van de projectfinanciering.",
+  "aanvrager_type": "beide",
+  "geo_niveau": "regio",
+  "geo_waarden": [
+    "Groot-Rotterdam (13 gemeenten, o.a. Rotterdam, Schiedam, Vlaardingen, Ridderkerk) voor maatschappelijke en culturele bijdragen",
+    "Nederland (landelijk) voor boeken, wetenschap en archeologie"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": "Geen bedragen gepubliceerd; wel: \"maximale bijdrage 50% van de projectfinanciering\". Bij proefschriften alleen drukkosten.",
+  "cofinanciering_vereist": true,
+  "uitsluitingen": [
+    "exploitatiekosten",
+    "uitwisselingsprogramma's",
+    "vertalingen uit het Engels",
+    "medische en juridische dissertaties",
+    "overige kosten bij proefschriften (alleen drukkosten)",
+    "maatschappelijke/culturele projecten buiten groot-Rotterdam"
+  ],
+  "kostensoort": [
+    "investering",
+    "restauratie",
+    "onderzoek"
+  ],
+  "landgoed_relevantie": {
+    "route": "zelf",
+    "onderbouwing": "De doelstelling noemt letterlijk \"geschiedenis, ... archeologie, natuur, geografie, monumentenzorg\" - vier van de zeven werkvelden raken de landgoedopgave direct. Voor een landgoed in de regio groot-Rotterdam kan dat een restauratie- of natuurproject zijn; landelijk is bovendien de route via boeken/wetenschap/archeologie open, waarmee een landgoedmonografie, archeologisch onderzoek op het terrein of een historische terreinstudie overal in Nederland aanvraagbaar is. Aanvraagformulier is open, dus route 'zelf'; wel geldt de harde uitsluiting van exploitatiekosten en de 50%-cofinancieringsgrens.",
+    "partnertype": null
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "Bedragrange of gemiddelde toekenning: niet gepubliceerd op de Volkskracht-pagina.",
+    "Of een particuliere landgoedeigenaar (natuurlijk persoon) kan aanvragen: de pagina noemt 'boekuitgaven, in bepaalde gevallen ook voor personen', maar geeft geen algemene uitspraak over rechtsvorm.",
+    "Een apart beleidsplan of jaarverslag van de J.E. Jurriaanse Stichting: niet gevonden; de ANBI-informatie loopt via volkskracht.nl.",
+    "Deadlines/vergaderdata: niet gepubliceerd."
+  ]
+}

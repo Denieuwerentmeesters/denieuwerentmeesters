@@ -1,0 +1,123 @@
+{
+  "naam": "Cultuurfonds Overijssel",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://www.cultuurfonds.nl/provinciale-afdelingen/overijssel",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://www.cultuurfonds.nl/aanvragen/voorwaarden",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "Provinciale afdeling van het Cultuurfonds: \"Het Cultuurfonds heeft in elke provincie een afdeling met een eigen bestuur. Die afdeling behandelt en beoordeelt de aanvragen van projecten met een regionaal belang\" op het gebied van cultuur en natuur.",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "\"Ik ben een stichting of vereniging op het gebied van cultuur of natuur en wil geld aanvragen voor mijn project.\" Verplichte vooraanvraag op vaste deadlines: \"Stuur je definitieve aanvraag altijd in voordat het project begint. De startdatum van het project moet daarnaast ook na de besluitdatum liggen.\" Plus minimale projectbegroting EUR 15.000 en maximaal een toekenning per boekjaar.",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "provincie",
+  "geo_waarden": [
+    "Overijssel"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": 10000,
+  "bedrag_indicatie": "Provinciale projecten: maximaal 25% van de kosten met een plafond van EUR 10.000. Minimale projectbegroting EUR 15.000. (Landelijke route: max 50%, EUR 35.000-50.000.) Eigen initiatief Music Support Overijssel: maximaal EUR 1.000 per artiest.",
+  "cofinanciering_vereist": true,
+  "uitsluitingen": [
+    "reguliere exploitatie- en structurele kosten (\"alleen voor projectkosten, niet voor exploitatie- of reguliere kantoorkosten\")",
+    "regulier onderhoud van accommodaties",
+    "aanleg van recreatieve infrastructuur zoals bruggen en paden (route Natuuraanleg)",
+    "projecten met een politieke of religieuze hoofddoelstelling",
+    "polariserende projecten",
+    "solotentoonstellingen van hedendaagse kunstenaars",
+    "tijdelijke apps en reguliere websites",
+    "artist-in-residence-programma's",
+    "album-/EP-opnames",
+    "projecten zonder culturele component die zich primair op zorg of zorgpreventie richten",
+    "projecten die uitsluitend fondsenwervend zijn",
+    "projecten die binnen de reguliere activiteiten van de organisatie vallen",
+    "projecten met een begroting onder EUR 15.000",
+    "projecten buiten Nederland"
+  ],
+  "kostensoort": [
+    "investering",
+    "restauratie",
+    "onderzoek"
+  ],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "De afdeling behandelt \"aanvragen van projecten met een regionaal belang\" van \"een stichting of vereniging op het gebied van cultuur of natuur\", waaronder monumentenzorg & erfgoed en natuur. Uit de toekenningen van het onderliggende Marke van Streukel / Marke van Berkum Fonds blijkt dat de afdeling daadwerkelijk landgoedwerk financiert: \"herbouw duiventil Landgoed De Horte, Dalfsen\" en \"aanleg Berceau-boogconstructie Landgoed de Eversberg\", beide via Stichting Landschap Overijssel. Route is via_partner omdat een landgoed in particulier eigendom of in een gewone B.V. niet aan de rechtsvormeis voldoet; alleen \"in het geval van historische buitenplaatsen mag het erfgoed ook in bezit zijn van een familie-B.V. die verbonden is aan de Natuurschoonwet\". Breuklijn: restauratie, herbouw en herbestemming wel, regulier onderhoud en exploitatie expliciet niet.",
+    "partnertype": "Stichting of vereniging met cultuur of natuur in de statutaire doelstelling en een onafhankelijk, breed samengesteld bestuur: Landschap Overijssel, een landgoed- of vriendenstichting, historische vereniging of erfgoedstichting. Bij een historische buitenplaats kan een NSW-familie-B.V. zelf aanvragen."
+  },
+  "onderliggende_fondsen": [
+    {
+      "naam": "Marke van Streukel / Marke van Berkum Fonds",
+      "relevant": true,
+      "reden": "\"natuurbehoud, (rechts)wetenschap en monumentenzorg\" in Overijssel; financierde aantoonbaar werk op Landgoed De Horte en Landgoed de Eversberg"
+    },
+    {
+      "naam": "Staargaard-Van Oostrom Meyjes Fonds",
+      "relevant": true,
+      "reden": "\"behoud van natuur en landschap, (water)molens, flora en fauna in de provincie Overijssel\" - dekt landschapsherstel en molens op een landgoed"
+    },
+    {
+      "naam": "Fonds Bodem voor hemel",
+      "relevant": true,
+      "reden": "kleinschalige groene projecten rond biodiversiteit en het begrip 'tuin', plus levend religieus erfgoed - raakt historische tuin en kapel/kerkje op een landgoed"
+    },
+    {
+      "naam": "Haersoltefonds Overijssel",
+      "relevant": true,
+      "reden": "educatie en talentontwikkeling op het gebied van podiumkunsten, beeldende kunst en natuur in Overijssel - route voor natuureducatie of een cultureel programma op een landgoed"
+    },
+    {
+      "naam": "Kouwelaar-Popma Fonds",
+      "relevant": true,
+      "reden": "natuureducatieprojecten in Overijssel - bruikbaar voor educatie op een landgoed"
+    },
+    {
+      "naam": "Fonds Kleine Culturele Initiatieven Provincie Overijssel (KCIPO)",
+      "relevant": true,
+      "reden": "kleinschalige culturele initiatieven; mogelijke route voor een klein programma op een landgoed onder de EUR 15.000-drempel"
+    },
+    {
+      "naam": "Chagall Fonds",
+      "relevant": false,
+      "reden": "beeldende kunst en muziek in Zwolle en omgeving"
+    },
+    {
+      "naam": "Feteris-Oosterbaan Fonds",
+      "relevant": false,
+      "reden": "muziekbeoefening"
+    },
+    {
+      "naam": "Fonds De Horsthoek",
+      "relevant": false,
+      "reden": "podiumkunsten voor jongeren"
+    },
+    {
+      "naam": "Henk Jan van den Berg Fonds",
+      "relevant": false,
+      "reden": "amateuristische muziekbeoefening"
+    },
+    {
+      "naam": "Herman Krop Fundatie",
+      "relevant": false,
+      "reden": "culturele projecten Zwolle e.o., geen erfgoed- of natuurfocus"
+    },
+    {
+      "naam": "Jan van Zeijst-Muziekstudiefonds voor Drenthe en Overijssel",
+      "relevant": false,
+      "reden": "klassieke muziekstudie"
+    }
+  ],
+  "niet_gevonden": [
+    "Provinciespecifieke maximumbedragen of afwijkende voorwaarden voor Overijssel: de afdelingspagina noemt alleen aanvragerstype, deadlines, initiatieven en fondsen op naam.",
+    "Beleidsplan of jaarverslag van de afdeling Overijssel afzonderlijk: niet aangetroffen op cultuurfonds.nl.",
+    "Volledige doelstellingstekst van het Staargaard-Van Oostrom Meyjes Fonds: op de afdelingspagina afgekapt.",
+    "Contactgegevens van de afdeling Overijssel (e-mail/telefoon): stonden niet in de opgehaalde paginatekst."
+  ]
+}

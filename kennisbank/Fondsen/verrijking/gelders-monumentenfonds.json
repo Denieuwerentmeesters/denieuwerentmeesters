@@ -1,0 +1,41 @@
+{
+  "naam": "Gelders Monumentenfonds",
+  "bronnen": [
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://www.restauratiefonds.nl/monumenteigenaren/financieringen/gelders-monumentenfonds",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "\"De Gelderse Monumentenfonds-hypotheek is een annuiteitenlening met een lage rente. U komt in aanmerking voor deze lening wanneer u eigenaar bent van een monument in de provincie Gelderland en kosten gaat maken voor het restaureren, herbestemmen of verduurzamen van uw monument.\" \"De provincie Gelderland vindt het belangrijk dat restauraties met kwaliteit en door vakmensen worden uitgevoerd.\"",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "\"Ga eerst langs uw gemeente. U vraagt de hypotheek aan nadat de subsidiabele kosten zijn vastgesteld door uw gemeente en voordat u begint met de werkzaamheden.\" En: \"Er is voldoende budget in het Gelders Monumentenfonds om u een Gelderse Monumentenfonds-hypotheek toe te kennen.\"",
+  "aanvrager_type": "beide",
+  "geo_niveau": "provincie",
+  "geo_waarden": [
+    "Gelderland"
+  ],
+  "bedrag_min": 25000,
+  "bedrag_max": 1000000,
+  "bedrag_indicatie": "\"Het minimale hypotheekbedrag is 25.000 euro en het maximale bedrag is 1.000.000 euro per aanvrager. Voor een VvE geldt maximaal 30.000 euro per appartementsrecht.\"",
+  "cofinanciering_vereist": false,
+  "uitsluitingen": [
+    "monumenten in overheidseigendom",
+    "werkzaamheden die al gestart zijn",
+    "kosten die niet vallen onder constructief herstel, behoud van monumentale waarde, herbestemming of energiebesparing (dus geen regulier onderhoud of exploitatie)"
+  ],
+  "kostensoort": [
+    "investering",
+    "restauratie"
+  ],
+  "landgoed_relevantie": {
+    "route": "zelf",
+    "onderbouwing": "Direct voor eigenaren: \"U bent eigenaar, of Vereniging van Eigenaren (VvE) van een rijksmonument of een gemeentelijk monument\" en \"Uw monument staat in de provincie Gelderland\". Gelderland is landgoedrijk; herbestemming van koetshuis/schuur en restauratie van het hoofdhuis vallen binnen de subsidiabele kosten.",
+    "partnertype": null
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "Voorwaardenboek-PDF niet apart uitgelezen"
+  ]
+}

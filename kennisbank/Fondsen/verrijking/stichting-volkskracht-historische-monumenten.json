@@ -1,0 +1,101 @@
+{
+  "naam": "Stichting Volkskracht Historische Monumenten",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://www.volkskracht.nl/de-volkskracht-stichtingen/aangesloten-stichtingen/stichting-volkskracht-historische-monumenten/",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://www.volkskracht.nl/aanvraag-indienen/",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "website",
+      "url": "https://www.skbl.nl/erfgoedfondsen/",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "Het aankopen, restaureren en instandhouden van monumenten die vallen onder de Monumentenwet. De stichting koopt alleen monumenten aan wanneer dit van essentieel belang is voor het behoud ervan.",
+  "benaderbaarheid": "gesloten",
+  "benaderwijze_notitie": "\"De stichting geeft geen subsidies. Sluit uw project wel aan bij de doelstelling van deze stichting? Vraag dan rechtstreeks subsidie aan bij de Stichting Bevordering van Volkskracht.\"",
+  "aanvrager_type": "nvt",
+  "geo_niveau": "regio",
+  "geo_waarden": [
+    "Rotterdam en agglomeratie"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": null,
+  "cofinanciering_vereist": null,
+  "uitsluitingen": [
+    "subsidies/giften in het algemeen — de stichting geeft geen subsidies, zij verwerft en beheert zelf monumenten",
+    "monumenten die ook zonder de stichting behouden kunnen blijven: \"Wanneer blijkt dat een gebouw ook zonder de stichting behouden kan blijven, trekt de stichting zich terug\"",
+    "monumenten zonder langdurige maatschappelijke gebruiksfunctie"
+  ],
+  "kostensoort": [
+    "investering",
+    "restauratie"
+  ],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Geen subsidieroute: \"De stichting geeft geen subsidies.\" Wel een reële route als redder-in-nood-eigenaar voor een monument in de regio Rotterdam: \"het aankopen, restaureren en instandhouden van monumenten die vallen onder de Monumentenwet (...) wanneer dit van essentieel belang is voor het behoud ervan\", mits \"het monument wordt gebruikt voor een maatschappelijke activiteit\" en \"de huurder/partner van het gebouw moet deze activiteit voor langere tijd kunnen uitvoeren\". Voor een geldvraag verwijst de stichting zelf naar Stichting Bevordering van Volkskracht. Bovendien is de zusterstichting Volkskracht Natuurmonumenten expliciet op landgoederen gericht.",
+    "partnertype": "voor een gift: Stichting Bevordering van Volkskracht (via de QuickScan op volkskracht.nl). Voor overdracht/instandhouding: rechtstreeks deze stichting, met een maatschappelijke huurder/partner die de activiteit langdurig uitvoert"
+  },
+  "onderliggende_fondsen": [
+    {
+      "naam": "Stichting Volkskracht Natuurmonumenten",
+      "relevant": true,
+      "reden": "\"heeft als doel het aankopen, beheren en restaureren van landelijke eigendommen, zoals landgoederen, tuinen, polders en waters in Rotterdam en in de agglomeratie van Rotterdam\" — expliciet landgoedgericht (sKBL)"
+    },
+    {
+      "naam": "Stichting Bevordering van Volkskracht",
+      "relevant": true,
+      "reden": "de stichting waarnaar Volkskracht Historische Monumenten zelf doorverwijst voor subsidieaanvragen die bij haar doelstelling (monumenten) aansluiten"
+    },
+    {
+      "naam": "H.M.A. Schadee-fonds",
+      "relevant": false,
+      "reden": "\"Het bevorderen van culturele belangen in Rotterdam en omgeving, met een voorkeur voor kleinschalige projecten in cultuur en kunst (theater, muziek, literair, etc.)\" (sKBL)"
+    },
+    {
+      "naam": "J.E. Jurriaanse Stichting",
+      "relevant": null,
+      "reden": "aangesloten stichting; doelstelling niet opgehaald"
+    },
+    {
+      "naam": "Stichting Kleijn van Willigen-Goddard",
+      "relevant": null,
+      "reden": "aangesloten stichting; doelstelling niet opgehaald"
+    },
+    {
+      "naam": "Van Leeuwen Van Lignac Stichting",
+      "relevant": null,
+      "reden": "aangesloten stichting; doelstelling niet opgehaald"
+    },
+    {
+      "naam": "Stichting Ivo Opstelten Fonds",
+      "relevant": null,
+      "reden": "aangesloten stichting; doelstelling niet opgehaald"
+    },
+    {
+      "naam": "Stichting Neyenburgh",
+      "relevant": null,
+      "reden": "aangesloten stichting; doelstelling niet opgehaald"
+    },
+    {
+      "naam": "Stichting Bekker-la Bastide-Fonds",
+      "relevant": null,
+      "reden": "aangesloten stichting; doelstelling niet opgehaald"
+    }
+  ],
+  "niet_gevonden": [
+    "bedragen, maxima of cofinancieringseis — nergens gepubliceerd op volkskracht.nl",
+    "de inhoudelijke basisvoorwaarden achter de QuickScan (die zit achter een formulier/registratie)",
+    "een beleidsplan-PDF specifiek voor Volkskracht Historische Monumenten; wel jaarverslagen op /de-volkskracht-stichtingen/jaarverslagen/ (niet doorgenomen)"
+  ]
+}

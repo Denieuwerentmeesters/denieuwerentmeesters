@@ -1,0 +1,41 @@
+{
+  "naam": "Oranje Fonds",
+  "bronnen": [
+    {"soort": "aanvraagvoorwaarden", "url": "https://www.oranjefonds.nl/algemene-richtlijnen-en-voorwaarden", "jaar": 2026, "gelezen": true}
+  ],
+  "doelstelling": "\"Het Oranje Fonds ondersteunt projecten die zich richten op een sociaal verbonden samenleving. In Nederland én het Caribisch deel van ons Koninkrijk.\" Binnen die doelstelling vallen initiatieven die de leefbaarheid in buurten bevorderen; die \"willen verbinden en daarbij duurzaam en herhaald mensen bij elkaar brengen, waardoor er sociale netwerken kunnen ontstaan\"; die met vrijwillige inzet andere mensen ondersteunen; die meedoen in de samenleving mogelijk maken; en die de veelvormigheid in de samenleving ten goede komen.",
+  "benaderbaarheid": "open",
+  "benaderwijze_notitie": "\"Aanvragers kunnen het hele jaar door bij ons aankloppen als zich een van de volgende situaties voordoet: je wil een nieuw sociaal initiatief starten [...]\" Geen deadlines; er is een online 'Projectcheck' en een aanvraagsysteem. Wel uitsluitend vooraf: \"je [kunt] bij ons alleen financiering vóóraf aanvragen. Wij dragen nooit bij in kosten die ten tijde van het indienen van de aanvraag al zijn gemaakt.\"",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "landelijk",
+  "geo_waarden": ["Nederland", "Caribisch deel van het Koninkrijk"],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": null,
+  "cofinanciering_vereist": false,
+  "uitsluitingen": [
+    "Alle initiatieven buiten het Koninkrijk der Nederlanden",
+    "Initiatieven die primair gericht zijn op het bevorderen van gezondheidszorg, kunst en cultuur, natuur en milieu, onderwijs, politiek, religie en levensbeschouwing en sport en recreatie",
+    "Initiatieven die incidentele en vrijblijvende middelen inzetten: kortdurende activiteiten (kerstdiners, dorpsfeesten, festivals), jubilea, mediaproducties, lespakketten en onderzoek",
+    "Particulieren, commerciële bedrijven, fondsen en overheden",
+    "Individuele noden (verjaardagsuitjes, cadeaus, kleding, sportlessen)",
+    "Kosten die ten tijde van het indienen van de aanvraag al zijn gemaakt",
+    "Structurele/permanente kosten: \"De kosten waarvoor je een beroep kunt doen op het Oranje Fonds zijn in alle gevallen tijdelijk van aard.\"",
+    "Terughoudend met investeringsbijdragen aan grote zorg- en welzijnsorganisaties (\"deze kosten [horen] doorgaans tot de normale bedrijfsvoering en exploitatie\")",
+    "Speeltuinen vallen niet onder kleinschalige buurtinitiatieven"
+  ],
+  "kostensoort": ["investering", "personeel"],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Het fonds sluit landgoed-eigen doelen expliciet uit: \"initiatieven die primair gericht zijn op het bevorderen van gezondheidszorg, kunst en cultuur, natuur en milieu, onderwijs, politiek, religie en levensbeschouwing en sport en recreatie vallen buiten de doelstelling van het Oranje Fonds\" — dat schrapt erfgoed-, natuur- én recreatievragen in één zin. Ook de aanvrager kan het landgoed niet zijn: \"Privépersonen, commerciële bedrijven, fondsen en overheden kunnen geen aanvraag bij het Oranje Fonds indienen.\" Toch is de partnerroute reëel en zelfs tekstueel uitgenodigd: het fonds noemt \"buurtmoestuinen\" met zoveel woorden als passend, en \"ontmoetingsruimtes of langdurige activiteitenprogramma's\" en \"informele zorg of maatjesinitiatieven\". Een landgoed dat samen met een buurtvereniging, welzijns- of zorgorganisatie een ontmoetingsplek, moestuin of langlopend activiteitenprogramma opzet, kan die partner laten aanvragen; het landgoed levert grond en gebouw. De financiering is dan wel per definitie tijdelijk (startkosten, personeelskosten voor nieuwe werkwijzen, investeringskosten in duurzame gebruiksgoederen, activiteitskosten) — geen bijdrage aan instandhouding of exploitatie. Doorslaggevend is dat het initiatief primair sociaal is, niet primair natuur/erfgoed: een 'natuurwerkdag' verkoopt niet, een 'wekelijkse ontmoetingsplek voor eenzame ouderen in de moestuin' wel.",
+    "partnertype": "Officiële organisatie met een sociaal-maatschappelijk doel (stichting of vereniging), of een informele buurtvereniging/-werkgroep via een penvoerder. Het initiatief moet primair sociaal zijn, met aantoonbare vrijwillige inzet."
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "Bedragen: geen minimum, maximum of gemiddelde bijdrage op de richtlijnenpagina.",
+    "De specifieke richtlijnen voor informele zorg, ontmoetingsruimtes en kleinschalige buurtinitiatieven zijn als bestaand genoemd maar niet opgehaald — juist 'ontmoetingsruimtes' kan voor een landgoedgebouw relevant zijn.",
+    "Behandeltermijn: niet gepubliceerd op deze pagina.",
+    "Of huisvestings-/verbouwingskosten van een ontmoetingsruimte subsidiabel zijn: alleen 'investeringskosten voor de aanschaf van duurzame gebruiksgoederen' wordt genoemd, wat eerder inventaris dan bouw suggereert.",
+    "De algemene voorwaarden en het Meerjarenplan (aparte pagina's) zijn niet opgehaald."
+  ]
+}

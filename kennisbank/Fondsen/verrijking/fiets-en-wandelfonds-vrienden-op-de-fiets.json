@@ -1,0 +1,37 @@
+{
+  "naam": "Fiets en Wandelfonds (Stichting Vrienden op de Fiets)",
+  "bronnen": [
+    {"soort": "aanvraagvoorwaarden", "url": "https://web.archive.org/web/2025/https://www.vriendenopdefiets.nl/nl/page/help-sportievelingen-vooruit-doe-een-aanvraag-bij-het-fiets-en-wandelfonds", "jaar": 2021, "gelezen": true},
+    {"soort": "beleidsplan", "url": "https://www.vriendenopdefiets.nl/files/1713347971_MJB-2024-2026-publicatie.pdf", "jaar": 2023, "gelezen": true},
+    {"soort": "website", "url": "https://www.vriendenopdefiets.nl/over-de-stichting", "jaar": 2026, "gelezen": true}
+  ],
+  "doelstelling": "Vrienden op de Fiets maakt zich sterk voor fietsers en wandelaars in Nederland. Dat doen we met het netwerk van gastadressen, maar we willen nóg meer mensen stimuleren Nederland te fiets of te voet te ontdekken. Met de oprichting van ons 'Fiets en Wandelfonds' kan dat. Helpt uw initiatief fietsers en wandelaars op weg? Dan biedt ons fonds nét even dat laatste financiële zetje in de rug. Zo hebben we ruimte om met het Fiets en Wandelfonds te investeren in een bloeiend fiets- en wandelklimaat in Nederland.",
+  "benaderbaarheid": "onbekend",
+  "benaderwijze_notitie": "In de gearchiveerde opzet volledig open met twee vaste rondes: \"Jaarlijks kunt u op twee momenten een aanvraag indienen: voor 15 september met uitsluitsel begin november en voor 15 maart met uitsluitsel begin mei.\" MAAR het Meerjarenbeleidsplan 2024-2026 zegt: \"We stoppen met de huidige opzet en ontwikkelen een nieuw programmabeleid voor het Fiets & Wandelfonds waarbij onderzocht wordt welke mogelijkheden er zijn voor langduriger en impactvollere vormen van samenwerking met derden.\" De aanvraagpagina staat inmiddels niet meer op de live site (HTTP 404) en er is geen vervangend beleid gepubliceerd. Daarom 'onbekend' - bellen/mailen is nodig.",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "landelijk",
+  "geo_waarden": ["Nederland"],
+  "bedrag_min": 2500,
+  "bedrag_max": 25000,
+  "bedrag_indicatie": "\"Per project is de bijdrage daarom minimaal € 2.500 en maximaal € 25.000 en gaan we niet verder dan 50% van de totale projectbegroting. Toekenningen zijn een gift.\"",
+  "cofinanciering_vereist": true,
+  "uitsluitingen": [
+    "eenmalige of eendaagse evenementen (\"Eenmalige of eendaagse evenementen zijn uitgesloten.\")",
+    "aanvragers die geen non-profit organisatie zijn in de vorm van stichting, vereniging of coöperatie",
+    "de normale lopende activiteiten van de organisatie (\"Het project staat los van de normale lopende activiteiten van uw organisatie\")",
+    "projecten met een looptijd korter dan drie jaar",
+    "meer dan 50% van de totale projectbegroting"
+  ],
+  "kostensoort": ["investering", "onderzoek"],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Een landgoed als bv, maatschap of particulier eigendom kan zelf niet aanvragen: \"U heeft een non-profit organisatie die is georganiseerd als stichting, vereniging of coöperatie.\" Wél is de inhoudelijke match sterk voor recreatieve ontsluiting van een landgoed: \"U kunt financiering van het Fiets en Wandelfonds krijgen als uw project recreatief, liefst meerdaags, wandelen en fietsen voor een brede of juist heel specifieke groep mensen stimuleert\" en het project \"stelt bewegen in de natuur, ontmoetingen tussen mensen en/of duurzaam toerisme centraal\". De toegekende projecten zijn routeorganisaties (Fietsplatform, Fietsersbond, IVN Trektochten, OnbeperktOpPad, meerdaags wandelen voor minder mobielen in het Rijk van Nijmegen) - precies het type partner dat een route over of langs een landgoed kan realiseren, waarbij het landgoed als schakel of locatie in de begroting zit. Een eigen landgoedstichting die een meerjarige wandelroute of trektocht opzet zou wel zelf kunnen indienen.",
+    "partnertype": "routeorganisatie of natuur-/recreatieorganisatie met rechtsvorm stichting, vereniging of coöperatie (bijv. Fietsplatform, Fietsersbond, IVN, Wandelnet, een provinciale landschapsorganisatie), of een eigen landgoedstichting"
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "Actueel beleid: de fondspagina staat niet meer op vriendenopdefiets.nl (alle /nl/page/-URL's geven 404 na een sitemigratie); de menu-items 'Fiets en Wandelfonds', 'Provincieparels' en 'Partners' zijn verdwenen. Gezocht op de homepage, /over-de-stichting, /veelgestelde-vragen-links en via zoekmachine; alleen de gearchiveerde versie is nog leesbaar.",
+    "Het aangekondigde nieuwe programmabeleid voor het Fiets & Wandelfonds (Meerjarenbeleidsplan 2024-2026, punt 5) is niet gepubliceerd; onbekend of het fonds nog aanvragen aanneemt en of de deadlines 15 maart / 15 september nog gelden.",
+    "Jaarlijks fondsbudget of aantal toekenningen: niet gepubliceerd."
+  ]
+}

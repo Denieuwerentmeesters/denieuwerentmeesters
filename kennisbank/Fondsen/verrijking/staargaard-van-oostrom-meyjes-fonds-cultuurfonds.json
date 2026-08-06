@@ -1,0 +1,59 @@
+{
+  "naam": "Staargaard-Van Oostrom Meyjes Fonds (Cultuurfonds)",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://www.cultuurfonds.nl/fondsen/staargaard-van-oostrom-meyjes-fonds",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://www.cultuurfonds.nl/aanvragen/voorwaarden",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "website",
+      "url": "https://www.cultuurfonds.nl/fondsen",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "Dit fonds is er voor projecten buiten de Randstad met een blijvend karakter die gericht zijn op het behoud van natuur, landschap, molens, erfgoed en het ondersteunen van klassieke muziek projecten en musea.",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "“Ruim 500 bevlogen schenkers hebben bij het Cultuurfonds een eigen fonds ingesteld, met een zelfgekozen naam en doelstelling. (…) Het Cultuurfonds behandelt de aanvragen en informeert de insteller over de bestede gelden en de betrokken projecten.” Er is geen eigen loket; aanvragen loopt via het gewone Cultuurfonds-aanvraagportaal. Drempels: “Je organisatie staat ingeschreven bij de Kamer van Koophandel”, “Je organisatie heeft cultuur of natuur in de statutaire doelstelling”, “Je totale projectbegroting is minimaal € 15.000”.",
+  "aanvrager_type": "beide",
+  "geo_niveau": "landelijk",
+  "geo_waarden": [
+    "Nederland buiten de Randstad (toekenningen sterk geconcentreerd in Twente/Overijssel en op de Veluwe)"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": "Geen bedragen gepubliceerd per fonds op naam. Wel een drempel aan de projectkant: “Je totale projectbegroting is minimaal € 15.000.”",
+  "cofinanciering_vereist": null,
+  "uitsluitingen": [
+    "Randstad: “projecten buiten de Randstad” — projecten in de Randstad vallen buiten dit fonds",
+    "“Het project betreft niet groot of regulier onderhoud.” (voorwaarde bij Restauratie)",
+    "“Je project is geen reguliere activiteit”",
+    "“Je project heeft geen polariserend effect en is niet primair religieus, sociaal-maatschappelijk of politiek.”",
+    "“Je organisatie heeft dit jaar nog geen toekenning ontvangen van het Cultuurfonds”",
+    "“Je hebt voor dit project nog niet eerder een aanvraag gedaan bij het Cultuurfonds”",
+    "Natuuraanleg: “Het project gaat niet om de aanleg van recreatieve infrastructuur (zoals bruggen en paden).”"
+  ],
+  "kostensoort": [
+    "investering",
+    "restauratie"
+  ],
+  "landgoed_relevantie": {
+    "route": "zelf",
+    "onderbouwing": "“projecten buiten de Randstad met een blijvend karakter die gericht zijn op het behoud van natuur, landschap, molens, erfgoed”. Dat is vrijwel exact het profiel van een landgoed. In de toekenningenlijst staat letterlijk “Stichting Landschap Overijssel — Systeemherstel landgoederen Enschede — natuur”. Rechtsvormeis uit de landelijke voorwaarden: “Het erfgoed is in bezit van een stichting, vereniging of religieus genootschap. Uitzondering: in het geval van historische buitenplaatsen mag het erfgoed ook in bezit zijn van een familie-B.V. die verbonden is aan de Natuurschoonwet.”",
+    "partnertype": "Is het landgoed geen stichting/vereniging en ook geen NSW-familie-B.V., dan via een eigen erfgoed-/vriendenstichting of via een provinciale landschapsorganisatie (zoals Landschap Overijssel, dat in dit fonds meermaals aanvrager was)."
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "Geen fondsspecifieke bedragen, jaarbudget, deadlines of cofinancieringseis — de fondspagina op cultuurfonds.nl geeft alleen één zin doelstelling plus de toekenningenlijst.",
+    "Geen apart beleidsplan, jaarverslag of ANBI-publicatie per fonds op naam gevonden op cultuurfonds.nl.",
+    "Geen expliciete afbakening van wat “buiten de Randstad” precies omvat."
+  ]
+}

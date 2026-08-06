@@ -1,0 +1,53 @@
+{
+  "naam": "Triodos Foundation",
+  "bronnen": [
+    {
+      "soort": "website",
+      "url": "https://www.triodosfoundation.nl/",
+      "jaar": 2026,
+      "gelezen": true
+    },
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://www.triodosfoundation.nl/aanvragen",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "Werken aan 'een groenere, eerlijkere en socialere wereld, waarin mens en natuur in balans zijn', via twee thema's: natuur & biodiversiteit in Nederland en de landbouw- en voedseltransitie.",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "Aanvraag via quickscan en aanvraagformulier; maar: 'vastgoedprojecten' en projecten 'die uitsluitend lokaal zijn' worden uitgesloten, en cofinanciering door ten minste een andere partij is vereist.",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "landelijk",
+  "geo_waarden": [
+    "Nederland"
+  ],
+  "bedrag_min": 5000,
+  "bedrag_max": 20000,
+  "bedrag_indicatie": "gebruikelijke donaties EUR 5.000-20.000; projecten met totaalbegroting boven EUR 300.000 maken minder kans",
+  "cofinanciering_vereist": true,
+  "uitsluitingen": [
+    "uitsluitend lokale projecten",
+    "noodhulp",
+    "projecten gericht op individuen",
+    "vastgoedprojecten",
+    "commercieel geexploiteerde projecten",
+    "films",
+    "internationale projecten",
+    "evenementen"
+  ],
+  "kostensoort": [
+    "onderzoek",
+    "investering"
+  ],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Het thema is 'initiatieven die helpen om natuur en biodiversiteit in Nederland te herstellen', wat een landgoed raakt, maar 'vastgoedprojecten' en 'uitsluitend lokale' projecten zijn uitgesloten. Een landgoed komt dus alleen in beeld als locatie/partner binnen een breder, opschaalbaar natuur- of landbouwtransitieproject van een stichting.",
+    "partnertype": "natuur- of landbouwtransitie-stichting met ANBI en drie onafhankelijke bestuursleden"
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "De in de werklijst opgegeven pagina /themaschenken/natuur-en-biodiversiteit geeft HTTP 404; inhoudelijk thema wel teruggevonden op de homepage en /aanvragen",
+    "exacte deadlines per kwartaal"
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "naam": "Stichting Don't give up",
+  "bronnen": [
+    {"soort": "website", "url": "https://www.dontgiveup.nl/onze-missie/", "jaar": 2026, "gelezen": true},
+    {"soort": "beleidsplan", "url": "https://www.dontgiveup.nl/wp-content/uploads/2025/10/Beleidsplan_Dont_give_up_dd-20250211.pdf", "jaar": 2025, "gelezen": true},
+    {"soort": "aanvraagvoorwaarden", "url": "https://www.dontgiveup.nl/wp-content/uploads/2017/04/Aanvraagformulier-subsidie-Dont-give-up-v201701.pdf", "jaar": 2017, "gelezen": true},
+    {"soort": "website", "url": "https://www.landschapnoordholland.nl/doe-mee/fondsen-en-stichtingen", "jaar": 2026, "gelezen": true}
+  ],
+  "doelstelling": "De Stichting heeft ten doel het ondersteunen van maatschappelijke projecten op het gebied van natuurbescherming, het bevorderen van duurzaamheid en het bevorderen van het welzijn van jonge mensen alsmede het aanvaarden van erfstellingen onder het voorrecht van boedelbeschrijving en voorts al hetgeen in de ruimste zin met een en ander verband houdt.",
+  "benaderbaarheid": "open_met_drempel",
+  "benaderwijze_notitie": "\"Een verzoek voor een bijdrage kunt u per email indienen.\" Maar: \"Aanvragen zonder recent financieel en inhoudelijk jaarverslag, worden NIET in behandeling genomen\" en \"Aanvragen worden in behandeling genomen, zonder dat de aanvrager daar enig recht aan kan ontlenen. Het bestuur vergadert enkele keren per jaar. De doorlooptijd van een aanvraag bedraagt maximaal 6 maanden.\" Het bestuur werkt ook zelf selecterend: \"Het bestuur van Don't give up selecteert en/of initieert projecten die beantwoorden aan de doelstelling van de Stichting.\"",
+  "aanvrager_type": "derde_partij",
+  "geo_niveau": "internationaal",
+  "geo_waarden": ["Nederland", "buitenland"],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": null,
+  "cofinanciering_vereist": false,
+  "uitsluitingen": [
+    "Aanvragen zonder recent (voorgaand boekjaar) goedgekeurd financieel en inhoudelijk jaarverslag van de aanvragende organisatie worden niet in behandeling genomen",
+    "Repeterende bijdragen: \"De financiele bijdrage van Don't give up aan het project is in principe eenmalig. De Stichting is uiterst terughoudend met het toekennen van repeterende bijdragen.\""
+  ],
+  "kostensoort": ["investering", "onderzoek"],
+  "landgoed_relevantie": {
+    "route": "via_partner",
+    "onderbouwing": "Natuurbescherming is een van de drie kerndoelen: \"Don't give up draagt haar steentje bij in het tegengaan van dit proces door onder meer natuurgebieden te helpen beschermen en initiatieven te ondersteunen die het opwarmen van de aarde tegengaan.\" In de praktijk financiert het fonds concrete terreininrichting: bij Landschap Noord-Holland \"Broedeiland; meer ruimte voor de kluut!\". Dat is precies het type ingreep dat ook op een landgoed speelt (natte natuur, biotoopherstel). De aanvraagvoorwaarden richten zich echter op organisaties: gevraagd worden \"een recent (voorgaand boekjaar) goedgekeurd financieel en inhoudelijk jaarverslag van de aanvragende organisatie\", \"Statuten, bestuurssamenstelling en ANBI verklaring (ivt)\" - en beoordeeld wordt op \"soliditeit en aangetoonde succeshistorie van de aanvrager\" en \"omvang en mutaties van het eigen vermogen en / of de reserves van de aanvrager\". Een particulier landgoed zonder rechtspersoon/jaarverslag komt daar niet doorheen; de route loopt via een natuurorganisatie (bijvoorbeeld een provinciaal landschap) of een landgoedstichting die het natuurproject uitvoert. Ook het derde doel (ontwikkelkansen jonge mensen) biedt een partnerroute voor natuureducatie op het landgoed.",
+    "partnertype": "Natuur- of terreinbeherende organisatie met jaarverslag en statuten (provinciaal landschap, landgoedstichting), of een jeugd-/educatieorganisatie die een programma op het landgoed uitvoert"
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "Bedragen (min/max/indicatie): niet gepubliceerd in beleidsplan 2025 of aanvraagformulier",
+    "Vaste indieningsdeadlines: alleen 'Het bestuur vergadert enkele keren per jaar' en 'doorlooptijd maximaal 6 maanden'",
+    "Vermelding op fondseninnederland.nl: slugs stichting-don-t-give-up, stichting-dont-give-up, don-t-give-up en dont-give-up geven alle 404"
+  ]
+}

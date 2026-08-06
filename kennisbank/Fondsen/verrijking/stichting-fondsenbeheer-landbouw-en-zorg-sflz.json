@@ -1,0 +1,39 @@
+{
+  "naam": "Stichting Fondsenbeheer Landbouw en Zorg (SFLZ)",
+  "bronnen": [
+    {
+      "soort": "aanvraagvoorwaarden",
+      "url": "https://www.fondslandbouwenzorg.nl/aanvragen/",
+      "jaar": 2026,
+      "gelezen": true
+    }
+  ],
+  "doelstelling": "De combinatie zorg, welzijn en landbouw in balans - Nederlandse zorgboerderijen ondersteunen met donaties, leningen en kennisuitwisseling.",
+  "benaderbaarheid": "open",
+  "benaderwijze_notitie": "Openbare aanvraagpagina met negen beoordelingsvragen; aanvragen door eigenaren van zorgboerderijen in Nederland, contact via info@fondslandbouwenzorg.nl.",
+  "aanvrager_type": "landgoedeigenaar",
+  "geo_niveau": "landelijk",
+  "geo_waarden": [
+    "Nederland"
+  ],
+  "bedrag_min": null,
+  "bedrag_max": null,
+  "bedrag_indicatie": null,
+  "cofinanciering_vereist": null,
+  "uitsluitingen": [],
+  "kostensoort": [
+    "investering",
+    "onderzoek"
+  ],
+  "landgoed_relevantie": {
+    "route": "zelf",
+    "onderbouwing": "Dit is een van de weinige fondsen waar de grondeigenaar zelf aanvrager is: het fonds financiert eigenaren van zorgboerderijen, met criteria als \"Balans landbouw-zorg-welzijn\", \"Verbinding lokale omgeving\" en \"Aantal zorgplaatsen\". Een landgoed met (of met plannen voor) een zorgboerderij- of zorglandbouwtak kan rechtstreeks aanvragen, ook voor investeringen in gebouwen en inrichting. Ook leningen zijn mogelijk, wat past bij een landgoedexploitatie.",
+    "partnertype": null
+  },
+  "onderliggende_fondsen": [],
+  "niet_gevonden": [
+    "bedragen en maxima",
+    "uitsluitingen",
+    "cofinancieringspercentage (medefinanciering wordt wel als criterium genoemd, geen percentage)"
+  ]
+}
