@@ -16,6 +16,7 @@ import { VerwijderKnop } from "@/components/VerwijderKnop";
 import {
   GEBRUIK_OPTIES as GEBRUIK,
   gebruikOptiesVoor,
+  BEHEEROBJECT_PRIK_OPTIES,
 } from "@/app/(app)/landgoed/[id]/stamgegevens/constanten";
 import {
   isZelfkruisend,
@@ -66,7 +67,7 @@ type Resultaat = LookupResult & { soort: "perceel" | "gebouw" };
 // "bekijk" is de veilige standaard: klikken op de kaart doet dan niets.
 // "basis" (landgoed-locatie aanwijzen) is een eenmalige actie en zit bewust
 // niet meer tussen de hoofdmodi — bereikbaar via een aparte knop/link.
-type Mode = "bekijk" | "basis" | "perceel" | "indelen" | "gebouw";
+type Mode = "bekijk" | "basis" | "perceel" | "indelen" | "gebouw" | "object";
 
 // Eén kadastraal perceel uit het bezit-register (fase 1), met indeel-status
 // en bij welke beheerpercelen het hoort (voor deelgebruik en kaart→lijst).
@@ -147,6 +148,7 @@ export default function Kaart({
   lon,
   setBasisLocatie,
   plaatsOpKaart,
+  plaatsBeheerobject,
   lookupPerceel,
   lookupGebouw,
   verwijderObject,
@@ -172,6 +174,9 @@ export default function Kaart({
   lon: number | null;
   setBasisLocatie: (fd: FormData) => Promise<void>;
   plaatsOpKaart: (fd: FormData) => Promise<void>;
+  plaatsBeheerobject: (
+    fd: FormData,
+  ) => Promise<{ perceelNaam: string | null } | void>;
   lookupPerceel: (
     lat: number,
     lon: number,
@@ -466,15 +471,29 @@ export default function Kaart({
         continue;
       }
       // Terugval: geen contour bekend, dan een stip op het opgeslagen punt.
+      // Geprikte beheerobjecten (boom, brug…) leven hier; ze doen mee met
+      // tooltip, klik-naar-lijst en spotlight, net als de vlakken.
       if (Number.isFinite(o.lat) && Number.isFinite(o.lon)) {
-        L.circleMarker([o.lat, o.lon], {
+        const stip = L.circleMarker([o.lat, o.lon], {
           radius: 6,
           color: "#2A5C3F",
           fillColor: "#2A5C3F",
           fillOpacity: 0.7,
           weight: 1.5,
-        }).addTo(groep);
+        });
+        stip.bindTooltip(`${o.naam}${o.gebruik ? ` · ${o.gebruik}` : ""}`, {
+          sticky: true,
+        });
+        stip.on("click", () => toonInLijst(o.id));
+        stip.addTo(groep);
         bounds.extend([o.lat, o.lon]);
+        // Spotlight/selecteer verwachten de polygon-API; een punt levert zijn
+        // eigen mini-bounds.
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (stip as any).getBounds = () => L.latLngBounds([[o.lat, o.lon]]);
+        vlakkenRef.current.set(o.id, [
+          { poly: stip, basis: { weight: 1.5, fillOpacity: 0.7 } },
+        ]);
       }
     }
     // In de kadastrale weergave blijft de gekleurde laag van de kaart af;
@@ -1102,6 +1121,11 @@ export default function Kaart({
             tempRef.current.remove();
             tempRef.current = null;
           }
+        } else if (m === "object") {
+          // Prikken: geen externe lookup — het geklikte punt zelf is de
+          // registratie; het formulier in het paneel maakt het af.
+          setResultaat(null);
+          setMelding(null);
         } else {
           const r = await lookupGebouw(lat, lon);
           if (r === "onbereikbaar") {
@@ -1182,6 +1206,7 @@ export default function Kaart({
             ["perceel", "1 · Bezit inladen"],
             ["indelen", "2 · Percelen indelen"],
             ["gebouw", "Gebouwen aanklikken"],
+            ["object", "Objecten plaatsen"],
           ] as [Mode, string][]
         ).map(([m, lbl]) => (
           <button
@@ -1331,7 +1356,9 @@ export default function Kaart({
               : "Klik-klik-klik: elk aangeklikt perceel gaat direct het bezit in (PDOK Kadaster). Nogmaals klikken op een grijs perceel verwijdert het weer. Let op: zoom je ver uit, dan verbergt het Kadaster de perceelgrenzen en nummers — zoom in en ze verschijnen weer. Indelen komt daarna."
             : mode === "indelen"
               ? "Selecteer een of meer grijze percelen en maak er samen een beheerperceel van — of voeg ze toe aan een bestaand beheerperceel."
-              : "Klik op een gebouw; adres, oppervlakte, pandstatus en monumentstatus (RCE) worden opgehaald."}
+              : mode === "object"
+                ? "Klik op de kaart waar het object staat — een boom, brug, hek of technische voorziening — en geef het een naam. Het object koppelt zichzelf aan het beheerperceel waar het punt in valt."
+                : "Klik op een gebouw; adres, oppervlakte, pandstatus en monumentstatus (RCE) worden opgehaald."}
       </p>
       {/* Meldingen in alle modi — ook een bron-storing in de gebouwen-modus
           moet ergens leesbaar landen. */}
@@ -1984,6 +2011,54 @@ export default function Kaart({
               </SubmitKnop>
             </div>
           )}
+        </form>
+      )}
+
+      {/* Prik-paneel (Hugo 2.3): puntobject een naam en soort geven. */}
+      {mode === "object" && punt && (
+        <form
+          action={async (fd) => {
+            const res = await plaatsBeheerobject(fd);
+            setPunt(null);
+            if (tempRef.current) {
+              tempRef.current.remove();
+              tempRef.current = null;
+            }
+            setMelding(
+              res && res.perceelNaam
+                ? `Object geplaatst en gekoppeld aan beheerperceel ${res.perceelNaam}.`
+                : "Object geplaatst. Het punt valt buiten de beheerpercelen, dus er is nog geen koppeling gelegd.",
+            );
+          }}
+          className="card p-4"
+        >
+          <input type="hidden" name="landgoed_id" value={landgoedId} />
+          <input type="hidden" name="lat" value={punt.lat} />
+          <input type="hidden" name="lon" value={punt.lon} />
+          <div className="flex flex-wrap items-end gap-3">
+            <div>
+              <label className="label-up mb-1 block">Wat staat hier?</label>
+              <select className="input" name="categorie" defaultValue="boom">
+                {BEHEEROBJECT_PRIK_OPTIES.map(([waarde, label]) => (
+                  <option key={waarde} value={waarde}>
+                    {label}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="min-w-[180px] flex-1">
+              <label className="label-up mb-1 block">Naam</label>
+              <input
+                className="input"
+                name="naam"
+                placeholder="Bijv. Rode beuk bij het koetshuis"
+                required
+              />
+            </div>
+            <SubmitKnop className="btn btn-primary" pendingTekst="Plaatsen…">
+              Plaats object
+            </SubmitKnop>
+          </div>
         </form>
       )}
 

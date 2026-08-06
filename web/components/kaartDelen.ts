@@ -128,10 +128,10 @@ export function kaartGroep(o: {
 
   // Vaste objectcategorieën
   if (["gebouw", "woning", "opstal"].includes(cat)) return "Gebouwen";
-  if (["natuur", "natuurbeheertype", "onderhoudszone"].includes(cat)) return "Natuur";
+  if (["natuur", "natuurbeheertype", "onderhoudszone", "boom"].includes(cat)) return "Natuur";
   if (["tuin", "wandelroute", "bomenlaan", "risicoplek"].includes(cat)) return "Recreatie";
   if (["bedrijf", "werken"].includes(cat)) return "Werken";
-  if (["infrastructuur", "weg_pad", "brug", "hek", "kabel_leiding"].includes(cat)) return "Infrastructuur";
+  if (["infrastructuur", "weg_pad", "brug", "hek", "kabel_leiding", "voorziening"].includes(cat)) return "Infrastructuur";
   if (["water", "waterloop", "vijver_sloot"].includes(cat)) return "Water & Klimaat";
 
   // Percelen: indeling via gebruik-veld. Een woonperceel is grond en hoort

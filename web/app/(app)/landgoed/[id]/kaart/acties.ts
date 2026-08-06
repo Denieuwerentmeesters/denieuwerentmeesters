@@ -1556,6 +1556,108 @@ export async function lookupGebouw(
 // Plaatsen vanuit de kaart: nieuw object OF koppelen aan een bestaand
 // stamgegeven (dat wordt dan verrijkt met de PDOK-data). categorie =
 // 'pachtperceel' of 'gebouw'.
+// ── Beheerobjecten prikken (Hugo 2.3, issue #124) ──
+// Puntobjecten (boom, brug, hek, voorziening…) met één kaartklik plaatsen.
+// Zelfde waarden als BEHEEROBJECT_PRIK_OPTIES in stamgegevens/constanten.ts;
+// hier de harde grens vóór de insert.
+const BEHEEROBJECT_CATEGORIEEN = new Set([
+  "boom",
+  "brug",
+  "hek",
+  "voorziening",
+  "risicoplek",
+  "vijver_sloot",
+  "tuin",
+  "overig",
+]);
+
+export async function plaatsBeheerobject(
+  fd: FormData,
+): Promise<{ perceelNaam: string | null } | void> {
+  const landgoed_id = String(fd.get("landgoed_id"));
+  const naam = String(fd.get("naam") ?? "").trim();
+  const categorie = String(fd.get("categorie") ?? "").trim();
+  const lat = Number(fd.get("lat"));
+  const lon = Number(fd.get("lon"));
+  if (!naam || !BEHEEROBJECT_CATEGORIEEN.has(categorie)) return;
+  if (!Number.isFinite(lat) || !Number.isFinite(lon)) return;
+
+  const supabase = await createClient();
+  const nieuw = await moet(
+    supabase
+      .from("stamobject")
+      .insert({
+        landgoed_id,
+        naam,
+        categorie,
+        geometrie_type: "punt",
+        herkomst: "handmatig",
+        geaccordeerd: true,
+        kenmerken: { lat, lon },
+      })
+      .select("id")
+      .single(),
+    "beheerobject plaatsen",
+  );
+
+  // Automatische koppeling aan het beheerperceel waarin het punt valt —
+  // Hugo's "primair beheerperceel per object", afgeleid uit de geometrie.
+  // Bij deelgebruik is de splitsvorm preciezer dan het hele kadastrale vlak,
+  // dus die gaat voor.
+  const punt = merc3857(lon, lat);
+  const { data: kadData } = await supabase
+    .from("beheerperceel_kadastraal")
+    .select("stamobject_id, deel_geom_3857, kadastraal_perceel(geom_3857)")
+    .eq("landgoed_id", landgoed_id);
+  const rijen = (kadData ?? []) as unknown as {
+    stamobject_id: string;
+    deel_geom_3857: unknown;
+    kadastraal_perceel: { geom_3857: unknown } | null;
+  }[];
+  let perceelId: string | null = null;
+  for (const rij of rijen.filter((r) => r.deel_geom_3857 != null)) {
+    if (puntInVlak3857(punt, rij.deel_geom_3857)) {
+      perceelId = rij.stamobject_id;
+      break;
+    }
+  }
+  if (!perceelId) {
+    for (const rij of rijen.filter((r) => r.deel_geom_3857 == null)) {
+      const vlak = rij.kadastraal_perceel?.geom_3857;
+      if (vlak && puntInVlak3857(punt, vlak)) {
+        perceelId = rij.stamobject_id;
+        break;
+      }
+    }
+  }
+
+  let perceelNaam: string | null = null;
+  if (perceelId && nieuw.id) {
+    const { data: perceel } = await supabase
+      .from("stamobject")
+      .select("naam")
+      .eq("id", perceelId)
+      .maybeSingle();
+    perceelNaam = perceel?.naam ?? null;
+    const { data: gebruiker } = await supabase.auth.getUser();
+    await moet(
+      supabase.from("verband").insert({
+        landgoed_id,
+        bron_type: "stamobject",
+        bron_id: nieuw.id,
+        doel_type: "stamobject",
+        doel_id: perceelId,
+        rol: "gelegen_op",
+        status: "geaccordeerd",
+        aangemaakt_door: gebruiker.user?.id ?? null,
+      }),
+      "perceel-koppeling opslaan",
+    );
+  }
+  revalidatePath(`/landgoed/${landgoed_id}`, "layout");
+  return { perceelNaam };
+}
+
 export async function plaatsOpKaart(fd: FormData) {
   const landgoed_id = String(fd.get("landgoed_id"));
   const koppel_id = String(fd.get("koppel_id") ?? "").trim();
