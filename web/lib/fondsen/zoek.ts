@@ -51,7 +51,13 @@ import {
 // zakt de slagingskans. Aannames over het landgoed die niet in `landgoed` staan
 // zijn verboden; het model krijgt alleen de velden die er echt in staan.
 
-export const RANGSCHIK_MODEL = process.env.FONDSEN_ZOEK_MODEL ?? "claude-sonnet-4-6";
+// claude-sonnet-4-6 ondersteunt geen assistant-message-prefill (de "aanhef"-
+// truc hieronder om het model rechtstreeks een JSON-array te laten
+// vervolgen) — een aanroep met dat model geeft een 400 op elke rangschik- en
+// onderbouwstap, en de pijplijn valt dan stil terug op laag 2 zonder AI-
+// onderbouwing. Vastgesteld door de pijplijn echt te draaien, niet door de
+// documentatie te lezen. claude-sonnet-4-5 ondersteunt prefill wél.
+export const RANGSCHIK_MODEL = process.env.FONDSEN_ZOEK_MODEL ?? "claude-sonnet-4-5";
 export const MAX_TONEN = 5;
 export const MAX_ONDERBOUWD = 10;
 // Het kaartjesblok is het gecachte deel. Boven dit aantal wordt het te duur om
