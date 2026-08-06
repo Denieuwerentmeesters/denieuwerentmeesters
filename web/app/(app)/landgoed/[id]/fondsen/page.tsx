@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { moet } from "@/lib/db";
 import { RadarKaart, IcoonGeld, IcoonWereld, IcoonVinkje } from "@/components/RadarKaart";
 import { laadProfiel } from "@/app/(app)/landgoed/[id]/subsidies/matching";
+import { zetAnbiStatus } from "./acties";
 import {
   aliasIndex,
   toetsPoort,
@@ -140,6 +141,7 @@ export default async function FondsenPagina({
     kostensoort?: string;
     bedrag?: string;
     plan?: string;
+    motivatie?: string;
     doel?: string;
     fase?: string;
     band?: string;
@@ -257,8 +259,10 @@ export default async function FondsenPagina({
   // delen en te herladen is. Er wordt pas gezocht als er iets gevraagd is:
   // een lege pagina hoort niets te kosten.
   const planTekst = (zoekParams.plan ?? "").trim();
+  const motivatieTekst = (zoekParams.motivatie ?? "").trim();
   const antwoorden: Antwoorden = {
     plan: planTekst,
+    motivatie: motivatieTekst,
     // Geen apart keuzeveld meer (was dubbelop met de plantekst hierboven) —
     // deterministisch afgeleid uit wat de gebruiker al typte. Voedt de
     // kostensoort-poort en de thematische weging; bij twijfel null, en dan
@@ -279,6 +283,7 @@ export default async function FondsenPagina({
   };
   const erIsGevraagd =
     antwoorden.plan.length > 0 ||
+    antwoorden.motivatie.length > 0 ||
     antwoorden.doel !== null ||
     antwoorden.fase !== null ||
     antwoorden.bedragband !== null;
@@ -328,6 +333,39 @@ export default async function FondsenPagina({
         bijdragen aan de financiële haalbaarheid.
       </p>
 
+      {/* ANBI-status — een landgoedeigenschap, geen deel van de zoekopdracht.
+          Losse buttons die direct opslaan (server action), zodat de
+          ANBI-poort (lib/fondsen/poort.ts::toetsAnbi) meteen het juiste
+          antwoord ziet zonder dat de gebruiker eerst hoeft te zoeken. */}
+      <form action={zetAnbiStatus} className="card mb-6 flex flex-wrap items-center justify-between gap-3 p-4">
+        <div>
+          <div className="text-[13px] font-semibold">Heeft dit landgoed een ANBI-status?</div>
+          <p className="text-[12px]" style={{ color: "var(--text-3)" }}>
+            Sommige fondsen steunen uitsluitend ANBI-instellingen — dit antwoord bepaalt of die
+            fondsen meetellen.
+          </p>
+        </div>
+        <input type="hidden" name="landgoed_id" value={id} />
+        <div className="flex shrink-0 gap-2">
+          <button
+            type="submit"
+            name="is_anbi"
+            value="ja"
+            className={`btn btn-sm ${profiel.is_anbi ? "btn-primary" : "btn-ghost"}`}
+          >
+            Ja
+          </button>
+          <button
+            type="submit"
+            name="is_anbi"
+            value="nee"
+            className={`btn btn-sm ${!profiel.is_anbi ? "btn-primary" : "btn-ghost"}`}
+          >
+            Nee
+          </button>
+        </div>
+      </form>
+
       {/* HET VRAAGVELD — fase 3, de eerste functie waarmee de module iets doet
           wat een lijst niet kan. Server-rendered GET-formulier: geen client-JS
           nodig, en de vraag staat als URL-parameters in de link, dus een
@@ -349,6 +387,25 @@ export default async function FondsenPagina({
           className="w-full rounded-md border px-3 py-2 text-[13.5px]"
           style={{ borderColor: "var(--border)" }}
           placeholder="Wat wilt u doen?"
+        />
+
+        <label htmlFor="motivatie" className="mb-1 mt-4 block text-[13px] font-semibold">
+          Wat is uw doel?
+        </label>
+        <p className="mb-2 text-[12px]" style={{ color: "var(--text-3)" }}>
+          De onderliggende reden, los van de activiteit hierboven — bijvoorbeeld
+          &ldquo;behoud voor toekomstige generaties&rdquo; of &ldquo;toegankelijkheid voor het
+          publiek vergroten&rdquo;. Fondsen matchen vaak op hun eigen doelstelling, niet alleen
+          op de activiteit.
+        </p>
+        <textarea
+          id="motivatie"
+          name="motivatie"
+          rows={2}
+          defaultValue={antwoorden.motivatie}
+          className="w-full rounded-md border px-3 py-2 text-[13.5px]"
+          style={{ borderColor: "var(--border)" }}
+          placeholder="Waarom wilt u dit?"
         />
 
         <div className="mt-4 grid gap-3 sm:grid-cols-2">

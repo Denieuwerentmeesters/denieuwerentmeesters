@@ -171,6 +171,12 @@ export type Antwoorden = {
   // de gestructureerde weging en blijft de semantische laag achterwege — zonder
   // vraag valt er niets semantisch te matchen.
   plan: string;
+  // Waaróm dit plan, los van wát er gebeurt (plan hierboven). "Behoud voor
+  // toekomstige generaties" of "toegankelijkheid vergroten" zijn dingen die de
+  // plantekst zelf vaak niet zegt, maar die in een fondsprofiel (doelstelling,
+  // missie) wél terugkomen — dus dit telt mee in de zoekopdracht (laag 2/3),
+  // los van het al bestaande, deterministisch afgeleide `doel` hieronder.
+  motivatie: string;
   doel: Doel | null;
   fase: Planfase | null;
   bedragband: Bedragband | null;
@@ -180,6 +186,7 @@ export type Antwoorden = {
 
 export const LEGE_ANTWOORDEN: Antwoorden = {
   plan: "",
+  motivatie: "",
   doel: null,
   fase: null,
   bedragband: null,
@@ -209,6 +216,7 @@ export function leesAntwoorden(bron: {
   };
   return {
     plan: (tekst("plan") ?? "").trim().slice(0, MAX_PLAN_TEKENS),
+    motivatie: (tekst("motivatie") ?? "").trim().slice(0, MAX_PLAN_TEKENS),
     doel: keuze(tekst("doel"), DOELEN),
     fase: keuze(tekst("fase"), PLANFASEN),
     bedragband: keuze(tekst("bedragband"), BEDRAGBANDEN),
