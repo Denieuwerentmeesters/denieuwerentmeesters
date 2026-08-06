@@ -256,13 +256,13 @@ export default async function FondsenPagina({
       })
       .sort((a, b) => a.naam.localeCompare(b.naam));
 
-  const door = bak("doorgelaten", false);
-  const anders = bak("doorgelaten", true);
-  const onbekend = bak("onbekend");
-  const afgevallen = bak("afgevallen");
+  let door = bak("doorgelaten", false);
+  let anders = bak("doorgelaten", true);
+  let onbekend = bak("onbekend");
+  let afgevallen = bak("afgevallen");
   // Eigen categorie: gevonden, maar nog niet onderzocht. Niet wegfilteren (dit
   // is de werkvoorraad), maar ook niet meetellen alsof ze beoordeeld zijn.
-  const nietOnderzocht = zichtbaar
+  let nietOnderzocht = zichtbaar
     .filter((f) => !oordelen.get(f.id)!.onderzocht)
     .sort((a, b) => a.naam.localeCompare(b.naam));
 
@@ -315,6 +315,18 @@ export default async function FondsenPagina({
   }
 
   const uit = uitkomst?.uitkomst ?? null;
+
+  // Een fonds dat al bovenaan in de zoekresultaten staat, hoeft niet nóg een
+  // keer in de catalogusbakken eronder — anders staat bv. hetzelfde naamfonds
+  // twee keer op de pagina, met een andere weging/toon.
+  if (uit) {
+    const getoond = new Set(uit.fondsen.map((f) => f.fonds_id));
+    door = door.filter((f) => !getoond.has(f.id));
+    anders = anders.filter((f) => !getoond.has(f.id));
+    onbekend = onbekend.filter((f) => !getoond.has(f.id));
+    afgevallen = afgevallen.filter((f) => !getoond.has(f.id));
+    nietOnderzocht = nietOnderzocht.filter((f) => !getoond.has(f.id));
+  }
 
   const basis = `/landgoed/${id}/fondsen`;
   const vraagQuery = (over: Record<string, string | null>) => {
@@ -483,6 +495,7 @@ export default async function FondsenPagina({
           Wat hieronder staat zijn de harde ja/nee/onbekend-filters, zonder inhoudelijke weging op uw
           plan. Handig om te bladeren; voor een gerichte vraag is het veld hierboven sneller en
           scherper.
+          {erIsGevraagd && " Fondsen die hierboven al bij uw zoekresultaat staan, worden hier niet nog eens getoond."}
         </p>
 
       <div className="mb-6 grid gap-4 sm:grid-cols-3">
