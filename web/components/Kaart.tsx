@@ -44,6 +44,7 @@ import {
   kaartGroep,
   groepeerOpties,
   ordenGebouwen,
+  ordenPercelenMetObjecten,
   haTekst,
   geomNaarLatlngs,
   maakKadastraleLaag,
@@ -245,6 +246,10 @@ export default function Kaart({
     Map<string, { poly: any; basis: { weight: number; fillOpacity: number } }[]>
   >(new Map());
   const geselecteerdRef = useRef<string | null>(null);
+  // Renderer voor de stippen-laag (puntobjecten bóven de vlakken) — leeft
+  // even lang als de kaart, dus buiten tekenOverzicht bewaren.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const stipRendererRef = useRef<any>(null);
 
   const [mode, setMode] = useState<Mode>("bekijk");
   const [toonNatura, setToonNatura] = useState(false);
@@ -268,6 +273,12 @@ export default function Kaart({
   const [koppelGebouwId, setKoppelGebouwId] = useState<string | null>(null);
   // De lijst kent twee tabbladen: grond (beheerpercelen) en gebouwen.
   const [lijstTab, setLijstTab] = useState<"percelen" | "gebouwen">("percelen");
+  // In-/uitklappen van onderliggende rijen (objecten onder een beheerperceel,
+  // bijgebouwen onder een hoofdgebouw). Standaard ingeklapt — overzicht eerst.
+  const [uitgeklapt, setUitgeklapt] = useState<Record<string, boolean>>({});
+  function klapOm(id: string) {
+    setUitgeklapt((prev) => ({ ...prev, [id]: !prev[id] }));
+  }
   // Deelgebruik-knop in het indeel-paneel: pas na een bewuste druk hierop
   // zijn al-ingedeelde percelen aanklikbaar om extra te koppelen.
   const [extraKoppelen, setExtraKoppelen] = useState(false);
@@ -354,6 +365,17 @@ export default function Kaart({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [geselecteerd]);
 
+  // In de invoer-modi is de zwevende beheer-tooltip ("… behoort bij
+  // beheerperceel …") vooral in de weg — die achtervolgt je terwijl je met
+  // iets anders bezig bent (wens Steven). De werk-tooltips van de bezit-laag
+  // ("nog in te delen") blijven wél zichtbaar; die horen bij die modi.
+  useEffect(() => {
+    containerRef.current?.classList.toggle(
+      "verberg-beheer-tooltips",
+      mode !== "bekijk" && mode !== "basis",
+    );
+  }, [mode]);
+
   // Kaart → lijst: klik in bekijk-modus op een vlak en de lijst springt naar
   // de bijbehorende rij (de omgekeerde richting van selecteer()). Nogmaals
   // klikken heft de selectie weer op.
@@ -371,6 +393,13 @@ export default function Kaart({
     // De rij staat mogelijk op het andere tabblad — dan eerst omschakelen.
     const o = objecten.find((x) => x.id === id);
     if (o) setLijstTab(kaartGroep(o) === "Gebouwen" ? "gebouwen" : "percelen");
+    // Zit de rij ingeklapt onder een ouder (object onder perceel, bijgebouw
+    // onder hoofdgebouw), klap die dan eerst open — anders is er niets om
+    // naartoe te scrollen. Een bijgebouw heeft ook een staatOpId, maar in de
+    // gebouwen-lijst is het hoofdgebouw de ouder.
+    const ouder =
+      o && kaartGroep(o) === "Gebouwen" ? o.hoortBijId : o?.staatOpId;
+    if (ouder) setUitgeklapt((prev) => ({ ...prev, [ouder]: true }));
     setTimeout(() => {
       document
         .getElementById(`obj-rij-${id}`)
@@ -418,7 +447,7 @@ export default function Kaart({
             aanduiding
               ? `${aanduiding} · behoort bij beheerperceel: ${o.naam}${o.gebruik ? ` (${o.gebruik})` : ""}`
               : `${o.naam}${o.gebruik ? ` · ${o.gebruik}` : ""}${o.kadastraal ? ` · ${o.kadastraal}` : ""}`,
-            { sticky: true },
+            { sticky: true, className: "beheer-tooltip" },
           );
           // Hover-oplichten alleen zolang er geen spotlight-selectie actief is.
           poly.on("mouseover", () => {
@@ -460,7 +489,7 @@ export default function Kaart({
         });
         poly.bindTooltip(
           `${o.naam}${o.gebruik ? ` · ${o.gebruik}` : ""}`,
-          { sticky: true },
+          { sticky: true, className: "beheer-tooltip" },
         );
         poly.on("click", () => toonInLijst(o.id));
         poly.addTo(groep);
@@ -480,9 +509,23 @@ export default function Kaart({
           fillColor: "#2A5C3F",
           fillOpacity: 0.7,
           weight: 1.5,
+          renderer: stipRendererRef.current ?? undefined,
         });
         stip.bindTooltip(`${o.naam}${o.gebruik ? ` · ${o.gebruik}` : ""}`, {
           sticky: true,
+          className: "beheer-tooltip",
+        });
+        // Zelfde hover-taal als de vlakken: oplichten en iets groeien —
+        // een klein rondje is anders lastig te raken (wens Steven).
+        stip.on("mouseover", () => {
+          if (geselecteerdRef.current) return;
+          stip.setRadius(9);
+          stip.setStyle({ weight: 2.5, fillOpacity: 1 });
+        });
+        stip.on("mouseout", () => {
+          if (geselecteerdRef.current) return;
+          stip.setRadius(6);
+          stip.setStyle({ weight: 1.5, fillOpacity: 0.7 });
         });
         stip.on("click", () => toonInLijst(o.id));
         stip.addTo(groep);
@@ -978,6 +1021,12 @@ export default function Kaart({
       const L = (await import("leaflet")).default;
       if (cancelled || !containerRef.current || mapRef.current) return;
       const map = L.map(containerRef.current).setView([52.15, 5.4], 8);
+      // Eigen laag voor puntobjecten, bóven de vlakken (overlay-pane = 400):
+      // de objecten worden nieuwste-eerst getekend, dus zonder dit schuift
+      // het beheerperceel-vlak over de stip heen en vangt het alle
+      // muis-events af — hover en klik op de stip deden dan niets.
+      map.createPane("stippen").style.zIndex = "450";
+      stipRendererRef.current = L.svg({ pane: "stippen" });
       achtergrondRef.current = L.tileLayer(PDOK_TILES("standaard"), {
         maxZoom: 19,
         attribution: "© PDOK BRT-Achtergrondkaart",
@@ -2156,23 +2205,51 @@ export default function Kaart({
                 {objecten.filter((o) => kaartGroep(o) === "Gebouwen").length})
               </button>
             </div>
-            {KAARTGROEP_LABELS.filter((l) =>
-              lijstTab === "gebouwen" ? l === "Gebouwen" : l !== "Gebouwen",
-            ).map((label) => {
-              const lijst = groepenMap.get(label)!;
-              if (lijst.length === 0) return null;
+            {(lijstTab === "gebouwen"
+              ? /* Gebouwen als clusters: bijgebouwen ingesprongen onder
+                   hun hoofdgebouw. */
+                ([["Gebouwen", ordenGebouwen(groepenMap.get("Gebouwen")!)]] as [
+                  string,
+                  { item: PlaatsObject; ingesprongen: boolean; ouderId?: string }[],
+                ][])
+              : /* Percelen: beheerperceel als hoofditem, geprikte objecten
+                   ingesprongen eronder; losse objecten apart (issue #130). */
+                (() => {
+                  const { groepen, los } = ordenPercelenMetObjecten(objecten);
+                  return [
+                    ...groepen,
+                    ...(los.length
+                      ? ([
+                          [
+                            "Losse objecten (nog niet gekoppeld)",
+                            los.map((item) => ({ item, ingesprongen: false })),
+                          ],
+                        ] as [
+                          string,
+                          { item: PlaatsObject; ingesprongen: boolean; ouderId?: string }[],
+                        ][])
+                      : []),
+                  ];
+                })()
+            ).map(([label, geordend]) => {
+              if (geordend.length === 0) return null;
               return (
                 <div key={label} className="card p-4">
                   <div className="mb-2 text-[12px] font-semibold uppercase tracking-wide" style={{ color: "var(--text-2)" }}>
-                    {label} ({lijst.length})
+                    {label} ({geordend.length})
                   </div>
                   <div className="divide-y" style={{ borderColor: "var(--border)" }}>
-                    {/* Gebouwen als clusters: bijgebouwen ingesprongen onder
-                        hun hoofdgebouw. */}
-                    {(label === "Gebouwen"
-                      ? ordenGebouwen(lijst)
-                      : lijst.map((item) => ({ item, ingesprongen: false }))
-                    ).map(({ item: o, ingesprongen }) => (
+                    {geordend
+                      .filter(
+                        (r) =>
+                          !r.ingesprongen ||
+                          (r.ouderId != null && uitgeklapt[r.ouderId]),
+                      )
+                      .map(({ item: o, ingesprongen }) => {
+                      const kinderen = geordend.filter(
+                        (r) => r.ouderId === o.id,
+                      ).length;
+                      return (
                       <div
                         key={o.id}
                         id={`obj-rij-${o.id}`}
@@ -2183,6 +2260,26 @@ export default function Kaart({
                         }}
                       >
                         <div className="flex items-center gap-3 py-2.5">
+                          {/* Pijltje voor in-/uitklappen van wat eronder
+                              hangt; rijen zonder kinderen krijgen een spacer
+                              zodat de namen uitlijnen. */}
+                          {kinderen > 0 ? (
+                            <button
+                              type="button"
+                              onClick={() => klapOm(o.id)}
+                              className="shrink-0 text-[12.5px] font-medium"
+                              style={{ color: "var(--text-2)", minWidth: 22 }}
+                              title={
+                                uitgeklapt[o.id]
+                                  ? "Klap in"
+                                  : `Toon ${kinderen} onderliggende`
+                              }
+                            >
+                              {uitgeklapt[o.id] ? "▾" : `▸ ${kinderen}`}
+                            </button>
+                          ) : (
+                            <span className="shrink-0" style={{ minWidth: 22 }} />
+                          )}
                           <button
                             type="button"
                             onClick={() => selecteer(o)}
@@ -2214,7 +2311,10 @@ export default function Kaart({
                               Wijzig
                             </button>
                           )}
-                          {GEBOUW_CATS.has(o.categorie) && (
+                          {/* Ook geprikte objecten (boom, vijver…) zijn zo
+                              handmatig te (ont)koppelen — zelfde verband en
+                              formulier als bij gebouwen. */}
+                          {!PERCEEL_CATS.has(o.categorie) && (
                             <button
                               type="button"
                               className="text-[11.5px] hover:underline"
@@ -2462,7 +2562,8 @@ export default function Kaart({
                             </div>
                           )}
                       </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 </div>
               );

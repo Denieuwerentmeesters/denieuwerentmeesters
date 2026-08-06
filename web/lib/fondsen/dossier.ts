@@ -202,8 +202,14 @@ export function deelStapels(vereisten: Vereiste[]): Stapels {
     const uitleg = strijdigeToezegging(v);
     if (uitleg) strijdig.push({ vereiste: v, uitleg });
     const s = stapelVan(v);
-    if (s === "wij") wij.push(v);
-    else if (s === "u") u.push(v);
+    if (s === "wij") {
+      // Een strijdige belofte ("wij stellen dit op" zonder generator) hoort
+      // niet ook nog eens bij "wij maken dit" — dat is precies de belofte
+      // die hierboven al als strijdig is gemeld. Bij een van-nature-extern
+      // stuk (EXTERN_VAN_NATURE) komt `s` hier nooit uit op "wij" — die gaat
+      // altijd via de "u"-tak hieronder, mét de strijdig-melding ernaast.
+      if (!uitleg) wij.push(v);
+    } else if (s === "u") u.push(v);
     else onbepaald.push(v);
   }
   return { wij, u, onbepaald, strijdig };
@@ -422,6 +428,21 @@ export function vindTegenstrijdigheden(...teksten: (string | null | undefined)[]
     }
   }
   return gevonden;
+}
+
+/**
+ * Splitst een vrije-tekstnotitie (vaak losse geciteerde zinnen aan elkaar
+ * geplakt, zoals `benaderwijze_notitie`) in losse regels voor een opsomming.
+ * Twee zinsgrenzen: een echt zinseinde (niet de punt in "€ 10.000" of "bv.",
+ * en een sluitend aanhalingsteken mag ertussen staan — "ingediend." is een
+ * zinseinde), en een dubbele punt die een citaat inleidt ("regel: "Het
+ * contact...""), want dat is in de bron zelf al een eigen, afgebakend punt.
+ */
+export function splitsInRegels(tekst: string): string[] {
+  return tekst
+    .split(/(?<=[.!?])["”]?\s+(?=[A-Z(“"])|(?<=:)\s+(?=[“"])/)
+    .map((z) => z.trim())
+    .filter(Boolean);
 }
 
 // ---------------------------------------------------------------------------
