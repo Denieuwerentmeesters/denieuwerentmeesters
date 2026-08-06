@@ -122,7 +122,7 @@ export async function genereerMatchprofielen(
     .from("regeling")
     .select(KOLOMMEN)
     .in("soort_bron", ["fonds", "lening"])
-    // niet_relevant hoort nooit in de fondsenstroom te verschijnen (0052); daar
+    // niet_relevant hoort nooit in de fondsenstroom te verschijnen (0058); daar
     // een profiel voor maken is weggegooid geld.
     .neq("landgoed_route", "niet_relevant");
   if (opties.regelingId) vraag = vraag.eq("id", opties.regelingId);

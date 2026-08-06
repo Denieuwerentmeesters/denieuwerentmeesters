@@ -201,6 +201,130 @@ export async function ontkoppelAfspraak(fd: FormData) {
   await ontkoppel(fd);
 }
 
+// ── Gebruikseenheden (Hugo 2.2, issue #114) ──
+// De check-constraints in migratie 0052 zijn de harde grens; deze lijsten
+// houden de invoer netjes vóór de database het afkeurt.
+const EENHEID_TYPES = [
+  "woning",
+  "appartement",
+  "kantoor",
+  "opslag",
+  "bedrijfsruimte",
+  "recreatieverblijf",
+  "overig",
+];
+const EENHEID_STATUSSEN = ["in_gebruik", "leegstand", "in_renovatie"];
+
+function eenheidVelden(fd: FormData) {
+  const type = tekst(fd, "type");
+  const status = tekst(fd, "status");
+  return {
+    naam: tekst(fd, "naam"),
+    type: type && EENHEID_TYPES.includes(type) ? type : "overig",
+    status:
+      status && EENHEID_STATUSSEN.includes(status) ? status : "in_gebruik",
+    adres: tekst(fd, "adres"),
+    oppervlakte_m2: getal(fd, "oppervlakte_m2"),
+    omschrijving: tekst(fd, "omschrijving"),
+  };
+}
+
+export async function nieuweGebruikseenheid(fd: FormData) {
+  const landgoed_id = String(fd.get("landgoed_id"));
+  const object_id = String(fd.get("object_id"));
+  const velden = eenheidVelden(fd);
+  if (!velden.naam) return;
+  const supabase = await createClient();
+  await moet(
+    supabase
+      .from("gebruikseenheid")
+      .insert({ landgoed_id, stamobject_id: object_id, ...velden }),
+    "gebruikseenheid opslaan",
+  );
+  revalidatePath(pad(landgoed_id, object_id));
+}
+
+export async function bewerkGebruikseenheid(fd: FormData) {
+  const landgoed_id = String(fd.get("landgoed_id"));
+  const object_id = String(fd.get("object_id"));
+  const eenheid_id = String(fd.get("eenheid_id"));
+  if (!eenheid_id) return;
+  const velden = eenheidVelden(fd);
+  if (!velden.naam) return;
+  const supabase = await createClient();
+  await moet(
+    supabase
+      .from("gebruikseenheid")
+      .update(velden)
+      .eq("id", eenheid_id)
+      .eq("landgoed_id", landgoed_id),
+    "gebruikseenheid bijwerken",
+  );
+  revalidatePath(pad(landgoed_id, object_id));
+}
+
+export async function verwijderGebruikseenheid(fd: FormData) {
+  const landgoed_id = String(fd.get("landgoed_id"));
+  const object_id = String(fd.get("object_id"));
+  const eenheid_id = String(fd.get("eenheid_id"));
+  if (!eenheid_id) return;
+  const supabase = await createClient();
+  // Verband is generiek (geen FK) — eerst de koppelingen naar deze eenheid
+  // opruimen, anders blijven er wees-verbanden achter.
+  await moet(
+    supabase
+      .from("verband")
+      .delete()
+      .eq("landgoed_id", landgoed_id)
+      .eq("doel_type", "gebruikseenheid")
+      .eq("doel_id", eenheid_id),
+    "koppelingen van eenheid verwijderen",
+  );
+  await moet(
+    supabase
+      .from("gebruikseenheid")
+      .delete()
+      .eq("id", eenheid_id)
+      .eq("landgoed_id", landgoed_id),
+    "gebruikseenheid verwijderen",
+  );
+  revalidatePath(pad(landgoed_id, object_id));
+}
+
+export async function koppelContactAanEenheid(fd: FormData) {
+  const landgoed_id = String(fd.get("landgoed_id"));
+  const object_id = String(fd.get("object_id"));
+  const eenheid_id = tekst(fd, "eenheid_id");
+  const relatie_id = tekst(fd, "relatie_id");
+  if (!eenheid_id || !relatie_id) return;
+  const supabase = await createClient();
+  const { data: gebruiker } = await supabase.auth.getUser();
+  await moet(
+    supabase.from("verband").upsert(
+      {
+        landgoed_id,
+        bron_type: "relatie",
+        bron_id: relatie_id,
+        doel_type: "gebruikseenheid",
+        doel_id: eenheid_id,
+        rol: tekst(fd, "rol"),
+        status: "geaccordeerd",
+        aangemaakt_door: gebruiker.user?.id ?? null,
+      },
+      {
+        onConflict: "bron_type,bron_id,doel_type,doel_id,rol",
+        ignoreDuplicates: true,
+      },
+    ),
+    "contact aan eenheid koppelen",
+  );
+  revalidatePath(pad(landgoed_id, object_id));
+}
+
+export async function ontkoppelContactVanEenheid(fd: FormData) {
+  await ontkoppel(fd);
+}
+
 // ── Documenten ──
 export async function uploadDocumentBijObject(fd: FormData) {
   const landgoed_id = String(fd.get("landgoed_id"));

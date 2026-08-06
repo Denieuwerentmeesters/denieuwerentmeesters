@@ -64,6 +64,24 @@ export const GEBRUIK_GEBOUW_OPTIES = [
 
 export const GEBOUW_CATEGORIEEN = ["gebouw", "woning", "opstal"];
 
+// Gebruikseenheden binnen één gebouw (Hugo 2.2, waardenlijst 22_13):
+// dezelfde waarden als de check-constraint in migratie 0052.
+export const EENHEID_TYPE_LABEL: Record<string, string> = {
+  woning: "Woning",
+  appartement: "Appartement",
+  kantoor: "Kantoor",
+  opslag: "Opslag",
+  bedrijfsruimte: "Bedrijfsruimte",
+  recreatieverblijf: "Recreatieverblijf",
+  overig: "Overig",
+};
+
+export const EENHEID_STATUS_LABEL: Record<string, string> = {
+  in_gebruik: "In gebruik",
+  leegstand: "Leegstand",
+  in_renovatie: "In renovatie",
+};
+
 // De juiste gebruik-lijst per categorie, met — net als bij categorieOptiesVoor —
 // de huidige waarde als vangnet zodat een <select> nooit stilzwijgend terugvalt
 // op de eerste optie.
