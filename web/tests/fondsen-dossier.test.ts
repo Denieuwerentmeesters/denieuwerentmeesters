@@ -5,6 +5,7 @@ import {
   deelStapels,
   isAlgemeenAdres,
   schoonContact,
+  splitsInRegels,
   splitsProfiel,
   stapelVan,
   strijdigeToezegging,
@@ -62,6 +63,35 @@ describe("de twee stapels (§4)", () => {
     expect(s.u.map((v) => v.id)).toEqual(["b", "d"]);
     expect(s.onbepaald.map((v) => v.id)).toEqual(["c"]);
     expect(s.strijdig.map((x) => x.vereiste.id)).toEqual(["d"]);
+  });
+
+  it("zet een strijdige belofte van een niet-extern, niet-genereerbaar type NIET ook op de wij-stapel", () => {
+    // bv. "onderbouwing waarom er geen subsidie is aangevraagd": geen
+    // EXTERN_VAN_NATURE-type (dus stapelVan zou 'm zonder deze check op
+    // "wij" zetten), en geen GENEREERBARE_TYPEN-type (dus strijdig gemeld).
+    // Hoorde vroeger op BEIDE stapels — dat was het gemelde dubbele stuk.
+    const s = deelStapels([
+      vereiste({ id: "e", vereiste_type: "onderbouwing", zelf_op_te_stellen: true }),
+    ]);
+    expect(s.wij).toEqual([]);
+    expect(s.u).toEqual([]);
+    expect(s.onbepaald).toEqual([]);
+    expect(s.strijdig.map((x) => x.vereiste.id)).toEqual(["e"]);
+  });
+});
+
+describe("een notitie in losse regels", () => {
+  it("splitst geciteerde zinnen in aparte regels voor een opsomming", () => {
+    const regels = splitsInRegels(
+      '"Een aanvraag kan het hele jaar worden ingediend." Wél één harde regel: "Geen contact vooraf."',
+    );
+    expect(regels).toHaveLength(3);
+    expect(regels[0]).toMatch(/hele jaar/);
+    expect(regels[2]).toMatch(/Geen contact vooraf/);
+  });
+
+  it("splitst niet op de punt in een bedrag", () => {
+    expect(splitsInRegels("Maximaal € 10.000 per jaar.")).toHaveLength(1);
   });
 });
 
