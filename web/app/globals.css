@@ -202,3 +202,11 @@ body {
   max-width: 240px;
   line-height: 1.35;
 }
+
+/* In de invoer-modi (bezit inladen, indelen, gebouwen, objecten) is de
+   zwevende beheer-tooltip vooral in de weg — de invoerpagina zet deze klasse
+   op de kaart-container zodra een invoer-modus actief is. De werk-tooltips
+   van de bezit-laag ("nog in te delen") vallen hier bewust buiten. */
+.verberg-beheer-tooltips .leaflet-tooltip.beheer-tooltip {
+  display: none;
+}
