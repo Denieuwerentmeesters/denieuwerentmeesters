@@ -118,3 +118,21 @@ elkaar doordat de stap "toepassen op live" niet was vastgelegd. Daarom, zonder u
 Het bouwplan en het code-reviewrapport staan in Dropbox (map "1. Bouwspecs"). De
 verhardingsklussen daaruit (Fase V) staan als open GitHub-issues in deze repo — dat is
 de actuele prioriteitenlijst.
+
+### Moduleoverzicht op Google Drive — kolom L bijhouden (verplicht, beide huishoudens)
+
+Het moduleoverzicht **"De nieuwe rentmeesters opzet tooling"** (Hugo's kapstok: alle
+submodules met prioriteit en spec-status) staat als Google Spreadsheet op Drive en is
+dáár leidend:
+https://docs.google.com/spreadsheets/d/1GMe4tzjcyJ2vzISbr8ufbiBMEyeYP-9cDrh1AOCqN-E/
+
+- **Kolom L "Gebouwd in app"** (tabblad "Status") is de bouwstatus. Wie een mijlpaal
+  merget — Steven+Claude óf Reinoud+Claude — werkt de eigen regel in kolom L bij:
+  kort wát er staat, met maand/jaar. Begin de cel met **"✔ Gebouwd"** als de submodule
+  af is, of **"Deels"**/**"Kiem"** als er iets ligt — de voorwaardelijke opmaak kleurt
+  de cel dan vanzelf groen of geel.
+- **Kolommen H/I zijn van Hugo** (spec-status) — daar blijven we af. De overige
+  kolommen (positionering, doel, lead) zijn ook van hem.
+- Rolverdeling van de drie administraties: **Drive-spreadsheet** = hoog-over per
+  module · **GitHub-issues** = levende werklijst · **Dropbox "Openstaand werk"** =
+  leesbare tussenstand.
