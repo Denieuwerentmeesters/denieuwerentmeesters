@@ -112,6 +112,12 @@ export default function KaartWeergave({
   // tegelijk laten oplichten.
   const [selectie, setSelectie] = useState<string[]>([]);
   const [kadSelectie, setKadSelectie] = useState<string[]>([]);
+  // In-/uitklappen van onderliggende rijen (objecten onder een beheerperceel,
+  // bijgebouwen onder een hoofdgebouw). Standaard ingeklapt — overzicht eerst.
+  const [uitgeklapt, setUitgeklapt] = useState<Record<string, boolean>>({});
+  function klapOm(id: string) {
+    setUitgeklapt((prev) => ({ ...prev, [id]: !prev[id] }));
+  }
 
   // Eén stijl-pass over alle vlakken: selectie wint van filter, filter wint
   // van de basisweergave. Alles wat niet meedoet vervaagt. Het filter slaat
@@ -454,6 +460,13 @@ export default function KaartWeergave({
       // De rij staat mogelijk op het andere tabblad — dan eerst omschakelen.
       const o = objecten.find((x) => x.id === id);
       if (o) setLijstTab(kaartGroep(o) === "Gebouwen" ? "gebouwen" : "percelen");
+      // Zit de rij ingeklapt onder een ouder (object onder perceel, bijgebouw
+      // onder hoofdgebouw), klap die dan eerst open — anders is er niets om
+      // naartoe te scrollen. Een bijgebouw heeft ook een staatOpId, maar in
+      // de gebouwen-lijst is het hoofdgebouw de ouder.
+      const ouder =
+        o && kaartGroep(o) === "Gebouwen" ? o.hoortBijId : o?.staatOpId;
+      if (ouder) setUitgeklapt((prev) => ({ ...prev, [ouder]: true }));
       setTimeout(() => {
         document
           .getElementById(`weergave-rij-${id}`)
@@ -711,7 +724,7 @@ export default function KaartWeergave({
                     ["Gebouwen", ordenGebouwen(groepenMap.get("Gebouwen")!)],
                   ] as [
                     string,
-                    { item: KaartObject; ingesprongen: boolean }[],
+                    { item: KaartObject; ingesprongen: boolean; ouderId?: string }[],
                   ][])
                 : /* Percelen: beheerperceel als hoofditem, geprikte objecten
                      ingesprongen eronder; losse objecten apart (issue #130). */
@@ -727,7 +740,7 @@ export default function KaartWeergave({
                             ],
                           ] as [
                             string,
-                            { item: KaartObject; ingesprongen: boolean }[],
+                            { item: KaartObject; ingesprongen: boolean; ouderId?: string }[],
                           ][])
                         : []),
                     ];
@@ -743,7 +756,16 @@ export default function KaartWeergave({
                     {label} ({geordend.length})
                   </div>
                   <div className="divide-y" style={{ borderColor: "var(--border)" }}>
-                    {geordend.map(({ item: o, ingesprongen }) => {
+                    {geordend
+                      .filter(
+                        (r) =>
+                          !r.ingesprongen ||
+                          (r.ouderId != null && uitgeklapt[r.ouderId]),
+                      )
+                      .map(({ item: o, ingesprongen }) => {
+                      const kinderen = geordend.filter(
+                        (r) => r.ouderId === o.id,
+                      ).length;
                       // Filter actief: passende rijen lichten op in de
                       // filterkleur, de rest dimt licht — zelfde taal als de
                       // kaart (wens Steven).
@@ -768,6 +790,26 @@ export default function KaartWeergave({
                           paddingLeft: ingesprongen ? 18 : undefined,
                         }}
                       >
+                        {/* Pijltje voor in-/uitklappen van wat eronder hangt;
+                            rijen zonder kinderen krijgen een spacer zodat de
+                            namen uitlijnen. */}
+                        {kinderen > 0 ? (
+                          <button
+                            type="button"
+                            onClick={() => klapOm(o.id)}
+                            className="shrink-0 text-[12.5px] font-medium"
+                            style={{ color: "var(--text-2)", minWidth: 22 }}
+                            title={
+                              uitgeklapt[o.id]
+                                ? "Klap in"
+                                : `Toon ${kinderen} onderliggende`
+                            }
+                          >
+                            {uitgeklapt[o.id] ? "▾" : `▸ ${kinderen}`}
+                          </button>
+                        ) : (
+                          <span className="shrink-0" style={{ minWidth: 22 }} />
+                        )}
                         <button
                           type="button"
                           onClick={() => selecteer(o)}
