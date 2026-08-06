@@ -12,6 +12,9 @@ import { useEffect, useState } from "react";
 // Daarom een schermvullende laag met het kasteeltje, die pas verdwijnt als
 // de server-action klaar is en de pagina zich heeft ververst.
 
+// Standaardstappen (omgevingsradar-ophaalronde). Andere aanroepers geven hun
+// eigen `stappen` mee via de prop hieronder — de eerste regel komt sowieso
+// van `bezigTekst`, dus die staat niet nog een keer in deze lijst.
 const STAPPEN = [
   "We halen alle relevante informatie op",
   "Publicaties doorzoeken bij gemeente, provincie en waterschap",
@@ -20,7 +23,7 @@ const STAPPEN = [
   "Bijna klaar — de laatste berichten worden beoordeeld",
 ];
 
-function Overlay({ eersteRegel }: { eersteRegel: string }) {
+function Overlay({ eersteRegel, stappen }: { eersteRegel: string; stappen: string[] }) {
   const [stap, setStap] = useState(0);
 
   // De teksten wisselen zodat zichtbaar blijft dat er nog iets gebeurt. Ze
@@ -28,12 +31,12 @@ function Overlay({ eersteRegel }: { eersteRegel: string }) {
   // blijft staan zolang het duurt.
   useEffect(() => {
     const t = setInterval(() => {
-      setStap((s) => Math.min(s + 1, STAPPEN.length - 1));
+      setStap((s) => Math.min(s + 1, stappen.length - 1));
     }, 12000);
     return () => clearInterval(t);
-  }, []);
+  }, [stappen.length]);
 
-  const regels = [eersteRegel, ...STAPPEN.slice(1)];
+  const regels = [eersteRegel, ...stappen.slice(1)];
 
   return (
     <div
@@ -59,10 +62,13 @@ export default function LangeActieKnop({
   children,
   className = "btn btn-primary btn-sm",
   bezigTekst = STAPPEN[0],
+  stappen = STAPPEN,
 }: {
   children: React.ReactNode;
   className?: string;
   bezigTekst?: string;
+  // Eigen stappenlijst voor deze actie; standaard de omgevingsradar-tekst.
+  stappen?: string[];
 }) {
   const { pending } = useFormStatus();
   return (
@@ -70,7 +76,7 @@ export default function LangeActieKnop({
       <button type="submit" className={className} disabled={pending}>
         {children}
       </button>
-      {pending && <Overlay eersteRegel={bezigTekst} />}
+      {pending && <Overlay eersteRegel={bezigTekst} stappen={stappen} />}
     </>
   );
 }
