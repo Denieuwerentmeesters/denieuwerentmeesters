@@ -59,7 +59,11 @@ import {
 // documentatie te lezen. claude-sonnet-4-5 ondersteunt prefill wél.
 export const RANGSCHIK_MODEL = process.env.FONDSEN_ZOEK_MODEL ?? "claude-sonnet-4-5";
 export const MAX_TONEN = 5;
-export const MAX_ONDERBOUWD = 10;
+// Was 10; er worden toch nooit meer dan MAX_TONEN getoond, dus de extra 5
+// kostten alleen tokens/tijd op de duurste stap (laag 3b) zonder ooit op het
+// scherm te komen. Een kleine marge boven MAX_TONEN blijft nuttig omdat laag
+// 3b zelf nog fondsen mag laten vallen ("sluit het plan aantoonbaar uit").
+export const MAX_ONDERBOUWD = 6;
 // Het kaartjesblok is het gecachte deel. Boven dit aantal wordt het te duur om
 // bij elke vraag opnieuw weg te schrijven; de weging bepaalt dan wie erin komt.
 export const MAX_KAARTJES_IN_BLOK = 140;
@@ -516,7 +520,7 @@ export async function zoek(
         `${i + 1}. [${g.fonds.id}] ${g.fonds.naam} (voorselectie ${g.weging.score}/100, matchbaarheid ${g.weging.matchbaarheid}/100)`,
     )
     .join("\n");
-  const rangschikPrompt = `${landgoedBlok(profiel)}\n\n${vraagBlok(antwoorden)}\n\nKANDIDATEN — kies uitsluitend uit deze ID's:\n${kandidaten}\n\nGeef de maximaal 10 die hier het beste bij passen, van hoog naar laag.`;
+  const rangschikPrompt = `${landgoedBlok(profiel)}\n\n${vraagBlok(antwoorden)}\n\nKANDIDATEN — kies uitsluitend uit deze ID's:\n${kandidaten}\n\nGeef de maximaal ${MAX_ONDERBOUWD} die hier het beste bij passen, van hoog naar laag.`;
 
   const rang = await vraagTekstMetGebruik(RANGSCHIK_SYSTEEM, rangschikPrompt, {
     model: RANGSCHIK_MODEL,

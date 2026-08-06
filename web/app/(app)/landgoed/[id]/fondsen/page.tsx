@@ -3,7 +3,8 @@ import { createClient } from "@/lib/supabase/server";
 import { moet } from "@/lib/db";
 import { RadarKaart, IcoonGeld, IcoonWereld, IcoonVinkje } from "@/components/RadarKaart";
 import { laadProfiel } from "@/app/(app)/landgoed/[id]/subsidies/matching";
-import { zetAnbiStatus } from "./acties";
+import { zetAnbiStatus, zoekFondsen } from "./acties";
+import LangeActieKnop from "@/components/LangeActieKnop";
 import {
   aliasIndex,
   toetsPoort,
@@ -65,6 +66,17 @@ function aanvragerOpties(rechtsvorm: string | null): { waarde: string; label: st
 // later. Wat hier staat is deterministisch en met de hand na te rekenen.
 
 export const dynamic = "force-dynamic";
+
+// Stappen voor de laadoverlay tijdens zoekFondsen (acties.ts) — de eerste
+// regel komt van `bezigTekst` op de knop zelf, dus die staat hier niet nog
+// een keer in.
+const ZOEK_STAPPEN = [
+  "We doorzoeken de fondsencatalogus",
+  "De harde filters toepassen (ligging, rechtsvorm, ANBI, bedrag)",
+  "De beste kandidaten rangschikken",
+  "Per fonds de onderbouwing schrijven",
+  "Bijna klaar",
+];
 
 type FondsRij = PoortFonds & {
   organisatie: string | null;
@@ -367,11 +379,14 @@ export default async function FondsenPagina({
       </form>
 
       {/* HET VRAAGVELD — fase 3, de eerste functie waarmee de module iets doet
-          wat een lijst niet kan. Server-rendered GET-formulier: geen client-JS
-          nodig, en de vraag staat als URL-parameters in de link, dus een
-          uitkomst is te delen en te herladen zonder opnieuw te betalen (de
-          hash in opslag.ts zorgt daarvoor). */}
-      <form method="get" className="card mb-6 p-4 md:p-5">
+          wat een lijst niet kan. Server action i.p.v. method="get": laag 3
+          (twee AI-aanroepen) draait ín de action, mét laadoverlay
+          (LangeActieKnop), en stuurt daarna door naar dezelfde
+          GET-route-met-parameters — die blijft dus deelbaar/te herladen, en
+          de bestemmingspagina treft de uitkomst als cache-hit aan (de hash in
+          opslag.ts), dus zonder nog een keer te betalen. Zie ./acties.ts. */}
+      <form action={zoekFondsen} className="card mb-6 p-4 md:p-5">
+        <input type="hidden" name="landgoed_id" value={id} />
         <label htmlFor="plan" className="mb-1 block text-[13px] font-semibold">
           Beschrijf uw plan
         </label>
@@ -436,9 +451,13 @@ export default async function FondsenPagina({
         </div>
 
         <div className="mt-4 flex items-center gap-2">
-          <button type="submit" className="btn btn-primary">
+          <LangeActieKnop
+            className="btn btn-primary"
+            bezigTekst="We doorzoeken de fondsencatalogus"
+            stappen={ZOEK_STAPPEN}
+          >
             Zoek fondsen
-          </button>
+          </LangeActieKnop>
           {erIsGevraagd && (
             <Link href={basis} className="btn btn-ghost btn-sm">
               Wissen
