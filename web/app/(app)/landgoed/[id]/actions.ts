@@ -364,13 +364,15 @@ export async function nieuwContract(fd: FormData) {
   const titel = tekst(fd, "titel");
   if (!titel) return;
   const supabase = await createClient();
-  await moet(supabase.from("contract").insert({
+  const bedrag = getal(fd, "bedrag");
+  const ingangsdatum = tekst(fd, "ingangsdatum");
+  const nieuw = await moet(supabase.from("contract").insert({
     landgoed_id,
     titel,
     type: tekst(fd, "type"),
     partij: tekst(fd, "partij"),
-    bedrag: getal(fd, "bedrag"),
-    ingangsdatum: tekst(fd, "ingangsdatum"),
+    bedrag,
+    ingangsdatum,
     einddatum: tekst(fd, "einddatum"),
     indexatie_type: tekst(fd, "indexatie_type"),
     volgende_indexatie: tekst(fd, "volgende_indexatie"),
@@ -378,6 +380,22 @@ export async function nieuwContract(fd: FormData) {
     achterstand: getal(fd, "achterstand"),
     achterstand_notitie: tekst(fd, "achterstand_notitie"),
     status: "actief",
-  }), "contract opslaan");
+  }).select("id").single(), "contract opslaan");
+  // Plak 2: het bedrag leeft als prijsafspraak met geldigheidsperiode;
+  // het bedrag-veld op contract is daarvan de spiegel.
+  if (nieuw.id && bedrag != null && Number.isFinite(bedrag)) {
+    await moet(
+      supabase.from("contract_prijsafspraak").insert({
+        landgoed_id,
+        contract_id: nieuw.id,
+        bedrag,
+        geldig_van: ingangsdatum ?? new Date().toISOString().slice(0, 10),
+        status: "geaccordeerd",
+        herkomst: "handmatig",
+        toelichting: "eerste prijs bij aanmaken",
+      }),
+      "prijsafspraak opslaan",
+    );
+  }
   revalidatePath(`/landgoed/${landgoed_id}/contracten`);
 }

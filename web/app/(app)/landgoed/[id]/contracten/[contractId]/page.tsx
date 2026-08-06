@@ -22,6 +22,11 @@ import {
   ontkoppelContractObject,
   uploadDocumentBijContract,
   ontkoppelDocumentVanContract,
+  nieuwePrijsafspraak,
+  maakIndexatieVoorstel,
+  accordeerPrijsvoorstel,
+  wijsAfPrijsvoorstel,
+  verwijderPrijsafspraak,
 } from "./acties";
 
 // Het contractdossier (Hugo module 6, plak 1): het contract als
@@ -69,6 +74,7 @@ export default async function ContractDossierPage({
     { data: allePercelen },
     { data: alleStamobjecten },
     { data: alleEenheden },
+    { data: prijsData },
   ] = await Promise.all([
     supabase
       .from("contract_partij")
@@ -103,6 +109,11 @@ export default async function ContractDossierPage({
       .select("id, naam, type, stamobject_id")
       .eq("landgoed_id", id)
       .order("naam"),
+    supabase
+      .from("contract_prijsafspraak")
+      .select("id, bedrag, geldig_van, geldig_tot, status, herkomst, toelichting")
+      .eq("contract_id", contractId)
+      .order("geldig_van", { ascending: false }),
   ]);
 
   const partijen = (partijenData ?? []) as unknown as {
@@ -347,15 +358,6 @@ export default async function ContractDossierPage({
               </select>
             </div>
             <div>
-              <label className="label-up mb-1 block">Bedrag (€/jaar)</label>
-              <input
-                className="input"
-                name="bedrag"
-                inputMode="decimal"
-                defaultValue={contract.bedrag ?? ""}
-              />
-            </div>
-            <div>
               <label className="label-up mb-1 block">Servicekosten (€)</label>
               <input
                 className="input"
@@ -433,6 +435,154 @@ export default async function ContractDossierPage({
               koppel hieronder het échte contact, dan reist alles mee.
             </p>
           )}
+        </section>
+
+        {/* ── Prijs & indexatie (plak 2): historie met geldigheidsperioden ── */}
+        <section className="mb-7">
+          <h2 className="mb-2 text-[16px] font-bold">
+            Prijs & indexatie
+            {euro(contract.bedrag) && (
+              <span className="ml-2 text-[13px] font-normal" style={{ color: "var(--text-2)" }}>
+                huidig: {euro(contract.bedrag)}/jaar
+              </span>
+            )}
+          </h2>
+          <div className="card mb-3 divide-y" style={{ borderColor: "var(--border)" }}>
+            {(prijsData ?? []).length === 0 && (
+              <div className="p-4 text-[13px]" style={{ color: "var(--text-2)" }}>
+                Nog geen prijsafspraken vastgelegd.
+              </div>
+            )}
+            {(prijsData ?? []).map((p) => (
+              <div key={p.id} className="flex flex-wrap items-center gap-3 px-4 py-3">
+                <div className="min-w-[200px] flex-1">
+                  <div className="text-[14px] font-semibold">
+                    {euro(p.bedrag)}/jaar
+                    <span
+                      className="ml-2 text-[12px] font-normal"
+                      style={{ color: "var(--text-2)" }}
+                    >
+                      {p.geldig_tot
+                        ? `${p.geldig_van} t/m ${p.geldig_tot}`
+                        : `vanaf ${p.geldig_van}`}
+                    </span>
+                  </div>
+                  {p.toelichting && (
+                    <div className="text-[12px]" style={{ color: "var(--text-3)" }}>
+                      {p.toelichting}
+                    </div>
+                  )}
+                </div>
+                {p.status === "voorstel" ? (
+                  <div className="flex items-center gap-2">
+                    <span
+                      className="rounded px-1.5 py-0.5 text-[11px] font-semibold"
+                      style={{ background: "#fef3c7", color: "#92400e" }}
+                    >
+                      Voorstel
+                    </span>
+                    <form action={accordeerPrijsvoorstel}>
+                      <input type="hidden" name="landgoed_id" value={id} />
+                      <input type="hidden" name="contract_id" value={contractId} />
+                      <input type="hidden" name="afspraak_id" value={p.id} />
+                      <SubmitKnop className="btn btn-primary btn-sm" pendingTekst="…">
+                        Akkoord
+                      </SubmitKnop>
+                    </form>
+                    <form action={wijsAfPrijsvoorstel}>
+                      <input type="hidden" name="landgoed_id" value={id} />
+                      <input type="hidden" name="contract_id" value={contractId} />
+                      <input type="hidden" name="afspraak_id" value={p.id} />
+                      <SubmitKnop className="btn btn-ghost btn-sm" pendingTekst="…">
+                        Wijs af
+                      </SubmitKnop>
+                    </form>
+                  </div>
+                ) : (
+                  <>
+                    {p.status === "afgewezen" && (
+                      <span className="tag tag-gray">afgewezen</span>
+                    )}
+                    {p.herkomst === "indexatie" && p.status === "geaccordeerd" && (
+                      <span className="tag tag-gray">indexatie</span>
+                    )}
+                    <form action={verwijderPrijsafspraak}>
+                      <input type="hidden" name="landgoed_id" value={id} />
+                      <input type="hidden" name="contract_id" value={contractId} />
+                      <input type="hidden" name="afspraak_id" value={p.id} />
+                      <VerwijderKnop
+                        className="text-[11.5px] hover:underline"
+                        vraag={`de prijsregel van ${euro(p.bedrag)}/jaar (vanaf ${p.geldig_van})`}
+                      >
+                        <span style={{ color: "var(--red)" }}>verwijder</span>
+                      </VerwijderKnop>
+                    </form>
+                  </>
+                )}
+              </div>
+            ))}
+          </div>
+
+          <div className="flex flex-col gap-3 md:flex-row">
+            <form
+              action={nieuwePrijsafspraak}
+              className="card flex flex-1 flex-wrap items-end gap-3 p-4"
+            >
+              <input type="hidden" name="landgoed_id" value={id} />
+              <input type="hidden" name="contract_id" value={contractId} />
+              <div>
+                <label className="label-up mb-1 block">Nieuwe prijs (€/jaar)</label>
+                <input className="input" name="bedrag" inputMode="decimal" required />
+              </div>
+              <div>
+                <label className="label-up mb-1 block">Geldig vanaf</label>
+                <input className="input" type="date" name="geldig_van" required />
+              </div>
+              <div className="min-w-[140px] flex-1">
+                <label className="label-up mb-1 block">Toelichting</label>
+                <input className="input" name="toelichting" placeholder="bijv. herziening" />
+              </div>
+              <SubmitKnop className="btn btn-primary btn-sm" pendingTekst="Opslaan…">
+                Leg vast
+              </SubmitKnop>
+            </form>
+            <form
+              action={maakIndexatieVoorstel}
+              className="card flex flex-wrap items-end gap-3 p-4"
+            >
+              <input type="hidden" name="landgoed_id" value={id} />
+              <input type="hidden" name="contract_id" value={contractId} />
+              <div style={{ maxWidth: 110 }}>
+                <label className="label-up mb-1 block">Indexatie (%)</label>
+                <input
+                  className="input"
+                  name="percentage"
+                  inputMode="decimal"
+                  placeholder="bijv. 3,1"
+                  required
+                />
+              </div>
+              <div>
+                <label className="label-up mb-1 block">Per</label>
+                <input
+                  className="input"
+                  type="date"
+                  name="ingangsdatum"
+                  defaultValue={contract.volgende_indexatie ?? ""}
+                  required
+                />
+              </div>
+              <SubmitKnop className="btn btn-ghost btn-sm" pendingTekst="Rekenen…">
+                Stel indexatie voor
+              </SubmitKnop>
+            </form>
+          </div>
+          <p className="mt-1 text-[11.5px]" style={{ color: "var(--text-3)" }}>
+            Een indexatie-voorstel rekent de nieuwe prijs uit over de huidige;
+            pas na jouw akkoord wordt hij de geldende prijs en schuift de
+            volgende indexatiedatum een jaar op. Oude prijzen blijven als
+            afgesloten periode bewaard.
+          </p>
         </section>
 
         {/* ── Partijen ── */}
