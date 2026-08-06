@@ -48,6 +48,7 @@ import {
   haTekst,
   geomNaarLatlngs,
   maakKadastraleLaag,
+  maakStipIcoon,
 } from "@/components/kaartDelen";
 
 type PlaatsObject = KaartObject;
@@ -246,10 +247,6 @@ export default function Kaart({
     Map<string, { poly: any; basis: { weight: number; fillOpacity: number } }[]>
   >(new Map());
   const geselecteerdRef = useRef<string | null>(null);
-  // Renderer voor de stippen-laag (puntobjecten bóven de vlakken) — leeft
-  // even lang als de kaart, dus buiten tekenOverzicht bewaren.
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const stipRendererRef = useRef<any>(null);
 
   const [mode, setMode] = useState<Mode>("bekijk");
   const [toonNatura, setToonNatura] = useState(false);
@@ -499,41 +496,29 @@ export default function Kaart({
         ]);
         continue;
       }
-      // Terugval: geen contour bekend, dan een stip op het opgeslagen punt.
-      // Geprikte beheerobjecten (boom, brug…) leven hier; ze doen mee met
-      // tooltip, klik-naar-lijst en spotlight, net als de vlakken.
+      // Terugval: geen contour bekend, dan een merkje op het opgeslagen punt.
+      // Geprikte beheerobjecten (boom, brug…) leven hier: gekleurd rondje met
+      // wit pictogram per soort; groeien bij hover doet de CSS. Markers leven
+      // in Leaflets marker-pane en liggen dus vanzelf bóven de vlakken.
       if (Number.isFinite(o.lat) && Number.isFinite(o.lon)) {
-        const stip = L.circleMarker([o.lat, o.lon], {
-          radius: 6,
-          color: "#2A5C3F",
-          fillColor: "#2A5C3F",
-          fillOpacity: 0.7,
-          weight: 1.5,
-          renderer: stipRendererRef.current ?? undefined,
+        const stip = L.marker([o.lat, o.lon], {
+          icon: maakStipIcoon(L, o.categorie),
         });
         stip.bindTooltip(`${o.naam}${o.gebruik ? ` · ${o.gebruik}` : ""}`, {
           sticky: true,
           className: "beheer-tooltip",
         });
-        // Zelfde hover-taal als de vlakken: oplichten en iets groeien —
-        // een klein rondje is anders lastig te raken (wens Steven).
-        stip.on("mouseover", () => {
-          if (geselecteerdRef.current) return;
-          stip.setRadius(9);
-          stip.setStyle({ weight: 2.5, fillOpacity: 1 });
-        });
-        stip.on("mouseout", () => {
-          if (geselecteerdRef.current) return;
-          stip.setRadius(6);
-          stip.setStyle({ weight: 1.5, fillOpacity: 0.7 });
-        });
         stip.on("click", () => toonInLijst(o.id));
         stip.addTo(groep);
         bounds.extend([o.lat, o.lon]);
         // Spotlight/selecteer verwachten de polygon-API; een punt levert zijn
-        // eigen mini-bounds.
+        // eigen mini-bounds, en vertaalt setStyle naar marker-opacity (dimmen
+        // als iets anders de spotlight heeft).
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (stip as any).getBounds = () => L.latLngBounds([[o.lat, o.lon]]);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (stip as any).setStyle = (s: { opacity?: number }) =>
+          stip.setOpacity(s?.opacity != null && s.opacity < 1 ? 0.35 : 1);
         vlakkenRef.current.set(o.id, [
           { poly: stip, basis: { weight: 1.5, fillOpacity: 0.7 } },
         ]);
@@ -1021,12 +1006,6 @@ export default function Kaart({
       const L = (await import("leaflet")).default;
       if (cancelled || !containerRef.current || mapRef.current) return;
       const map = L.map(containerRef.current).setView([52.15, 5.4], 8);
-      // Eigen laag voor puntobjecten, bóven de vlakken (overlay-pane = 400):
-      // de objecten worden nieuwste-eerst getekend, dus zonder dit schuift
-      // het beheerperceel-vlak over de stip heen en vangt het alle
-      // muis-events af — hover en klik op de stip deden dan niets.
-      map.createPane("stippen").style.zIndex = "450";
-      stipRendererRef.current = L.svg({ pane: "stippen" });
       achtergrondRef.current = L.tileLayer(PDOK_TILES("standaard"), {
         maxZoom: 19,
         attribution: "© PDOK BRT-Achtergrondkaart",
