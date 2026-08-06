@@ -163,6 +163,7 @@ export async function verrijkRegelingRij(
     if (w !== undefined && w !== null) upd[k] = w;
   };
   zet("organisatie", v.organisatie);
+  zet("beheerd_door", v.beheerd_door);
   zet("samenvatting", v.samenvatting);
   zet("themas", v.themas?.length ? v.themas : undefined);
   zet("trefwoorden", v.trefwoorden?.length ? v.trefwoorden : undefined);

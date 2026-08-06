@@ -29,6 +29,7 @@ export const POORTEN = [
   "benaderbaarheid",
   "geografie",
   "rechtsvorm",
+  "anbi",
   "aanvrager_route",
   "bedragband",
   "projectstatus",
@@ -609,6 +610,49 @@ export function toetsRechtsvorm(f: PoortFonds, p: Landgoedprofiel): PoortOordeel
 }
 
 // ---------------------------------------------------------------------------
+// Poort — ANBI (de meeste landgoederen zijn géén ANBI, en dat is een harde eis)
+// ---------------------------------------------------------------------------
+// Zelfde mechanisme als rechtsvorm: geen eigen kolom, maar een generiek
+// criterium (regeling_criterium, veld='is_anbi') dat de bronlezing oplevert
+// wanneer een fonds "uitsluitend ANBI-instellingen" eist. Zonder zo'n
+// criterium is er geen ANBI-eis en blijft het fonds gewoon doorgelaten.
+
+export function toetsAnbi(f: PoortFonds, p: Landgoedprofiel): PoortOordeel {
+  const criteria = (f.criteria ?? []).filter(
+    (c) => c.veld === "is_anbi" && (c.fase ?? "vooraf") === "vooraf",
+  );
+  if (criteria.length === 0)
+    return {
+      poort: "anbi",
+      uitkomst: "doorgelaten",
+      reden: "Geen ANBI-eis vastgelegd bij dit fonds.",
+    };
+
+  for (const c of criteria) {
+    const soort = c.soort ?? "eis";
+    const uitslag = toetsCriterium(p, c);
+    if (soort === "uitsluiting" ? uitslag === "voldoet" : uitslag === "voldoet_niet")
+      return {
+        poort: "anbi",
+        uitkomst: "afgevallen",
+        reden: `${c.omschrijving}; dit landgoed heeft geen ANBI-status.`,
+      };
+    if (uitslag === "onzeker")
+      return {
+        poort: "anbi",
+        uitkomst: "onbekend",
+        reden: `ANBI-eis niet machinaal te toetsen: ${c.omschrijving}.`,
+      };
+  }
+
+  return {
+    poort: "anbi",
+    uitkomst: "doorgelaten",
+    reden: "Dit landgoed heeft ANBI-status en voldoet aan de eis van dit fonds.",
+  };
+}
+
+// ---------------------------------------------------------------------------
 // Poort 4 — aanvrager-route
 // ---------------------------------------------------------------------------
 // `derde_partij` is géén afwijzing. Er valt geld te verdienen, maar via een
@@ -888,6 +932,7 @@ export function toetsPoort(
     toetsBenaderbaarheid(f),
     toetsGeografie(f, p, aliassen),
     toetsRechtsvorm(f, p),
+    toetsAnbi(f, p),
     toetsAanvragerRoute(f),
     toetsBedragband(f, v),
     toetsProjectstatus(v),

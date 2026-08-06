@@ -28,6 +28,7 @@ type Profiel = {
   gemeente: string | null;
   nsw_status: string | null;
   rechtsvorm: string | null; // aanvragerstype: particulier/bv/stichting/collectief/...
+  is_anbi: boolean; // false = default; de meeste landgoederen zijn geen ANBI
   hectare: number | null;
   natuurbeheertypes: string[];
   agrarisch: boolean;
@@ -53,6 +54,8 @@ export function profielWaarde(p: Profiel, veld: string): string | null {
       return p.nsw_status;
     case "rechtsvorm":
       return p.rechtsvorm;
+    case "is_anbi":
+      return p.is_anbi ? "ja" : "nee";
     case "hectare_min":
       return p.hectare != null ? String(p.hectare) : null;
     case "agrarisch":
@@ -255,7 +258,7 @@ export async function laadProfiel(db: Db, landgoedId: string): Promise<Profiel> 
   const [{ data: lg }, { data: omg }, { data: stam }] = await Promise.all([
     db
       .from("landgoed")
-      .select("provincie, gemeente, nsw_status, rechtsvorm, hectare, ligt_in_natura2000, ligt_in_nnn, ligt_op_veengrond, anlb_leefgebied_code, anlb_leefgebied_naam")
+      .select("provincie, gemeente, nsw_status, rechtsvorm, is_anbi, hectare, ligt_in_natura2000, ligt_in_nnn, ligt_op_veengrond, anlb_leefgebied_code, anlb_leefgebied_naam")
       .eq("id", landgoedId)
       .maybeSingle(),
     db
@@ -282,6 +285,7 @@ export async function laadProfiel(db: Db, landgoedId: string): Promise<Profiel> 
     gemeente: lg?.gemeente ?? null,
     nsw_status: lg?.nsw_status ?? null,
     rechtsvorm: lg?.rechtsvorm ?? null,
+    is_anbi: lg?.is_anbi ?? false,
     hectare: lg?.hectare ?? null,
     natuurbeheertypes: types,
     agrarisch,

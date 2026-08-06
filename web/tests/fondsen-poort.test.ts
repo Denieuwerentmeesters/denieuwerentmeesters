@@ -5,6 +5,7 @@ import {
   toetsBenaderbaarheid,
   toetsGeografie,
   toetsRechtsvorm,
+  toetsAnbi,
   toetsAanvragerRoute,
   toetsBedragband,
   toetsProjectstatus,
@@ -31,6 +32,7 @@ function profiel(over: Partial<Landgoedprofiel> = {}): Landgoedprofiel {
     gemeente: "Middelburg",
     nsw_status: "actief",
     rechtsvorm: "stichting",
+    is_anbi: false,
     hectare: 57.45,
     natuurbeheertypes: [],
     agrarisch: false,
@@ -64,6 +66,15 @@ const RECHTSVORM_EIS = {
   veld: "rechtsvorm",
   operator: "in",
   waarde: "stichting,vereniging",
+  soort: "eis",
+  fase: "vooraf",
+};
+
+const ANBI_EIS = {
+  omschrijving: "Uitsluitend instellingen met ANBI-verklaring",
+  veld: "is_anbi",
+  operator: "is",
+  waarde: "ja",
   soort: "eis",
   fase: "vooraf",
 };
@@ -441,6 +452,31 @@ describe("rechtsvorm", () => {
   });
 });
 
+describe("anbi", () => {
+  it("laat door als het fonds geen ANBI-eis heeft vastgelegd", () => {
+    expect(toetsAnbi(fonds({ criteria: [] }), profiel()).uitkomst).toBe("doorgelaten");
+  });
+
+  it("laat een landgoed zonder ANBI-status afvallen bij een ANBI-eis", () => {
+    const o = toetsAnbi(fonds({ criteria: [ANBI_EIS] }), profiel({ is_anbi: false }));
+    expect(o.uitkomst).toBe("afgevallen");
+    expect(o.reden).toContain("geen ANBI-status");
+  });
+
+  it("laat een landgoed mét ANBI-status door", () => {
+    const o = toetsAnbi(fonds({ criteria: [ANBI_EIS] }), profiel({ is_anbi: true }));
+    expect(o.uitkomst).toBe("doorgelaten");
+  });
+
+  it("negeert criteria uit een andere fase dan 'vooraf'", () => {
+    const o = toetsAnbi(
+      fonds({ criteria: [{ ...ANBI_EIS, fase: "bij_aanvraag" }] }),
+      profiel({ is_anbi: false }),
+    );
+    expect(o.uitkomst).toBe("doorgelaten");
+  });
+});
+
 // ── Aanvrager-route ────────────────────────────────────────────────────────
 
 describe("aanvrager-route", () => {
@@ -582,7 +618,7 @@ describe("toetsPoort", () => {
 
   it("evalueert ALLE poorten, ook na een afvaller (anders geen trechtercijfers)", () => {
     const o = toetsPoort(fonds({ benaderbaarheid: "gesloten" }), profiel());
-    expect(o.poorten).toHaveLength(7);
+    expect(o.poorten).toHaveLength(8);
   });
 
   it("houdt een fonds met een ander handelingsperspectief in de lijst", () => {
