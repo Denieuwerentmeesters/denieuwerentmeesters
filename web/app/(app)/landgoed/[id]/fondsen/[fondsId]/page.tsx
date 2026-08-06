@@ -1,11 +1,12 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { botsendeBedragen } from "./bedragen";
+import { botsendeBedragen, euro } from "./bedragen";
 import { type PoortFonds } from "@/lib/fondsen/poort";
 import {
   bepaalDekking,
   deelStapels,
+  splitsInRegels,
   splitsProfiel,
   schoonContact,
   telDekking,
@@ -76,6 +77,7 @@ export default async function FondsDetail({
     contact: string | null;
     matchbaarheid: number | null;
     geaccordeerd: boolean;
+    cofinanciering_vereist: boolean | null;
   };
 
   const [vereistenRes, profielRes, bronnenRes] = await Promise.all([
@@ -187,18 +189,35 @@ export default async function FondsDetail({
       )}
 
       {/* De matchmotor heeft de poort al getoetst — is dit fonds geen match,
-          dan komt u hier niet. Wat wél hier hoort: de voorwaarde die bepaalt
-          of aanschrijven zin heeft, zoals Trees for All's eis dat u eerst
-          alle andere financiering verkend moet hebben. Die staat, bij gebrek
-          aan een apart veld, in de vrije brontekst — maar verdient een
-          prominente plek, niet een voetnoot. */}
-      {fonds.benaderwijze_notitie && (
+          dan komt u hier niet. Wat wél hier hoort: een opsomming van de
+          voorwaarden, zoals Trees for All's eis dat u eerst alle andere
+          financiering verkend moet hebben. Het bedrag en de cofinancierings-
+          eis staan al gestructureerd in de catalogus (bedrag_min/_max,
+          cofinanciering_vereist) — de rest komt, bij gebrek aan een apart
+          veld per voorwaarde, uit de vrije brontekst, in losse regels i.p.v.
+          één geciteerde alinea. */}
+      {(fonds.benaderwijze_notitie ||
+        fonds.bedrag_min != null ||
+        fonds.bedrag_max != null ||
+        fonds.cofinanciering_vereist) && (
         <div
           className="mt-5 rounded-lg border px-4 py-3 text-[13px] leading-snug"
           style={{ borderColor: "var(--border)", background: "rgba(37,99,235,0.06)" }}
         >
-          <strong>Aanschrijven heeft alleen zin als u aan deze voorwaarde voldoet:</strong>
-          <p className="mt-1">&ldquo;{fonds.benaderwijze_notitie}&rdquo;</p>
+          <strong>In het kort — voorwaarden voor dit fonds:</strong>
+          <ol className="mt-1.5 list-decimal pl-5">
+            {(fonds.bedrag_min != null || fonds.bedrag_max != null) && (
+              <li>
+                {fonds.bedrag_max != null && `Maximale bijdrage: ${euro(fonds.bedrag_max)}`}
+                {fonds.bedrag_min != null &&
+                  `${fonds.bedrag_max != null ? " / m" : "M"}inimale bijdrage: ${euro(fonds.bedrag_min)}`}
+                .
+              </li>
+            )}
+            {fonds.cofinanciering_vereist && <li>Cofinanciering/eigen bijdrage is vereist.</li>}
+            {fonds.benaderwijze_notitie &&
+              splitsInRegels(fonds.benaderwijze_notitie).map((regel, i) => <li key={i}>{regel}</li>)}
+          </ol>
         </div>
       )}
 
