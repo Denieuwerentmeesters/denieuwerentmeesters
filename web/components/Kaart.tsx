@@ -355,6 +355,17 @@ export default function Kaart({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [geselecteerd]);
 
+  // In de invoer-modi is de zwevende beheer-tooltip ("… behoort bij
+  // beheerperceel …") vooral in de weg — die achtervolgt je terwijl je met
+  // iets anders bezig bent (wens Steven). De werk-tooltips van de bezit-laag
+  // ("nog in te delen") blijven wél zichtbaar; die horen bij die modi.
+  useEffect(() => {
+    containerRef.current?.classList.toggle(
+      "verberg-beheer-tooltips",
+      mode !== "bekijk" && mode !== "basis",
+    );
+  }, [mode]);
+
   // Kaart → lijst: klik in bekijk-modus op een vlak en de lijst springt naar
   // de bijbehorende rij (de omgekeerde richting van selecteer()). Nogmaals
   // klikken heft de selectie weer op.
@@ -419,7 +430,7 @@ export default function Kaart({
             aanduiding
               ? `${aanduiding} · behoort bij beheerperceel: ${o.naam}${o.gebruik ? ` (${o.gebruik})` : ""}`
               : `${o.naam}${o.gebruik ? ` · ${o.gebruik}` : ""}${o.kadastraal ? ` · ${o.kadastraal}` : ""}`,
-            { sticky: true },
+            { sticky: true, className: "beheer-tooltip" },
           );
           // Hover-oplichten alleen zolang er geen spotlight-selectie actief is.
           poly.on("mouseover", () => {
@@ -461,7 +472,7 @@ export default function Kaart({
         });
         poly.bindTooltip(
           `${o.naam}${o.gebruik ? ` · ${o.gebruik}` : ""}`,
-          { sticky: true },
+          { sticky: true, className: "beheer-tooltip" },
         );
         poly.on("click", () => toonInLijst(o.id));
         poly.addTo(groep);
@@ -484,6 +495,7 @@ export default function Kaart({
         });
         stip.bindTooltip(`${o.naam}${o.gebruik ? ` · ${o.gebruik}` : ""}`, {
           sticky: true,
+          className: "beheer-tooltip",
         });
         stip.on("click", () => toonInLijst(o.id));
         stip.addTo(groep);
