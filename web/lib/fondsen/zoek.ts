@@ -115,6 +115,11 @@ export type ZoekUitkomst = {
   kosten: Kostenoverzicht;
   model_gebruikt: boolean;
   toelichting: string;
+  // Laag-2-score (gratis, deterministisch) voor ELK fonds dat door de poort
+  // kwam — niet alleen de top die naar laag 3 ging. Zo kan de catalogus
+  // hieronder ("Door de poort" e.a.) op relevantie sorteren i.p.v. op naam,
+  // zonder dat daar nog een AI-aanroep voor nodig is.
+  weegscores: { fonds_id: string; score: number }[];
 };
 
 // ---------------------------------------------------------------------------
@@ -440,6 +445,7 @@ export async function zoek(
       kosten: legeKosten(),
       model_gebruikt: false,
       toelichting: "Geen zoekopdracht uitgevoerd: het plan is voorbij het punt waarop financiering nog kan.",
+      weegscores: [],
     };
   }
 
@@ -478,16 +484,19 @@ export async function zoek(
     : [];
   const trefferIds = new Set(treffers.map((t) => t.regeling_id));
   // Per fonds wegen mét zijn eigen poortoordeel erbij (dat drukt de score als de
-  // bron op punten zwijgt), daarna snijden op de shortlist-omvang.
-  const gewogen = doorDePoort
+  // bron op punten zwijgt). `gewogenVolledig` is ELK fonds dat door de poort
+  // kwam (voor de weegscores-export hieronder); `gewogen` snijdt daarna op de
+  // shortlist-omvang voor wat naar laag 3 gaat.
+  const gewogenVolledig = doorDePoort
     .map((f) => ({ fonds: f, weging: shortlistVoorEen(f, antwoorden, trefferIds, oordelen.get(f.id)) }))
     .sort(
       (a, b) =>
         b.weging.score - a.weging.score ||
         b.weging.matchbaarheid - a.weging.matchbaarheid ||
         a.fonds.naam.localeCompare(b.fonds.naam),
-    )
-    .slice(0, SHORTLIST_OMVANG);
+    );
+  const gewogen = gewogenVolledig.slice(0, SHORTLIST_OMVANG);
+  const weegscores = gewogenVolledig.map((g) => ({ fonds_id: g.fonds.id, score: g.weging.score }));
 
   const aanroepen: Aanroepkosten[] = [];
 
@@ -505,6 +514,7 @@ export async function zoek(
       trechter: cijfers,
       kosten,
       model_gebruikt: false,
+      weegscores,
       toelichting:
         gewogen.length === 0
           ? "Er blijft na de harde filters niets over."
@@ -628,6 +638,7 @@ export async function zoek(
       getoond.length === 0
         ? "Er is geen fonds waarvan het profiel dit plan dekt."
         : `${getoond.length} ${getoond.length === 1 ? "fonds" : "fondsen"} uit ${cijfers.doorgelaten + cijfers.onbekend} die door de poort kwamen.`,
+    weegscores,
   };
 }
 

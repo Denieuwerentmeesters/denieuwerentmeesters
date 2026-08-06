@@ -326,6 +326,19 @@ export default async function FondsenPagina({
     onbekend = onbekend.filter((f) => !getoond.has(f.id));
     afgevallen = afgevallen.filter((f) => !getoond.has(f.id));
     nietOnderzocht = nietOnderzocht.filter((f) => !getoond.has(f.id));
+
+    // Op relevantie sorteren i.p.v. op naam: `weegscores` is de gratis, al
+    // berekende laag-2-score (thema/trefwoorden/kostensoort tegen het
+    // opgegeven plan) voor ELK fonds dat door de poort kwam, niet alleen de
+    // top die naar de AI ging. Zo zakt een fonds dat niets met het plan te
+    // maken heeft (bv. een kunstfonds bij een plan over voedselbossen) naar
+    // onderen, zonder dat daar een extra AI-aanroep voor nodig is.
+    const score = new Map(uit.weegscores.map((w) => [w.fonds_id, w.score]));
+    const opRelevantie = (a: FondsRij, b: FondsRij) =>
+      (score.get(b.id) ?? -1) - (score.get(a.id) ?? -1) || a.naam.localeCompare(b.naam);
+    door = [...door].sort(opRelevantie);
+    anders = [...anders].sort(opRelevantie);
+    onbekend = [...onbekend].sort(opRelevantie);
   }
 
   const basis = `/landgoed/${id}/fondsen`;
