@@ -22,6 +22,7 @@ import {
   type KaartGroepLabel,
   kaartGroep,
   ordenGebouwen,
+  ordenPercelenMetObjecten,
   geomNaarLatlngs,
   maakKadastraleLaag,
 } from "@/components/kaartDelen";
@@ -687,26 +688,46 @@ export default function KaartWeergave({
                   {objecten.filter((o) => kaartGroep(o) === "Gebouwen").length})
                 </button>
               </div>
-              {KAARTGROEP_LABELS.filter((l) =>
-                lijstTab === "gebouwen" ? l === "Gebouwen" : l !== "Gebouwen",
-              ).map((label) => {
-              const lijst = groepenMap.get(label)!;
-              if (lijst.length === 0) return null;
+              {(lijstTab === "gebouwen"
+                ? /* Gebouwen als clusters: bijgebouwen ingesprongen onder
+                     hun hoofdgebouw. */
+                  ([
+                    ["Gebouwen", ordenGebouwen(groepenMap.get("Gebouwen")!)],
+                  ] as [
+                    string,
+                    { item: KaartObject; ingesprongen: boolean }[],
+                  ][])
+                : /* Percelen: beheerperceel als hoofditem, geprikte objecten
+                     ingesprongen eronder; losse objecten apart (issue #130). */
+                  (() => {
+                    const { groepen, los } = ordenPercelenMetObjecten(objecten);
+                    return [
+                      ...groepen,
+                      ...(los.length
+                        ? ([
+                            [
+                              "Losse objecten (nog niet gekoppeld)",
+                              los.map((item) => ({ item, ingesprongen: false })),
+                            ],
+                          ] as [
+                            string,
+                            { item: KaartObject; ingesprongen: boolean }[],
+                          ][])
+                        : []),
+                    ];
+                  })()
+              ).map(([label, geordend]) => {
+              if (geordend.length === 0) return null;
               return (
                 <div key={label} className="card p-4">
                   <div
                     className="mb-2 text-[12px] font-semibold uppercase tracking-wide"
                     style={{ color: "var(--text-2)" }}
                   >
-                    {label} ({lijst.length})
+                    {label} ({geordend.length})
                   </div>
                   <div className="divide-y" style={{ borderColor: "var(--border)" }}>
-                    {/* Gebouwen als clusters: bijgebouwen ingesprongen onder
-                        hun hoofdgebouw. */}
-                    {(label === "Gebouwen"
-                      ? ordenGebouwen(lijst)
-                      : lijst.map((item) => ({ item, ingesprongen: false }))
-                    ).map(({ item: o, ingesprongen }) => {
+                    {geordend.map(({ item: o, ingesprongen }) => {
                       // Filter actief: passende rijen lichten op in de
                       // filterkleur, de rest dimt licht — zelfde taal als de
                       // kaart (wens Steven).
