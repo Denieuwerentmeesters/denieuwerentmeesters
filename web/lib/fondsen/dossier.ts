@@ -401,6 +401,13 @@ const STRIJDIG_WOORDEN = [
   "wijkt af van",
 ];
 
+// Zelfreferentiële vlag: het model markeert een passage soms alleen als
+// "tegenstrijdig gepubliceerd" (evt. met "dit is"/"dat is" ervoor) zonder te
+// zeggen WAT er tegenstrijdig is. Zo'n zin benoemt geen enkele concrete
+// tegenstrijdigheid en voegt naast de wél concrete meldingen van
+// `botsendeBedragen` niets toe.
+const CONTENTLOOZE_VLAG = /^(dit|dat|het)?\s*(is\s+)?tegenstrijdig gepubliceerd\.?$/i;
+
 export function vindTegenstrijdigheden(...teksten: (string | null | undefined)[]): string[] {
   const gevonden: string[] = [];
   for (const t of teksten) {
@@ -408,10 +415,16 @@ export function vindTegenstrijdigheden(...teksten: (string | null | undefined)[]
     // Op zinnen splitsen, maar niet op de punt in "€ 10.000" of "bv.".
     for (const zin of t.split(/(?<=[.!?])\s+(?=[A-Z(“"])/)) {
       const schoon = zin.trim();
-      if (!schoon) continue;
+      if (!schoon || CONTENTLOOZE_VLAG.test(schoon)) continue;
       const laag = schoon.toLowerCase();
-      if (STRIJDIG_WOORDEN.some((w) => laag.includes(w)) && !gevonden.includes(schoon))
-        gevonden.push(schoon);
+      if (!STRIJDIG_WOORDEN.some((w) => laag.includes(w))) continue;
+
+      // Dedupe op inhoud, niet op exacte string: "Dit is tegenstrijdig X"
+      // bevat "Tegenstrijdig X" vaak al letterlijk, en dat is dezelfde
+      // melding twee keer.
+      if (gevonden.some((g) => g.toLowerCase().includes(laag) || laag.includes(g.toLowerCase()))) continue;
+
+      gevonden.push(schoon);
     }
   }
   return gevonden;
