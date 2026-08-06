@@ -63,6 +63,7 @@ type UitkomstJson = {
   wat_zou_helpen: string[];
   te_laat: ZoekUitkomst["te_laat"];
   toelichting: string;
+  weegscores: ZoekUitkomst["weegscores"];
 };
 
 function alsAntwoorden(v: unknown): Antwoorden {
@@ -105,6 +106,7 @@ export async function leesZoekopdracht(
       te_laat: u.te_laat ?? null,
       fondsen: u.fondsen ?? [],
       wat_zou_helpen: u.wat_zou_helpen ?? [],
+      weegscores: u.weegscores ?? [],
       trechter: r.trechter as ZoekUitkomst["trechter"],
       // DE KOSTEN VAN EEN HERGEBRUIKTE VRAAG ZIJN NUL, NIET DE OUDE KOSTEN.
       // Wat het destijds kostte staat in de rij en blijft daar; wat déze
@@ -152,6 +154,7 @@ export async function bewaarZoekopdracht(
     wat_zou_helpen: u.wat_zou_helpen,
     te_laat: u.te_laat,
     toelichting: u.toelichting,
+    weegscores: u.weegscores,
   };
 
   const { error } = await db.from(ZOEKOPDRACHT_TABEL).upsert(
