@@ -497,6 +497,18 @@ export default function Kaart({
           sticky: true,
           className: "beheer-tooltip",
         });
+        // Zelfde hover-taal als de vlakken: oplichten en iets groeien —
+        // een klein rondje is anders lastig te raken (wens Steven).
+        stip.on("mouseover", () => {
+          if (geselecteerdRef.current) return;
+          stip.setRadius(9);
+          stip.setStyle({ weight: 2.5, fillOpacity: 1 });
+        });
+        stip.on("mouseout", () => {
+          if (geselecteerdRef.current) return;
+          stip.setRadius(6);
+          stip.setStyle({ weight: 1.5, fillOpacity: 0.7 });
+        });
         stip.on("click", () => toonInLijst(o.id));
         stip.addTo(groep);
         bounds.extend([o.lat, o.lon]);

@@ -322,15 +322,30 @@ export default function KaartWeergave({
           stip.bindTooltip(`${o.naam}${o.gebruik ? ` · ${o.gebruik}` : ""}`, {
             sticky: true,
           });
+          // Zelfde hover-taal als de vlakken: oplichten en iets groeien —
+          // een klein rondje is anders lastig te raken (wens Steven).
+          stip.on("mouseover", () => {
+            if (selectieRef.current.length || filterRef.current) return;
+            stip.setRadius(10);
+            stip.setStyle({ weight: 3, fillOpacity: 1 });
+          });
+          stip.on("mouseout", () => {
+            if (selectieRef.current.length || filterRef.current) return;
+            stip.setRadius(7);
+            stip.setStyle({ opacity: 1, weight: 2, fillOpacity: 0.8 });
+          });
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           stip.on("click", (e: any) => {
             if (e.originalEvent) L.DomEvent.stopPropagation(e.originalEvent);
             toonInLijst(o.id);
           });
           // De stijl-pass en zoomNaar verwachten de polygon-API; een punt
-          // levert zijn eigen mini-bounds.
+          // levert zijn eigen mini-bounds en zijn eigen basisstijl (voller
+          // dan een vlak, anders vervaagt het rondje na elke stijl-pass).
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           (stip as any).getBounds = () => L.latLngBounds([[o.lat, o.lon]]);
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          (stip as any)._puntBasis = { weight: 2, fillOpacity: 0.8 };
           stip.addTo(groep);
           bounds.extend([o.lat, o.lon]);
           eenheid.push(stip);
@@ -340,7 +355,8 @@ export default function KaartWeergave({
             o.id,
             eenheid.map((p) => ({
               poly: p,
-              basis,
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              basis: (p as any)._puntBasis ?? basis,
               gebruik: o.gebruik,
               isPerceel,
             })),
