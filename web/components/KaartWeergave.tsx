@@ -211,6 +211,12 @@ export default function KaartWeergave({
       const L = (await import("leaflet")).default;
       if (cancelled || !containerRef.current || mapRef.current) return;
       const map = L.map(containerRef.current).setView([52.15, 5.4], 8);
+      // Eigen laag voor puntobjecten, bóven de vlakken (overlay-pane = 400):
+      // de objecten worden nieuwste-eerst getekend, dus zonder dit schuift
+      // het beheerperceel-vlak over de stip heen en vangt het alle
+      // muis-events af — hover en klik op de stip deden dan niets.
+      map.createPane("stippen").style.zIndex = "450";
+      const stipRenderer = L.svg({ pane: "stippen" });
       achtergrondRef.current = L.tileLayer(PDOK_TILES("grijs"), {
         maxZoom: 19,
         attribution: "© PDOK BRT-Achtergrondkaart",
@@ -324,6 +330,7 @@ export default function KaartWeergave({
             fillColor: kleur,
             fillOpacity: 0.8,
             weight: 2,
+            renderer: stipRenderer,
           });
           stip.bindTooltip(`${o.naam}${o.gebruik ? ` · ${o.gebruik}` : ""}`, {
             sticky: true,

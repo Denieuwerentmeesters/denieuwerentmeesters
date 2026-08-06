@@ -246,6 +246,10 @@ export default function Kaart({
     Map<string, { poly: any; basis: { weight: number; fillOpacity: number } }[]>
   >(new Map());
   const geselecteerdRef = useRef<string | null>(null);
+  // Renderer voor de stippen-laag (puntobjecten bóven de vlakken) — leeft
+  // even lang als de kaart, dus buiten tekenOverzicht bewaren.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const stipRendererRef = useRef<any>(null);
 
   const [mode, setMode] = useState<Mode>("bekijk");
   const [toonNatura, setToonNatura] = useState(false);
@@ -505,6 +509,7 @@ export default function Kaart({
           fillColor: "#2A5C3F",
           fillOpacity: 0.7,
           weight: 1.5,
+          renderer: stipRendererRef.current ?? undefined,
         });
         stip.bindTooltip(`${o.naam}${o.gebruik ? ` · ${o.gebruik}` : ""}`, {
           sticky: true,
@@ -1016,6 +1021,12 @@ export default function Kaart({
       const L = (await import("leaflet")).default;
       if (cancelled || !containerRef.current || mapRef.current) return;
       const map = L.map(containerRef.current).setView([52.15, 5.4], 8);
+      // Eigen laag voor puntobjecten, bóven de vlakken (overlay-pane = 400):
+      // de objecten worden nieuwste-eerst getekend, dus zonder dit schuift
+      // het beheerperceel-vlak over de stip heen en vangt het alle
+      // muis-events af — hover en klik op de stip deden dan niets.
+      map.createPane("stippen").style.zIndex = "450";
+      stipRendererRef.current = L.svg({ pane: "stippen" });
       achtergrondRef.current = L.tileLayer(PDOK_TILES("standaard"), {
         maxZoom: 19,
         attribution: "© PDOK BRT-Achtergrondkaart",
