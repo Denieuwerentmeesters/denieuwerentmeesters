@@ -1,6 +1,8 @@
+import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { nieuwContract } from "../actions";
 import { ToevoegenToggle } from "@/components/ToevoegenToggle";
+import { CONTRACT_STATUS_LABEL } from "./constanten";
 
 function dagenTot(datum: string | null): number | null {
   if (!datum) return null;
@@ -28,7 +30,7 @@ export default async function ContractenPage({
   const { data: contracten } = await supabase
     .from("contract")
     .select(
-      "id, titel, type, partij, bedrag, ingangsdatum, einddatum, indexatie_type, volgende_indexatie, servicekosten, achterstand, status",
+      "id, titel, contractnummer, type, partij, bedrag, ingangsdatum, einddatum, indexatie_type, volgende_indexatie, servicekosten, achterstand, status",
     )
     .eq("landgoed_id", id)
     .order("einddatum", { nullsFirst: false });
@@ -141,13 +143,24 @@ export default async function ContractenPage({
               >
                 <div className="flex-1">
                   <div className="flex items-center gap-2">
-                    <span className="text-[14px] font-semibold">{c.titel}</span>
+                    <Link
+                      href={`/landgoed/${id}/contracten/${c.id}`}
+                      className="text-[14px] font-semibold underline"
+                    >
+                      {c.titel}
+                    </Link>
                     {c.type && <span className="tag tag-gray">{c.type}</span>}
+                    {c.status && c.status !== "actief" && (
+                      <span className="tag tag-gray">
+                        {CONTRACT_STATUS_LABEL[c.status] ?? c.status}
+                      </span>
+                    )}
                   </div>
                   <div
                     className="mt-0.5 text-[12px]"
                     style={{ color: "var(--text-2)" }}
                   >
+                    {c.contractnummer ? `${c.contractnummer} · ` : ""}
                     {c.partij ? `${c.partij} · ` : ""}
                     {euro(c.bedrag) ? `${euro(c.bedrag)}/jaar` : "geen bedrag"}
                     {c.einddatum ? ` · loopt af ${c.einddatum}` : ""}

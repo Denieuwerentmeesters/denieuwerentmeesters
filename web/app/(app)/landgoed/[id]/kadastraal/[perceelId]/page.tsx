@@ -244,12 +244,80 @@ export default async function KadastraalDetailPage({
           )}
           <p className="mt-1 text-[11.5px]" style={{ color: "var(--text-3)" }}>
             Het beheerperceel is de beheer-eenheid (gebruik, gebouwen, taken);
-            dit kadastrale perceel is de juridische register-eenheid. Rechten en
-            contracten die op dit perceel rusten (pacht, erfpacht) komen hier te
-            staan zodra de contractenmodule er is.
+            dit kadastrale perceel is de juridische register-eenheid.
           </p>
         </section>
+
+        {/* ── Contracten die op dit perceel rusten (Hugo 6.2: pacht rust
+            juridisch op kadastrale nummers) ── */}
+        <ContractenOpPerceel landgoedId={id} perceelId={perceelId} />
       </div>
     </div>
+  );
+}
+
+async function ContractenOpPerceel({
+  landgoedId,
+  perceelId,
+}: {
+  landgoedId: string;
+  perceelId: string;
+}) {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("contract_object")
+    .select("id, contract(id, titel, type, status, einddatum, bedrag)")
+    .eq("landgoed_id", landgoedId)
+    .eq("object_type", "kadastraal_perceel")
+    .eq("object_id", perceelId);
+  const rijen = (data ?? []) as unknown as {
+    id: string;
+    contract: {
+      id: string;
+      titel: string;
+      type: string | null;
+      status: string | null;
+      einddatum: string | null;
+      bedrag: number | null;
+    } | null;
+  }[];
+  return (
+    <section className="mb-7">
+      <h2 className="mb-2 text-[16px] font-bold">Rechten & contracten</h2>
+      {rijen.length === 0 ? (
+        <div className="card p-4 text-[13px]" style={{ color: "var(--text-2)" }}>
+          Er zijn nog geen contracten aan dit perceel gekoppeld. Koppelen doe je
+          vanuit het contractdossier (Contracten → contract → &quot;Rust op&quot;).
+        </div>
+      ) : (
+        <div className="card divide-y" style={{ borderColor: "var(--border)" }}>
+          {rijen.map((r) =>
+            r.contract ? (
+              <div key={r.id} className="flex flex-wrap items-center gap-3 px-4 py-3">
+                <div className="min-w-[200px] flex-1">
+                  <Link
+                    href={`/landgoed/${landgoedId}/contracten/${r.contract.id}`}
+                    className="text-[14px] font-semibold underline"
+                  >
+                    {r.contract.titel}
+                  </Link>
+                  <span className="ml-2 text-[12px]" style={{ color: "var(--text-2)" }}>
+                    {[
+                      r.contract.einddatum ? `loopt tot ${r.contract.einddatum}` : null,
+                    ]
+                      .filter(Boolean)
+                      .join(" · ")}
+                  </span>
+                </div>
+                {r.contract.type && <span className="tag tag-gray">{r.contract.type}</span>}
+                {r.contract.status && r.contract.status !== "actief" && (
+                  <span className="tag tag-gray">{r.contract.status}</span>
+                )}
+              </div>
+            ) : null,
+          )}
+        </div>
+      )}
+    </section>
   );
 }
