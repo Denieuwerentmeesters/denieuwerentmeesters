@@ -15,6 +15,21 @@ import {
   type RegioAlias,
   type Vraag,
 } from "@/lib/fondsen/poort";
+import { laadCatalogus } from "@/lib/fondsen/zoek";
+import { zoekMetOpslag } from "@/lib/fondsen/opslag";
+import {
+  AANVRAGERS,
+  AANVRAGER_LABELS,
+  BEDRAGBANDEN,
+  BEDRAGBAND_LABELS,
+  DOELEN,
+  DOEL_LABELS,
+  PLANFASEN,
+  PLANFASE_LABELS,
+  PUBLIEK_LABELS,
+  PUBLIEK_OPTIES,
+  type Antwoorden,
+} from "@/lib/fondsen/vraag";
 
 // Fondsenradar — fase 2: DE POORT.
 //
@@ -93,7 +108,18 @@ export default async function FondsenPagina({
   searchParams,
 }: {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ q?: string; status?: string; kostensoort?: string; bedrag?: string }>;
+  searchParams: Promise<{
+    q?: string;
+    status?: string;
+    kostensoort?: string;
+    bedrag?: string;
+    plan?: string;
+    doel?: string;
+    fase?: string;
+    band?: string;
+    aanvrager?: string;
+    publiek?: string;
+  }>;
 }) {
   const { id } = await params;
   const zoekParams = await searchParams;
@@ -200,6 +226,50 @@ export default async function FondsenPagina({
     .filter((f) => !oordelen.get(f.id)!.onderzocht)
     .sort((a, b) => a.naam.localeCompare(b.naam));
 
+  // ── De vraag van de gebruiker (fase 3) ────────────────────────────────────
+  // De vijf antwoorden komen als URL-parameters binnen, zodat een uitkomst te
+  // delen en te herladen is. Er wordt pas gezocht als er iets gevraagd is:
+  // een lege pagina hoort niets te kosten.
+  const antwoorden: Antwoorden = {
+    plan: (zoekParams.plan ?? "").trim(),
+    doel: (DOELEN as readonly string[]).includes(zoekParams.doel ?? "")
+      ? (zoekParams.doel as Antwoorden["doel"])
+      : null,
+    fase: (PLANFASEN as string[]).includes(zoekParams.fase ?? "")
+      ? (zoekParams.fase as Antwoorden["fase"])
+      : null,
+    bedragband: (BEDRAGBANDEN as readonly string[]).includes(zoekParams.band ?? "")
+      ? (zoekParams.band as Antwoorden["bedragband"])
+      : null,
+    aanvrager: (AANVRAGERS as readonly string[]).includes(zoekParams.aanvrager ?? "")
+      ? (zoekParams.aanvrager as Antwoorden["aanvrager"])
+      : null,
+    publiek: (PUBLIEK_OPTIES as readonly string[]).includes(zoekParams.publiek ?? "")
+      ? (zoekParams.publiek as Antwoorden["publiek"])
+      : null,
+  };
+  const erIsGevraagd =
+    antwoorden.plan.length > 0 ||
+    antwoorden.doel !== null ||
+    antwoorden.fase !== null ||
+    antwoorden.bedragband !== null;
+
+  // Faalt de zoekstap (bijvoorbeeld omdat migratie 0056 nog niet is toegepast,
+  // of omdat het model onbereikbaar is), dan blijft de catalogus gewoon staan.
+  // Een kapotte zoekopdracht mag de pagina niet meenemen.
+  let uitkomst: Awaited<ReturnType<typeof zoekMetOpslag>> | null = null;
+  let zoekfout: string | null = null;
+  if (erIsGevraagd) {
+    try {
+      const catalogus = await laadCatalogus(supabase);
+      uitkomst = await zoekMetOpslag(supabase, id, profiel, antwoorden, catalogus);
+    } catch (e) {
+      zoekfout = e instanceof Error ? e.message : String(e);
+    }
+  }
+
+  const uit = uitkomst?.uitkomst ?? null;
+
   const basis = `/landgoed/${id}/fondsen`;
   const vraagQuery = (over: Record<string, string | null>) => {
     const p = new URLSearchParams();
@@ -240,6 +310,93 @@ export default async function FondsenPagina({
         uw plan komen in de volgende stap. Toetsing tegen: {profiel.rechtsvorm ?? "rechtsvorm onbekend"},{" "}
         {profiel.gemeente ?? "gemeente onbekend"} ({profiel.provincie ?? "provincie onbekend"}).
       </div>
+
+      {/* HET VRAAGVELD — fase 3, de eerste functie waarmee de module iets doet
+          wat een lijst niet kan. Server-rendered GET-formulier: geen client-JS
+          nodig, en de vraag staat als URL-parameters in de link, dus een
+          uitkomst is te delen en te herladen zonder opnieuw te betalen (de
+          hash in opslag.ts zorgt daarvoor). */}
+      <form method="get" className="card mb-6 p-4 md:p-5">
+        <label htmlFor="plan" className="mb-1 block text-[13px] font-semibold">
+          Beschrijf uw plan
+        </label>
+        <p className="mb-2 text-[12px]" style={{ color: "var(--text-3)" }}>
+          Bijvoorbeeld: &ldquo;ik wil de historische laan herstellen&rdquo; of &ldquo;het koetshuis
+          herbestemmen tot werkplek voor een zorgpartij&rdquo;.
+        </p>
+        <textarea
+          id="plan"
+          name="plan"
+          rows={2}
+          defaultValue={antwoorden.plan}
+          className="w-full rounded-md border px-3 py-2 text-[13.5px]"
+          style={{ borderColor: "var(--border)" }}
+          placeholder="Wat wilt u doen?"
+        />
+
+        <div className="mt-4 grid gap-3 sm:grid-cols-2">
+          <VraagVeld
+            naam="doel"
+            label="Wat gaat u doen?"
+            waarde={antwoorden.doel ?? ""}
+            opties={[{ waarde: "", label: "weet ik nog niet" }, ...DOELEN.map((d) => ({ waarde: d, label: DOEL_LABELS[d] }))]}
+          />
+          <VraagVeld
+            naam="fase"
+            label="Waar staat het plan nu?"
+            waarde={antwoorden.fase ?? ""}
+            opties={[{ waarde: "", label: "weet ik nog niet" }, ...PLANFASEN.map((f) => ({ waarde: f, label: PLANFASE_LABELS[f] }))]}
+          />
+          <VraagVeld
+            naam="band"
+            label="Orde van grootte?"
+            waarde={antwoorden.bedragband ?? ""}
+            opties={[{ waarde: "", label: "weet ik nog niet" }, ...BEDRAGBANDEN.map((b) => ({ waarde: b, label: BEDRAGBAND_LABELS[b] }))]}
+          />
+          <VraagVeld
+            naam="aanvrager"
+            label="Wie zou aanvragen?"
+            waarde={antwoorden.aanvrager ?? ""}
+            opties={[{ waarde: "", label: "weet ik nog niet" }, ...AANVRAGERS.map((a) => ({ waarde: a, label: AANVRAGER_LABELS[a] }))]}
+          />
+          <VraagVeld
+            naam="publiek"
+            label="Komt er publiek bij?"
+            waarde={antwoorden.publiek ?? ""}
+            opties={[{ waarde: "", label: "weet ik nog niet" }, ...PUBLIEK_OPTIES.map((p) => ({ waarde: p, label: PUBLIEK_LABELS[p] }))]}
+          />
+        </div>
+
+        <div className="mt-4 flex items-center gap-2">
+          <button type="submit" className="btn btn-primary">
+            Zoek fondsen
+          </button>
+          {erIsGevraagd && (
+            <Link href={basis} className="btn btn-ghost btn-sm">
+              Wissen
+            </Link>
+          )}
+        </div>
+      </form>
+
+      {erIsGevraagd && (
+        <ZoekResultaat
+          fondsenId={id}
+          zoekfout={zoekfout}
+          uitkomst={uit}
+          uitOpslag={uitkomst?.uit_opslag ?? false}
+        />
+      )}
+
+      <details className="mb-6">
+        <summary className="cursor-pointer text-[13px] font-semibold" style={{ color: "var(--text-2)" }}>
+          Of blader door de hele catalogus
+        </summary>
+        <p className="mb-3 mt-2 max-w-2xl text-[12.5px] leading-snug" style={{ color: "var(--text-2)" }}>
+          Wat hieronder staat zijn de harde ja/nee/onbekend-filters, zonder inhoudelijke weging op uw
+          plan. Handig om te bladeren; voor een gerichte vraag is het veld hierboven sneller en
+          scherper.
+        </p>
 
       <div className="mb-6 grid gap-4 sm:grid-cols-3">
         <RadarKaart
@@ -454,6 +611,167 @@ export default async function FondsenPagina({
           verrijkingsronde moeten krijgen.
         </p>
       </details>
+      </details>
+    </div>
+  );
+}
+
+// ── Het vraagveld: één keuzeveld ────────────────────────────────────────────
+
+function VraagVeld({
+  naam,
+  label,
+  waarde,
+  opties,
+}: {
+  naam: string;
+  label: string;
+  waarde: string;
+  opties: { waarde: string; label: string }[];
+}) {
+  return (
+    <div>
+      <label htmlFor={naam} className="mb-1 block text-[12.5px] font-medium">
+        {label}
+      </label>
+      <select
+        id={naam}
+        name={naam}
+        defaultValue={waarde}
+        className="w-full rounded-md border px-2.5 py-1.5 text-[13px]"
+        style={{ borderColor: "var(--border)" }}
+      >
+        {opties.map((o) => (
+          <option key={o.waarde} value={o.waarde}>
+            {o.label}
+          </option>
+        ))}
+      </select>
+    </div>
+  );
+}
+
+// ── Het resultaat van de zoekopdracht ───────────────────────────────────────
+
+const ROUTE_LABELS: Record<string, string> = {
+  zelf: "u kunt zelf aanvragen",
+  partner: "via een partner",
+  intermediair: "via een intermediair",
+};
+
+function ZoekResultaat({
+  fondsenId,
+  zoekfout,
+  uitkomst,
+  uitOpslag,
+}: {
+  fondsenId: string;
+  zoekfout: string | null;
+  uitkomst: Awaited<ReturnType<typeof zoekMetOpslag>>["uitkomst"] | null;
+  uitOpslag: boolean;
+}) {
+  if (zoekfout) {
+    return (
+      <div
+        className="mb-8 rounded-lg border px-4 py-3 text-[13px] leading-snug"
+        style={{ borderColor: "var(--border)", background: "rgba(220,38,38,0.05)" }}
+      >
+        <strong>De zoekopdracht kon niet worden uitgevoerd.</strong> De catalogus hieronder blijft
+        gewoon bruikbaar. ({zoekfout})
+      </div>
+    );
+  }
+  if (!uitkomst) return null;
+
+  // De timing-val (§6): geen model aangeroepen, geen lijst getoond — alleen
+  // de reden waarom het te laat is.
+  if (uitkomst.te_laat) {
+    return (
+      <div
+        className="mb-8 rounded-lg border px-4 py-3 text-[13.5px] leading-snug"
+        style={{ borderColor: "var(--border)", background: "rgba(220,38,38,0.06)" }}
+      >
+        <strong>Voor dit plan bent u te laat.</strong> {uitkomst.te_laat.reden}
+        <div className="mt-1.5">{uitkomst.te_laat.wat_wel}</div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="mb-8">
+      <div className="mb-2 flex items-baseline justify-between gap-3">
+        <h2 className="text-[16px] font-semibold">
+          {uitkomst.fondsen.length > 0
+            ? `${uitkomst.fondsen.length} fonds${uitkomst.fondsen.length === 1 ? "" : "en"} die passen`
+            : "Geen match gevonden"}
+        </h2>
+        <span className="text-[11.5px]" style={{ color: "var(--text-3)" }}>
+          {uitOpslag ? "eerder berekend, geen nieuwe kosten" : `$${uitkomst.kosten.dollars.toFixed(4)}`}
+        </span>
+      </div>
+      <p className="mb-3 max-w-2xl text-[12.5px] leading-snug" style={{ color: "var(--text-2)" }}>
+        {uitkomst.toelichting}
+      </p>
+
+      {uitkomst.fondsen.length === 0 && uitkomst.wat_zou_helpen.length > 0 && (
+        <div
+          className="mb-4 rounded-lg border px-4 py-3 text-[13px] leading-snug"
+          style={{ borderColor: "var(--border)", background: "rgba(245,158,11,0.06)" }}
+        >
+          <strong>Wat zou helpen:</strong>
+          <ul className="mt-1 list-disc pl-5">
+            {uitkomst.wat_zou_helpen.map((w, i) => (
+              <li key={i}>{w}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {/* Een stapeling met volgorde, geen ranglijst (§9.3): gesorteerd op
+          slagingskans, met per fonds de route en de eerste stap. */}
+      <div className="flex flex-col gap-2.5">
+        {uitkomst.fondsen.map((f, i) => (
+          <article key={f.fonds_id} className="card p-4">
+            <div className="flex flex-wrap items-start justify-between gap-x-4 gap-y-1.5">
+              <h3 className="text-[14.5px] font-semibold leading-tight">
+                <Link href={`/landgoed/${fondsenId}/fondsen/${f.fonds_id}`} className="hover:underline">
+                  {i + 1}. {f.naam}
+                </Link>
+              </h3>
+              <div className="flex shrink-0 flex-wrap items-center gap-1.5">
+                <span className="tag tag-green">slagingskans {f.slagingskans}/100</span>
+                <span className="tag tag-gray" title="Hoeveel wij van dit fonds weten — een ander getal dan de slagingskans">
+                  matchbaarheid {f.matchbaarheid}/100
+                </span>
+              </div>
+            </div>
+
+            <p className="mt-1.5 text-[12.5px] leading-snug" style={{ color: "var(--text-2)" }}>
+              {f.waarom}
+            </p>
+            {f.citaat && (
+              <p
+                className="mt-1.5 border-l-2 pl-2.5 text-[12px] leading-snug"
+                style={{ borderColor: "var(--border)", color: "var(--text-3)" }}
+              >
+                &ldquo;{f.citaat}&rdquo;
+                {!f.citaat_gecontroleerd && " (kon niet worden teruggevonden in het profiel)"}
+              </p>
+            )}
+
+            <div className="mt-2 text-[12.5px]" style={{ color: "var(--text-2)" }}>
+              <strong>{ROUTE_LABELS[f.route] ?? f.route}.</strong> {f.route_uitleg}
+            </div>
+            <div className="mt-1 text-[12.5px] font-medium">→ {f.eerste_stap}</div>
+
+            {f.waarschuwingen.map((w) => (
+              <div key={w} className="mt-1.5 text-[12px]" style={{ color: "var(--text-3)" }}>
+                Let op: {w}
+              </div>
+            ))}
+          </article>
+        ))}
+      </div>
     </div>
   );
 }

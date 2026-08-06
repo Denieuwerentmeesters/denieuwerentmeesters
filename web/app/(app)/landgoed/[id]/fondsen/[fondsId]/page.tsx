@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { botsendeBedragen } from "./bedragen";
 import { laadProfiel } from "@/app/(app)/landgoed/[id]/subsidies/matching";
 import {
   aliasIndex,
@@ -200,11 +201,17 @@ export default async function FondsDetail({
   }[];
 
   const contact = schoonContact(fonds.contact);
-  const tegenstrijdig = vindTegenstrijdigheden(
-    fonds.bedrag_indicatie,
-    mp?.profiel,
-    fonds.benaderwijze_notitie,
-  );
+  const tegenstrijdig = [
+    ...vindTegenstrijdigheden(fonds.bedrag_indicatie, mp?.profiel, fonds.benaderwijze_notitie),
+    // Tweede soort tegenstrijdigheid: de vrije tekst en de vastgelegde band
+    // komen uit verschillende leesrondes en spreken elkaar soms tegen. Alleen
+    // een bedrag BUITEN de band telt mee — zie de toelichting in bedragen.ts.
+    ...botsendeBedragen(
+      fonds.bedrag_indicatie,
+      fonds.bedrag_min as number | null,
+      fonds.bedrag_max as number | null,
+    ),
+  ];
 
   const uitsluitingen = criteria.filter((c) => c.soort === "uitsluiting");
 
