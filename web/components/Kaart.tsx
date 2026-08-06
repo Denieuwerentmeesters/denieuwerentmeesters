@@ -267,7 +267,6 @@ export default function Kaart({
   const [selectie, setSelectie] = useState<string[]>([]);
   // Beheerperceel waarvan het wijzig-formulier (naam/gebruik) openstaat.
   const [wijzigId, setWijzigId] = useState<string | null>(null);
-  const [koppelGebouwId, setKoppelGebouwId] = useState<string | null>(null);
   // De lijst kent twee tabbladen: grond (beheerpercelen) en gebouwen.
   const [lijstTab, setLijstTab] = useState<"percelen" | "gebouwen">("percelen");
   // In-/uitklappen van onderliggende rijen (objecten onder een beheerperceel,
@@ -2288,23 +2287,6 @@ export default function Kaart({
                           >
                             Wijzig
                           </button>
-                          {/* Ook geprikte objecten (boom, vijver…) zijn zo
-                              handmatig te (ont)koppelen — zelfde verband en
-                              formulier als bij gebouwen. */}
-                          {!PERCEEL_CATS.has(o.categorie) && (
-                            <button
-                              type="button"
-                              className="text-[11.5px] hover:underline"
-                              style={{ color: "var(--text-2)" }}
-                              onClick={() =>
-                                setKoppelGebouwId(koppelGebouwId === o.id ? null : o.id)
-                              }
-                            >
-                              {o.staatOpId
-                                ? "Wijzig / ontkoppel perceel"
-                                : "Koppel aan perceel"}
-                            </button>
-                          )}
                           <form action={verwijderObject} style={{ color: "var(--red)" }}>
                             <input type="hidden" name="landgoed_id" value={landgoedId} />
                             <input type="hidden" name="id" value={o.id} />
@@ -2415,6 +2397,37 @@ export default function Kaart({
                                 </select>
                               </div>
                             )}
+                            {/* Eén formulier, één Opslaan: ook de koppeling
+                                "staat op beheerperceel" hoort hier gewoon bij
+                                (gebouwen én geprikte objecten). */}
+                            {!PERCEEL_CATS.has(o.categorie) && (
+                              <div className="min-w-[220px] flex-1">
+                                <label className="label-up mb-1 block">
+                                  Staat op beheerperceel
+                                </label>
+                                <select
+                                  className="input"
+                                  name="perceel_id"
+                                  defaultValue={o.staatOpId ?? ""}
+                                >
+                                  <option value="">— geen —</option>
+                                  {groepeerOpties(
+                                    objecten.filter((p) =>
+                                      PERCEEL_CATS.has(p.categorie),
+                                    ),
+                                  ).map(([label, lijst]) => (
+                                    <optgroup key={label} label={label}>
+                                      {lijst.map((p) => (
+                                        <option key={p.id} value={p.id}>
+                                          {p.naam}
+                                          {p.gebruik ? ` (${p.gebruik})` : ""}
+                                        </option>
+                                      ))}
+                                    </optgroup>
+                                  ))}
+                                </select>
+                              </div>
+                            )}
                             <SubmitKnop className="btn btn-primary btn-sm" pendingTekst="Opslaan…">
                               Opslaan
                             </SubmitKnop>
@@ -2471,54 +2484,6 @@ export default function Kaart({
                               ))}
                             </div>
                           )}
-                        {koppelGebouwId === o.id && (
-                          <form
-                            action={async (fd) => {
-                              await koppelGebouwAanPerceel(fd);
-                              setKoppelGebouwId(null);
-                            }}
-                            className="flex flex-wrap items-end gap-3 pb-3"
-                          >
-                            <input type="hidden" name="landgoed_id" value={landgoedId} />
-                            <input type="hidden" name="gebouw_id" value={o.id} />
-                            <div className="min-w-[220px] flex-1">
-                              <label className="label-up mb-1 block">
-                                Staat op beheerperceel
-                              </label>
-                              <select
-                                className="input"
-                                name="perceel_id"
-                                defaultValue={o.staatOpId ?? ""}
-                              >
-                                <option value="">— geen —</option>
-                                {groepeerOpties(
-                                  objecten.filter((p) =>
-                                    PERCEEL_CATS.has(p.categorie),
-                                  ),
-                                ).map(([label, lijst]) => (
-                                  <optgroup key={label} label={label}>
-                                    {lijst.map((p) => (
-                                      <option key={p.id} value={p.id}>
-                                        {p.naam}
-                                        {p.gebruik ? ` (${p.gebruik})` : ""}
-                                      </option>
-                                    ))}
-                                  </optgroup>
-                                ))}
-                              </select>
-                            </div>
-                            <SubmitKnop className="btn btn-primary btn-sm" pendingTekst="Opslaan…">
-                              Opslaan
-                            </SubmitKnop>
-                            <button
-                              type="button"
-                              className="btn btn-ghost btn-sm"
-                              onClick={() => setKoppelGebouwId(null)}
-                            >
-                              Annuleer
-                            </button>
-                          </form>
-                        )}
                         {/* Deelgebruik: percelen die dit beheerperceel deelt
                             met een ander kunnen met een lijn gesplitst worden. */}
                         {PERCEEL_CATS.has(o.categorie) &&
