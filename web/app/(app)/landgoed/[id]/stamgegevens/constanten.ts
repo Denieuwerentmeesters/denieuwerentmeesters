@@ -19,6 +19,8 @@ export const CATEGORIE_LABEL: Record<string, string> = {
   brug: "Bruggen",
   hek: "Hekken",
   vijver_sloot: "Vijvers & sloten",
+  boom: "Bomen",
+  voorziening: "Technische voorzieningen",
   tuin: "Tuinen",
   natuur: "Natuur",
   infrastructuur: "Infrastructuur",
@@ -33,11 +35,27 @@ export const HANDMATIG_CATEGORIEEN = [
   "woning",
   "opstal",
   "pachtperceel",
+  "boom",
+  "voorziening",
   "tuin",
   "natuur",
   "infrastructuur",
   "water",
   "overig",
+];
+
+// De keuzes in de "Objecten plaatsen"-modus op de kaart (Hugo 2.3):
+// puntobjecten die je met één klik prikt. Lijn- en vlakvormen (waterloop,
+// pad, bosvak) volgen in een eigen plak.
+export const BEHEEROBJECT_PRIK_OPTIES: [string, string][] = [
+  ["boom", "Boom"],
+  ["brug", "Brug"],
+  ["hek", "Hek of poort"],
+  ["voorziening", "Technische voorziening (pomp, gemaal…)"],
+  ["risicoplek", "Risicoplek"],
+  ["vijver_sloot", "Vijver of poel"],
+  ["tuin", "Tuinelement"],
+  ["overig", "Overig"],
 ];
 
 export const GEBRUIK_OPTIES = [

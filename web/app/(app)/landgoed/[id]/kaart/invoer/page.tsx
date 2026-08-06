@@ -3,6 +3,7 @@ import { laadKaartData } from "../data";
 import {
   setBasisLocatie,
   plaatsOpKaart,
+  plaatsBeheerobject,
   lookupPerceel,
   lookupGebouw,
   verwijderObject,
@@ -128,6 +129,7 @@ export default async function KaartInvoerPage({
           lon={landgoed?.lon ?? null}
           setBasisLocatie={setBasisLocatie}
           plaatsOpKaart={plaatsOpKaart}
+          plaatsBeheerobject={plaatsBeheerobject}
           lookupPerceel={lookupPerceel}
           lookupGebouw={lookupGebouw}
           verwijderObject={verwijderObject}

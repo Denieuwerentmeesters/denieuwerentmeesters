@@ -304,6 +304,36 @@ export default function KaartWeergave({
           poly.addTo(groep);
           bounds.extend(poly.getBounds());
         });
+        // Puntobjecten (boom, brug, voorziening…) hebben geen vlak — die
+        // krijgen een stip, met dezelfde tooltip-, klik- en filtertaal.
+        if (
+          eenheid.length === 0 &&
+          Number.isFinite(o.lat) &&
+          Number.isFinite(o.lon)
+        ) {
+          const stip = L.circleMarker([o.lat, o.lon], {
+            radius: 7,
+            color: kleur,
+            fillColor: kleur,
+            fillOpacity: 0.8,
+            weight: 2,
+          });
+          stip.bindTooltip(`${o.naam}${o.gebruik ? ` · ${o.gebruik}` : ""}`, {
+            sticky: true,
+          });
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          stip.on("click", (e: any) => {
+            if (e.originalEvent) L.DomEvent.stopPropagation(e.originalEvent);
+            toonInLijst(o.id);
+          });
+          // De stijl-pass en zoomNaar verwachten de polygon-API; een punt
+          // levert zijn eigen mini-bounds.
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          (stip as any).getBounds = () => L.latLngBounds([[o.lat, o.lon]]);
+          stip.addTo(groep);
+          bounds.extend([o.lat, o.lon]);
+          eenheid.push(stip);
+        }
         if (eenheid.length) {
           vlakkenRef.current.set(
             o.id,
