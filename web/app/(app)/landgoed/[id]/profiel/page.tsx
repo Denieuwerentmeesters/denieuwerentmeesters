@@ -75,7 +75,7 @@ export default async function ProfielPage({
     supabase
       .from("landgoed")
       .select(
-        "naam, gemeente, provincie, plaats, hectare, nsw_status, nsw_sinds, nsw_openstelling_dagen, nsw_nummer, eigendomsvorm, rechtsvorm, lat, lon, monumenten_gecontroleerd_op, bodemgebruik_gecontroleerd_op",
+        "naam, gemeente, provincie, plaats, hectare, nsw_status, nsw_sinds, nsw_openstelling_dagen, nsw_nummer, eigendomsvorm, rechtsvorm, is_anbi, lat, lon, monumenten_gecontroleerd_op, bodemgebruik_gecontroleerd_op",
       )
       .eq("id", id)
       .maybeSingle(),
@@ -246,6 +246,13 @@ export default async function ProfielPage({
               <Veld label="Eigendomsvorm" name="eigendomsvorm" defaultValue={landgoed?.eigendomsvorm} placeholder="bv. Stichting X" />
               <Veld label="Rechtsvorm (aanvrager)" name="rechtsvorm" defaultValue={landgoed?.rechtsvorm} placeholder="particulier / stichting / bv / …" />
               <Veld label="Oppervlakte handmatig (ha)" name="hectare" defaultValue={landgoed?.hectare} type="number" placeholder="alleen als er geen percelen zijn" />
+              <label className="flex flex-col gap-1 text-[12.5px]">
+                <span style={{ color: "var(--text-2)" }}>ANBI-status</span>
+                <select className="input" name="is_anbi" defaultValue={landgoed?.is_anbi ? "ja" : "nee"}>
+                  <option value="nee">Nee (standaard — de meeste landgoederen zijn geen ANBI)</option>
+                  <option value="ja">Ja</option>
+                </select>
+              </label>
             </div>
             <div>
               <button className="btn btn-primary btn-sm" type="submit">Opslaan</button>
@@ -412,6 +419,7 @@ export default async function ProfielPage({
               ))}
               <Rij label="Eigendomsvorm" waarde={landgoed?.eigendomsvorm} />
               <Rij label="Rechtsvorm (aanvrager)" waarde={landgoed?.rechtsvorm} />
+              <Rij label="ANBI-status" waarde={landgoed?.is_anbi ? "Ja" : "Nee"} />
               <Rij label="NSW-nummer" waarde={landgoed?.nsw_nummer} />
             </dl>
             <Bron>Kadaster/PDOK (percelen) + handmatige invoer (juridisch)</Bron>

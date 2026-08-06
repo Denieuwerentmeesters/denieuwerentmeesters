@@ -408,6 +408,7 @@ export async function bewaarProfiel(fd: FormData) {
         nsw_nummer: tekst(fd, "nsw_nummer"),
         eigendomsvorm: tekst(fd, "eigendomsvorm"),
         rechtsvorm: tekst(fd, "rechtsvorm"),
+        is_anbi: fd.get("is_anbi") === "ja",
         hectare: getal(fd, "hectare"),
       })
       .eq("id", landgoed_id),

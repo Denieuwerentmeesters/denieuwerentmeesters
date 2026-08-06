@@ -689,6 +689,10 @@ export async function extraheerUitInboundEmail(
 export type RegelingVerrijking = {
   // Genormaliseerde catalogusvelden (alleen vullen wat de bron noemt).
   organisatie?: string | null;
+  // Koepelstichting die dit (naam)fonds beheert, bv. "Ars Donandi" — alleen
+  // vullen als de bron expliciet noemt dat het fonds ONDER een koepel valt
+  // (niet de koepel zelf als regeling).
+  beheerd_door?: string | null;
   samenvatting?: string | null;
   themas?: string[];
   trefwoorden?: string[];
@@ -724,12 +728,14 @@ const VERRIJKING_SYSTEEM =
   "het een tijdelijke/eenmalige regeling met beperkt budget is. " +
   "Maak criteria waar mogelijk machine-leesbaar via veld/operator/waarde " +
   "(velden: nsw_status, provincie, gemeente, hectare_min, natuurbeheertype, rijksmonument, " +
-  "agrarisch; operators: is, bevat, >=, in). Lukt dat niet, laat veld/operator/waarde leeg en " +
-  "geef alleen 'omschrijving'. " +
+  "agrarisch, rechtsvorm, is_anbi; operators: is, bevat, >=, in). Voor is_anbi: waarde 'ja' " +
+  "als de bron uitsluitend ANBI-instellingen toelaat (\"uitsluitend instellingen met " +
+  "ANBI-verklaring\", \"aanvrager moet ANBI zijn\"). Lukt het niet machine-leesbaar te maken, " +
+  "laat veld/operator/waarde leeg en geef alleen 'omschrijving'. " +
   "Geef per criterium een FASE, want alleen toelatingsvragen mogen meewegen: " +
   "'vooraf' = een eigenschap van de aanvrager of het landgoed die NU al vaststaat en bepaalt " +
-  "of hij in aanmerking komt (ligging, eigendom, rechtsvorm, oppervlakte, lidmaatschap, " +
-  "certificaat); 'bij_aanvraag' = iets wat je tijdens de aanvraagprocedure moet regelen of " +
+  "of hij in aanmerking komt (ligging, eigendom, rechtsvorm, ANBI-status, oppervlakte, " +
+  "lidmaatschap, certificaat); 'bij_aanvraag' = iets wat je tijdens de aanvraagprocedure moet regelen of " +
   "aanleveren (plan indienen, aanmelden in een openstellingsronde, deelnemen aan een " +
   "gebiedsproces, goedkeuring of aanbeveling verkrijgen); 'na_toekenning' = een verplichting " +
   "die pas na toekenning geldt (onderhoudsverplichting, aanmelden binnen X maanden na " +
@@ -741,8 +747,11 @@ const VERRIJKING_SYSTEEM =
   "criterium. Eigenschappen van het PLAN in plaats van van het landgoed (\"streekeigen " +
   "soorten\", \"minimaal 25 meter\", \"cofinanciering 50%\") horen ook niet bij criteria. " +
   "Datums als yyyy-mm-dd; onbekend = null. " +
+  "Noemt de bron expliciet dat dit fonds ONDER een koepelstichting valt (bv. een naamfonds " +
+  "\"onder Ars Donandi\"), vul dan 'beheerd_door' met die koepel. Is de regeling zelf de " +
+  "koepel (geen eigen naamfonds), laat 'beheerd_door' leeg. " +
   "VERZIN NIETS: noemt de tekst iets niet, laat het leeg/weg (liever een gat dan een aanname). " +
-  "Antwoord UITSLUITEND met JSON: {organisatie?, samenvatting?, themas?, trefwoorden?, doelgroepen?, " +
+  "Antwoord UITSLUITEND met JSON: {organisatie?, beheerd_door?, samenvatting?, themas?, trefwoorden?, doelgroepen?, " +
   "is_tijdelijk?, openstelling_van?, openstelling_tot?, budget_indicatie?, " +
   "criteria:[{omschrijving, veld?, operator?, waarde?, verplicht?, fase?}], " +
   "maatregelen:[{omschrijving, natuurbeheertype?, eenheid?}], " +

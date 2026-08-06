@@ -16,6 +16,7 @@ const profiel: Profiel = {
   gemeente: "Middelburg",
   nsw_status: "actief",
   rechtsvorm: "stichting",
+  is_anbi: false,
   hectare: 58.4,
   natuurbeheertypes: ["N16.03 Droog bos met productie", "N12.02 Kruiden- en faunarijk grasland"],
   agrarisch: true,

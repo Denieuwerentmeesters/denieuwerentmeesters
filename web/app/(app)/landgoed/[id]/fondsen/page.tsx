@@ -67,6 +67,10 @@ export const dynamic = "force-dynamic";
 
 type FondsRij = PoortFonds & {
   organisatie: string | null;
+  // Koepelstichting die dit (naam)fonds beheert, bv. "Ars Donandi" — je dient
+  // in bij het naamfonds zelf, niet bij de koepel; dit label maakt zichtbaar
+  // welke onderliggende fondsen bij welke koepel horen.
+  beheerd_door: string | null;
   samenvatting: string | null;
   soort_bron: string;
   herkomst: string;
@@ -77,7 +81,7 @@ type FondsRij = PoortFonds & {
 };
 
 const VELDEN =
-  "id, naam, organisatie, samenvatting, themas, trefwoorden, soort_bron, benaderbaarheid, " +
+  "id, naam, organisatie, beheerd_door, samenvatting, themas, trefwoorden, soort_bron, benaderbaarheid, " +
   "benaderwijze_notitie, aanvrager_type, landgoed_route, landgoed_partnertype, geo_niveau, " +
   "geo_waarden, bedrag_min, bedrag_max, bedrag_indicatie, kostensoort, herkomst, bron_url";
 
@@ -220,7 +224,7 @@ export default async function FondsenPagina({
   const zoek = (zoekParams.q ?? "").trim().toLowerCase();
   const zichtbaar = alle.filter((f) => {
     if (!zoek) return true;
-    return [f.naam, f.organisatie, f.samenvatting, (f.themas ?? []).join(" "), (f.trefwoorden ?? []).join(" ")]
+    return [f.naam, f.organisatie, f.beheerd_door, f.samenvatting, (f.themas ?? []).join(" "), (f.trefwoorden ?? []).join(" ")]
       .filter(Boolean)
       .join(" ")
       .toLowerCase()
@@ -839,15 +843,22 @@ function FondsRegel({ fonds: f, oordeel: o }: { fonds: FondsRij; oordeel: FondsO
   return (
     <article className="card p-4">
       <div className="flex flex-wrap items-start justify-between gap-x-4 gap-y-1.5">
-        <h3 className="text-[14.5px] font-semibold leading-tight">
-          {f.bron_url ? (
-            <a href={f.bron_url} target="_blank" rel="noopener noreferrer" className="hover:underline">
-              {f.naam}
-            </a>
-          ) : (
-            f.naam
+        <div>
+          <h3 className="text-[14.5px] font-semibold leading-tight">
+            {f.bron_url ? (
+              <a href={f.bron_url} target="_blank" rel="noopener noreferrer" className="hover:underline">
+                {f.naam}
+              </a>
+            ) : (
+              f.naam
+            )}
+          </h3>
+          {f.beheerd_door && (
+            <p className="mt-0.5 text-[11.5px]" style={{ color: "var(--text-3)" }}>
+              Naamfonds, beheerd door {f.beheerd_door} — aanvraag loopt via dit fonds, niet via de koepel.
+            </p>
           )}
-        </h3>
+        </div>
         <div className="flex shrink-0 flex-wrap items-center gap-1.5">
           <span className={`tag ${tag.cls}`}>{tag.label}</span>
           {f.soort_bron === "lening" && <span className="tag tag-amber">lening</span>}
@@ -889,7 +900,7 @@ function FondsRegel({ fonds: f, oordeel: o }: { fonds: FondsRij; oordeel: FondsO
 
       <details className="mt-2">
         <summary className="cursor-pointer text-[12px]" style={{ color: "var(--text-3)" }}>
-          alle zeven poorten
+          alle acht poorten
         </summary>
         <ul className="mt-1 flex flex-col gap-1 text-[12px]" style={{ color: "var(--text-3)" }}>
           {o.poorten.map((po) => (
