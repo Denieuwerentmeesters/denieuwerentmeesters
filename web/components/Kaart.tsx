@@ -2276,20 +2276,18 @@ export default function Kaart({
                             Details
                           </Link>
                           {/* Zelden gebruikte acties: klein en tekstueel, niet in
-                              your face (wens Steven). */}
-                          {(PERCEEL_CATS.has(o.categorie) ||
-                            GEBOUW_CATS.has(o.categorie)) && (
-                            <button
-                              type="button"
-                              className="text-[11.5px] hover:underline"
-                              style={{ color: "var(--text-2)" }}
-                              onClick={() =>
-                                setWijzigId(wijzigId === o.id ? null : o.id)
-                              }
-                            >
-                              Wijzig
-                            </button>
-                          )}
+                              your face (wens Steven). Ook geprikte objecten
+                              zijn te wijzigen (naam + soort). */}
+                          <button
+                            type="button"
+                            className="text-[11.5px] hover:underline"
+                            style={{ color: "var(--text-2)" }}
+                            onClick={() =>
+                              setWijzigId(wijzigId === o.id ? null : o.id)
+                            }
+                          >
+                            Wijzig
+                          </button>
                           {/* Ook geprikte objecten (boom, vijver…) zijn zo
                               handmatig te (ont)koppelen — zelfde verband en
                               formulier als bij gebouwen. */}
@@ -2348,21 +2346,47 @@ export default function Kaart({
                                 required
                               />
                             </div>
-                            <div>
-                              <label className="label-up mb-1 block">Gebruik</label>
-                              <select
-                                className="input"
-                                name="gebruik"
-                                defaultValue={o.gebruik ?? ""}
-                              >
-                                <option value="">— geen —</option>
-                                {gebruikOptiesVoor(o.categorie, o.gebruik).map((g) => (
-                                  <option key={g} value={g}>
-                                    {g}
-                                  </option>
-                                ))}
-                              </select>
-                            </div>
+                            {PERCEEL_CATS.has(o.categorie) ||
+                            GEBOUW_CATS.has(o.categorie) ? (
+                              <div>
+                                <label className="label-up mb-1 block">Gebruik</label>
+                                <select
+                                  className="input"
+                                  name="gebruik"
+                                  defaultValue={o.gebruik ?? ""}
+                                >
+                                  <option value="">— geen —</option>
+                                  {gebruikOptiesVoor(o.categorie, o.gebruik).map((g) => (
+                                    <option key={g} value={g}>
+                                      {g}
+                                    </option>
+                                  ))}
+                                </select>
+                              </div>
+                            ) : (
+                              /* Geprikt object: geen gebruik-veld maar de
+                                 soort (boom bleek toch een brug…). */
+                              <div>
+                                <label className="label-up mb-1 block">Soort</label>
+                                <select
+                                  className="input"
+                                  name="soort"
+                                  defaultValue={
+                                    BEHEEROBJECT_PRIK_OPTIES.some(
+                                      ([w]) => w === o.categorie,
+                                    )
+                                      ? o.categorie
+                                      : "overig"
+                                  }
+                                >
+                                  {BEHEEROBJECT_PRIK_OPTIES.map(([waarde, label]) => (
+                                    <option key={waarde} value={waarde}>
+                                      {label}
+                                    </option>
+                                  ))}
+                                </select>
+                              </div>
+                            )}
                             {/* Gebouwen-cluster: schuur/stal onder zijn
                                 hoofdgebouw hangen (één niveau diep). */}
                             {GEBOUW_CATS.has(o.categorie) && (
