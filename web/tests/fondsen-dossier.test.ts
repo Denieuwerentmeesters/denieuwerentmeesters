@@ -205,6 +205,19 @@ describe("tegenstrijdigheden blijven staan", () => {
   it("vindt niets als er niets tegenstrijdigs staat", () => {
     expect(vindTegenstrijdigheden("Maximaal € 10.000 per toekenning.", null)).toEqual([]);
   });
+
+  it("laat de kale vlag 'tegenstrijdig gepubliceerd' weg — die benoemt niets concreets", () => {
+    expect(vindTegenstrijdigheden("Tegenstrijdig gepubliceerd.")).toEqual([]);
+    expect(vindTegenstrijdigheden("Dit is tegenstrijdig gepubliceerd.")).toEqual([]);
+  });
+
+  it("dedupliceert een zin die letterlijk in een andere gevonden zin voorkomt", () => {
+    const gevonden = vindTegenstrijdigheden(
+      "Tegenstrijdig gepubliceerd: bedrag.",
+      "Dit is tegenstrijdig gepubliceerd: bedrag.",
+    );
+    expect(gevonden).toHaveLength(1);
+  });
 });
 
 describe("contactgegevens en de AVG", () => {
