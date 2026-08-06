@@ -589,6 +589,48 @@ export async function wijzigBeheerperceel(fd: FormData) {
     supabase.from("stamobject").update(update).eq("id", id),
     "object wijzigen",
   );
+
+  // Eén formulier, één Opslaan (wens Steven): stuurt het wijzig-formulier
+  // ook een perceel-keuze mee (gebouwen en geprikte objecten), dan gaat de
+  // gelegen_op-koppeling in dezelfde beweging mee — zelfde logica als
+  // koppelGebouwAanPerceel.
+  if (fd.has("perceel_id")) {
+    const perceel_id = String(fd.get("perceel_id") ?? "").trim();
+    await moet(
+      supabase
+        .from("verband")
+        .delete()
+        .eq("landgoed_id", landgoed_id)
+        .eq("bron_type", "stamobject")
+        .eq("bron_id", id)
+        .eq("rol", "gelegen_op"),
+      "oude perceel-koppeling verwijderen",
+    );
+    if (perceel_id) {
+      const { data: perceel } = await supabase
+        .from("stamobject")
+        .select("id")
+        .eq("id", perceel_id)
+        .eq("landgoed_id", landgoed_id)
+        .maybeSingle();
+      if (perceel) {
+        const { data: gebruiker } = await supabase.auth.getUser();
+        await moet(
+          supabase.from("verband").insert({
+            landgoed_id,
+            bron_type: "stamobject",
+            bron_id: id,
+            doel_type: "stamobject",
+            doel_id: perceel_id,
+            rol: "gelegen_op",
+            status: "geaccordeerd",
+            aangemaakt_door: gebruiker.user?.id ?? null,
+          }),
+          "perceel-koppeling opslaan",
+        );
+      }
+    }
+  }
   revalidatePath(`/landgoed/${landgoed_id}`, "layout");
 }
 
