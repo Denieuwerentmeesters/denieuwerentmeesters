@@ -48,6 +48,7 @@ export type KaartObject = {
 
 export function objectDetails(o: KaartObject): string {
   const isGebouw = GEBOUW_CATS.has(o.categorie);
+  const isPerceel = PERCEEL_CATS.has(o.categorie);
   const delen = isGebouw
     ? [
         o.gebruik,
@@ -58,11 +59,21 @@ export function objectDetails(o: KaartObject): string {
         o.staatOp ? `staat op beheerperceel ${o.staatOp}` : null,
         o.hoortBij ? `hoort bij ${o.hoortBij}` : null,
       ]
-    : [
-        o.gebruik,
-        o.oppervlakteHa,
-        o.kadastraal ?? "nog geen percelen gekoppeld",
-      ];
+    : isPerceel
+      ? [
+          o.gebruik,
+          o.oppervlakteHa,
+          o.kadastraal ?? "nog geen percelen gekoppeld",
+        ]
+      : [
+          // Geprikt beheerobject (boom, brug, vijver…): de kadastrale taal
+          // van beheerpercelen slaat hier nergens op — dit object staat óp
+          // een beheerperceel, of is nog los.
+          o.gebruik,
+          o.staatOp
+            ? `staat op beheerperceel ${o.staatOp}`
+            : "nog niet aan een beheerperceel gekoppeld",
+        ];
   return [o.categorie, ...delen, o.herkomstLabel].filter(Boolean).join(" · ");
 }
 
@@ -131,7 +142,7 @@ export function kaartGroep(o: {
   if (["natuur", "natuurbeheertype", "onderhoudszone", "boom"].includes(cat)) return "Natuur";
   if (["tuin", "wandelroute", "bomenlaan", "risicoplek"].includes(cat)) return "Recreatie";
   if (["bedrijf", "werken"].includes(cat)) return "Werken";
-  if (["infrastructuur", "weg_pad", "brug", "hek", "kabel_leiding", "voorziening"].includes(cat)) return "Infrastructuur";
+  if (["infrastructuur", "weg_pad", "voetpad", "fietspad", "brug", "hek", "kabel_leiding", "voorziening"].includes(cat)) return "Infrastructuur";
   if (["water", "waterloop", "vijver_sloot"].includes(cat)) return "Water & Klimaat";
 
   // Percelen: indeling via gebruik-veld. Een woonperceel is grond en hoort
@@ -168,7 +179,7 @@ export function groepeerOpties<
 // bijgebouwen (ingesprongen). Gebouwen zonder cluster blijven gewoon staan.
 export function ordenGebouwen<T extends { id: string; hoortBijId?: string | null }>(
   lijst: T[],
-): { item: T; ingesprongen: boolean }[] {
+): { item: T; ingesprongen: boolean; ouderId?: string }[] {
   const bijgebouwenVan = new Map<string, T[]>();
   const hoofd: T[] = [];
   for (const g of lijst) {
@@ -180,14 +191,81 @@ export function ordenGebouwen<T extends { id: string; hoortBijId?: string | null
       hoofd.push(g);
     }
   }
-  const uit: { item: T; ingesprongen: boolean }[] = [];
+  const uit: { item: T; ingesprongen: boolean; ouderId?: string }[] = [];
   for (const h of hoofd) {
     uit.push({ item: h, ingesprongen: false });
     for (const b of bijgebouwenVan.get(h.id) ?? []) {
-      uit.push({ item: b, ingesprongen: true });
+      uit.push({ item: b, ingesprongen: true, ouderId: h.id });
     }
   }
   return uit;
+}
+
+// Percelen-tab (besluit 6 aug, issue #130): het beheerperceel is het
+// hoofditem; de geprikte objecten die erop staan (boom, vijver, brug…)
+// springen eronder in — zelfde taal als bijgebouwen onder hun hoofdgebouw —
+// en verhuizen mee naar de groep van hún perceel. Objecten zonder koppeling
+// komen apart terecht ("los"), zodat zichtbaar is dat daar nog iets te
+// koppelen valt.
+export function ordenPercelenMetObjecten<
+  T extends {
+    id: string;
+    naam: string;
+    categorie: string;
+    gebruik?: string | null;
+    staatOpId?: string | null;
+  },
+>(
+  objecten: T[],
+): {
+  groepen: [string, { item: T; ingesprongen: boolean; ouderId?: string }[]][];
+  los: T[];
+} {
+  const hoofd: T[] = [];
+  const perPerceel = new Map<string, T[]>();
+  const los: T[] = [];
+  for (const o of objecten) {
+    if (GEBOUW_CATS.has(o.categorie)) continue; // eigen tabblad
+    if (PERCEEL_CATS.has(o.categorie)) {
+      hoofd.push(o);
+    } else if (o.staatOpId) {
+      const lijst = perPerceel.get(o.staatOpId) ?? [];
+      lijst.push(o);
+      perPerceel.set(o.staatOpId, lijst);
+    } else {
+      los.push(o);
+    }
+  }
+  // Koppeling naar iets dat geen getoond beheerperceel is → toch los.
+  const hoofdIds = new Set(hoofd.map((h) => h.id));
+  for (const [perceelId, lijst] of [...perPerceel]) {
+    if (!hoofdIds.has(perceelId)) {
+      los.push(...lijst);
+      perPerceel.delete(perceelId);
+    }
+  }
+  const groepenMap = new Map<
+    string,
+    { item: T; ingesprongen: boolean; ouderId?: string }[]
+  >(KAARTGROEP_LABELS.map((l) => [l as string, []]));
+  for (const p of hoofd) {
+    const lijst = groepenMap.get(kaartGroep({ categorie: p.categorie, gebruik: p.gebruik }))!;
+    lijst.push({ item: p, ingesprongen: false });
+    for (const kind of (perPerceel.get(p.id) ?? []).sort((a, b) =>
+      a.naam.localeCompare(b.naam),
+    )) {
+      lijst.push({ item: kind, ingesprongen: true, ouderId: p.id });
+    }
+  }
+  return {
+    groepen: KAARTGROEP_LABELS.filter((l) => l !== "Gebouwen").map(
+      (l) => [l as string, groepenMap.get(l)!] as [
+        string,
+        { item: T; ingesprongen: boolean; ouderId?: string }[],
+      ],
+    ),
+    los,
+  };
 }
 
 export function haTekst(m2: unknown): string {

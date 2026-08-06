@@ -22,6 +22,7 @@ import {
   type KaartGroepLabel,
   kaartGroep,
   ordenGebouwen,
+  ordenPercelenMetObjecten,
   geomNaarLatlngs,
   maakKadastraleLaag,
 } from "@/components/kaartDelen";
@@ -111,6 +112,12 @@ export default function KaartWeergave({
   // tegelijk laten oplichten.
   const [selectie, setSelectie] = useState<string[]>([]);
   const [kadSelectie, setKadSelectie] = useState<string[]>([]);
+  // In-/uitklappen van onderliggende rijen (objecten onder een beheerperceel,
+  // bijgebouwen onder een hoofdgebouw). Standaard ingeklapt — overzicht eerst.
+  const [uitgeklapt, setUitgeklapt] = useState<Record<string, boolean>>({});
+  function klapOm(id: string) {
+    setUitgeklapt((prev) => ({ ...prev, [id]: !prev[id] }));
+  }
 
   // Eén stijl-pass over alle vlakken: selectie wint van filter, filter wint
   // van de basisweergave. Alles wat niet meedoet vervaagt. Het filter slaat
@@ -204,6 +211,12 @@ export default function KaartWeergave({
       const L = (await import("leaflet")).default;
       if (cancelled || !containerRef.current || mapRef.current) return;
       const map = L.map(containerRef.current).setView([52.15, 5.4], 8);
+      // Eigen laag voor puntobjecten, bóven de vlakken (overlay-pane = 400):
+      // de objecten worden nieuwste-eerst getekend, dus zonder dit schuift
+      // het beheerperceel-vlak over de stip heen en vangt het alle
+      // muis-events af — hover en klik op de stip deden dan niets.
+      map.createPane("stippen").style.zIndex = "450";
+      const stipRenderer = L.svg({ pane: "stippen" });
       achtergrondRef.current = L.tileLayer(PDOK_TILES("grijs"), {
         maxZoom: 19,
         attribution: "© PDOK BRT-Achtergrondkaart",
@@ -317,9 +330,22 @@ export default function KaartWeergave({
             fillColor: kleur,
             fillOpacity: 0.8,
             weight: 2,
+            renderer: stipRenderer,
           });
           stip.bindTooltip(`${o.naam}${o.gebruik ? ` · ${o.gebruik}` : ""}`, {
             sticky: true,
+          });
+          // Zelfde hover-taal als de vlakken: oplichten en iets groeien —
+          // een klein rondje is anders lastig te raken (wens Steven).
+          stip.on("mouseover", () => {
+            if (selectieRef.current.length || filterRef.current) return;
+            stip.setRadius(10);
+            stip.setStyle({ weight: 3, fillOpacity: 1 });
+          });
+          stip.on("mouseout", () => {
+            if (selectieRef.current.length || filterRef.current) return;
+            stip.setRadius(7);
+            stip.setStyle({ opacity: 1, weight: 2, fillOpacity: 0.8 });
           });
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           stip.on("click", (e: any) => {
@@ -327,9 +353,12 @@ export default function KaartWeergave({
             toonInLijst(o.id);
           });
           // De stijl-pass en zoomNaar verwachten de polygon-API; een punt
-          // levert zijn eigen mini-bounds.
+          // levert zijn eigen mini-bounds en zijn eigen basisstijl (voller
+          // dan een vlak, anders vervaagt het rondje na elke stijl-pass).
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           (stip as any).getBounds = () => L.latLngBounds([[o.lat, o.lon]]);
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          (stip as any)._puntBasis = { weight: 2, fillOpacity: 0.8 };
           stip.addTo(groep);
           bounds.extend([o.lat, o.lon]);
           eenheid.push(stip);
@@ -339,7 +368,8 @@ export default function KaartWeergave({
             o.id,
             eenheid.map((p) => ({
               poly: p,
-              basis,
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              basis: (p as any)._puntBasis ?? basis,
               gebruik: o.gebruik,
               isPerceel,
             })),
@@ -437,6 +467,13 @@ export default function KaartWeergave({
       // De rij staat mogelijk op het andere tabblad — dan eerst omschakelen.
       const o = objecten.find((x) => x.id === id);
       if (o) setLijstTab(kaartGroep(o) === "Gebouwen" ? "gebouwen" : "percelen");
+      // Zit de rij ingeklapt onder een ouder (object onder perceel, bijgebouw
+      // onder hoofdgebouw), klap die dan eerst open — anders is er niets om
+      // naartoe te scrollen. Een bijgebouw heeft ook een staatOpId, maar in
+      // de gebouwen-lijst is het hoofdgebouw de ouder.
+      const ouder =
+        o && kaartGroep(o) === "Gebouwen" ? o.hoortBijId : o?.staatOpId;
+      if (ouder) setUitgeklapt((prev) => ({ ...prev, [ouder]: true }));
       setTimeout(() => {
         document
           .getElementById(`weergave-rij-${id}`)
@@ -687,26 +724,55 @@ export default function KaartWeergave({
                   {objecten.filter((o) => kaartGroep(o) === "Gebouwen").length})
                 </button>
               </div>
-              {KAARTGROEP_LABELS.filter((l) =>
-                lijstTab === "gebouwen" ? l === "Gebouwen" : l !== "Gebouwen",
-              ).map((label) => {
-              const lijst = groepenMap.get(label)!;
-              if (lijst.length === 0) return null;
+              {(lijstTab === "gebouwen"
+                ? /* Gebouwen als clusters: bijgebouwen ingesprongen onder
+                     hun hoofdgebouw. */
+                  ([
+                    ["Gebouwen", ordenGebouwen(groepenMap.get("Gebouwen")!)],
+                  ] as [
+                    string,
+                    { item: KaartObject; ingesprongen: boolean; ouderId?: string }[],
+                  ][])
+                : /* Percelen: beheerperceel als hoofditem, geprikte objecten
+                     ingesprongen eronder; losse objecten apart (issue #130). */
+                  (() => {
+                    const { groepen, los } = ordenPercelenMetObjecten(objecten);
+                    return [
+                      ...groepen,
+                      ...(los.length
+                        ? ([
+                            [
+                              "Losse objecten (nog niet gekoppeld)",
+                              los.map((item) => ({ item, ingesprongen: false })),
+                            ],
+                          ] as [
+                            string,
+                            { item: KaartObject; ingesprongen: boolean; ouderId?: string }[],
+                          ][])
+                        : []),
+                    ];
+                  })()
+              ).map(([label, geordend]) => {
+              if (geordend.length === 0) return null;
               return (
                 <div key={label} className="card p-4">
                   <div
                     className="mb-2 text-[12px] font-semibold uppercase tracking-wide"
                     style={{ color: "var(--text-2)" }}
                   >
-                    {label} ({lijst.length})
+                    {label} ({geordend.length})
                   </div>
                   <div className="divide-y" style={{ borderColor: "var(--border)" }}>
-                    {/* Gebouwen als clusters: bijgebouwen ingesprongen onder
-                        hun hoofdgebouw. */}
-                    {(label === "Gebouwen"
-                      ? ordenGebouwen(lijst)
-                      : lijst.map((item) => ({ item, ingesprongen: false }))
-                    ).map(({ item: o, ingesprongen }) => {
+                    {geordend
+                      .filter(
+                        (r) =>
+                          !r.ingesprongen ||
+                          (r.ouderId != null && uitgeklapt[r.ouderId]),
+                      )
+                      .map(({ item: o, ingesprongen }) => {
+                      const kinderen = geordend.filter(
+                        (r) => r.ouderId === o.id,
+                      ).length;
                       // Filter actief: passende rijen lichten op in de
                       // filterkleur, de rest dimt licht — zelfde taal als de
                       // kaart (wens Steven).
@@ -731,6 +797,26 @@ export default function KaartWeergave({
                           paddingLeft: ingesprongen ? 18 : undefined,
                         }}
                       >
+                        {/* Pijltje voor in-/uitklappen van wat eronder hangt;
+                            rijen zonder kinderen krijgen een spacer zodat de
+                            namen uitlijnen. */}
+                        {kinderen > 0 ? (
+                          <button
+                            type="button"
+                            onClick={() => klapOm(o.id)}
+                            className="shrink-0 text-[12.5px] font-medium"
+                            style={{ color: "var(--text-2)", minWidth: 22 }}
+                            title={
+                              uitgeklapt[o.id]
+                                ? "Klap in"
+                                : `Toon ${kinderen} onderliggende`
+                            }
+                          >
+                            {uitgeklapt[o.id] ? "▾" : `▸ ${kinderen}`}
+                          </button>
+                        ) : (
+                          <span className="shrink-0" style={{ minWidth: 22 }} />
+                        )}
                         <button
                           type="button"
                           onClick={() => selecteer(o)}
