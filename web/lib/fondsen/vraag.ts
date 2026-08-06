@@ -57,12 +57,28 @@ export const DOEL_KOSTENSOORT: Record<Doel, string | null> = {
 // die we hopen tegen te komen.
 export const DOEL_THEMAWOORDEN: Record<Doel, string[]> = {
   restauratie: ["monument", "erfgoed", "restauratie", "cultuurhistorie", "gebouw", "kasteel", "buitenplaats"],
-  natuurherstel: ["natuur", "landschap", "biodiversiteit", "bos", "water", "ecologie", "herstel"],
+  natuurherstel: ["natuur", "landschap", "biodiversiteit", "bos", "water", "ecologie", "herstel", "voedselbos", "poel"],
   herbestemming: ["herbestemming", "erfgoed", "monument", "leefbaarheid", "gebouw", "sociaal"],
   publiek_openstellen: ["educatie", "publiek", "openstelling", "recreatie", "toegankelijkheid", "samenleving"],
   onderzoek: ["onderzoek", "wetenschap", "kennis", "documentatie", "archief"],
   anders: [],
 };
+
+// Er is bewust géén apart keuzeveld "wat gaat u doen" meer in het formulier —
+// dat was dubbelop met het vrije-tekstveld waarin de gebruiker het plan al
+// beschrijft. Maar `doel` voedt wél de kostensoort-poort (§9.2: de
+// onderhoud/restauratie-herkadering) en de thematische weging in laag 2, dus
+// die twee signalen mogen niet stilzwijgend verdwijnen. Vandaar deze
+// deterministische afleiding uit de plantekst: eerste treffer wint, geen
+// model, geen gok — bij twijfel `null` en dan wordt de kostensoortpoort
+// simpelweg niet getoetst in plaats van een verkeerd doel aan te nemen.
+export function leidDoelAf(plan: string): Doel | null {
+  const tekst = plan.toLowerCase();
+  for (const doel of DOELEN) {
+    if (DOEL_THEMAWOORDEN[doel].some((w) => tekst.includes(w))) return doel;
+  }
+  return null;
+}
 
 // ── Vraag 2 — waar staat het plan nu? ──────────────────────────────────────
 // Hergebruikt PROJECTSTATUSSEN uit poort.ts; hier alleen de labels en de vraag

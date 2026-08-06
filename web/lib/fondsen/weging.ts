@@ -24,6 +24,18 @@ import type { FondsOordeel, PoortFonds } from "./poort";
 // BIJ TWIJFEL TONEN, NIET WEGLATEN. Een score van 0 is geen reden om een fonds
 // uit de shortlist te houden zolang er ruimte is — wat wegvalt ziet niemand meer.
 
+// Leesbare zin per kostensoort, voor in de weegredenen op het scherm. Los van
+// de kortere labels elders in de UI, want hier moet het als lopende zin lezen
+// ("Dit fonds financiert ...").
+const KOSTENSOORT_ZIN: Record<string, string> = {
+  investering: "investeringen",
+  restauratie: "restauraties",
+  regulier_onderhoud: "regulier onderhoud",
+  exploitatie: "exploitatiekosten",
+  personeel: "personeelskosten",
+  onderzoek: "onderzoek",
+};
+
 export type WegingBron = PoortFonds & {
   themas?: string[] | null;
   trefwoorden?: string[] | null;
@@ -140,7 +152,7 @@ export function weeg(f: WegingBron, ctx: WegingContext): Weging {
     const gevonden = woorden.filter((w) => hooiberg.includes(norm(w)));
     if (gevonden.length > 0) {
       score += Math.min(25, gevonden.length * 8);
-      redenen.push(`Thema-overlap op: ${gevonden.join(", ")}.`);
+      redenen.push(`Dit fonds noemt zelf de thema's ${gevonden.join(", ")}.`);
     }
   }
 
@@ -149,7 +161,7 @@ export function weeg(f: WegingBron, ctx: WegingContext): Weging {
   const gevraagdeKostensoort = a.doel ? DOEL_KOSTENSOORT[a.doel] : null;
   if (gevraagdeKostensoort && (f.kostensoort ?? []).map(norm).includes(norm(gevraagdeKostensoort))) {
     score += 15;
-    redenen.push(`Financiert ${gevraagdeKostensoort.replace("_", " ")} met zoveel woorden.`);
+    redenen.push(`Dit fonds financiert ${KOSTENSOORT_ZIN[gevraagdeKostensoort] ?? gevraagdeKostensoort}.`);
   }
 
   // 4. Bedragband. Volledige insluiting weegt zwaarder dan gedeeltelijke
@@ -163,10 +175,10 @@ export function weeg(f: WegingBron, ctx: WegingContext): Weging {
       const onder = fmax != null && tot != null ? fmax >= van && fmin != null && fmin <= tot : true;
       if (onder) {
         score += 12;
-        redenen.push("De bedragband van dit fonds valt samen met uw orde van grootte.");
+        redenen.push("Dit fonds financiert deze orde van grootte.");
       } else {
         score += 6;
-        redenen.push("De bedragband overlapt gedeeltelijk met uw orde van grootte.");
+        redenen.push("Dit fonds financiert deels deze orde van grootte.");
       }
     }
   }
@@ -179,7 +191,7 @@ export function weeg(f: WegingBron, ctx: WegingContext): Weging {
     const tekst = norm([f.kaartje ?? "", f.samenvatting ?? "", (f.themas ?? []).join(" ")].join(" "));
     if (PUBLIEKSWOORDEN.some((w) => tekst.includes(w))) {
       score += a.publiek === "structureel" ? 10 : 5;
-      redenen.push("Dit fonds let op maatschappelijk rendement, en uw plan brengt publiek bij.");
+      redenen.push("Dit fonds let op maatschappelijk rendement, en uw plan omvat een publieke openstelling.");
     }
   }
 

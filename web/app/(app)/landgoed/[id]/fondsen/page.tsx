@@ -19,17 +19,39 @@ import { laadCatalogus } from "@/lib/fondsen/zoek";
 import { zoekMetOpslag } from "@/lib/fondsen/opslag";
 import {
   AANVRAGERS,
-  AANVRAGER_LABELS,
   BEDRAGBANDEN,
   BEDRAGBAND_LABELS,
-  DOELEN,
-  DOEL_LABELS,
+  leidDoelAf,
   PLANFASEN,
   PLANFASE_LABELS,
   PUBLIEK_LABELS,
   PUBLIEK_OPTIES,
   type Antwoorden,
 } from "@/lib/fondsen/vraag";
+
+// Vraag 4 ("wie zou aanvragen?") test uitsluitend de rechtsvormpoort — zie
+// `profielVoorAanvrager` in lib/fondsen/zoek.ts. Is de rechtsvorm van het
+// landgoed zelf al stichting of vereniging, dan geeft "het landgoed zelf" en
+// "een stichting" precies hetzelfde resultaat, en dat is verwarrend om naast
+// elkaar te laten staan. Vandaar: bij een landgoed dat al stichting/vereniging
+// is, één samengevoegde optie; bij een ander landgoed (privé, BV, onbekend)
+// blijft "een steunstichting oprichten" een apart, betekenisvol alternatief —
+// dat is de grootste enkele knop uit §9.1 van het plan.
+function aanvragerOpties(rechtsvorm: string | null): { waarde: string; label: string }[] {
+  const isAlAlStichtingachtig =
+    rechtsvorm === "stichting" || rechtsvorm === "vereniging";
+  if (isAlAlStichtingachtig) {
+    return [
+      { waarde: "landgoed", label: "het landgoed zelf" },
+      { waarde: "partner", label: "een aparte partnerorganisatie" },
+    ];
+  }
+  return [
+    { waarde: "landgoed", label: "het landgoed zelf, in de huidige rechtsvorm" },
+    { waarde: "stichting", label: "een (nieuw op te richten) steunstichting" },
+    { waarde: "partner", label: "een aparte partnerorganisatie" },
+  ];
+}
 
 // Fondsenradar — fase 2: DE POORT.
 //
@@ -230,11 +252,14 @@ export default async function FondsenPagina({
   // De vijf antwoorden komen als URL-parameters binnen, zodat een uitkomst te
   // delen en te herladen is. Er wordt pas gezocht als er iets gevraagd is:
   // een lege pagina hoort niets te kosten.
+  const planTekst = (zoekParams.plan ?? "").trim();
   const antwoorden: Antwoorden = {
-    plan: (zoekParams.plan ?? "").trim(),
-    doel: (DOELEN as readonly string[]).includes(zoekParams.doel ?? "")
-      ? (zoekParams.doel as Antwoorden["doel"])
-      : null,
+    plan: planTekst,
+    // Geen apart keuzeveld meer (was dubbelop met de plantekst hierboven) —
+    // deterministisch afgeleid uit wat de gebruiker al typte. Voedt de
+    // kostensoort-poort en de thematische weging; bij twijfel null, en dan
+    // wordt die poort simpelweg niet getoetst.
+    doel: leidDoelAf(planTekst),
     fase: (PLANFASEN as string[]).includes(zoekParams.fase ?? "")
       ? (zoekParams.fase as Antwoorden["fase"])
       : null,
@@ -336,12 +361,6 @@ export default async function FondsenPagina({
 
         <div className="mt-4 grid gap-3 sm:grid-cols-2">
           <VraagVeld
-            naam="doel"
-            label="Wat gaat u doen?"
-            waarde={antwoorden.doel ?? ""}
-            opties={[{ waarde: "", label: "weet ik nog niet" }, ...DOELEN.map((d) => ({ waarde: d, label: DOEL_LABELS[d] }))]}
-          />
-          <VraagVeld
             naam="fase"
             label="Waar staat het plan nu?"
             waarde={antwoorden.fase ?? ""}
@@ -357,7 +376,7 @@ export default async function FondsenPagina({
             naam="aanvrager"
             label="Wie zou aanvragen?"
             waarde={antwoorden.aanvrager ?? ""}
-            opties={[{ waarde: "", label: "weet ik nog niet" }, ...AANVRAGERS.map((a) => ({ waarde: a, label: AANVRAGER_LABELS[a] }))]}
+            opties={[{ waarde: "", label: "weet ik nog niet" }, ...aanvragerOpties(profiel.rechtsvorm)]}
           />
           <VraagVeld
             naam="publiek"
@@ -769,6 +788,15 @@ function ZoekResultaat({
                 Let op: {w}
               </div>
             ))}
+
+            <div className="mt-3">
+              <Link
+                href={`/landgoed/${fondsenId}/fondsen/${f.fonds_id}`}
+                className="btn btn-primary btn-sm"
+              >
+                Meer info →
+              </Link>
+            </div>
           </article>
         ))}
       </div>
