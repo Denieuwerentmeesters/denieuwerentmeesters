@@ -2,13 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { botsendeBedragen } from "./bedragen";
-import { laadProfiel } from "@/app/(app)/landgoed/[id]/subsidies/matching";
-import {
-  aliasIndex,
-  toetsPoort,
-  type PoortFonds,
-  type RegioAlias,
-} from "@/lib/fondsen/poort";
+import { type PoortFonds } from "@/lib/fondsen/poort";
 import {
   bepaalDekking,
   deelStapels,
@@ -22,13 +16,12 @@ import {
   type Vereiste,
 } from "@/lib/fondsen/dossier";
 
-// Detailpagina van één fonds, gezien vanuit dít landgoed.
-//
-// De pagina beantwoordt vier vragen, in de volgorde waarin ze zich stellen:
-//   1. kom ik hiervoor in aanmerking?          (de poort, met reden per toets)
-//   2. wat moet er aangeleverd worden?         (twee stapels: wij / u)
-//   3. wat ligt er al in het archief?          (dekking uit de documentenmodule)
-//   4. wat wil dit fonds eigenlijk?            (het matchprofiel + de bronnen)
+// Detailpagina van één fonds, gezien vanuit dít landgoed. Of dit fonds een
+// match is, heeft de matchmotor al bepaald — staat u hier, dan bent u door
+// de poort. De pagina beantwoordt drie vragen:
+//   1. wat moet er aangeleverd worden?         (twee stapels: wij / u)
+//   2. wat ligt er al in het archief?          (dekking uit de documentenmodule)
+//   3. wat wil dit fonds eigenlijk?            (het matchprofiel + de bronnen)
 //
 // En één die je vóóraf wil weten in plaats van achteraf: wat moet er ná
 // toekenning gebeuren (§8). Een bijdrage van EUR 5.000 met een
@@ -46,22 +39,6 @@ const VELDEN =
   "geo_waarden, bedrag_min, bedrag_max, bedrag_indicatie, cofinanciering_vereist, kostensoort, " +
   "herkomst, geaccordeerd, bron_url, contact, matchbaarheid, hercontrole_termijn, laatst_gezien";
 
-const UITKOMST_TAG: Record<string, { label: string; cls: string }> = {
-  doorgelaten: { label: "voldoet", cls: "tag-green" },
-  afgevallen: { label: "voldoet niet", cls: "tag-red" },
-  onbekend: { label: "dat weten we niet", cls: "tag-amber" },
-};
-
-const POORT_LABELS: Record<string, string> = {
-  benaderbaarheid: "Staat het fonds open?",
-  geografie: "Ligt uw landgoed in het werkgebied?",
-  rechtsvorm: "Mag uw rechtsvorm aanvragen?",
-  aanvrager_route: "Wie is de aanvrager?",
-  bedragband: "Past het bedrag?",
-  projectstatus: "Bent u op tijd?",
-  kostensoort: "Financieren ze dit soort kosten?",
-};
-
 const FASE_LABELS: Record<string, string> = {
   vooraf: "vooraf",
   bij_aanvraag: "bij de aanvraag",
@@ -76,26 +53,6 @@ const DEKKING_TEKST: Record<string, { label: string; cls: string }> = {
   ontbreekt: { label: "ontbreekt", cls: "tag-gray" },
   niet_archiefstuk: { label: "", cls: "" },
 };
-
-// De aliassen komen uit migratie 0055; die staat op live. De kolom `landelijk`
-// kwam er in dezelfde migratie bij — valt de query toch om, dan werken we
-// zonder aliassen door en blijft de geografische toets op 'onbekend' staan.
-// Dat is de veilige stand: niet weten is iets anders dan niet voldoen.
-async function laadAliassen(
-  supabase: Awaited<ReturnType<typeof createClient>>,
-): Promise<RegioAlias[]> {
-  const { data, error } = await supabase
-    .from("regio_alias")
-    .select("alias, provincie, gemeenten, landelijk, geaccordeerd");
-  if (error || !data) return [];
-  return data.map((r) => ({
-    alias: r.alias,
-    provincie: r.provincie,
-    gemeenten: r.gemeenten ?? [],
-    landelijk: Boolean(r.landelijk),
-    geaccordeerd: Boolean(r.geaccordeerd),
-  }));
-}
 
 export default async function FondsDetail({
   params,
@@ -121,41 +78,23 @@ export default async function FondsDetail({
     geaccordeerd: boolean;
   };
 
-  const [profiel, aliassen, criteriaRes, vereistenRes, profielRes, bronnenRes] =
-    await Promise.all([
-      laadProfiel(supabase, id),
-      laadAliassen(supabase),
-      supabase
-        .from("regeling_criterium")
-        .select("omschrijving, veld, operator, waarde, soort, fase, uitkomst, uitkomst_toelichting")
-        .eq("regeling_id", fondsId),
-      supabase
-        .from("regeling_bewijs")
-        .select(
-          "id, omschrijving, vereiste_type, fase, verplichtheid, zelf_op_te_stellen, doorlooptijd_indicatie, document_categorie, bron_tekst, geaccordeerd",
-        )
-        .eq("regeling_id", fondsId),
-      supabase
-        .from("regeling_matchprofiel")
-        .select("profiel, kaartje, model, geaccordeerd, bijgewerkt_op")
-        .eq("regeling_id", fondsId)
-        .maybeSingle(),
-      supabase
-        .from("regeling_bronlezing")
-        .select("soort, url, jaar, gelezen_op, samenvatting")
-        .eq("regeling_id", fondsId),
-    ]);
-
-  const criteria = (criteriaRes.data ?? []) as {
-    omschrijving: string;
-    veld: string | null;
-    operator: string | null;
-    waarde: string | null;
-    soort: string | null;
-    fase: string | null;
-    uitkomst: string;
-    uitkomst_toelichting: string | null;
-  }[];
+  const [vereistenRes, profielRes, bronnenRes] = await Promise.all([
+    supabase
+      .from("regeling_bewijs")
+      .select(
+        "id, omschrijving, vereiste_type, fase, verplichtheid, zelf_op_te_stellen, doorlooptijd_indicatie, document_categorie, bron_tekst, geaccordeerd",
+      )
+      .eq("regeling_id", fondsId),
+    supabase
+      .from("regeling_matchprofiel")
+      .select("profiel, kaartje, model, geaccordeerd, bijgewerkt_op")
+      .eq("regeling_id", fondsId)
+      .maybeSingle(),
+    supabase
+      .from("regeling_bronlezing")
+      .select("soort, url, jaar, gelezen_op, samenvatting")
+      .eq("regeling_id", fondsId),
+  ]);
 
   // `document_categorie` komt uit migratie 0057 en staat nog niet op live.
   // Ontbreekt de kolom, dan valt de query om en werken we zonder — de
@@ -171,16 +110,6 @@ export default async function FondsDetail({
         .eq("landgoed_id", id)
     ).data ?? []
   ) as Archiefstuk[];
-
-  const oordeel = toetsPoort(
-    {
-      ...fonds,
-      criteria: criteria.filter((c) => (c.fase ?? "vooraf") === "vooraf"),
-    },
-    profiel,
-    {},
-    aliasIndex(aliassen),
-  );
 
   const stapels = deelStapels(vereisten.filter((v) => v.fase !== "achteraf"));
   const achteraf = vereisten.filter((v) => v.fase === "achteraf");
@@ -212,8 +141,6 @@ export default async function FondsDetail({
       fonds.bedrag_max as number | null,
     ),
   ];
-
-  const uitsluitingen = criteria.filter((c) => c.soort === "uitsluiting");
 
   return (
     <div className="mx-auto max-w-4xl px-6 py-7">
@@ -259,69 +186,20 @@ export default async function FondsDetail({
         </div>
       )}
 
-      {/* 1. Kom ik in aanmerking? ------------------------------------------ */}
-      <h2 className="mt-7 text-[16px] font-semibold">Komt u hiervoor in aanmerking?</h2>
-      <p className="mb-3 mt-1 text-[12.5px]" style={{ color: "var(--text-2)" }}>
-        Zeven toetsen tegen de gegevens van dit landgoed. &ldquo;Dat weten we niet&rdquo; is geen
-        afwijzing maar werk dat nog gedaan moet worden.
-      </p>
-      <div className="flex flex-col gap-1.5">
-        {oordeel.poorten.map((p) => {
-          const tag = UITKOMST_TAG[p.uitkomst] ?? UITKOMST_TAG.onbekend;
-          return (
-            <div key={p.poort} className="card flex flex-wrap items-start gap-x-3 gap-y-1 p-3">
-              <span className={`tag ${tag.cls} shrink-0`}>{tag.label}</span>
-              <div className="min-w-0 flex-1">
-                <div className="text-[13.5px] font-medium">
-                  {POORT_LABELS[p.poort] ?? p.poort}
-                </div>
-                <div className="text-[12.5px]" style={{ color: "var(--text-2)" }}>
-                  {p.reden}
-                </div>
-                {p.actie && (
-                  <div className="mt-1 text-[12.5px]" style={{ color: "var(--primary)" }}>
-                    Actie: {p.actie}
-                  </div>
-                )}
-                {p.herkadering && (
-                  <div className="mt-1 text-[12.5px]" style={{ color: "var(--text-2)" }}>
-                    {p.herkadering}
-                  </div>
-                )}
-                {p.uitkomst === "onbekend" && (
-                  <div className="mt-1 text-[12px]" style={{ color: "var(--text-3)" }}>
-                    Dit moeten we navragen bij het fonds.
-                  </div>
-                )}
-              </div>
-            </div>
-          );
-        })}
-      </div>
-
+      {/* De matchmotor heeft de poort al getoetst — is dit fonds geen match,
+          dan komt u hier niet. Wat wél hier hoort: de voorwaarde die bepaalt
+          of aanschrijven zin heeft, zoals Trees for All's eis dat u eerst
+          alle andere financiering verkend moet hebben. Die staat, bij gebrek
+          aan een apart veld, in de vrije brontekst — maar verdient een
+          prominente plek, niet een voetnoot. */}
       {fonds.benaderwijze_notitie && (
-        <p
-          className="mt-3 border-l-2 pl-3 text-[12.5px] leading-snug"
-          style={{ borderColor: "var(--border)", color: "var(--text-3)" }}
+        <div
+          className="mt-5 rounded-lg border px-4 py-3 text-[13px] leading-snug"
+          style={{ borderColor: "var(--border)", background: "rgba(37,99,235,0.06)" }}
         >
-          Uit de bron: &ldquo;{fonds.benaderwijze_notitie}&rdquo;
-        </p>
-      )}
-
-      {uitsluitingen.length > 0 && (
-        <>
-          <h3 className="mt-5 text-[14px] font-semibold">Wat dit fonds uitsluit</h3>
-          <ul className="mt-1.5 list-disc pl-5 text-[13px] leading-snug">
-            {uitsluitingen.map((c, i) => (
-              <li key={i}>
-                {c.omschrijving}
-                {c.uitkomst_toelichting && (
-                  <span style={{ color: "var(--text-3)" }}> — &ldquo;{c.uitkomst_toelichting}&rdquo;</span>
-                )}
-              </li>
-            ))}
-          </ul>
-        </>
+          <strong>Aanschrijven heeft alleen zin als u aan deze voorwaarde voldoet:</strong>
+          <p className="mt-1">&ldquo;{fonds.benaderwijze_notitie}&rdquo;</p>
+        </div>
       )}
 
       {/* 2 + 3. Wat moet er aangeleverd worden, en wat ligt er al? --------- */}
@@ -350,9 +228,9 @@ export default async function FondsDetail({
 
           <div className="grid gap-4 sm:grid-cols-2">
             <section>
-              <h3 className="text-[14px] font-semibold">Dit maken wij voor u</h3>
+              <h3 className="text-[14px] font-semibold">Dit kunnen we samen maken</h3>
               <p className="mb-2 mt-0.5 text-[12px]" style={{ color: "var(--text-3)" }}>
-                Stukken die het platform kan opstellen uit uw gegevens.
+                Wij stellen u de vragen die nodig zijn om dit stuk op te stellen.
               </p>
               {stapels.wij.length === 0 ? (
                 <p className="text-[12.5px]" style={{ color: "var(--text-3)" }}>
