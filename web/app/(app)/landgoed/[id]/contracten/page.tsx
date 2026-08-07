@@ -1,7 +1,10 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { nieuwContract } from "../actions";
+import { nieuwContractUitDocument } from "./acties";
 import { ToevoegenToggle } from "@/components/ToevoegenToggle";
+import BestandVeld from "@/components/BestandVeld";
+import SubmitKnop from "@/components/SubmitKnop";
 import { CONTRACT_STATUS_LABEL } from "./constanten";
 
 function dagenTot(datum: string | null): number | null {
@@ -54,6 +57,29 @@ export default async function ContractenPage({
             indexatie.
           </p>
         </header>
+
+        {/* AI-invoer (plak 4): upload het contract, de AI stelt het dossier
+            voor als concept — accorderen doe je op de dossierpagina. */}
+        <form
+          action={nieuwContractUitDocument}
+          className="card mb-4 flex flex-wrap items-end gap-3 p-4"
+        >
+          <input type="hidden" name="landgoed_id" value={id} />
+          <div className="min-w-[220px] flex-1">
+            <label className="label-up mb-1 block">
+              Nieuw contract uit document (AI)
+            </label>
+            <BestandVeld maxMb={10} />
+          </div>
+          <SubmitKnop className="btn btn-primary" pendingTekst="Lezen…">
+            Lees & stel voor
+          </SubmitKnop>
+          <p className="w-full text-[11.5px]" style={{ color: "var(--text-3)" }}>
+            Upload een pachtcontract (pdf). De AI leest partijen, looptijd,
+            prijs en kadastrale percelen en zet alles klaar als
+            concept-dossier — niets wordt vastgelegd zonder jouw akkoord.
+          </p>
+        </form>
 
         <ToevoegenToggle label="contract toevoegen">
           <form action={nieuwContract} className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3">
