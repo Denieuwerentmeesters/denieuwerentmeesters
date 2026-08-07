@@ -18,14 +18,16 @@ type SupabaseClient = Awaited<ReturnType<typeof createClient>>;
 
 // ── Nieuw contract uit document(en) (plak 4, issue #152) ──
 // Eén of meer pdf's tegelijk (bulk, wens Steven); ze worden één voor één
-// verwerkt. Elk document wordt altijd eerst veiliggesteld (upload +
-// document-rij), daarna leest de AI het contract. Het resultaat is per
-// document een CONCEPT-dossier (herkomst 'ai') dat de gebruiker naloopt en
-// accordeert door de status op Actief te zetten. Mislukt de extractie, dan
-// bestaat het dossier alsnog — met het document eraan en een eerlijke
-// notitie waarom de velden leeg zijn.
+// verwerkt. Met het vinkje "één contract" worden alle pdf's juist als één
+// geheel gelezen (hoofdovereenkomst + bijlagen) en komt er één dossier uit.
+// Elk document wordt altijd eerst veiliggesteld (upload + document-rij),
+// daarna leest de AI het contract. Het resultaat is een CONCEPT-dossier
+// (herkomst 'ai') dat de gebruiker naloopt en accordeert door de status op
+// Actief te zetten. Mislukt de extractie, dan bestaat het dossier alsnog —
+// met de documenten eraan en een eerlijke notitie waarom de velden leeg zijn.
 export async function nieuwContractUitDocument(fd: FormData) {
   const landgoed_id = String(fd.get("landgoed_id"));
+  const eenContract = fd.get("een_contract") === "ja";
   const bestanden = fd
     .getAll("bestand")
     .filter(
@@ -56,29 +58,37 @@ export async function nieuwContractUitDocument(fd: FormData) {
     ]),
   );
 
-  // Eén voor één verwerken; één mislukt bestand mag de rest niet blokkeren.
+  // Met het vinkje "één contract" gaan alle bestanden samen in één beurt;
+  // anders elk bestand apart, en dan mag één mislukt bestand de rest niet
+  // blokkeren.
+  const beurten: File[][] = eenContract
+    ? [bestanden]
+    : bestanden.map((f) => [f]);
   const dossierIds: string[] = [];
   const mislukt: string[] = [];
-  for (const file of bestanden) {
+  for (const files of beurten) {
     try {
       dossierIds.push(
-        await verwerkContractPdf({
+        await verwerkContractPdfs({
           supabase,
           landgoed_id,
           gebruikerId: gebruiker.user?.id ?? null,
-          file,
+          files,
           relatieVanNaam,
           perceelVanAanduiding,
         }),
       );
     } catch (e) {
-      mislukt.push(`${file.name} (${e instanceof Error ? e.message : String(e)})`);
+      mislukt.push(
+        `${files.map((f) => f.name).join(" + ")} (${e instanceof Error ? e.message : String(e)})`,
+      );
     }
   }
 
-  // Eén bestand dat lukte: direct naar het dossier. Anders terug naar het
-  // register, met een eerlijke melding over wat er wel en niet lukte.
-  if (bestanden.length === 1 && dossierIds.length === 1) {
+  // Eén dossier dat lukte (één bestand, of alle bestanden samen als één
+  // contract): direct naar het dossier. Anders terug naar het register,
+  // met een eerlijke melding over wat er wel en niet lukte.
+  if (dossierIds.length === 1 && mislukt.length === 0) {
     redirect(`/landgoed/${landgoed_id}/contracten/${dossierIds[0]}`);
   }
   const delen: string[] = [];
@@ -97,55 +107,63 @@ export async function nieuwContractUitDocument(fd: FormData) {
   );
 }
 
-// De verwerking van één pdf: veiligstellen → AI lezen → concept-dossier.
-// Geeft het contract-id terug.
-async function verwerkContractPdf({
+// De verwerking van één contract: één of meer pdf's (hoofdovereenkomst +
+// eventuele bijlagen) veiligstellen → in samenhang door de AI laten lezen →
+// één concept-dossier. Geeft het contract-id terug.
+async function verwerkContractPdfs({
   supabase,
   landgoed_id,
   gebruikerId,
-  file,
+  files,
   relatieVanNaam,
   perceelVanAanduiding,
 }: {
   supabase: SupabaseClient;
   landgoed_id: string;
   gebruikerId: string | null;
-  file: File;
+  files: File[];
   relatieVanNaam: Map<string, string>;
   perceelVanAanduiding: Map<string, string>;
 }): Promise<string> {
-  // 1. Document veiligstellen (private bucket + document-rij).
-  const bestandPad = `${landgoed_id}/${crypto.randomUUID()}-${veiligeNaam(file.name)}`;
-  const bytes = Buffer.from(await file.arrayBuffer());
-  const { error: uploadFout } = await supabase.storage
-    .from("documenten")
-    .upload(bestandPad, bytes, { contentType: "application/pdf" });
-  if (uploadFout) throw new Error(uploadFout.message);
+  // 1. Documenten veiligstellen (private bucket + document-rij per bestand).
+  const documentIds: string[] = [];
+  const base64s: string[] = [];
+  for (const file of files) {
+    const bestandPad = `${landgoed_id}/${crypto.randomUUID()}-${veiligeNaam(file.name)}`;
+    const bytes = Buffer.from(await file.arrayBuffer());
+    const { error: uploadFout } = await supabase.storage
+      .from("documenten")
+      .upload(bestandPad, bytes, { contentType: "application/pdf" });
+    if (uploadFout) throw new Error(uploadFout.message);
 
-  const document = await moet(
-    supabase
-      .from("document")
-      .insert({
-        landgoed_id,
-        scope: "landgoed",
-        titel: file.name,
-        bestand_pad: bestandPad,
-        geupload_door: gebruikerId,
-      })
-      .select("id")
-      .single(),
-    "document opslaan",
-  );
+    const document = await moet(
+      supabase
+        .from("document")
+        .insert({
+          landgoed_id,
+          scope: "landgoed",
+          titel: file.name,
+          bestand_pad: bestandPad,
+          geupload_door: gebruikerId,
+        })
+        .select("id")
+        .single(),
+      "document opslaan",
+    );
+    documentIds.push(document.id as string);
+    base64s.push(bytes.toString("base64"));
+  }
 
-  // 2. AI-extractie — falen is geen ramp: het dossier komt er toch, met
-  //    een eerlijke notitie in plaats van stil lege velden.
+  // 2. AI-extractie over alle bestanden samen — falen is geen ramp: het
+  //    dossier komt er toch, met een eerlijke notitie in plaats van stil
+  //    lege velden.
   let voorstel: ContractVoorstel | null = null;
   let extractieFout: string | null = null;
   if (!contractExtractieBeschikbaar()) {
     extractieFout = "AI niet beschikbaar (geen sleutel ingesteld)";
   } else {
     try {
-      voorstel = await extraheerContractUitPdf(bytes.toString("base64"));
+      voorstel = await extraheerContractUitPdf(base64s);
     } catch (e) {
       extractieFout = e instanceof Error ? e.message : String(e);
     }
@@ -184,7 +202,7 @@ async function verwerkContractPdf({
       .from("contract")
       .insert({
         landgoed_id,
-        titel: voorstel?.titel ?? file.name.replace(/\.pdf$/i, ""),
+        titel: voorstel?.titel ?? files[0].name.replace(/\.pdf$/i, ""),
         contractnummer: voorstel?.contractnummer ?? null,
         type: voorstel?.type ?? "pacht",
         pachtvorm: voorstel?.pachtvorm ?? null,
@@ -204,20 +222,22 @@ async function verwerkContractPdf({
   );
   const contract_id = contract.id as string;
 
-  // 4. Document aan het dossier hangen.
-  await moet(
-    supabase.from("verband").insert({
-      landgoed_id,
-      bron_type: "document",
-      bron_id: document.id,
-      doel_type: "contract",
-      doel_id: contract_id,
-      rol: "betreft",
-      status: "geaccordeerd",
-      aangemaakt_door: gebruikerId,
-    }),
-    "document koppelen",
-  );
+  // 4. Alle documenten aan het dossier hangen.
+  for (const documentId of documentIds) {
+    await moet(
+      supabase.from("verband").insert({
+        landgoed_id,
+        bron_type: "document",
+        bron_id: documentId,
+        doel_type: "contract",
+        doel_id: contract_id,
+        rol: "betreft",
+        status: "geaccordeerd",
+        aangemaakt_door: gebruikerId,
+      }),
+      "document koppelen",
+    );
+  }
 
   // 5. Gematchte partijen en percelen koppelen (alleen bestaande
   //    registraties — de rest staat in de notitie).

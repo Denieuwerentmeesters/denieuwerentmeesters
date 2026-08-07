@@ -76,13 +76,21 @@ const PROMPT = `Je leest een Nederlands grondgebruiks- of huurcontract (meestal 
 
 Neem alleen over wat er echt staat; gok niet. Onbekend = null of lege lijst.`;
 
-// Stuur de pdf naar de AI en geef het gevalideerde voorstel terug.
+// Stuur één of meer pdf's naar de AI en geef het gevalideerde voorstel
+// terug. Meerdere pdf's betekent: één contract dat over meerdere bestanden
+// verspreid is (hoofdovereenkomst + bijlagen/allonges) — de AI leest ze in
+// samenhang en er komt één voorstel uit.
 // Gooit een Error met leesbare tekst als de aanroep of het parsen mislukt —
 // de aanroeper toont die eerlijk (bron-storing is geen "geen resultaat").
 export async function extraheerContractUitPdf(
-  pdfBase64: string,
+  pdfBase64: string | string[],
 ): Promise<ContractVoorstel> {
+  const pdfs = Array.isArray(pdfBase64) ? pdfBase64 : [pdfBase64];
   const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY! });
+  const prompt =
+    pdfs.length > 1
+      ? `Je krijgt ${pdfs.length} bestanden die samen één contract vormen (bijvoorbeeld een hoofdovereenkomst met bijlagen of allonges). Lees ze in samenhang als één geheel; bij tegenstrijdigheden geldt het meest recente of specifieke stuk en noem je de tegenstrijdigheid bij "onzekerheden".\n\n${PROMPT}`
+      : PROMPT;
   const res = await client.messages.create({
     model: MODEL,
     max_tokens: 2000,
@@ -90,15 +98,15 @@ export async function extraheerContractUitPdf(
       {
         role: "user",
         content: [
-          {
-            type: "document",
+          ...pdfs.map((data) => ({
+            type: "document" as const,
             source: {
-              type: "base64",
-              media_type: "application/pdf",
-              data: pdfBase64,
+              type: "base64" as const,
+              media_type: "application/pdf" as const,
+              data,
             },
-          },
-          { type: "text", text: PROMPT },
+          })),
+          { type: "text", text: prompt },
         ],
       },
     ],
