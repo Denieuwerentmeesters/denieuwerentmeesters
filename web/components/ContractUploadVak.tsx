@@ -2,11 +2,13 @@
 
 import { useRef, useState } from "react";
 import SubmitKnop from "@/components/SubmitKnop";
+import { bepaalBestandsSoort } from "@/lib/contracten/bestanden";
 
 // Uploadvak voor de AI-invoer van contracten (wens Steven): een duidelijke
-// dropzone waar je pdf's in kunt slepen óf kiezen, met de leesknop pas
-// zichtbaar zodra er echt iets klaarstaat. Meerdere bestanden mag — de AI
-// leest ze op de server één voor één.
+// dropzone waar je bestanden in kunt slepen óf kiezen, met de leesknop pas
+// zichtbaar zodra er echt iets klaarstaat. Naast pdf kan ook Word (docx)
+// en een scan of foto (jpg, png, webp, heic). Meerdere bestanden mag — de
+// AI leest ze op de server één voor één.
 const MAX_MB = 10;
 const MAX_AANTAL = 5;
 
@@ -35,17 +37,20 @@ export default function ContractUploadVak({
   function voegToe(nieuw: FileList | File[] | null) {
     if (!nieuw) return;
     const kandidaten = Array.from(nieuw);
-    const geenPdf = kandidaten.filter((f) => f.type !== "application/pdf");
+    const leesbaar = (f: File) => bepaalBestandsSoort(f.type, f.name) !== null;
+    const verkeerdType = kandidaten.filter((f) => !leesbaar(f));
     const teGroot = kandidaten.filter(
-      (f) => f.type === "application/pdf" && f.size > MAX_MB * 1024 * 1024,
+      (f) => leesbaar(f) && f.size > MAX_MB * 1024 * 1024,
     );
     const goed = kandidaten.filter(
-      (f) => f.type === "application/pdf" && f.size <= MAX_MB * 1024 * 1024,
+      (f) => leesbaar(f) && f.size <= MAX_MB * 1024 * 1024,
     );
     const samen = [...bestanden, ...goed];
     const problemen: string[] = [];
-    if (geenPdf.length)
-      problemen.push(`${geenPdf.map((f) => f.name).join(", ")}: alleen pdf's kunnen gelezen worden`);
+    if (verkeerdType.length)
+      problemen.push(
+        `${verkeerdType.map((f) => f.name).join(", ")}: alleen pdf, Word (docx) of een scan/foto (jpg, png, webp, heic) kan gelezen worden`,
+      );
     if (teGroot.length)
       problemen.push(`${teGroot.map((f) => f.name).join(", ")}: groter dan ${MAX_MB} MB`);
     if (samen.length > MAX_AANTAL)
@@ -61,7 +66,7 @@ export default function ContractUploadVak({
         ref={inputRef}
         type="file"
         name="bestand"
-        accept="application/pdf"
+        accept=".pdf,.docx,.jpg,.jpeg,.png,.webp,.heic,.heif,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/jpeg,image/png,image/webp,image/heic,image/heif"
         multiple
         className="hidden"
         onChange={(e) => {
@@ -97,14 +102,15 @@ export default function ContractUploadVak({
         }}
       >
         <div className="text-[14px] font-semibold">
-          Sleep hier één of meer contracten in (pdf)
+          Sleep hier één of meer contracten in
         </div>
         <div className="text-[12.5px]" style={{ color: "var(--text-2)" }}>
           of
         </div>
         <span className="btn btn-primary btn-sm">Kies bestanden</span>
         <div className="text-[11.5px]" style={{ color: "var(--text-3)" }}>
-          Maximaal {MAX_AANTAL} bestanden van {MAX_MB} MB per keer.
+          Pdf, Word (docx) of een scan/foto (jpg, png, heic) — maximaal{" "}
+          {MAX_AANTAL} bestanden van {MAX_MB} MB per keer.
         </div>
       </div>
 

@@ -76,20 +76,67 @@ const PROMPT = `Je leest een Nederlands grondgebruiks- of huurcontract (meestal 
 
 Neem alleen over wat er echt staat; gok niet. Onbekend = null of lege lijst.`;
 
-// Stuur één of meer pdf's naar de AI en geef het gevalideerde voorstel
-// terug. Meerdere pdf's betekent: één contract dat over meerdere bestanden
-// verspreid is (hoofdovereenkomst + bijlagen/allonges) — de AI leest ze in
-// samenhang en er komt één voorstel uit.
+// Wat de AI kan lezen: een pdf, een afbeelding (scan of foto van het
+// contract), of platte tekst (bv. uit een Word-bestand gehaald).
+export type ExtractieBron =
+  | { soort: "pdf"; base64: string }
+  | {
+      soort: "afbeelding";
+      mediaType: "image/jpeg" | "image/png" | "image/webp";
+      base64: string;
+    }
+  | { soort: "tekst"; naam: string; tekst: string };
+
+// Bronnen omzetten naar de content-blokken van de API. Puur en
+// exporteerbaar voor de tests.
+export function maakContentBlokken(bronnen: ExtractieBron[]) {
+  return bronnen.map((b) => {
+    if (b.soort === "pdf") {
+      return {
+        type: "document" as const,
+        source: {
+          type: "base64" as const,
+          media_type: "application/pdf" as const,
+          data: b.base64,
+        },
+      };
+    }
+    if (b.soort === "afbeelding") {
+      return {
+        type: "image" as const,
+        source: {
+          type: "base64" as const,
+          media_type: b.mediaType,
+          data: b.base64,
+        },
+      };
+    }
+    return {
+      type: "document" as const,
+      title: b.naam,
+      source: {
+        type: "text" as const,
+        media_type: "text/plain" as const,
+        data: b.tekst,
+      },
+    };
+  });
+}
+
+// Stuur één of meer bronnen naar de AI en geef het gevalideerde voorstel
+// terug. Meerdere bronnen betekent: één contract dat over meerdere
+// bestanden verspreid is (hoofdovereenkomst + bijlagen/allonges, of een
+// meerpaginacontract als losse foto's) — de AI leest ze in samenhang en er
+// komt één voorstel uit.
 // Gooit een Error met leesbare tekst als de aanroep of het parsen mislukt —
 // de aanroeper toont die eerlijk (bron-storing is geen "geen resultaat").
-export async function extraheerContractUitPdf(
-  pdfBase64: string | string[],
+export async function extraheerContract(
+  bronnen: ExtractieBron[],
 ): Promise<ContractVoorstel> {
-  const pdfs = Array.isArray(pdfBase64) ? pdfBase64 : [pdfBase64];
   const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY! });
   const prompt =
-    pdfs.length > 1
-      ? `Je krijgt ${pdfs.length} bestanden die samen één contract vormen (bijvoorbeeld een hoofdovereenkomst met bijlagen of allonges). Lees ze in samenhang als één geheel; bij tegenstrijdigheden geldt het meest recente of specifieke stuk en noem je de tegenstrijdigheid bij "onzekerheden".\n\n${PROMPT}`
+    bronnen.length > 1
+      ? `Je krijgt ${bronnen.length} bestanden die samen één contract vormen (bijvoorbeeld een hoofdovereenkomst met bijlagen of allonges, of een contract dat per pagina gefotografeerd is). Lees ze in samenhang als één geheel; bij tegenstrijdigheden geldt het meest recente of specifieke stuk en noem je de tegenstrijdigheid bij "onzekerheden".\n\n${PROMPT}`
       : PROMPT;
   const res = await client.messages.create({
     model: MODEL,
@@ -97,17 +144,7 @@ export async function extraheerContractUitPdf(
     messages: [
       {
         role: "user",
-        content: [
-          ...pdfs.map((data) => ({
-            type: "document" as const,
-            source: {
-              type: "base64" as const,
-              media_type: "application/pdf" as const,
-              data,
-            },
-          })),
-          { type: "text", text: prompt },
-        ],
+        content: [...maakContentBlokken(bronnen), { type: "text", text: prompt }],
       },
     ],
   });

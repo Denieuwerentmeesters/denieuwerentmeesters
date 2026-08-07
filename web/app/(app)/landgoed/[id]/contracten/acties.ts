@@ -3,15 +3,58 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { moet } from "@/lib/db";
+import mammoth from "mammoth";
+import heicConvert from "heic-convert";
+import { bepaalBestandsSoort } from "@/lib/contracten/bestanden";
 import {
   contractExtractieBeschikbaar,
-  extraheerContractUitPdf,
+  extraheerContract,
   normaliseerAanduiding,
   type ContractVoorstel,
+  type ExtractieBron,
 } from "@/lib/contracten/extractie";
 
 function veiligeNaam(naam: string) {
   return naam.replace(/[^a-zA-Z0-9._-]/g, "_");
+}
+
+// Eén geüpload bestand omzetten naar iets wat de AI kan lezen:
+// pdf gaat rechtstreeks mee; jpg/png/webp als afbeelding; heic (iPhone-
+// foto's) wordt eerst naar jpeg omgezet; uit een Word-bestand halen we de
+// tekst. Gooit een leesbare fout bij een niet-ondersteund of onleesbaar
+// bestand — de aanroeper meldt die per bestand.
+async function maakBron(file: File, bytes: Buffer): Promise<ExtractieBron> {
+  const soort = bepaalBestandsSoort(file.type, file.name);
+  if (soort === "pdf") {
+    return { soort: "pdf", base64: bytes.toString("base64") };
+  }
+  if (soort === "afbeelding") {
+    const n = file.name.toLowerCase();
+    const mediaType =
+      file.type === "image/png" || n.endsWith(".png")
+        ? ("image/png" as const)
+        : file.type === "image/webp" || n.endsWith(".webp")
+          ? ("image/webp" as const)
+          : ("image/jpeg" as const);
+    return { soort: "afbeelding", mediaType, base64: bytes.toString("base64") };
+  }
+  if (soort === "heic") {
+    const jpeg = Buffer.from(
+      await heicConvert({ buffer: bytes, format: "JPEG", quality: 0.7 }),
+    );
+    return {
+      soort: "afbeelding",
+      mediaType: "image/jpeg",
+      base64: jpeg.toString("base64"),
+    };
+  }
+  if (soort === "docx") {
+    const { value } = await mammoth.extractRawText({ buffer: bytes });
+    const tekst = value.trim();
+    if (!tekst) throw new Error("geen tekst gevonden in het Word-bestand");
+    return { soort: "tekst", naam: file.name, tekst };
+  }
+  throw new Error("bestandstype wordt niet ondersteund");
 }
 
 type SupabaseClient = Awaited<ReturnType<typeof createClient>>;
@@ -32,7 +75,9 @@ export async function nieuwContractUitDocument(fd: FormData) {
     .getAll("bestand")
     .filter(
       (b): b is File =>
-        b instanceof File && b.size > 0 && b.type === "application/pdf",
+        b instanceof File &&
+        b.size > 0 &&
+        bepaalBestandsSoort(b.type, b.name) !== null,
     );
   if (bestanden.length === 0) return;
 
@@ -69,7 +114,7 @@ export async function nieuwContractUitDocument(fd: FormData) {
   for (const files of beurten) {
     try {
       dossierIds.push(
-        await verwerkContractPdfs({
+        await verwerkContractBestanden({
           supabase,
           landgoed_id,
           gebruikerId: gebruiker.user?.id ?? null,
@@ -107,10 +152,11 @@ export async function nieuwContractUitDocument(fd: FormData) {
   );
 }
 
-// De verwerking van één contract: één of meer pdf's (hoofdovereenkomst +
-// eventuele bijlagen) veiligstellen → in samenhang door de AI laten lezen →
-// één concept-dossier. Geeft het contract-id terug.
-async function verwerkContractPdfs({
+// De verwerking van één contract: één of meer bestanden (pdf, Word,
+// scan/foto — hoofdovereenkomst + eventuele bijlagen) veiligstellen → in
+// samenhang door de AI laten lezen → één concept-dossier. Geeft het
+// contract-id terug.
+async function verwerkContractBestanden({
   supabase,
   landgoed_id,
   gebruikerId,
@@ -125,15 +171,21 @@ async function verwerkContractPdfs({
   relatieVanNaam: Map<string, string>;
   perceelVanAanduiding: Map<string, string>;
 }): Promise<string> {
-  // 1. Documenten veiligstellen (private bucket + document-rij per bestand).
+  // 1. Elk bestand eerst leesbaar maken voor de AI (vóór de upload — een
+  //    mislukte conversie laat dan niets half achter), daarna veiligstellen
+  //    in de private bucket + document-rij.
   const documentIds: string[] = [];
-  const base64s: string[] = [];
+  const bronnen: ExtractieBron[] = [];
   for (const file of files) {
-    const bestandPad = `${landgoed_id}/${crypto.randomUUID()}-${veiligeNaam(file.name)}`;
     const bytes = Buffer.from(await file.arrayBuffer());
+    bronnen.push(await maakBron(file, bytes));
+
+    const bestandPad = `${landgoed_id}/${crypto.randomUUID()}-${veiligeNaam(file.name)}`;
     const { error: uploadFout } = await supabase.storage
       .from("documenten")
-      .upload(bestandPad, bytes, { contentType: "application/pdf" });
+      .upload(bestandPad, bytes, {
+        contentType: file.type || "application/octet-stream",
+      });
     if (uploadFout) throw new Error(uploadFout.message);
 
     const document = await moet(
@@ -151,10 +203,9 @@ async function verwerkContractPdfs({
       "document opslaan",
     );
     documentIds.push(document.id as string);
-    base64s.push(bytes.toString("base64"));
   }
 
-  // 2. AI-extractie over alle bestanden samen — falen is geen ramp: het
+  // 2. AI-extractie over alle bronnen samen — falen is geen ramp: het
   //    dossier komt er toch, met een eerlijke notitie in plaats van stil
   //    lege velden.
   let voorstel: ContractVoorstel | null = null;
@@ -163,7 +214,7 @@ async function verwerkContractPdfs({
     extractieFout = "AI niet beschikbaar (geen sleutel ingesteld)";
   } else {
     try {
-      voorstel = await extraheerContractUitPdf(base64s);
+      voorstel = await extraheerContract(bronnen);
     } catch (e) {
       extractieFout = e instanceof Error ? e.message : String(e);
     }
