@@ -606,3 +606,40 @@ export async function werkorderAfronden(fd: FormData) {
   revalidatePath(`/landgoed/${landgoed_id}/werkorders`);
   revalidatePath(`/landgoed/${landgoed_id}/werkorder/${id}`);
 }
+
+// Genereert de magic link waarmee een externe uitvoerder deze klus zonder
+// account kan bijwerken (migratie 0066). Verstuurt zelf nog geen mail — dat is
+// stap 5 (Resend).
+//
+// "Nieuwe link maken" laat bestaande links écht vervallen: de knop wekt de
+// indruk dat de oude link dood is, en bij een token dat schrijfrechten geeft
+// (uitvoerder van de klus gehaald na een geschil) mag dat geen loze belofte
+// zijn. Daarom eerst verlopen zetten, dan pas een nieuwe rij.
+export async function maakKlusLink(fd: FormData) {
+  const landgoed_id = String(fd.get("landgoed_id"));
+  const id = String(fd.get("id"));
+  const supabase = await createClient();
+
+  // RLS op werkorder_toegangstoken toetst de rol via de werkorder; deze check
+  // voorkomt dat een verkeerd landgoed_id in het formulier tot een token voor
+  // andermans werkorder leidt.
+  const { data: werkorder } = await supabase
+    .from("werkorder")
+    .select("id")
+    .eq("id", id)
+    .eq("landgoed_id", landgoed_id)
+    .maybeSingle();
+  if (!werkorder) return;
+
+  await moet(supabase
+    .from("werkorder_toegangstoken")
+    .update({ verloopt_op: new Date().toISOString() })
+    .eq("werkorder_id", id)
+    .gt("verloopt_op", new Date().toISOString()), "oude klus-links laten vervallen");
+
+  await moet(supabase
+    .from("werkorder_toegangstoken")
+    .insert({ werkorder_id: id }), "klus-link aanmaken");
+
+  revalidatePath(`/landgoed/${landgoed_id}/werkorder/${id}`);
+}

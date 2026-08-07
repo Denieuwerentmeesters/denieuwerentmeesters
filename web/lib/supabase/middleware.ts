@@ -16,6 +16,9 @@ const PUBLIEKE_PADEN = [
   // Meldlink zonder account: de SECURITY DEFINER-functie meld_werkorder_publiek
   // valideert zelf het token in de URL (migratie 0065).
   "/melden",
+  // Magic link per klus voor externe uitvoerders; token gevalideerd door de
+  // SECURITY DEFINER-functies uit migratie 0066.
+  "/klus",
   "/api/extractie",
   "/api/subsidie",
   "/api/fondsen",

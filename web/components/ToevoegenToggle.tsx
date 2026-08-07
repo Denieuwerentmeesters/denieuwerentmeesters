@@ -23,7 +23,13 @@ export function ToevoegenToggle({
         </button>
       )}
       {open && (
-        <div>
+        // Sluit na een succesvolle submit: submit-events van het formulier in
+        // children bubbelen hier naartoe. Faalt de browservalidatie (leeg
+        // verplicht veld), dan komt het event niet — het formulier blijft dan
+        // open staan, zoals bedoeld. Zonder dit bleef het formulier open na
+        // toevoegen en zag je bij terugkeer via het menu nóg steeds het
+        // formulier in plaats van het overzicht.
+        <div onSubmit={() => setOpen(false)}>
           <div className="card p-4 md:p-5">
             <div className="mb-3 flex items-center justify-between">
               <span className="text-[13px] font-semibold">{label}</span>
