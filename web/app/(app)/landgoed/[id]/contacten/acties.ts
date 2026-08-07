@@ -142,6 +142,27 @@ export async function maakRolType(fd: FormData) {
   revalidatePath(`/landgoed/${landgoed_id}/contacten`);
 }
 
+// Een door de AI aangemaakt contact (uit een contract-pdf) bevestigen:
+// de gebruiker heeft het nagekeken, dus geaccordeerd. De herkomst blijft
+// 'ai' staan — dat is eerlijke geschiedenis, geen smet.
+export async function bevestigContact(fd: FormData) {
+  const landgoed_id = String(fd.get("landgoed_id"));
+  const contact_id = String(fd.get("contact_id"));
+  const supabase = await createClient();
+
+  await moet(
+    supabase
+      .from("relatie")
+      .update({ geaccordeerd: true })
+      .eq("id", contact_id)
+      .eq("landgoed_id", landgoed_id),
+    "contact bevestigen",
+  );
+
+  revalidatePath(`/landgoed/${landgoed_id}/contacten`);
+  revalidatePath(`/landgoed/${landgoed_id}/contacten/${contact_id}`);
+}
+
 export async function archiveerContact(fd: FormData) {
   const landgoed_id = String(fd.get("landgoed_id"));
   const contact_id = String(fd.get("contact_id"));
