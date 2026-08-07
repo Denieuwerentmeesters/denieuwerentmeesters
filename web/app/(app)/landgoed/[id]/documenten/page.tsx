@@ -249,24 +249,27 @@ export default async function DocumentenPage({
               accordeerCategorie={accordeerCategorie}
             />
 
-            {/* Werkvoorraad-blok: alleen als er iets in staat, en dan bovenaan. */}
+            {/* Werkvoorraad-blok: alleen als er iets in staat, en dan bovenaan. De
+                AI-knop stond eerder als los, verwarrend "leeg" ogend kaartje ernaast —
+                nu direct onder de kaart waar hij bij hoort, in dezelfde grid-cel (een
+                <form>/<button> mag niet ín de <Link>-kaart zelf, zie de conventie bij
+                KansRij op de subsidiepagina). */}
             {werkvoorraad.length > 0 && (
               <div className="mb-4 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
-                {blokVoor(
-                  NOG_IN_TE_DELEN,
-                  "Nog in te delen",
-                  "Stukken waarvan de categorie nog niet bevestigd is. Werk deze bak leeg en de rest van het archief klopt.",
-                )}
-                <div className="card flex flex-col justify-center gap-3 p-5">
-                  <div className="text-[12.5px]" style={{ color: "var(--text-2)" }}>
-                    De AI kan de onbekende stukken alsnog langslopen en per stuk een
-                    categorie voorstellen. Je bevestigt ze daarna hierboven.
-                  </div>
-                  <form action={herclassificeerOnbekende}>
+                <div className="flex flex-col gap-2">
+                  {blokVoor(
+                    NOG_IN_TE_DELEN,
+                    "Nog in te delen",
+                    "Stukken waarvan de categorie nog niet bevestigd is. Werk deze bak leeg en de rest van het archief klopt.",
+                  )}
+                  <form action={herclassificeerOnbekende} className="flex flex-wrap items-center gap-2 px-1">
                     <input type="hidden" name="landgoed_id" value={id} />
                     <button type="submit" className="btn btn-ghost btn-sm">
                       Laat de AI voorstellen doen
                     </button>
+                    <span className="text-[11.5px]" style={{ color: "var(--text-3)" }}>
+                      Loopt de onbekende stukken langs en stelt per stuk een categorie voor.
+                    </span>
                   </form>
                 </div>
               </div>
