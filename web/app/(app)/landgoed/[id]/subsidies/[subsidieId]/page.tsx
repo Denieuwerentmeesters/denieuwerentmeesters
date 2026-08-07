@@ -160,8 +160,8 @@ export default async function SubsidieDetailPage({
   return (
     <div className="flex flex-col">
       <div className="bg-white px-7 py-4" style={{ borderBottom: "1px solid var(--border)" }}>
-        <Link href={`/landgoed/${id}/subsidies`} className="text-[12.5px]" style={{ color: "var(--text-2)" }}>
-          ← Subsidies
+        <Link href={`/landgoed/${id}/subsidies`} className="btn btn-ghost btn-sm">
+          ← Terug naar de subsidieradar
         </Link>
       </div>
 

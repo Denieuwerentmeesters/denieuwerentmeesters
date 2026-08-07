@@ -269,12 +269,8 @@ export default async function ContractDossierPage({
         className="bg-white px-7 py-4"
         style={{ borderBottom: "1px solid var(--border)" }}
       >
-        <Link
-          href={`/landgoed/${id}/contracten`}
-          className="text-[12.5px]"
-          style={{ color: "var(--text-2)" }}
-        >
-          ← Terug naar contracten
+        <Link href={`/landgoed/${id}/contracten`} className="btn btn-ghost btn-sm">
+          ← Alle contracten
         </Link>
       </div>
 

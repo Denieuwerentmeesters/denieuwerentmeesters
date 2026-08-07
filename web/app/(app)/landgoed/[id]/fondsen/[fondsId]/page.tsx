@@ -148,10 +148,9 @@ export default async function FondsDetail({
     <div className="mx-auto max-w-4xl px-6 py-7">
       <Link
         href={`/landgoed/${id}/fondsen`}
-        className="text-[12.5px]"
-        style={{ color: "var(--text-3)" }}
+        className="btn btn-ghost btn-sm"
       >
-        ← terug naar de fondsenradar
+        ← Terug naar de fondsenradar
       </Link>
 
       <h1 className="mt-2 text-[22px] font-bold leading-tight">{fonds.naam}</h1>
