@@ -54,6 +54,12 @@ export default async function WerkordersPage({
     return a.aangemaakt_op < b.aangemaakt_op ? 1 : -1; // ouder eerst binnen dezelfde status
   });
 
+  const { data: landgoed } = await supabase
+    .from("landgoed")
+    .select("meld_token")
+    .eq("id", id)
+    .maybeSingle();
+
   const [ledenRaw, relatiesRaw] = await Promise.all([
     supabase.from("lidmaatschap").select("gebruiker_id, profiel(id, naam, email)").eq("landgoed_id", id),
     // Uitvoerders: contacten met een rol die 'werkorder' in koppelbaar_aan heeft.
@@ -146,6 +152,18 @@ export default async function WerkordersPage({
             </button>
           </form>
         </ToevoegenToggle>
+
+        {landgoed?.meld_token && (
+          <div className="card mb-5 p-4 text-[12.5px]" style={{ color: "var(--text-2)" }}>
+            <span className="label-up">Meldlink om te delen</span>
+            <div className="mt-1 break-all font-mono text-[12px]" style={{ color: "var(--text)" }}>
+              /melden/{landgoed.meld_token}
+            </div>
+            <p className="mt-1">
+              Huurders, bewoners en anderen kunnen hiermee melden zonder account.
+            </p>
+          </div>
+        )}
 
         <div className="card mt-5 divide-y" style={{ borderColor: "var(--border)" }}>
           {werkorders.length === 0 && (
