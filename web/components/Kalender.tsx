@@ -7,7 +7,7 @@ import { VerwijderKnop } from "@/components/VerwijderKnop";
 export type KalenderEvent = {
   datum: string; // YYYY-MM-DD
   titel: string;
-  soort: "agenda" | "taak" | "contract" | "indexatie" | "vergadering";
+  soort: "agenda" | "taak" | "klus" | "contract" | "indexatie" | "vergadering";
   tijd?: string | null;
   href?: string | null;
   agendaId?: string | null; // alleen voor eigen agendapunten (verwijderbaar)
@@ -16,6 +16,7 @@ export type KalenderEvent = {
 const SOORT_TAG: Record<KalenderEvent["soort"], string> = {
   agenda: "tag-green",
   taak: "tag-amber",
+  klus: "tag-purple",
   contract: "tag-red",
   indexatie: "tag-blue",
   vergadering: "tag-gray",
@@ -23,6 +24,7 @@ const SOORT_TAG: Record<KalenderEvent["soort"], string> = {
 const SOORT_LABEL: Record<KalenderEvent["soort"], string> = {
   agenda: "Agenda",
   taak: "Taak",
+  klus: "Klus",
   contract: "Contract loopt af",
   indexatie: "Indexatie",
   vergadering: "Vergadering",
