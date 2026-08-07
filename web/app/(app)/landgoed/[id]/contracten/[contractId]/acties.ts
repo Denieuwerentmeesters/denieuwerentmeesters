@@ -1,5 +1,6 @@
 "use server";
 
+import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { isUuid, moet } from "@/lib/db";
 import { revalidatePath } from "next/cache";
@@ -94,6 +95,9 @@ export async function verwijderContract(fd: FormData) {
     "contract verwijderen",
   );
   revalidatePath(`/landgoed/${landgoed_id}/contracten`);
+  // Zonder redirect blijf je op de dossierpagina van het zojuist
+  // verwijderde contract staan — en die geeft dan een 404.
+  redirect(`/landgoed/${landgoed_id}/contracten`);
 }
 
 // ── Partijen ──
