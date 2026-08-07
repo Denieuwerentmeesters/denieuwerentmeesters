@@ -57,6 +57,26 @@ async function veiligeToewijzing(
   return leeg;
 }
 
+// ── Hulp: meerdere foto's uploaden ──
+async function uploadFotos(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  landgoed_id: string,
+  werkorder_id: string,
+  submap: string,
+  files: File[],
+): Promise<string[]> {
+  const paden: string[] = [];
+  for (const file of files) {
+    if (!file || file.size === 0) continue;
+    const ext = file.name.split(".").pop() ?? "bin";
+    const pad = `${landgoed_id}/werkorders/${werkorder_id}/${submap}/${Date.now()}-${paden.length}.${ext}`;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { error } = await (supabase as any).storage.from("documenten").upload(pad, file);
+    if (!error) paden.push(pad);
+  }
+  return paden;
+}
+
 // ── Taken ──
 export async function nieuweTaak(fd: FormData) {
   const landgoed_id = String(fd.get("landgoed_id"));
@@ -356,6 +376,7 @@ export async function voegNotitieToe(fd: FormData) {
   }), "notitie toevoegen");
   revalidatePath(`/landgoed/${landgoed_id}/taak/${object_id}`);
   revalidatePath(`/landgoed/${landgoed_id}/agenda/${object_id}`);
+  revalidatePath(`/landgoed/${landgoed_id}/werkorder/${object_id}`);
 }
 
 // ── Contracten ──
@@ -398,4 +419,96 @@ export async function nieuwContract(fd: FormData) {
     );
   }
   revalidatePath(`/landgoed/${landgoed_id}/contracten`);
+}
+
+// ── Werkorders ──
+const WERKORDER_STATUSSEN = [
+  "gemeld", "beoordelen", "toegewezen", "in_uitvoering", "wacht_op", "klaar", "geannuleerd",
+] as const;
+
+export async function nieuweWerkorder(fd: FormData) {
+  const landgoed_id = String(fd.get("landgoed_id"));
+  const titel = tekst(fd, "titel");
+  if (!titel) return;
+  const supabase = await createClient();
+  const toewijzing = await veiligeToewijzing(supabase, landgoed_id, tekst(fd, "toegewezen_aan"));
+  const { data: { user } } = await supabase.auth.getUser();
+
+  const nieuw = await moet(supabase.from("werkorder").insert({
+    landgoed_id,
+    titel,
+    omschrijving: tekst(fd, "omschrijving"),
+    prioriteit: tekst(fd, "prioriteit"),
+    deadline: tekst(fd, "deadline"),
+    soort: tekst(fd, "soort"),
+    stamobject_id: tekst(fd, "stamobject_id"),
+    ...toewijzing,
+    status: "gemeld",
+    aangemaakt_door: user?.id ?? null,
+  }).select("id").single(), "werkorder aanmaken");
+
+  const fotos = (fd.getAll("fotos") as File[]).filter((f) => f && f.size > 0);
+  if (nieuw.id && fotos.length > 0) {
+    const paden = await uploadFotos(supabase, landgoed_id, nieuw.id, "voor", fotos);
+    if (paden.length > 0) {
+      await moet(supabase.from("werkorder").update({ fotos_voor: paden }).eq("id", nieuw.id), "foto's koppelen");
+    }
+  }
+
+  revalidatePath(`/landgoed/${landgoed_id}/werkorders`);
+}
+
+// Bewaakt geldige overgangen zodat een gemanipuleerd formulier een werkorder
+// niet buiten het statusmodel kan zetten (zelfde discipline als veiligeToewijzing).
+export async function werkorderStatusWijzigen(fd: FormData) {
+  const landgoed_id = String(fd.get("landgoed_id"));
+  const id = String(fd.get("id"));
+  const nieuweStatusRuw = String(fd.get("status") ?? "");
+  if (!WERKORDER_STATUSSEN.includes(nieuweStatusRuw as (typeof WERKORDER_STATUSSEN)[number])) return;
+  const supabase = await createClient();
+
+  const update: Record<string, unknown> = {
+    status: nieuweStatusRuw,
+    bijgewerkt_op: new Date().toISOString(),
+  };
+  if (nieuweStatusRuw === "wacht_op") {
+    update.wacht_reden = tekst(fd, "wacht_reden");
+  } else {
+    update.wacht_reden = null;
+  }
+
+  await moet(supabase.from("werkorder")
+    .update(update)
+    .eq("id", id)
+    .eq("landgoed_id", landgoed_id), "werkorder status bijwerken");
+
+  revalidatePath(`/landgoed/${landgoed_id}/werkorders`);
+  revalidatePath(`/landgoed/${landgoed_id}/werkorder/${id}`);
+}
+
+// Het controlemoment uit hfst 3: beheerder keurt "klaar" goed of stuurt terug.
+export async function werkorderAfronden(fd: FormData) {
+  const landgoed_id = String(fd.get("landgoed_id"));
+  const id = String(fd.get("id"));
+  const goedgekeurd = String(fd.get("goedgekeurd")) === "ja";
+  const supabase = await createClient();
+
+  const fotos = (fd.getAll("fotos_na") as File[]).filter((f) => f && f.size > 0);
+  const update: Record<string, unknown> = {
+    status: goedgekeurd ? "klaar" : "toegewezen",
+    bijgewerkt_op: new Date().toISOString(),
+  };
+  if (fotos.length > 0) {
+    const paden = await uploadFotos(supabase, landgoed_id, id, "na", fotos);
+    if (paden.length > 0) update.fotos_na = paden;
+  }
+  if (getal(fd, "kosten_werkelijk") !== null) update.kosten_werkelijk = getal(fd, "kosten_werkelijk");
+
+  await moet(supabase.from("werkorder")
+    .update(update)
+    .eq("id", id)
+    .eq("landgoed_id", landgoed_id), "werkorder afronden");
+
+  revalidatePath(`/landgoed/${landgoed_id}/werkorders`);
+  revalidatePath(`/landgoed/${landgoed_id}/werkorder/${id}`);
 }
