@@ -33,6 +33,9 @@ export type ContractVoorstel = {
   ingangsdatum: string | null;
   einddatum: string | null;
   bedrag_per_jaar: number | null;
+  // Zelfde waarden als de app gebruikt (contract.indexatie_type).
+  indexatie_type: "CBS-CPI" | "vast %" | null;
+  indexatie_percentage: number | null;
   partijen: { naam: string; rol: "verpachter" | "pachter" | "verhuurder" | "huurder" | "partij" }[];
   kadastrale_aanduidingen: string[];
   onzekerheden: string | null;
@@ -47,6 +50,7 @@ const PACHTVORMEN = new Set([
   "overig",
 ]);
 const LOOPTIJDEN = new Set(["bepaald", "onbepaald"]);
+const INDEXATIES = new Set(["CBS-CPI", "vast %"]);
 const ROLLEN = new Set(["verpachter", "pachter", "verhuurder", "huurder", "partij"]);
 
 function alsDatum(v: unknown): string | null {
@@ -66,6 +70,12 @@ const PROMPT = `Je leest een Nederlands grondgebruiks- of huurcontract (meestal 
   "ingangsdatum": "JJJJ-MM-DD"|null,
   "einddatum": "JJJJ-MM-DD"|null,
   "bedrag_per_jaar": number|null,   // pacht-/huurprijs per jaar in euro's, als getal
+  "indexatie_type": "CBS-CPI"|"vast %"|null,
+                                    // wat het contract over indexeren/aanpassen van de prijs zegt:
+                                    // koppeling aan de consumentenprijsindex van het CBS = "CBS-CPI",
+                                    // een vast percentage per jaar = "vast %", niets geregeld = null
+  "indexatie_percentage": number|null,
+                                    // alleen bij "vast %": het percentage per jaar, als getal
   "partijen": [{"naam": string, "rol": "verpachter"|"pachter"|"verhuurder"|"huurder"|"partij"}],
                                     // de partij zelf (stichting, maatschap, persoon), niet de vertegenwoordigers
   "kadastrale_aanduidingen": [string],
@@ -176,6 +186,8 @@ export function valideerContractVoorstel(
   const pachtvorm = String(rauw.pachtvorm ?? "");
   const looptijd = String(rauw.looptijd_type ?? "");
   const bedrag = Number(rauw.bedrag_per_jaar);
+  const indexatie = String(rauw.indexatie_type ?? "");
+  const indexatiePct = Number(rauw.indexatie_percentage);
   const partijen = Array.isArray(rauw.partijen)
     ? (rauw.partijen as { naam?: unknown; rol?: unknown }[])
         .map((p) => ({
@@ -203,6 +215,13 @@ export function valideerContractVoorstel(
     ingangsdatum: alsDatum(rauw.ingangsdatum),
     einddatum: alsDatum(rauw.einddatum),
     bedrag_per_jaar: Number.isFinite(bedrag) && bedrag >= 0 ? bedrag : null,
+    indexatie_type: INDEXATIES.has(indexatie)
+      ? (indexatie as ContractVoorstel["indexatie_type"])
+      : null,
+    indexatie_percentage:
+      Number.isFinite(indexatiePct) && indexatiePct > 0 && indexatiePct <= 25
+        ? indexatiePct
+        : null,
     partijen: partijen as ContractVoorstel["partijen"],
     kadastrale_aanduidingen: aanduidingen,
     onzekerheden: rauw.onzekerheden ? String(rauw.onzekerheden).trim() : null,

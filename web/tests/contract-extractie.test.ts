@@ -63,6 +63,24 @@ describe("valideerContractVoorstel", () => {
   it("laat een negatief bedrag niet door", () => {
     expect(valideerContractVoorstel({ bedrag_per_jaar: -500 }).bedrag_per_jaar).toBeNull();
   });
+
+  it("neemt de indexatieregeling over binnen de eigen lijsten", () => {
+    const v = valideerContractVoorstel({
+      indexatie_type: "vast %",
+      indexatie_percentage: 3,
+    });
+    expect(v.indexatie_type).toBe("vast %");
+    expect(v.indexatie_percentage).toBe(3);
+  });
+
+  it("wijst onbekende indexatietypes en onzinnige percentages af", () => {
+    const v = valideerContractVoorstel({
+      indexatie_type: "ROZ-index",
+      indexatie_percentage: 40,
+    });
+    expect(v.indexatie_type).toBeNull();
+    expect(v.indexatie_percentage).toBeNull();
+  });
 });
 
 describe("normaliseerAanduiding", () => {

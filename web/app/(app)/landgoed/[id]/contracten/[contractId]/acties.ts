@@ -57,6 +57,7 @@ export async function bewerkContractDossier(fd: FormData) {
         // spiegel van de geaccordeerde prijsafspraak — zie de sync
         // hieronder.
         indexatie_type: tekst(fd, "indexatie_type"),
+        indexatie_percentage: getal(fd, "indexatie_percentage"),
         volgende_indexatie: tekst(fd, "volgende_indexatie"),
         servicekosten: getal(fd, "servicekosten"),
         notitie: tekst(fd, "notitie"),
@@ -322,6 +323,33 @@ async function sluitOudereRegels(supabase: any, contract_id: string, geldig_van:
       "vorige prijsperiode afsluiten",
     );
   }
+}
+
+// Heronderhandeling (of pachtprijstoetsing): handmatig een nieuwe prijs
+// vastleggen in het verloop — de prijs bij Kerngegevens volgt vanzelf.
+export async function nieuwePrijsafspraak(fd: FormData) {
+  const landgoed_id = String(fd.get("landgoed_id"));
+  const contract_id = String(fd.get("contract_id"));
+  const bedrag = getal(fd, "bedrag");
+  const geldig_van = tekst(fd, "geldig_van");
+  if (!isUuid(contract_id) || bedrag == null || !Number.isFinite(bedrag) || !geldig_van)
+    return;
+  const supabase = await createClient();
+  await moet(
+    supabase.from("contract_prijsafspraak").insert({
+      landgoed_id,
+      contract_id,
+      bedrag,
+      geldig_van,
+      status: "geaccordeerd",
+      herkomst: "handmatig",
+      toelichting: tekst(fd, "toelichting") ?? "heronderhandeling",
+    }),
+    "prijsafspraak opslaan",
+  );
+  await sluitOudereRegels(supabase, contract_id, geldig_van);
+  await zetHuidigePrijs(supabase, landgoed_id, contract_id);
+  revalidatePath(pad(landgoed_id, contract_id));
 }
 
 export async function maakIndexatieVoorstel(fd: FormData) {
