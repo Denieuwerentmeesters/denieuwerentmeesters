@@ -4,6 +4,7 @@ import { isUuid } from "@/lib/db";
 import { createClient } from "@/lib/supabase/server";
 import BestandVeld from "@/components/BestandVeld";
 import SubmitKnop from "@/components/SubmitKnop";
+import WijzigbaarFormulier from "@/components/WijzigbaarFormulier";
 import { VerwijderKnop } from "@/components/VerwijderKnop";
 import {
   CONTRACT_STATUS_LABEL,
@@ -15,6 +16,7 @@ import {
 } from "../constanten";
 import {
   bewerkContractDossier,
+  bewerkContractPrijsgegevens,
   verwijderContract,
   koppelPartij,
   ontkoppelPartij,
@@ -48,6 +50,34 @@ function haTekst(m2: unknown): string | null {
   return `${(n / 10000).toLocaleString("nl-NL", { maximumFractionDigits: 2 })} ha`;
 }
 
+// Compacte kijkstand voor een WijzigbaarFormulier: alleen de gevulde
+// velden, als label-waarde-paren naast elkaar. Lange teksten (notitie)
+// krijgen de volle breedte.
+function GegevensWeergave({
+  items,
+}: {
+  items: { label: string; waarde: string | null | undefined; breed?: boolean }[];
+}) {
+  const gevuld = items.filter((i) => i.waarde);
+  if (gevuld.length === 0) {
+    return (
+      <p className="text-[13px]" style={{ color: "var(--text-2)" }}>
+        Nog niets ingevuld.
+      </p>
+    );
+  }
+  return (
+    <div className="flex flex-wrap gap-x-8 gap-y-3">
+      {gevuld.map((i) => (
+        <div key={i.label} className={i.breed ? "w-full" : undefined}>
+          <div className="label-up">{i.label}</div>
+          <div className="mt-0.5 text-[13.5px] font-medium">{i.waarde}</div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export default async function ContractDossierPage({
   params,
 }: {
@@ -60,7 +90,7 @@ export default async function ContractDossierPage({
   const { data: contract } = await supabase
     .from("contract")
     .select(
-      "id, landgoed_id, titel, contractnummer, type, status, herkomst, pachtvorm, looptijd_type, partij, bedrag, servicekosten, ingangsdatum, einddatum, indexatie_type, volgende_indexatie, achterstand, achterstand_notitie, notitie",
+      "id, landgoed_id, titel, contractnummer, type, status, herkomst, pachtvorm, looptijd_type, partij, bedrag, servicekosten, ingangsdatum, einddatum, indexatie_type, volgende_indexatie, notitie",
     )
     .eq("id", contractId)
     .maybeSingle();
@@ -227,6 +257,12 @@ export default async function ContractDossierPage({
   const statusLabel =
     CONTRACT_STATUS_LABEL[contract.status ?? ""] ?? contract.status ?? "—";
 
+  // Een vers AI-concept begint in de wijzig-stand met "Accepteren en
+  // opslaan": dat slaat de gecontroleerde velden op én zet de status op
+  // Actief — dat ís het accorderen. Daarbuiten staan de kerngegevens op
+  // slot tot de gebruiker bewust op Wijzigen klikt.
+  const isAiConcept = contract.herkomst === "ai" && contract.status === "concept";
+
   return (
     <div className="flex flex-col">
       <div
@@ -280,8 +316,9 @@ export default async function ContractDossierPage({
           >
             Dit dossier is een AI-voorstel uit een geüpload document (zie
             Documenten hieronder). Controleer de velden, pas aan waar nodig en
-            zet de status op <strong>Actief</strong> om te accorderen. Wat de
-            AI niet zeker wist of niet kon koppelen, staat in de notitie.
+            klik <strong>Accepteren en opslaan</strong> om te accorderen — het
+            contract wordt dan actief. Wat de AI niet zeker wist of niet kon
+            koppelen, staat in de notitie.
           </div>
         )}
 
@@ -299,12 +336,48 @@ export default async function ContractDossierPage({
         {/* ── Kerngegevens (bewerken) ── */}
         <section className="mb-7">
           <h2 className="mb-2 text-[16px] font-bold">Kerngegevens</h2>
-          <form
+          <WijzigbaarFormulier
             action={bewerkContractDossier}
-            className="card grid grid-cols-2 gap-3 p-4 md:grid-cols-4"
+            beginOpen={isAiConcept}
+            opslaanLabel={isAiConcept ? "Accepteren en opslaan" : "Opslaan"}
+            className="card p-4"
+            veldenKlasse="grid grid-cols-2 gap-3 md:grid-cols-3"
+            weergave={
+              <GegevensWeergave
+                items={[
+                  { label: "Titel", waarde: contract.titel },
+                  { label: "Contractnummer", waarde: contract.contractnummer },
+                  { label: "Status", waarde: statusLabel },
+                  {
+                    label: "Type",
+                    waarde: contract.type
+                      ? CONTRACT_TYPE_LABEL[contract.type] ?? contract.type
+                      : null,
+                  },
+                  {
+                    label: "Pachtvorm",
+                    waarde: contract.pachtvorm
+                      ? PACHTVORM_LABEL[contract.pachtvorm] ?? contract.pachtvorm
+                      : null,
+                  },
+                  {
+                    label: "Looptijd",
+                    waarde: contract.looptijd_type
+                      ? LOOPTIJD_LABEL[contract.looptijd_type] ?? contract.looptijd_type
+                      : null,
+                  },
+                  { label: "Ingangsdatum", waarde: contract.ingangsdatum },
+                  { label: "Einddatum", waarde: contract.einddatum },
+                  { label: "Notitie", waarde: contract.notitie, breed: true },
+                ]}
+              />
+            }
           >
             <input type="hidden" name="landgoed_id" value={id} />
             <input type="hidden" name="contract_id" value={contractId} />
+            {/* Accepteren = accorderen: de status gaat mee naar Actief.
+                De status-keuzelijst zou hier dubbelop zijn. */}
+            {isAiConcept && <input type="hidden" name="status" value="actief" />}
             <div className="col-span-2">
               <label className="label-up mb-1 block">Titel</label>
               <input className="input" name="titel" defaultValue={contract.titel} required />
@@ -318,19 +391,21 @@ export default async function ContractDossierPage({
                 defaultValue={contract.contractnummer ?? ""}
               />
             </div>
-            <div>
-              <label className="label-up mb-1 block">Status</label>
-              <select className="input" name="status" defaultValue={contract.status ?? "concept"}>
-                {Object.entries(CONTRACT_STATUS_LABEL).map(([w, l]) => (
-                  <option key={w} value={w}>
-                    {l}
-                  </option>
-                ))}
-                {contract.status && !(contract.status in CONTRACT_STATUS_LABEL) && (
-                  <option value={contract.status}>{contract.status}</option>
-                )}
-              </select>
-            </div>
+            {!isAiConcept && (
+              <div>
+                <label className="label-up mb-1 block">Status</label>
+                <select className="input" name="status" defaultValue={contract.status ?? "concept"}>
+                  {Object.entries(CONTRACT_STATUS_LABEL).map(([w, l]) => (
+                    <option key={w} value={w}>
+                      {l}
+                    </option>
+                  ))}
+                  {contract.status && !(contract.status in CONTRACT_STATUS_LABEL) && (
+                    <option value={contract.status}>{contract.status}</option>
+                  )}
+                </select>
+              </div>
+            )}
             <div>
               <label className="label-up mb-1 block">Type</label>
               <select className="input" name="type" defaultValue={contract.type ?? "pacht"}>
@@ -368,15 +443,6 @@ export default async function ContractDossierPage({
               </select>
             </div>
             <div>
-              <label className="label-up mb-1 block">Servicekosten (€)</label>
-              <input
-                className="input"
-                name="servicekosten"
-                inputMode="decimal"
-                defaultValue={contract.servicekosten ?? ""}
-              />
-            </div>
-            <div>
               <label className="label-up mb-1 block">Ingangsdatum</label>
               <input
                 className="input"
@@ -394,51 +460,17 @@ export default async function ContractDossierPage({
                 defaultValue={contract.einddatum ?? ""}
               />
             </div>
-            <div>
-              <label className="label-up mb-1 block">Indexatie</label>
-              <select
-                className="input"
-                name="indexatie_type"
-                defaultValue={contract.indexatie_type ?? ""}
-              >
-                <option value="">Geen</option>
-                <option value="CBS-CPI">CBS-CPI</option>
-                <option value="vast %">Vast %</option>
-              </select>
-            </div>
-            <div>
-              <label className="label-up mb-1 block">Volgende indexatie</label>
-              <input
-                className="input"
-                type="date"
-                name="volgende_indexatie"
-                defaultValue={contract.volgende_indexatie ?? ""}
-              />
-            </div>
-            <div>
-              <label className="label-up mb-1 block">Achterstand (€)</label>
-              <input
-                className="input"
-                name="achterstand"
-                inputMode="decimal"
-                defaultValue={contract.achterstand ?? ""}
-              />
-            </div>
             <div className="col-span-2 md:col-span-3">
               <label className="label-up mb-1 block">Notitie</label>
-              <input
+              <textarea
                 className="input"
                 name="notitie"
+                rows={3}
                 defaultValue={contract.notitie ?? ""}
                 placeholder="Vrije aantekening bij dit dossier"
               />
             </div>
-            <div className="col-span-2 flex items-end gap-2 md:col-span-4">
-              <SubmitKnop className="btn btn-primary" pendingTekst="Opslaan…">
-                Opslaan
-              </SubmitKnop>
-            </div>
-          </form>
+          </WijzigbaarFormulier>
           {contract.partij && partijen.length === 0 && (
             <p className="mt-1 text-[11.5px]" style={{ color: "var(--text-3)" }}>
               Oude notatie: partij stond als tekst genoteerd (&quot;{contract.partij}&quot;) —
@@ -593,6 +625,61 @@ export default async function ContractDossierPage({
             volgende indexatiedatum een jaar op. Oude prijzen blijven als
             afgesloten periode bewaard.
           </p>
+
+          {/* Overige prijsgegevens — hoorden eerst bij Kerngegevens, maar
+              dit zijn prijszaken (wens Steven). Eigen formulier + actie,
+              zodat de twee opslaan-knoppen elkaar niet overschrijven. */}
+          <WijzigbaarFormulier
+            action={bewerkContractPrijsgegevens}
+            className="card mt-3 p-4"
+            veldenKlasse="grid grid-cols-2 gap-3 md:grid-cols-4"
+            weergave={
+              <GegevensWeergave
+                items={[
+                  { label: "Indexatie", waarde: contract.indexatie_type ?? "Geen" },
+                  { label: "Volgende indexatie", waarde: contract.volgende_indexatie },
+                  {
+                    label: "Servicekosten",
+                    waarde:
+                      contract.servicekosten != null ? euro(contract.servicekosten) : null,
+                  },
+                ]}
+              />
+            }
+          >
+            <input type="hidden" name="landgoed_id" value={id} />
+            <input type="hidden" name="contract_id" value={contractId} />
+            <div>
+              <label className="label-up mb-1 block">Indexatie</label>
+              <select
+                className="input"
+                name="indexatie_type"
+                defaultValue={contract.indexatie_type ?? ""}
+              >
+                <option value="">Geen</option>
+                <option value="CBS-CPI">CBS-CPI</option>
+                <option value="vast %">Vast %</option>
+              </select>
+            </div>
+            <div>
+              <label className="label-up mb-1 block">Volgende indexatie</label>
+              <input
+                className="input"
+                type="date"
+                name="volgende_indexatie"
+                defaultValue={contract.volgende_indexatie ?? ""}
+              />
+            </div>
+            <div>
+              <label className="label-up mb-1 block">Servicekosten (€)</label>
+              <input
+                className="input"
+                name="servicekosten"
+                inputMode="decimal"
+                defaultValue={contract.servicekosten ?? ""}
+              />
+            </div>
+          </WijzigbaarFormulier>
         </section>
 
         {/* ── Partijen ── */}
