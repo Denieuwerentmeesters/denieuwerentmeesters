@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { meldWerkorderPubliek } from "./actions";
+import { LocatieVeld } from "@/components/LocatieVeld";
 
 export function MeldFormulier({ token, landgoedNaam }: { token: string; landgoedNaam: string }) {
   const [status, setStatus] = useState<"invullen" | "bezig" | "verstuurd">("invullen");
@@ -47,6 +48,7 @@ export function MeldFormulier({ token, landgoedNaam }: { token: string; landgoed
         <label className="label-up mb-1 block">Toelichting</label>
         <textarea className="input w-full" name="omschrijving" rows={3} placeholder="Optioneel — waar precies, sinds wanneer?" />
       </div>
+      <LocatieVeld />
       <div className="flex flex-col gap-3 sm:flex-row">
         <div className="flex-1">
           <label className="label-up mb-1 block">Uw naam</label>
