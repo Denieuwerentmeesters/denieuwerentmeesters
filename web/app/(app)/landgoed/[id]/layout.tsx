@@ -40,7 +40,7 @@ export default async function LandgoedLayout({
     .from("werkorder")
     .select("id", { count: "exact", head: true })
     .eq("landgoed_id", id)
-    .in("status", ["gemeld", "beoordelen"]);
+    .eq("status", "gemeld");
 
   const { count: inboxConcept } = await supabase
     .from("inbound_extractie")

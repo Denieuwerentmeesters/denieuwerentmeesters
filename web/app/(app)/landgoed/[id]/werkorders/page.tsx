@@ -6,34 +6,21 @@ import { ToevoegenToggle } from "@/components/ToevoegenToggle";
 
 const STATUS_LABEL: Record<string, string> = {
   gemeld: "Gemeld",
-  beoordelen: "Beoordelen",
-  toegewezen: "Toegewezen",
-  in_uitvoering: "In uitvoering",
-  wacht_op: "Wacht op…",
-  klaar: "Klaar",
-  geannuleerd: "Geannuleerd",
+  geaccepteerd: "Geaccepteerd",
+  afgerond: "Afgerond",
 };
 
 const STATUS_TAG: Record<string, string> = {
   gemeld: "tag-blue",
-  beoordelen: "tag-amber",
-  toegewezen: "tag-blue",
-  in_uitvoering: "tag-amber",
-  wacht_op: "tag-red",
-  klaar: "tag-green",
-  geannuleerd: "tag-gray",
+  geaccepteerd: "tag-amber",
+  afgerond: "tag-green",
 };
 
-// Sortering "wat aandacht vraagt" (bronplan hfst 7.2): nieuw eerst, dan
-// gepland/in uitvoering, dan wachtend, dan afgerond/geannuleerd onderaan.
+// Sortering "wat aandacht vraagt": nieuwe meldingen eerst, afgerond onderaan.
 const STATUS_VOLGORDE: Record<string, number> = {
   gemeld: 0,
-  beoordelen: 1,
-  wacht_op: 2,
-  toegewezen: 3,
-  in_uitvoering: 4,
-  klaar: 5,
-  geannuleerd: 6,
+  geaccepteerd: 1,
+  afgerond: 2,
 };
 
 export default async function WerkordersPage({
@@ -46,7 +33,7 @@ export default async function WerkordersPage({
 
   const { data: werkordersRaw } = await supabase
     .from("werkorder")
-    .select("id, titel, prioriteit, status, deadline, wacht_reden, toegewezen_aan, toegewezen_aan_naam, aangemaakt_op, ai_voorstel, ai_voorstel_status, profiel!werkorder_toegewezen_aan_fkey(naam, email), stamobject(id, naam)")
+    .select("id, titel, prioriteit, status, deadline, wacht_op_akkoord, toegewezen_aan, toegewezen_aan_naam, aangemaakt_op, ai_voorstel, ai_voorstel_status, profiel!werkorder_toegewezen_aan_fkey(naam, email), stamobject(id, naam)")
     .eq("landgoed_id", id);
 
   const werkorders = (werkordersRaw ?? []).slice().sort((a, b) => {
@@ -226,7 +213,7 @@ export default async function WerkordersPage({
             const persoon = (w.profiel as unknown) as { naam: string | null; email: string | null } | null;
             const uitvoerderNaam = persoon?.naam ?? persoon?.email ?? w.toegewezen_aan_naam;
             const voorstel = w.ai_voorstel as { uitvoerder_waarde: string | null; urgentie: string; toelichting: string } | null;
-            const toonTriage = w.status === "beoordelen" && w.ai_voorstel_status === "voorgesteld" && voorstel;
+            const toonTriage = w.status === "gemeld" && w.ai_voorstel_status === "voorgesteld" && voorstel;
             return (
               <div key={w.id} className="flex flex-col gap-2 px-5 py-3.5" style={{ borderColor: "var(--border)" }}>
                 <div className="flex items-center gap-3">
@@ -238,7 +225,7 @@ export default async function WerkordersPage({
                       <span className={`tag ${STATUS_TAG[w.status] ?? "tag-gray"}`}>
                         {STATUS_LABEL[w.status] ?? w.status}
                       </span>
-                      {w.status === "wacht_op" && w.wacht_reden && <span>({w.wacht_reden})</span>}
+                      {w.wacht_op_akkoord && <span className="tag tag-red">wacht op akkoord</span>}
                       {(() => {
                         const obj = (w.stamobject as unknown) as { id: string; naam: string } | null;
                         return obj ? <span>📍 {obj.naam}</span> : null;

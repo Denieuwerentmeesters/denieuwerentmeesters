@@ -4,20 +4,15 @@ import { useState } from "react";
 import { klusStatusBijwerken, klusNieuwPuntMelden } from "./actions";
 
 const STATUS_LABEL: Record<string, string> = {
-  gemeld: "Gemeld",
-  beoordelen: "In beoordeling",
-  toegewezen: "Toegewezen",
-  in_uitvoering: "In uitvoering",
-  wacht_op: "Wacht op…",
-  klaar: "Klaar",
-  geannuleerd: "Geannuleerd",
+  gemeld: "Nog niet geaccepteerd",
+  geaccepteerd: "Geaccepteerd",
+  afgerond: "Afgerond",
 };
 
 export function KlusPaneel({ token, status }: { token: string; status: string }) {
   const [bezig, setBezig] = useState(false);
   const [fout, setFout] = useState<string | null>(null);
   const [puntGemeld, setPuntGemeld] = useState(false);
-  const afgerond = status === "klaar";
 
   async function zetStatus(fd: FormData) {
     setBezig(true);
@@ -30,41 +25,35 @@ export function KlusPaneel({ token, status }: { token: string; status: string })
   return (
     <>
       <div className="card mb-5 p-5">
-        <span className="label-up">Status bijwerken</span>
-        {afgerond ? (
-          <p className="mt-2 text-[13px]" style={{ color: "var(--text-2)" }}>
-            U heeft deze klus op klaar gezet. De beheerder controleert het en sluit af.
-          </p>
-        ) : (
-          <div className="mt-3 flex flex-wrap items-end gap-2">
-            <form action={zetStatus}>
-              <input type="hidden" name="status" value="in_uitvoering" />
-              <button type="submit" className="btn btn-ghost btn-sm" disabled={bezig}>
-                Ik ben begonnen
-              </button>
-            </form>
-            <form action={zetStatus} className="flex items-end gap-2">
-              <input type="hidden" name="status" value="wacht_op" />
-              <div>
-                <label className="label-up mb-1 block">Even geblokkeerd?</label>
-                <input className="input" name="wacht_reden" placeholder="Reden, bijv. wacht op materiaal" />
-              </div>
-              <button type="submit" className="btn btn-ghost btn-sm" disabled={bezig}>
-                Doorgeven
-              </button>
-            </form>
-            <form action={zetStatus}>
-              <input type="hidden" name="status" value="klaar" />
-              <button type="submit" className="btn btn-primary btn-sm" disabled={bezig}>
-                Klus is klaar
-              </button>
-            </form>
-          </div>
-        )}
-        {fout && <p className="mt-2 text-[13px]" style={{ color: "var(--red)" }}>{fout}</p>}
-        <p className="mt-3 text-[12px]" style={{ color: "var(--text-2)" }}>
-          Huidige status: <strong>{STATUS_LABEL[status] ?? status}</strong>
+        <p className="text-[12.5px]" style={{ color: "var(--text-2)" }}>
+          Status: <strong>{STATUS_LABEL[status] ?? status}</strong>
         </p>
+
+        {status === "gemeld" && (
+          <form action={zetStatus} className="mt-3">
+            <input type="hidden" name="status" value="geaccepteerd" />
+            <button type="submit" className="btn btn-primary btn-sm" disabled={bezig}>
+              Ik pak dit op
+            </button>
+          </form>
+        )}
+
+        {status === "geaccepteerd" && (
+          <form action={zetStatus} className="mt-3">
+            <input type="hidden" name="status" value="afgerond" />
+            <button type="submit" className="btn btn-primary btn-sm" disabled={bezig}>
+              Klus is klaar
+            </button>
+          </form>
+        )}
+
+        {status === "afgerond" && (
+          <p className="mt-2 text-[13px]" style={{ color: "var(--text-2)" }}>
+            Bedankt — de klus staat als afgerond genoteerd.
+          </p>
+        )}
+
+        {fout && <p className="mt-2 text-[13px]" style={{ color: "var(--red)" }}>{fout}</p>}
       </div>
 
       <div className="card p-5">

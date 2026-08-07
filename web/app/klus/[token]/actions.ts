@@ -18,7 +18,6 @@ export async function klusStatusBijwerken(
   const { error } = await supabase.rpc("klus_status_bijwerken", {
     p_token: token,
     p_status: status,
-    p_wacht_reden: String(fd.get("wacht_reden") ?? ""),
   });
   if (error) return { ok: false, fout: "Bijwerken is niet gelukt. Probeer het opnieuw." };
   revalidatePath(`/klus/${token}`);
