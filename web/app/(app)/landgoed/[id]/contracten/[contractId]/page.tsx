@@ -15,6 +15,7 @@ import {
 } from "../constanten";
 import {
   bewerkContractDossier,
+  bewerkContractPrijsgegevens,
   verwijderContract,
   koppelPartij,
   ontkoppelPartij,
@@ -372,15 +373,6 @@ export default async function ContractDossierPage({
               </select>
             </div>
             <div>
-              <label className="label-up mb-1 block">Servicekosten (€)</label>
-              <input
-                className="input"
-                name="servicekosten"
-                inputMode="decimal"
-                defaultValue={contract.servicekosten ?? ""}
-              />
-            </div>
-            <div>
               <label className="label-up mb-1 block">Ingangsdatum</label>
               <input
                 className="input"
@@ -398,41 +390,12 @@ export default async function ContractDossierPage({
                 defaultValue={contract.einddatum ?? ""}
               />
             </div>
-            <div>
-              <label className="label-up mb-1 block">Indexatie</label>
-              <select
-                className="input"
-                name="indexatie_type"
-                defaultValue={contract.indexatie_type ?? ""}
-              >
-                <option value="">Geen</option>
-                <option value="CBS-CPI">CBS-CPI</option>
-                <option value="vast %">Vast %</option>
-              </select>
-            </div>
-            <div>
-              <label className="label-up mb-1 block">Volgende indexatie</label>
-              <input
-                className="input"
-                type="date"
-                name="volgende_indexatie"
-                defaultValue={contract.volgende_indexatie ?? ""}
-              />
-            </div>
-            <div>
-              <label className="label-up mb-1 block">Achterstand (€)</label>
-              <input
-                className="input"
-                name="achterstand"
-                inputMode="decimal"
-                defaultValue={contract.achterstand ?? ""}
-              />
-            </div>
-            <div className="col-span-2 md:col-span-3">
+            <div className="col-span-2 md:col-span-4">
               <label className="label-up mb-1 block">Notitie</label>
-              <input
+              <textarea
                 className="input"
                 name="notitie"
+                rows={3}
                 defaultValue={contract.notitie ?? ""}
                 placeholder="Vrije aantekening bij dit dossier"
               />
@@ -597,6 +560,70 @@ export default async function ContractDossierPage({
             volgende indexatiedatum een jaar op. Oude prijzen blijven als
             afgesloten periode bewaard.
           </p>
+
+          {/* Overige prijsgegevens — hoorden eerst bij Kerngegevens, maar
+              dit zijn prijszaken (wens Steven). Eigen formulier + actie,
+              zodat de twee opslaan-knoppen elkaar niet overschrijven. */}
+          <form
+            action={bewerkContractPrijsgegevens}
+            className="card mt-3 grid grid-cols-2 gap-3 p-4 md:grid-cols-4"
+          >
+            <input type="hidden" name="landgoed_id" value={id} />
+            <input type="hidden" name="contract_id" value={contractId} />
+            <div>
+              <label className="label-up mb-1 block">Indexatie</label>
+              <select
+                className="input"
+                name="indexatie_type"
+                defaultValue={contract.indexatie_type ?? ""}
+              >
+                <option value="">Geen</option>
+                <option value="CBS-CPI">CBS-CPI</option>
+                <option value="vast %">Vast %</option>
+              </select>
+            </div>
+            <div>
+              <label className="label-up mb-1 block">Volgende indexatie</label>
+              <input
+                className="input"
+                type="date"
+                name="volgende_indexatie"
+                defaultValue={contract.volgende_indexatie ?? ""}
+              />
+            </div>
+            <div>
+              <label className="label-up mb-1 block">Servicekosten (€)</label>
+              <input
+                className="input"
+                name="servicekosten"
+                inputMode="decimal"
+                defaultValue={contract.servicekosten ?? ""}
+              />
+            </div>
+            <div>
+              <label className="label-up mb-1 block">Achterstand (€)</label>
+              <input
+                className="input"
+                name="achterstand"
+                inputMode="decimal"
+                defaultValue={contract.achterstand ?? ""}
+              />
+            </div>
+            <div className="col-span-2 md:col-span-3">
+              <label className="label-up mb-1 block">Notitie bij achterstand</label>
+              <input
+                className="input"
+                name="achterstand_notitie"
+                defaultValue={contract.achterstand_notitie ?? ""}
+                placeholder="bijv. herinnering gestuurd 1-6"
+              />
+            </div>
+            <div className="flex items-end">
+              <SubmitKnop className="btn btn-primary btn-sm" pendingTekst="Opslaan…">
+                Opslaan
+              </SubmitKnop>
+            </div>
+          </form>
         </section>
 
         {/* ── Partijen ── */}
