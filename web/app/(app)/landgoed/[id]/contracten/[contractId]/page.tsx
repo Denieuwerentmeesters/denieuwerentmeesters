@@ -90,7 +90,7 @@ export default async function ContractDossierPage({
   const { data: contract } = await supabase
     .from("contract")
     .select(
-      "id, landgoed_id, titel, contractnummer, type, status, herkomst, pachtvorm, looptijd_type, partij, bedrag, servicekosten, ingangsdatum, einddatum, indexatie_type, volgende_indexatie, achterstand, achterstand_notitie, notitie",
+      "id, landgoed_id, titel, contractnummer, type, status, herkomst, pachtvorm, looptijd_type, partij, bedrag, servicekosten, ingangsdatum, einddatum, indexatie_type, volgende_indexatie, notitie",
     )
     .eq("id", contractId)
     .maybeSingle();
@@ -647,16 +647,6 @@ export default async function ContractDossierPage({
                     waarde:
                       contract.servicekosten != null ? euro(contract.servicekosten) : null,
                   },
-                  {
-                    label: "Achterstand",
-                    waarde:
-                      contract.achterstand != null ? euro(contract.achterstand) : null,
-                  },
-                  {
-                    label: "Notitie bij achterstand",
-                    waarde: contract.achterstand_notitie,
-                    breed: true,
-                  },
                 ]}
               />
             }
@@ -691,24 +681,6 @@ export default async function ContractDossierPage({
                 name="servicekosten"
                 inputMode="decimal"
                 defaultValue={contract.servicekosten ?? ""}
-              />
-            </div>
-            <div>
-              <label className="label-up mb-1 block">Achterstand (€)</label>
-              <input
-                className="input"
-                name="achterstand"
-                inputMode="decimal"
-                defaultValue={contract.achterstand ?? ""}
-              />
-            </div>
-            <div className="col-span-2 md:col-span-4">
-              <label className="label-up mb-1 block">Notitie bij achterstand</label>
-              <input
-                className="input"
-                name="achterstand_notitie"
-                defaultValue={contract.achterstand_notitie ?? ""}
-                placeholder="bijv. herinnering gestuurd 1-6"
               />
             </div>
           </WijzigbaarFormulier>
