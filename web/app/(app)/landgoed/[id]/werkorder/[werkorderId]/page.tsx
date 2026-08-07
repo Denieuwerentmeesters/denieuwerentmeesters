@@ -71,11 +71,14 @@ export default async function WerkorderDetailPage({
   // zelfde bron als op de lijstpagina.
   const [ledenRaw, relatiesRaw, objectenRaw] = await Promise.all([
     supabase.from("lidmaatschap").select("gebruiker_id, profiel(id, naam, email)").eq("landgoed_id", landgoed_id),
+    // Alle contacten van het landgoed, met hun rollen. Bewust géén filter op de
+    // 'werkorder'-rol meer: dat maakte de lijst leeg zolang niemand die rol had
+    // gekregen, en dwong de gebruiker eerst een rol te gaan instellen. Wie de
+    // rol wél heeft staat straks bovenaan.
     supabase
       .from("relatie")
-      .select("id, naam, contact_rol!inner(rol_type!inner(koppelbaar_aan))")
+      .select("id, naam, contact_rol(rol_type(koppelbaar_aan))")
       .eq("landgoed_id", landgoed_id)
-      .contains("contact_rol.rol_type.koppelbaar_aan", ["werkorder"])
       .order("naam"),
     supabase
       .from("stamobject")
@@ -89,10 +92,20 @@ export default async function WerkorderDetailPage({
     const p = (l.profiel as unknown) as { id: string; naam: string | null; email: string | null } | null;
     return { waarde: `u:${p?.id ?? l.gebruiker_id}`, naam: p?.naam ?? p?.email ?? l.gebruiker_id };
   });
-  const uitvoerderOpties = ((relatiesRaw.data ?? []) as { id: string; naam: string }[]).map((r) => ({
-    waarde: `c:${r.id}`,
-    naam: r.naam,
-  }));
+  type RelatieRij = {
+    id: string;
+    naam: string;
+    contact_rol?: { rol_type?: { koppelbaar_aan?: string[] | null } | null }[] | null;
+  };
+  const alleRelaties = (relatiesRaw.data ?? []) as unknown as RelatieRij[];
+  const isUitvoerder = (r: RelatieRij) =>
+    (r.contact_rol ?? []).some((cr) => cr.rol_type?.koppelbaar_aan?.includes("werkorder"));
+  const uitvoerderOpties = alleRelaties
+    .filter(isUitvoerder)
+    .map((r) => ({ waarde: `c:${r.id}`, naam: r.naam }));
+  const overigeContacten = alleRelaties
+    .filter((r) => !isUitvoerder(r))
+    .map((r) => ({ waarde: `c:${r.id}`, naam: r.naam }));
 
   if (!werkorder) {
     return <div className="p-7">Melding/klus niet gevonden.</div>;
@@ -107,6 +120,22 @@ export default async function WerkorderDetailPage({
       ? { lat: werkorder.lat as number, lon: werkorder.lon as number }
       : null;
   const wachtOpAkkoord = werkorder.wacht_op_akkoord === true;
+
+  // De bucket "documenten" is privé, dus een pad alleen is niet te tonen: er
+  // moet een tijdelijke ondertekende URL bij (zelfde aanpak als het
+  // objectdossier). Eén uur is ruim genoeg voor het bekijken van een pagina.
+  async function fotoUrls(paden: string[] | null): Promise<string[]> {
+    if (!paden || paden.length === 0) return [];
+    const urls = await Promise.all(
+      paden.map(async (pad) => {
+        const { data } = await supabase.storage.from("documenten").createSignedUrl(pad, 3600);
+        return data?.signedUrl ?? null;
+      }),
+    );
+    return urls.filter((u): u is string => Boolean(u));
+  }
+  const fotosVoor = await fotoUrls(werkorder.fotos_voor as string[] | null);
+  const fotosNa = await fotoUrls(werkorder.fotos_na as string[] | null);
 
   // AI-routeringsvoorstel: stond eerst in de lijst, maar die is nu een
   // overzicht zonder knoppen. Het voorstel hoort dus hier, waar je de melding
@@ -166,14 +195,40 @@ export default async function WerkorderDetailPage({
 
           </div>
 
-          {werkorder.fotos_voor?.length > 0 && (
-            <div className="mt-3 text-[12.5px]" style={{ color: "var(--text-2)" }}>
-              {werkorder.fotos_voor.length} foto{werkorder.fotos_voor.length !== 1 ? "'s" : ""} bij de melding.
+          {fotosVoor.length > 0 && (
+            <div className="mt-4">
+              <span className="label-up">Foto&apos;s bij de melding</span>
+              <div className="mt-2 flex flex-wrap gap-2">
+                {fotosVoor.map((url, i) => (
+                  <a key={url} href={url} target="_blank" rel="noreferrer" title="Openen op ware grootte">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={url}
+                      alt={`Foto ${i + 1} bij de melding`}
+                      className="h-28 w-28 rounded-[8px] object-cover"
+                      style={{ border: "1px solid var(--border)" }}
+                    />
+                  </a>
+                ))}
+              </div>
             </div>
           )}
-          {werkorder.fotos_na?.length > 0 && (
-            <div className="mt-1 text-[12.5px]" style={{ color: "var(--text-2)" }}>
-              {werkorder.fotos_na.length} foto{werkorder.fotos_na.length !== 1 ? "'s" : ""} bij de afronding.
+          {fotosNa.length > 0 && (
+            <div className="mt-4">
+              <span className="label-up">Foto&apos;s na afronding</span>
+              <div className="mt-2 flex flex-wrap gap-2">
+                {fotosNa.map((url, i) => (
+                  <a key={url} href={url} target="_blank" rel="noreferrer" title="Openen op ware grootte">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={url}
+                      alt={`Foto ${i + 1} na afronding`}
+                      className="h-28 w-28 rounded-[8px] object-cover"
+                      style={{ border: "1px solid var(--border)" }}
+                    />
+                  </a>
+                ))}
+              </div>
             </div>
           )}
 
@@ -322,6 +377,13 @@ export default async function WerkorderDetailPage({
                     ))}
                   </optgroup>
                 )}
+                {overigeContacten.length > 0 && (
+                  <optgroup label="Overige contacten">
+                    {overigeContacten.map((c) => (
+                      <option key={c.waarde} value={c.waarde}>{c.naam}</option>
+                    ))}
+                  </optgroup>
+                )}
               </select>
             </div>
             <button type="submit" className="btn btn-primary btn-sm">
@@ -333,10 +395,15 @@ export default async function WerkorderDetailPage({
               </span>
             )}
           </form>
-          {uitvoerderOpties.length === 0 && (
+          {alleRelaties.length === 0 && (
             <p className="mt-2 text-[12px]" style={{ color: "var(--text-2)" }}>
-              Nog geen externe uitvoerders. Geef een contact de rol &quot;Onderhoud&quot; of
-              &quot;Beheerder / tuinman&quot; om het hier te kunnen kiezen.
+              Nog geen contacten op dit landgoed. Voeg er een toe bij Contacten.
+            </p>
+          )}
+          {alleRelaties.length > 0 && uitvoerderOpties.length === 0 && (
+            <p className="mt-2 text-[12px]" style={{ color: "var(--text-2)" }}>
+              Tip: geef een contact de rol &quot;Onderhoud&quot; of &quot;Beheerder / tuinman&quot;,
+              dan staat het als vaste uitvoerder bovenaan.
             </p>
           )}
         </div>

@@ -548,22 +548,35 @@ async function stelWerkorderRoutingVoorEnBewaar(
 ) {
   const [ledenRaw, relatiesRaw] = await Promise.all([
     supabase.from("lidmaatschap").select("gebruiker_id, profiel(naam, email)").eq("landgoed_id", landgoed_id),
+    // Alle contacten, met hun rollen als hint. Filteren op de 'werkorder'-rol
+    // leverde een lege lijst zolang niemand die rol had — dan kon de AI per
+    // definitie niemand voorstellen.
     supabase
       .from("relatie")
-      .select("id, naam, contact_rol!inner(rol_type!inner(koppelbaar_aan))")
-      .eq("landgoed_id", landgoed_id)
-      .contains("contact_rol.rol_type.koppelbaar_aan", ["werkorder"]),
+      .select("id, naam, contact_rol(rol_type(naam, koppelbaar_aan))")
+      .eq("landgoed_id", landgoed_id),
   ]);
 
+  type RelatieRij = {
+    id: string;
+    naam: string;
+    contact_rol?: { rol_type?: { naam?: string; koppelbaar_aan?: string[] | null } | null }[] | null;
+  };
   const beschikbareUitvoerders = [
     ...(ledenRaw.data ?? []).map((l) => {
       const p = (l.profiel as unknown) as { naam: string | null; email: string | null } | null;
       return { waarde: `u:${l.gebruiker_id}`, naam: p?.naam ?? p?.email ?? l.gebruiker_id };
     }),
-    ...((relatiesRaw.data ?? []) as { id: string; naam: string }[]).map((r) => ({
-      waarde: `c:${r.id}`,
-      naam: r.naam,
-    })),
+    ...((relatiesRaw.data ?? []) as unknown as RelatieRij[]).map((r) => {
+      const rollen = (r.contact_rol ?? [])
+        .map((cr) => cr.rol_type?.naam)
+        .filter((n): n is string => Boolean(n));
+      return {
+        waarde: `c:${r.id}`,
+        naam: r.naam,
+        toelichting: rollen.length > 0 ? `rol: ${rollen.join(", ")}` : undefined,
+      };
+    }),
   ];
 
   const voorstel = await stelWerkorderRoutingVoor({

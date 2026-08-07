@@ -91,12 +91,11 @@ export default async function WerkordersPage({
 
   const [ledenRaw, relatiesRaw, objectenRaw] = await Promise.all([
     supabase.from("lidmaatschap").select("gebruiker_id, profiel(id, naam, email)").eq("landgoed_id", id),
-    // Uitvoerders: contacten met een rol die 'werkorder' in koppelbaar_aan heeft.
+    // Alle contacten; wie de 'werkorder'-rol heeft komt bovenaan te staan.
     supabase
       .from("relatie")
-      .select("id, naam, contact_rol!inner(rol_type!inner(koppelbaar_aan))")
+      .select("id, naam, contact_rol(rol_type(koppelbaar_aan))")
       .eq("landgoed_id", id)
-      .contains("contact_rol.rol_type.koppelbaar_aan", ["werkorder"])
       .order("naam"),
     // Alleen geaccordeerde objecten, net als op de kaart: een voorgesteld
     // object is nog geen feit en hoort niet als keuze in een formulier.
@@ -113,10 +112,20 @@ export default async function WerkordersPage({
     const p = (l.profiel as unknown) as { id: string; naam: string | null; email: string | null } | null;
     return { id: p?.id ?? l.gebruiker_id, naam: p?.naam ?? p?.email ?? l.gebruiker_id };
   });
-  const uitvoerderOpties = ((relatiesRaw.data ?? []) as { id: string; naam: string }[]).map((r) => ({
-    waarde: `c:${r.id}`,
-    naam: r.naam,
-  }));
+  type RelatieRij = {
+    id: string;
+    naam: string;
+    contact_rol?: { rol_type?: { koppelbaar_aan?: string[] | null } | null }[] | null;
+  };
+  const alleRelaties = (relatiesRaw.data ?? []) as unknown as RelatieRij[];
+  const isUitvoerder = (r: RelatieRij) =>
+    (r.contact_rol ?? []).some((cr) => cr.rol_type?.koppelbaar_aan?.includes("werkorder"));
+  const uitvoerderOpties = alleRelaties
+    .filter(isUitvoerder)
+    .map((r) => ({ waarde: `c:${r.id}`, naam: r.naam }));
+  const overigeContacten = alleRelaties
+    .filter((r) => !isUitvoerder(r))
+    .map((r) => ({ waarde: `c:${r.id}`, naam: r.naam }));
   const ledenOpties = leden.map((l) => ({ waarde: `u:${l.id}`, naam: l.naam }));
 
   // Vertaalt de "u:<uuid>"/"c:<naam>"-waarde uit het AI-voorstel naar een naam,
@@ -200,6 +209,13 @@ export default async function WerkordersPage({
                   <optgroup label="Uitvoerders">
                     {uitvoerderOpties.map((r) => (
                       <option key={r.waarde} value={r.waarde}>{r.naam}</option>
+                    ))}
+                  </optgroup>
+                )}
+                {overigeContacten.length > 0 && (
+                  <optgroup label="Overige contacten">
+                    {overigeContacten.map((c) => (
+                      <option key={c.waarde} value={c.waarde}>{c.naam}</option>
                     ))}
                   </optgroup>
                 )}
