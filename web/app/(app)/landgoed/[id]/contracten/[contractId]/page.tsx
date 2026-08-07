@@ -50,6 +50,34 @@ function haTekst(m2: unknown): string | null {
   return `${(n / 10000).toLocaleString("nl-NL", { maximumFractionDigits: 2 })} ha`;
 }
 
+// Compacte kijkstand voor een WijzigbaarFormulier: alleen de gevulde
+// velden, als label-waarde-paren naast elkaar. Lange teksten (notitie)
+// krijgen de volle breedte.
+function GegevensWeergave({
+  items,
+}: {
+  items: { label: string; waarde: string | null | undefined; breed?: boolean }[];
+}) {
+  const gevuld = items.filter((i) => i.waarde);
+  if (gevuld.length === 0) {
+    return (
+      <p className="text-[13px]" style={{ color: "var(--text-2)" }}>
+        Nog niets ingevuld.
+      </p>
+    );
+  }
+  return (
+    <div className="flex flex-wrap gap-x-8 gap-y-3">
+      {gevuld.map((i) => (
+        <div key={i.label} className={i.breed ? "w-full" : undefined}>
+          <div className="label-up">{i.label}</div>
+          <div className="mt-0.5 text-[13.5px] font-medium">{i.waarde}</div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export default async function ContractDossierPage({
   params,
 }: {
@@ -318,6 +346,36 @@ export default async function ContractDossierPage({
             opslaanLabel={isAiConcept ? "Accepteren en opslaan" : "Opslaan"}
             className="card p-4"
             veldenKlasse="grid grid-cols-2 gap-3 md:grid-cols-3"
+            weergave={
+              <GegevensWeergave
+                items={[
+                  { label: "Titel", waarde: contract.titel },
+                  { label: "Contractnummer", waarde: contract.contractnummer },
+                  { label: "Status", waarde: statusLabel },
+                  {
+                    label: "Type",
+                    waarde: contract.type
+                      ? CONTRACT_TYPE_LABEL[contract.type] ?? contract.type
+                      : null,
+                  },
+                  {
+                    label: "Pachtvorm",
+                    waarde: contract.pachtvorm
+                      ? PACHTVORM_LABEL[contract.pachtvorm] ?? contract.pachtvorm
+                      : null,
+                  },
+                  {
+                    label: "Looptijd",
+                    waarde: contract.looptijd_type
+                      ? LOOPTIJD_LABEL[contract.looptijd_type] ?? contract.looptijd_type
+                      : null,
+                  },
+                  { label: "Ingangsdatum", waarde: contract.ingangsdatum },
+                  { label: "Einddatum", waarde: contract.einddatum },
+                  { label: "Notitie", waarde: contract.notitie, breed: true },
+                ]}
+              />
+            }
           >
             <input type="hidden" name="landgoed_id" value={id} />
             <input type="hidden" name="contract_id" value={contractId} />
@@ -579,6 +637,29 @@ export default async function ContractDossierPage({
             action={bewerkContractPrijsgegevens}
             className="card mt-3 p-4"
             veldenKlasse="grid grid-cols-2 gap-3 md:grid-cols-4"
+            weergave={
+              <GegevensWeergave
+                items={[
+                  { label: "Indexatie", waarde: contract.indexatie_type ?? "Geen" },
+                  { label: "Volgende indexatie", waarde: contract.volgende_indexatie },
+                  {
+                    label: "Servicekosten",
+                    waarde:
+                      contract.servicekosten != null ? euro(contract.servicekosten) : null,
+                  },
+                  {
+                    label: "Achterstand",
+                    waarde:
+                      contract.achterstand != null ? euro(contract.achterstand) : null,
+                  },
+                  {
+                    label: "Notitie bij achterstand",
+                    waarde: contract.achterstand_notitie,
+                    breed: true,
+                  },
+                ]}
+              />
+            }
           >
             <input type="hidden" name="landgoed_id" value={id} />
             <input type="hidden" name="contract_id" value={contractId} />
