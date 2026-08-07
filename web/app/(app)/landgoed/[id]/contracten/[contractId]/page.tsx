@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { isUuid } from "@/lib/db";
@@ -52,11 +53,17 @@ function haTekst(m2: unknown): string | null {
 
 // Compacte kijkstand voor een WijzigbaarFormulier: alleen de gevulde
 // velden, als label-waarde-paren naast elkaar. Lange teksten (notitie)
-// krijgen de volle breedte.
+// krijgen de volle breedte; met nieuweRegel begint een item op een verse
+// regel (wens Steven: kern / looptijd / prijs als drie regels).
 function GegevensWeergave({
   items,
 }: {
-  items: { label: string; waarde: string | null | undefined; breed?: boolean }[];
+  items: {
+    label: string;
+    waarde: string | null | undefined;
+    breed?: boolean;
+    nieuweRegel?: boolean;
+  }[];
 }) {
   const gevuld = items.filter((i) => i.waarde);
   if (gevuld.length === 0) {
@@ -69,10 +76,13 @@ function GegevensWeergave({
   return (
     <div className="flex flex-wrap gap-x-8 gap-y-3">
       {gevuld.map((i) => (
-        <div key={i.label} className={i.breed ? "w-full" : undefined}>
-          <div className="label-up">{i.label}</div>
-          <div className="mt-0.5 text-[13.5px] font-medium">{i.waarde}</div>
-        </div>
+        <Fragment key={i.label}>
+          {i.nieuweRegel && <div className="h-0 basis-full" />}
+          <div className={i.breed ? "w-full" : undefined}>
+            <div className="label-up">{i.label}</div>
+            <div className="mt-0.5 text-[13.5px] font-medium">{i.waarde}</div>
+          </div>
+        </Fragment>
       ))}
     </div>
   );
@@ -373,6 +383,7 @@ export default async function ContractDossierPage({
                     waarde: contract.looptijd_type
                       ? LOOPTIJD_LABEL[contract.looptijd_type] ?? contract.looptijd_type
                       : null,
+                    nieuweRegel: true,
                   },
                   { label: "Ingangsdatum", waarde: contract.ingangsdatum },
                   { label: "Einddatum", waarde: contract.einddatum },
@@ -380,6 +391,7 @@ export default async function ContractDossierPage({
                     label: "Prijs",
                     waarde:
                       contract.bedrag != null ? `${euro(contract.bedrag)}/jaar` : null,
+                    nieuweRegel: true,
                   },
                   {
                     label: "Indexatie",
