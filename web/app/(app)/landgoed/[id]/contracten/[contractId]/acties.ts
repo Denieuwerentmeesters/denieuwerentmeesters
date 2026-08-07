@@ -50,43 +50,102 @@ export async function bewerkContractDossier(fd: FormData) {
         status: uitLijst(tekst(fd, "status"), CONTRACT_STATUS_LABEL) ?? "concept",
         pachtvorm: uitLijst(tekst(fd, "pachtvorm"), PACHTVORM_LABEL),
         looptijd_type: uitLijst(tekst(fd, "looptijd_type"), LOOPTIJD_LABEL),
-        // bedrag ontbreekt bewust: dat is sinds plak 2 de spiegel van de
-        // actuele geaccordeerde prijsafspraak. De overige prijsvelden
-        // (servicekosten, indexatie, achterstand) horen bij Prijs &
-        // indexatie en hebben hun eigen formulier + actie hieronder.
         ingangsdatum: tekst(fd, "ingangsdatum"),
         einddatum: tekst(fd, "einddatum"),
+        // De prijsafspraken uit het contract horen bij de kerngegevens
+        // (besluit Steven). bedrag ontbreekt hier bewust: dat is de
+        // spiegel van de geaccordeerde prijsafspraak — zie de sync
+        // hieronder.
+        indexatie_type: tekst(fd, "indexatie_type"),
+        volgende_indexatie: tekst(fd, "volgende_indexatie"),
+        servicekosten: getal(fd, "servicekosten"),
         notitie: tekst(fd, "notitie"),
       })
       .eq("id", contract_id)
       .eq("landgoed_id", landgoed_id),
     "contract bijwerken",
   );
+  await syncPrijsUitKerngegevens(supabase, landgoed_id, contract_id, fd);
   revalidatePath(pad(landgoed_id, contract_id));
 }
 
-// ── Overige prijsgegevens (sectie Prijs & indexatie) ──
-export async function bewerkContractPrijsgegevens(fd: FormData) {
-  const landgoed_id = String(fd.get("landgoed_id"));
-  const contract_id = String(fd.get("contract_id"));
-  if (!isUuid(contract_id)) return;
-  const supabase = await createClient();
-  await moet(
-    supabase
-      .from("contract")
-      .update({
-        servicekosten: getal(fd, "servicekosten"),
-        indexatie_type: tekst(fd, "indexatie_type"),
-        volgende_indexatie: tekst(fd, "volgende_indexatie"),
-        // achterstand hoort hier bewust niet meer bij: dat is een
-        // betaalstand (boekhouding), geen contractafspraak. De kolommen
-        // blijven bestaan; bestaande gegevens raken we niet aan.
-      })
-      .eq("id", contract_id)
-      .eq("landgoed_id", landgoed_id),
-    "prijsgegevens bijwerken",
+// De prijs in het kerngegevens-formulier voedt het prijsverloop:
+// - staat er nog een open AI-prijsvoorstel (contract-uit-pdf), dan is
+//   opslaan het accorderen daarvan — met het eventueel gecorrigeerde bedrag;
+// - is er nog helemaal geen prijs, dan wordt dit de eerste regel;
+// - wijkt het bedrag af van de geldende prijs, dan is dat een
+//   heronderhandeling: oude regel sluit af, nieuwe regel vanaf vandaag.
+// Een open indexatie-voorstel blijft hier bewust buiten schot — dat heeft
+// zijn eigen Akkoord-knop; een titelcorrectie mag niet stiekem een
+// indexatie accorderen.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function syncPrijsUitKerngegevens(
+  supabase: any,
+  landgoed_id: string,
+  contract_id: string,
+  fd: FormData,
+) {
+  const bedrag = getal(fd, "bedrag");
+  if (bedrag == null || !Number.isFinite(bedrag) || bedrag < 0) return;
+
+  const { data } = await supabase
+    .from("contract_prijsafspraak")
+    .select("id, bedrag, geldig_van, status, herkomst")
+    .eq("contract_id", contract_id)
+    .order("geldig_van", { ascending: false });
+  const rijen = (data ?? []) as {
+    id: string;
+    bedrag: number;
+    geldig_van: string;
+    status: string;
+    herkomst: string;
+  }[];
+  const openAiVoorstel = rijen.find(
+    (r) => r.status === "voorstel" && r.herkomst === "ai",
   );
-  revalidatePath(pad(landgoed_id, contract_id));
+  const geldend = rijen.find((r) => r.status === "geaccordeerd");
+  const vandaag = new Date().toISOString().slice(0, 10);
+
+  if (openAiVoorstel) {
+    await moet(
+      supabase
+        .from("contract_prijsafspraak")
+        .update({ bedrag, status: "geaccordeerd" })
+        .eq("id", openAiVoorstel.id),
+      "prijs uit document accorderen",
+    );
+    await sluitOudereRegels(supabase, contract_id, openAiVoorstel.geldig_van);
+  } else if (!geldend) {
+    await moet(
+      supabase.from("contract_prijsafspraak").insert({
+        landgoed_id,
+        contract_id,
+        bedrag,
+        geldig_van: tekst(fd, "ingangsdatum") ?? vandaag,
+        status: "geaccordeerd",
+        herkomst: "handmatig",
+        toelichting: "eerste prijs, via kerngegevens",
+      }),
+      "eerste prijsregel opslaan",
+    );
+  } else if (Number(geldend.bedrag) !== bedrag) {
+    await moet(
+      supabase.from("contract_prijsafspraak").insert({
+        landgoed_id,
+        contract_id,
+        bedrag,
+        geldig_van: vandaag,
+        status: "geaccordeerd",
+        herkomst: "handmatig",
+        toelichting: "heronderhandeling, via kerngegevens",
+      }),
+      "nieuwe prijsafspraak opslaan",
+    );
+    await sluitOudereRegels(supabase, contract_id, vandaag);
+  } else {
+    return; // bedrag ongewijzigd — niets te doen
+  }
+  await zetHuidigePrijs(supabase, landgoed_id, contract_id);
 }
 
 export async function verwijderContract(fd: FormData) {
@@ -263,31 +322,6 @@ async function sluitOudereRegels(supabase: any, contract_id: string, geldig_van:
       "vorige prijsperiode afsluiten",
     );
   }
-}
-
-export async function nieuwePrijsafspraak(fd: FormData) {
-  const landgoed_id = String(fd.get("landgoed_id"));
-  const contract_id = String(fd.get("contract_id"));
-  const bedrag = getal(fd, "bedrag");
-  const geldig_van = tekst(fd, "geldig_van");
-  if (!isUuid(contract_id) || bedrag == null || !Number.isFinite(bedrag) || !geldig_van)
-    return;
-  const supabase = await createClient();
-  await moet(
-    supabase.from("contract_prijsafspraak").insert({
-      landgoed_id,
-      contract_id,
-      bedrag,
-      geldig_van,
-      status: "geaccordeerd",
-      herkomst: "handmatig",
-      toelichting: tekst(fd, "toelichting"),
-    }),
-    "prijsafspraak opslaan",
-  );
-  await sluitOudereRegels(supabase, contract_id, geldig_van);
-  await zetHuidigePrijs(supabase, landgoed_id, contract_id);
-  revalidatePath(pad(landgoed_id, contract_id));
 }
 
 export async function maakIndexatieVoorstel(fd: FormData) {

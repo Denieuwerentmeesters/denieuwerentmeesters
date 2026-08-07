@@ -16,7 +16,6 @@ import {
 } from "../constanten";
 import {
   bewerkContractDossier,
-  bewerkContractPrijsgegevens,
   verwijderContract,
   koppelPartij,
   ontkoppelPartij,
@@ -24,7 +23,6 @@ import {
   ontkoppelContractObject,
   uploadDocumentBijContract,
   ontkoppelDocumentVanContract,
-  nieuwePrijsafspraak,
   maakIndexatieVoorstel,
   accordeerPrijsvoorstel,
   wijsAfPrijsvoorstel,
@@ -263,6 +261,14 @@ export default async function ContractDossierPage({
   // slot tot de gebruiker bewust op Wijzigen klikt.
   const isAiConcept = contract.herkomst === "ai" && contract.status === "concept";
 
+  // De prijs in het kerngegevens-formulier: de geldende prijs, of bij een
+  // vers AI-dossier het nog openstaande AI-prijsvoorstel — accepteren
+  // accordeert dat voorstel dan meteen mee (zie syncPrijsUitKerngegevens).
+  const aiPrijsVoorstel = (prijsData ?? []).find(
+    (p) => p.status === "voorstel" && p.herkomst === "ai",
+  );
+  const prijsInvulwaarde = contract.bedrag ?? aiPrijsVoorstel?.bedrag ?? "";
+
   return (
     <div className="flex flex-col">
       <div
@@ -368,6 +374,18 @@ export default async function ContractDossierPage({
                   },
                   { label: "Ingangsdatum", waarde: contract.ingangsdatum },
                   { label: "Einddatum", waarde: contract.einddatum },
+                  {
+                    label: "Prijs",
+                    waarde:
+                      contract.bedrag != null ? `${euro(contract.bedrag)}/jaar` : null,
+                  },
+                  { label: "Indexatie", waarde: contract.indexatie_type ?? "Geen" },
+                  { label: "Volgende indexatie", waarde: contract.volgende_indexatie },
+                  {
+                    label: "Servicekosten",
+                    waarde:
+                      contract.servicekosten != null ? euro(contract.servicekosten) : null,
+                  },
                   { label: "Notitie", waarde: contract.notitie, breed: true },
                 ]}
               />
@@ -460,7 +478,46 @@ export default async function ContractDossierPage({
                 defaultValue={contract.einddatum ?? ""}
               />
             </div>
-            <div className="col-span-2 md:col-span-3">
+            <div>
+              <label className="label-up mb-1 block">Prijs (€/jaar)</label>
+              <input
+                className="input"
+                name="bedrag"
+                inputMode="decimal"
+                defaultValue={prijsInvulwaarde}
+              />
+            </div>
+            <div>
+              <label className="label-up mb-1 block">Indexatie</label>
+              <select
+                className="input"
+                name="indexatie_type"
+                defaultValue={contract.indexatie_type ?? ""}
+              >
+                <option value="">Geen</option>
+                <option value="CBS-CPI">CBS-CPI</option>
+                <option value="vast %">Vast %</option>
+              </select>
+            </div>
+            <div>
+              <label className="label-up mb-1 block">Volgende indexatie</label>
+              <input
+                className="input"
+                type="date"
+                name="volgende_indexatie"
+                defaultValue={contract.volgende_indexatie ?? ""}
+              />
+            </div>
+            <div>
+              <label className="label-up mb-1 block">Servicekosten (€)</label>
+              <input
+                className="input"
+                name="servicekosten"
+                inputMode="decimal"
+                defaultValue={contract.servicekosten ?? ""}
+              />
+            </div>
+            <div className="col-span-2">
               <label className="label-up mb-1 block">Notitie</label>
               <textarea
                 className="input"
@@ -471,6 +528,11 @@ export default async function ContractDossierPage({
               />
             </div>
           </WijzigbaarFormulier>
+          <p className="mt-1 text-[11.5px]" style={{ color: "var(--text-3)" }}>
+            De prijs wijzigen is een heronderhandeling: de oude prijs wordt dan
+            automatisch als afgesloten periode bewaard in het prijsverloop
+            hieronder. De jaarlijkse indexatie doe je dáár.
+          </p>
           {contract.partij && partijen.length === 0 && (
             <p className="mt-1 text-[11.5px]" style={{ color: "var(--text-3)" }}>
               Oude notatie: partij stond als tekst genoteerd (&quot;{contract.partij}&quot;) —
@@ -479,10 +541,12 @@ export default async function ContractDossierPage({
           )}
         </section>
 
-        {/* ── Prijs & indexatie (plak 2): historie met geldigheidsperioden ── */}
+        {/* ── Prijsverloop & indexatie (plak 2): de historie met
+            geldigheidsperioden, plus de jaarlijkse indexatie-routine.
+            Heronderhandelen gaat via de prijs in Kerngegevens. ── */}
         <section className="mb-7">
           <h2 className="mb-2 text-[16px] font-bold">
-            Prijs & indexatie
+            Prijsverloop & indexatie
             {euro(contract.bedrag) && (
               <span className="ml-2 text-[13px] font-normal" style={{ color: "var(--text-2)" }}>
                 huidig: {euro(contract.bedrag)}/jaar
@@ -565,121 +629,43 @@ export default async function ContractDossierPage({
             ))}
           </div>
 
-          <div className="flex flex-col gap-3 md:flex-row">
-            <form
-              action={nieuwePrijsafspraak}
-              className="card flex flex-1 flex-wrap items-end gap-3 p-4"
-            >
-              <input type="hidden" name="landgoed_id" value={id} />
-              <input type="hidden" name="contract_id" value={contractId} />
-              <div>
-                <label className="label-up mb-1 block">Nieuwe prijs (€/jaar)</label>
-                <input className="input" name="bedrag" inputMode="decimal" required />
-              </div>
-              <div>
-                <label className="label-up mb-1 block">Geldig vanaf</label>
-                <input className="input" type="date" name="geldig_van" required />
-              </div>
-              <div className="min-w-[140px] flex-1">
-                <label className="label-up mb-1 block">Toelichting</label>
-                <input className="input" name="toelichting" placeholder="bijv. herziening" />
-              </div>
-              <SubmitKnop className="btn btn-primary btn-sm" pendingTekst="Opslaan…">
-                Leg vast
-              </SubmitKnop>
-            </form>
-            <form
-              action={maakIndexatieVoorstel}
-              className="card flex flex-wrap items-end gap-3 p-4"
-            >
-              <input type="hidden" name="landgoed_id" value={id} />
-              <input type="hidden" name="contract_id" value={contractId} />
-              <div style={{ maxWidth: 110 }}>
-                <label className="label-up mb-1 block">Indexatie (%)</label>
-                <input
-                  className="input"
-                  name="percentage"
-                  inputMode="decimal"
-                  placeholder="bijv. 3,1"
-                  required
-                />
-              </div>
-              <div>
-                <label className="label-up mb-1 block">Per</label>
-                <input
-                  className="input"
-                  type="date"
-                  name="ingangsdatum"
-                  defaultValue={contract.volgende_indexatie ?? ""}
-                  required
-                />
-              </div>
-              <SubmitKnop className="btn btn-ghost btn-sm" pendingTekst="Rekenen…">
-                Stel indexatie voor
-              </SubmitKnop>
-            </form>
-          </div>
+          <form
+            action={maakIndexatieVoorstel}
+            className="card flex flex-wrap items-end gap-3 p-4"
+          >
+            <input type="hidden" name="landgoed_id" value={id} />
+            <input type="hidden" name="contract_id" value={contractId} />
+            <div style={{ maxWidth: 110 }}>
+              <label className="label-up mb-1 block">Indexatie (%)</label>
+              <input
+                className="input"
+                name="percentage"
+                inputMode="decimal"
+                placeholder="bijv. 3,1"
+                required
+              />
+            </div>
+            <div>
+              <label className="label-up mb-1 block">Per</label>
+              <input
+                className="input"
+                type="date"
+                name="ingangsdatum"
+                defaultValue={contract.volgende_indexatie ?? ""}
+                required
+              />
+            </div>
+            <SubmitKnop className="btn btn-ghost btn-sm" pendingTekst="Rekenen…">
+              Stel indexatie voor
+            </SubmitKnop>
+          </form>
           <p className="mt-1 text-[11.5px]" style={{ color: "var(--text-3)" }}>
             Een indexatie-voorstel rekent de nieuwe prijs uit over de huidige;
             pas na jouw akkoord wordt hij de geldende prijs en schuift de
             volgende indexatiedatum een jaar op. Oude prijzen blijven als
-            afgesloten periode bewaard.
+            afgesloten periode bewaard. Een nieuwe prijs buiten de indexatie
+            om (heronderhandeling) leg je vast via de prijs bij Kerngegevens.
           </p>
-
-          {/* Overige prijsgegevens — hoorden eerst bij Kerngegevens, maar
-              dit zijn prijszaken (wens Steven). Eigen formulier + actie,
-              zodat de twee opslaan-knoppen elkaar niet overschrijven. */}
-          <WijzigbaarFormulier
-            action={bewerkContractPrijsgegevens}
-            className="card mt-3 p-4"
-            veldenKlasse="grid grid-cols-2 gap-3 md:grid-cols-4"
-            weergave={
-              <GegevensWeergave
-                items={[
-                  { label: "Indexatie", waarde: contract.indexatie_type ?? "Geen" },
-                  { label: "Volgende indexatie", waarde: contract.volgende_indexatie },
-                  {
-                    label: "Servicekosten",
-                    waarde:
-                      contract.servicekosten != null ? euro(contract.servicekosten) : null,
-                  },
-                ]}
-              />
-            }
-          >
-            <input type="hidden" name="landgoed_id" value={id} />
-            <input type="hidden" name="contract_id" value={contractId} />
-            <div>
-              <label className="label-up mb-1 block">Indexatie</label>
-              <select
-                className="input"
-                name="indexatie_type"
-                defaultValue={contract.indexatie_type ?? ""}
-              >
-                <option value="">Geen</option>
-                <option value="CBS-CPI">CBS-CPI</option>
-                <option value="vast %">Vast %</option>
-              </select>
-            </div>
-            <div>
-              <label className="label-up mb-1 block">Volgende indexatie</label>
-              <input
-                className="input"
-                type="date"
-                name="volgende_indexatie"
-                defaultValue={contract.volgende_indexatie ?? ""}
-              />
-            </div>
-            <div>
-              <label className="label-up mb-1 block">Servicekosten (€)</label>
-              <input
-                className="input"
-                name="servicekosten"
-                inputMode="decimal"
-                defaultValue={contract.servicekosten ?? ""}
-              />
-            </div>
-          </WijzigbaarFormulier>
         </section>
 
         {/* ── Partijen ── */}
