@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import BestandVeld from "@/components/BestandVeld";
 import SubmitKnop from "@/components/SubmitKnop";
 import WijzigbaarFormulier from "@/components/WijzigbaarFormulier";
+import { ToevoegenToggle } from "@/components/ToevoegenToggle";
 import { VerwijderKnop } from "@/components/VerwijderKnop";
 import {
   CONTRACT_STATUS_LABEL,
@@ -23,6 +24,7 @@ import {
   ontkoppelContractObject,
   uploadDocumentBijContract,
   ontkoppelDocumentVanContract,
+  nieuwePrijsafspraak,
   maakIndexatieVoorstel,
   accordeerPrijsvoorstel,
   wijsAfPrijsvoorstel,
@@ -88,7 +90,7 @@ export default async function ContractDossierPage({
   const { data: contract } = await supabase
     .from("contract")
     .select(
-      "id, landgoed_id, titel, contractnummer, type, status, herkomst, pachtvorm, looptijd_type, partij, bedrag, servicekosten, ingangsdatum, einddatum, indexatie_type, volgende_indexatie, notitie",
+      "id, landgoed_id, titel, contractnummer, type, status, herkomst, pachtvorm, looptijd_type, partij, bedrag, servicekosten, ingangsdatum, einddatum, indexatie_type, indexatie_percentage, volgende_indexatie, notitie",
     )
     .eq("id", contractId)
     .maybeSingle();
@@ -379,7 +381,14 @@ export default async function ContractDossierPage({
                     waarde:
                       contract.bedrag != null ? `${euro(contract.bedrag)}/jaar` : null,
                   },
-                  { label: "Indexatie", waarde: contract.indexatie_type ?? "Geen" },
+                  {
+                    label: "Indexatie",
+                    waarde:
+                      contract.indexatie_type === "vast %" &&
+                      contract.indexatie_percentage != null
+                        ? `vast ${Number(contract.indexatie_percentage).toLocaleString("nl-NL")}% per jaar`
+                        : contract.indexatie_type ?? "Geen",
+                  },
                   { label: "Volgende indexatie", waarde: contract.volgende_indexatie },
                   {
                     label: "Servicekosten",
@@ -478,15 +487,21 @@ export default async function ContractDossierPage({
                 defaultValue={contract.einddatum ?? ""}
               />
             </div>
-            <div>
-              <label className="label-up mb-1 block">Prijs (€/jaar)</label>
-              <input
-                className="input"
-                name="bedrag"
-                inputMode="decimal"
-                defaultValue={prijsInvulwaarde}
-              />
-            </div>
+            {/* De prijs is alleen bij het accepteren van een AI-concept een
+                invulveld (om de AI te kunnen corrigeren); daarna volgt hij
+                automatisch het prijsverloop en staat hij hier alleen-lezen
+                in de kijkstand. */}
+            {isAiConcept && (
+              <div>
+                <label className="label-up mb-1 block">Prijs (€/jaar)</label>
+                <input
+                  className="input"
+                  name="bedrag"
+                  inputMode="decimal"
+                  defaultValue={prijsInvulwaarde}
+                />
+              </div>
+            )}
             <div>
               <label className="label-up mb-1 block">Indexatie</label>
               <select
@@ -498,6 +513,16 @@ export default async function ContractDossierPage({
                 <option value="CBS-CPI">CBS-CPI</option>
                 <option value="vast %">Vast %</option>
               </select>
+            </div>
+            <div>
+              <label className="label-up mb-1 block">Vast % per jaar (bij vast %)</label>
+              <input
+                className="input"
+                name="indexatie_percentage"
+                inputMode="decimal"
+                placeholder="bijv. 3"
+                defaultValue={contract.indexatie_percentage ?? ""}
+              />
             </div>
             <div>
               <label className="label-up mb-1 block">Volgende indexatie</label>
@@ -529,9 +554,8 @@ export default async function ContractDossierPage({
             </div>
           </WijzigbaarFormulier>
           <p className="mt-1 text-[11.5px]" style={{ color: "var(--text-3)" }}>
-            De prijs wijzigen is een heronderhandeling: de oude prijs wordt dan
-            automatisch als afgesloten periode bewaard in het prijsverloop
-            hieronder. De jaarlijkse indexatie doe je dáár.
+            De prijs volgt automatisch het prijsverloop hieronder — indexeren
+            en heronderhandelen doe je dáár.
           </p>
           {contract.partij && partijen.length === 0 && (
             <p className="mt-1 text-[11.5px]" style={{ color: "var(--text-3)" }}>
@@ -629,43 +653,99 @@ export default async function ContractDossierPage({
             ))}
           </div>
 
-          <form
-            action={maakIndexatieVoorstel}
-            className="card flex flex-wrap items-end gap-3 p-4"
-          >
-            <input type="hidden" name="landgoed_id" value={id} />
-            <input type="hidden" name="contract_id" value={contractId} />
-            <div style={{ maxWidth: 110 }}>
-              <label className="label-up mb-1 block">Indexatie (%)</label>
-              <input
-                className="input"
-                name="percentage"
-                inputMode="decimal"
-                placeholder="bijv. 3,1"
-                required
-              />
-            </div>
-            <div>
-              <label className="label-up mb-1 block">Per</label>
-              <input
-                className="input"
-                type="date"
-                name="ingangsdatum"
-                defaultValue={contract.volgende_indexatie ?? ""}
-                required
-              />
-            </div>
-            <SubmitKnop className="btn btn-ghost btn-sm" pendingTekst="Rekenen…">
-              Stel indexatie voor
-            </SubmitKnop>
-          </form>
-          <p className="mt-1 text-[11.5px]" style={{ color: "var(--text-3)" }}>
-            Een indexatie-voorstel rekent de nieuwe prijs uit over de huidige;
-            pas na jouw akkoord wordt hij de geldende prijs en schuift de
-            volgende indexatiedatum een jaar op. Oude prijzen blijven als
-            afgesloten periode bewaard. Een nieuwe prijs buiten de indexatie
-            om (heronderhandeling) leg je vast via de prijs bij Kerngegevens.
-          </p>
+          {/* De jaarlijkse indexatie-routine — alleen als het contract
+              indexatie kent (wens Steven). Bij vast % staat het percentage
+              alvast ingevuld vanuit de kerngegevens. */}
+          {contract.indexatie_type ? (
+            <>
+              <form
+                action={maakIndexatieVoorstel}
+                className="card flex flex-wrap items-end gap-3 p-4"
+              >
+                <input type="hidden" name="landgoed_id" value={id} />
+                <input type="hidden" name="contract_id" value={contractId} />
+                <div style={{ maxWidth: 130 }}>
+                  <label className="label-up mb-1 block">
+                    {contract.indexatie_type === "vast %"
+                      ? "Vast % (uit contract)"
+                      : "Indexatie (%)"}
+                  </label>
+                  <input
+                    className="input"
+                    name="percentage"
+                    inputMode="decimal"
+                    placeholder={
+                      contract.indexatie_type === "CBS-CPI" ? "CPI, bijv. 3,1" : "bijv. 3"
+                    }
+                    defaultValue={
+                      contract.indexatie_type === "vast %"
+                        ? contract.indexatie_percentage ?? ""
+                        : ""
+                    }
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="label-up mb-1 block">Per</label>
+                  <input
+                    className="input"
+                    type="date"
+                    name="ingangsdatum"
+                    defaultValue={contract.volgende_indexatie ?? ""}
+                    required
+                  />
+                </div>
+                <SubmitKnop className="btn btn-ghost btn-sm" pendingTekst="Rekenen…">
+                  Stel indexatie voor
+                </SubmitKnop>
+              </form>
+              <p className="mt-1 mb-4 text-[11.5px]" style={{ color: "var(--text-3)" }}>
+                Een indexatie-voorstel rekent de nieuwe prijs uit over de
+                huidige; pas na jouw akkoord wordt hij de geldende prijs en
+                schuift de volgende indexatiedatum een jaar op.
+                {contract.indexatie_type === "CBS-CPI" &&
+                  " Het CPI-percentage vul je nog zelf in (van cbs.nl); automatisch ophalen staat op de lijst."}
+              </p>
+            </>
+          ) : (
+            <p className="mt-1 mb-4 text-[11.5px]" style={{ color: "var(--text-3)" }}>
+              Dit contract kent geen indexatie — stel die zo nodig in bij de
+              kerngegevens, dan verschijnt hier de jaarlijkse
+              indexatie-routine.
+            </p>
+          )}
+
+          {/* Heronderhandeling / pachtprijstoetsing: bewust een bescheiden
+              ingang — het gebeurt zelden, maar bestaat wel (pachtnormen,
+              huurcommissie, minnelijke herziening). */}
+          <ToevoegenToggle label="nieuwe prijs vastleggen (heronderhandeling)" stijl="tekst">
+            <form
+              action={nieuwePrijsafspraak}
+              className="flex flex-wrap items-end gap-3"
+            >
+              <input type="hidden" name="landgoed_id" value={id} />
+              <input type="hidden" name="contract_id" value={contractId} />
+              <div>
+                <label className="label-up mb-1 block">Nieuwe prijs (€/jaar)</label>
+                <input className="input" name="bedrag" inputMode="decimal" required />
+              </div>
+              <div>
+                <label className="label-up mb-1 block">Geldig vanaf</label>
+                <input className="input" type="date" name="geldig_van" required />
+              </div>
+              <div className="min-w-[140px] flex-1">
+                <label className="label-up mb-1 block">Toelichting</label>
+                <input
+                  className="input"
+                  name="toelichting"
+                  placeholder="bijv. pachtprijstoetsing 2027"
+                />
+              </div>
+              <SubmitKnop className="btn btn-primary btn-sm" pendingTekst="Opslaan…">
+                Leg vast
+              </SubmitKnop>
+            </form>
+          </ToevoegenToggle>
         </section>
 
         {/* ── Partijen ── */}

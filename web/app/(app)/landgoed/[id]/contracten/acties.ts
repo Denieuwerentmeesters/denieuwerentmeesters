@@ -303,6 +303,8 @@ async function verwerkContractBestanden({
         looptijd_type: voorstel?.looptijd_type ?? null,
         ingangsdatum: voorstel?.ingangsdatum ?? null,
         einddatum: voorstel?.einddatum ?? null,
+        indexatie_type: voorstel?.indexatie_type ?? null,
+        indexatie_percentage: voorstel?.indexatie_percentage ?? null,
         // transitie-tekstveld: zo toont het register de partijen ook zolang
         // er nog geen contact gekoppeld is
         partij: (voorstel?.partijen ?? []).map((p) => p.naam).join(", ") || null,
