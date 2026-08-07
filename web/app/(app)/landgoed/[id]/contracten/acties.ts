@@ -175,14 +175,57 @@ async function verwerkContractPdfs({
   }
   if (voorstel?.onzekerheden) notities.push(`AI-onzekerheden: ${voorstel.onzekerheden}`);
 
+  // Partijen zonder bestaand contact worden direct aangemaakt — als
+  // AI-voorstel (herkomst 'ai', niet geaccordeerd) dat de gebruiker bij
+  // Contacten bevestigt. Zo is het dossier meteen compleet gekoppeld,
+  // zonder dat de AI ongezien feiten vastlegt. Nieuwe contacten komen in
+  // relatieVanNaam, zodat een tweede document in dezelfde beurt dezelfde
+  // partij niet nóg eens aanmaakt.
   const ongematchtePartijen = (voorstel?.partijen ?? []).filter(
     (p) => !relatieVanNaam.has(p.naam.toLowerCase().trim()),
   );
   if (ongematchtePartijen.length) {
+    const { data: rolTypen } = await supabase
+      .from("rol_type")
+      .select("id, naam")
+      .or(`tenant_id.is.null,tenant_id.eq.${landgoed_id}`);
+    const rolTypeVanNaam = new Map(
+      (rolTypen ?? []).map((r) => [String(r.naam).toLowerCase().trim(), r.id as string]),
+    );
+    for (const p of ongematchtePartijen) {
+      const contact = await moet(
+        supabase
+          .from("relatie")
+          .insert({
+            landgoed_id,
+            naam: p.naam,
+            status: "actief",
+            herkomst: "ai",
+            geaccordeerd: false,
+            bron: `uit contract-pdf ${files.map((f) => f.name).join(" + ")}`,
+          })
+          .select("id")
+          .single(),
+        "contact aanmaken",
+      );
+      relatieVanNaam.set(p.naam.toLowerCase().trim(), contact.id as string);
+      // Rol als contactrol meegeven als die als rol-type bestaat (bv.
+      // 'pachter') — puur gemak, geen harde eis.
+      const rolTypeId = rolTypeVanNaam.get(p.rol);
+      if (rolTypeId) {
+        await moet(
+          supabase.from("contact_rol").upsert(
+            { contact_id: contact.id as string, rol_type_id: rolTypeId },
+            { onConflict: "contact_id,rol_type_id", ignoreDuplicates: true },
+          ),
+          "contactrol toevoegen",
+        );
+      }
+    }
     notities.push(
-      `Partijen uit het document zonder bestaand contact: ${ongematchtePartijen
+      `Nieuwe contacten uit het document, aangemaakt door AI: ${ongematchtePartijen
         .map((p) => `${p.naam} (${p.rol})`)
-        .join(", ")} — maak ze aan bij Contacten en koppel ze als partij.`,
+        .join(", ")} — bevestig ze bij Contacten.`,
     );
   }
   const ongematchteAanduidingen = (voorstel?.kadastrale_aanduidingen ?? []).filter(
