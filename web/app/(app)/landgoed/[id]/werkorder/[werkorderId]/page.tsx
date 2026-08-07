@@ -160,6 +160,12 @@ export default async function WerkorderDetailPage({
       </div>
 
       <div className="p-7">
+        <div className="mb-4">
+          <a href={`/landgoed/${landgoed_id}/werkorders`} className="btn btn-ghost btn-sm">
+            ← Overzicht alle meldingen
+          </a>
+        </div>
+
         <div className="card mb-5 p-5">
           <div className="mb-1 flex flex-wrap items-center gap-2">
             <span className={`tag ${STATUS_TAG[werkorder.status] ?? "tag-gray"}`}>
@@ -422,16 +428,21 @@ export default async function WerkorderDetailPage({
         {/* Magic link voor de externe uitvoerder */}
         <div className="card mb-5 p-5">
           <span className="label-up">Link voor de uitvoerder</span>
+          <p className="mt-1 text-[12.5px]" style={{ color: "var(--text-2)" }}>
+            Dit is een link die u naar een uitvoerder kunt sturen. Die ziet wat de opdracht is —
+            met foto&apos;s en locatie — en kan de klus accepteren, klaarmelden en zelf een nieuw
+            punt doorgeven. Er is geen account voor nodig.
+          </p>
           {klusLink ? (
             <>
-              <div className="mt-1 break-all font-mono text-[12px]">/klus/{klusLink.token}</div>
+              <div className="mt-2 break-all font-mono text-[12px]">/klus/{klusLink.token}</div>
               <p className="mt-1 text-[12px]" style={{ color: "var(--text-2)" }}>
-                Hiermee kan een externe uitvoerder zonder account de status bijwerken en een nieuw
-                punt melden. Geldig tot {new Date(klusLink.verloopt_op).toLocaleDateString("nl-NL")}.
+                Geldig tot {new Date(klusLink.verloopt_op).toLocaleDateString("nl-NL")}. Maakt u een
+                nieuwe link, dan werkt de oude niet meer.
               </p>
             </>
           ) : (
-            <p className="mt-1 text-[12.5px]" style={{ color: "var(--text-2)" }}>
+            <p className="mt-2 text-[12.5px]" style={{ color: "var(--text-2)" }}>
               Nog geen link aangemaakt.
             </p>
           )}

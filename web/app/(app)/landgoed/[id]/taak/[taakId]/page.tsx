@@ -41,6 +41,12 @@ export default async function TaakDetailPage({
       </div>
 
       <div className="p-7">
+        <div className="mb-4">
+          <a href={`/landgoed/${landgoed_id}/taken`} className="btn btn-ghost btn-sm">
+            ← Overzicht alle taken
+          </a>
+        </div>
+
         <div className="card mb-5 p-5">
           <div className="mb-1 flex flex-wrap items-center gap-2">
             {taak.prioriteit && (
