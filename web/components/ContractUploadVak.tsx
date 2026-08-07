@@ -21,6 +21,7 @@ export default function ContractUploadVak({
   const [bestanden, setBestanden] = useState<File[]>([]);
   const [sleep, setSleep] = useState(false);
   const [melding, setMelding] = useState<string | null>(null);
+  const [eenContract, setEenContract] = useState(false);
 
   // Eén bron van waarheid: de echte file-input. Zo verstuurt het formulier
   // gewoon de bestanden, ook de gesleepte.
@@ -138,15 +139,34 @@ export default function ContractUploadVak({
               </button>
             </div>
           ))}
+          {/* Eén contract dat over meerdere bestanden verspreid is
+              (hoofdovereenkomst + bijlagen): dan leest de AI ze in samenhang
+              en komt er één dossier uit i.p.v. één per bestand. */}
+          {bestanden.length > 1 && (
+            <label className="flex cursor-pointer items-center gap-2 text-[13px]">
+              <input
+                type="checkbox"
+                name="een_contract"
+                value="ja"
+                checked={eenContract}
+                onChange={(e) => setEenContract(e.target.checked)}
+              />
+              Deze bestanden horen bij één contract (hoofdovereenkomst met
+              bijlagen) — lees ze in samenhang
+            </label>
+          )}
           <div className="flex items-center gap-3">
             <SubmitKnop className="btn btn-primary" pendingTekst="Lezen… dit kan even duren">
               {bestanden.length === 1
                 ? "Lees & stel voor"
-                : `Lees & stel voor (${bestanden.length} documenten)`}
+                : eenContract
+                  ? `Lees & stel voor (1 contract uit ${bestanden.length} bestanden)`
+                  : `Lees & stel voor (${bestanden.length} documenten)`}
             </SubmitKnop>
             <span className="text-[11.5px]" style={{ color: "var(--text-3)" }}>
-              De AI leest ze één voor één; alles komt als concept-dossier
-              klaar te staan — niets wordt vastgelegd zonder jouw akkoord.
+              {bestanden.length > 1 && eenContract
+                ? "De AI leest de bestanden als één geheel; er komt één concept-dossier klaar te staan — niets wordt vastgelegd zonder jouw akkoord."
+                : "De AI leest ze één voor één; alles komt als concept-dossier klaar te staan — niets wordt vastgelegd zonder jouw akkoord."}
             </span>
           </div>
         </div>
