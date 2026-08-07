@@ -5,18 +5,32 @@ import { useState } from "react";
 export function ToevoegenToggle({
   label,
   children,
+  stijl = "knop",
 }: {
   label: string;
   children: React.ReactNode;
+  // "tekst" = bescheiden tekstlink i.p.v. primaire knop, voor secundaire
+  // routes (bv. handmatig een contract invoeren naast de AI-upload).
+  stijl?: "knop" | "tekst";
 }) {
   const [open, setOpen] = useState(false);
 
   return (
     <div className="mb-5">
-      {!open && (
+      {!open && stijl === "knop" && (
         <button
           type="button"
           className="btn btn-primary"
+          onClick={() => setOpen(true)}
+        >
+          + {label}
+        </button>
+      )}
+      {!open && stijl === "tekst" && (
+        <button
+          type="button"
+          className="text-[12.5px] underline"
+          style={{ color: "var(--text-2)" }}
           onClick={() => setOpen(true)}
         >
           + {label}

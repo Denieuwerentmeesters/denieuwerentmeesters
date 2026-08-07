@@ -14,20 +14,106 @@ function veiligeNaam(naam: string) {
   return naam.replace(/[^a-zA-Z0-9._-]/g, "_");
 }
 
-// ── Nieuw contract uit een document (plak 4, issue #152) ──
-// Het document wordt altijd eerst veiliggesteld (upload + document-rij).
-// Daarna leest de AI het contract; het resultaat is een CONCEPT-dossier
-// (herkomst 'ai') dat de gebruiker naloopt en accordeert door de status op
-// Actief te zetten. Mislukt de extractie, dan bestaat het dossier alsnog —
-// met het document eraan en een eerlijke notitie waarom de velden leeg zijn.
+type SupabaseClient = Awaited<ReturnType<typeof createClient>>;
+
+// ── Nieuw contract uit document(en) (plak 4, issue #152) ──
+// Eén of meer pdf's tegelijk (bulk, wens Steven); ze worden één voor één
+// verwerkt. Elk document wordt altijd eerst veiliggesteld (upload +
+// document-rij), daarna leest de AI het contract. Het resultaat is per
+// document een CONCEPT-dossier (herkomst 'ai') dat de gebruiker naloopt en
+// accordeert door de status op Actief te zetten. Mislukt de extractie, dan
+// bestaat het dossier alsnog — met het document eraan en een eerlijke
+// notitie waarom de velden leeg zijn.
 export async function nieuwContractUitDocument(fd: FormData) {
   const landgoed_id = String(fd.get("landgoed_id"));
-  const file = fd.get("bestand") as File | null;
-  if (!file || file.size === 0) return;
-  if (file.type !== "application/pdf") return;
+  const bestanden = fd
+    .getAll("bestand")
+    .filter(
+      (b): b is File =>
+        b instanceof File && b.size > 0 && b.type === "application/pdf",
+    );
+  if (bestanden.length === 0) return;
 
   const supabase = await createClient();
+  const { data: gebruiker } = await supabase.auth.getUser();
 
+  // Partijen en kadastrale percelen van het landgoed één keer ophalen om de
+  // AI-namen aan échte registraties te matchen (AI schept geen feiten).
+  const [{ data: relaties }, { data: percelen }] = await Promise.all([
+    supabase.from("relatie").select("id, naam").eq("landgoed_id", landgoed_id),
+    supabase
+      .from("kadastraal_perceel")
+      .select("id, kadastrale_aanduiding")
+      .eq("landgoed_id", landgoed_id),
+  ]);
+  const relatieVanNaam = new Map(
+    (relaties ?? []).map((r) => [String(r.naam).toLowerCase().trim(), r.id as string]),
+  );
+  const perceelVanAanduiding = new Map(
+    (percelen ?? []).map((p) => [
+      normaliseerAanduiding(String(p.kadastrale_aanduiding)),
+      p.id as string,
+    ]),
+  );
+
+  // Eén voor één verwerken; één mislukt bestand mag de rest niet blokkeren.
+  const dossierIds: string[] = [];
+  const mislukt: string[] = [];
+  for (const file of bestanden) {
+    try {
+      dossierIds.push(
+        await verwerkContractPdf({
+          supabase,
+          landgoed_id,
+          gebruikerId: gebruiker.user?.id ?? null,
+          file,
+          relatieVanNaam,
+          perceelVanAanduiding,
+        }),
+      );
+    } catch (e) {
+      mislukt.push(`${file.name} (${e instanceof Error ? e.message : String(e)})`);
+    }
+  }
+
+  // Eén bestand dat lukte: direct naar het dossier. Anders terug naar het
+  // register, met een eerlijke melding over wat er wel en niet lukte.
+  if (bestanden.length === 1 && dossierIds.length === 1) {
+    redirect(`/landgoed/${landgoed_id}/contracten/${dossierIds[0]}`);
+  }
+  const delen: string[] = [];
+  if (dossierIds.length > 0) {
+    delen.push(
+      dossierIds.length === 1
+        ? "1 document gelezen en als concept-dossier klaargezet."
+        : `${dossierIds.length} documenten gelezen en als concept-dossiers klaargezet.`,
+    );
+  }
+  if (mislukt.length > 0) {
+    delen.push(`Niet gelukt: ${mislukt.join("; ")}.`);
+  }
+  redirect(
+    `/landgoed/${landgoed_id}/contracten?melding=${encodeURIComponent(delen.join(" "))}`,
+  );
+}
+
+// De verwerking van één pdf: veiligstellen → AI lezen → concept-dossier.
+// Geeft het contract-id terug.
+async function verwerkContractPdf({
+  supabase,
+  landgoed_id,
+  gebruikerId,
+  file,
+  relatieVanNaam,
+  perceelVanAanduiding,
+}: {
+  supabase: SupabaseClient;
+  landgoed_id: string;
+  gebruikerId: string | null;
+  file: File;
+  relatieVanNaam: Map<string, string>;
+  perceelVanAanduiding: Map<string, string>;
+}): Promise<string> {
   // 1. Document veiligstellen (private bucket + document-rij).
   const bestandPad = `${landgoed_id}/${crypto.randomUUID()}-${veiligeNaam(file.name)}`;
   const bytes = Buffer.from(await file.arrayBuffer());
@@ -36,7 +122,6 @@ export async function nieuwContractUitDocument(fd: FormData) {
     .upload(bestandPad, bytes, { contentType: "application/pdf" });
   if (uploadFout) throw new Error(uploadFout.message);
 
-  const { data: gebruiker } = await supabase.auth.getUser();
   const document = await moet(
     supabase
       .from("document")
@@ -45,7 +130,7 @@ export async function nieuwContractUitDocument(fd: FormData) {
         scope: "landgoed",
         titel: file.name,
         bestand_pad: bestandPad,
-        geupload_door: gebruiker.user?.id,
+        geupload_door: gebruikerId,
       })
       .select("id")
       .single(),
@@ -65,25 +150,6 @@ export async function nieuwContractUitDocument(fd: FormData) {
       extractieFout = e instanceof Error ? e.message : String(e);
     }
   }
-
-  // 3. Partijen en kadastrale percelen van het landgoed ophalen om de
-  //    AI-namen aan échte registraties te matchen (AI schept geen feiten).
-  const [{ data: relaties }, { data: percelen }] = await Promise.all([
-    supabase.from("relatie").select("id, naam").eq("landgoed_id", landgoed_id),
-    supabase
-      .from("kadastraal_perceel")
-      .select("id, kadastrale_aanduiding")
-      .eq("landgoed_id", landgoed_id),
-  ]);
-  const relatieVanNaam = new Map(
-    (relaties ?? []).map((r) => [String(r.naam).toLowerCase().trim(), r.id as string]),
-  );
-  const perceelVanAanduiding = new Map(
-    (percelen ?? []).map((p) => [
-      normaliseerAanduiding(String(p.kadastrale_aanduiding)),
-      p.id as string,
-    ]),
-  );
 
   const notities: string[] = [];
   if (extractieFout) {
@@ -112,7 +178,7 @@ export async function nieuwContractUitDocument(fd: FormData) {
     );
   }
 
-  // 4. Het concept-dossier (herkomst 'ai' — het hele dossier is het voorstel).
+  // 3. Het concept-dossier (herkomst 'ai' — het hele dossier is het voorstel).
   const contract = await moet(
     supabase
       .from("contract")
@@ -138,7 +204,7 @@ export async function nieuwContractUitDocument(fd: FormData) {
   );
   const contract_id = contract.id as string;
 
-  // 5. Document aan het dossier hangen.
+  // 4. Document aan het dossier hangen.
   await moet(
     supabase.from("verband").insert({
       landgoed_id,
@@ -148,12 +214,12 @@ export async function nieuwContractUitDocument(fd: FormData) {
       doel_id: contract_id,
       rol: "betreft",
       status: "geaccordeerd",
-      aangemaakt_door: gebruiker.user?.id ?? null,
+      aangemaakt_door: gebruikerId,
     }),
     "document koppelen",
   );
 
-  // 6. Gematchte partijen en percelen koppelen (alleen bestaande
+  // 5. Gematchte partijen en percelen koppelen (alleen bestaande
   //    registraties — de rest staat in de notitie).
   for (const p of voorstel?.partijen ?? []) {
     const relatie_id = relatieVanNaam.get(p.naam.toLowerCase().trim());
@@ -178,7 +244,7 @@ export async function nieuwContractUitDocument(fd: FormData) {
     );
   }
 
-  // 7. De prijs uit het document als voorstel-regel (accordeer-flow plak 2).
+  // 6. De prijs uit het document als voorstel-regel (accordeer-flow plak 2).
   if (voorstel?.bedrag_per_jaar != null) {
     await moet(
       supabase.from("contract_prijsafspraak").insert({
@@ -194,5 +260,5 @@ export async function nieuwContractUitDocument(fd: FormData) {
     );
   }
 
-  redirect(`/landgoed/${landgoed_id}/contracten/${contract_id}`);
+  return contract_id;
 }
