@@ -665,8 +665,30 @@ export async function werkorderStatusWijzigen(fd: FormData) {
   if (!WERKORDER_STATUSSEN.includes(nieuweStatusRuw as (typeof WERKORDER_STATUSSEN)[number])) return;
   const supabase = await createClient();
 
+  const update: Record<string, unknown> = {
+    status: nieuweStatusRuw,
+    bijgewerkt_op: new Date().toISOString(),
+  };
+  // Wie de melding oppakt leggen we vast bij élke melding, los van bedragen:
+  // "wie heeft dit geaccepteerd" is een andere vraag dan "wie moest de uitgave
+  // goedkeuren". Alleen de eerste keer — heropenen en opnieuw accepteren
+  // overschrijft de oorspronkelijke acceptant niet.
+  if (nieuweStatusRuw === "geaccepteerd") {
+    const { data: huidig } = await supabase
+      .from("werkorder")
+      .select("geaccepteerd_op")
+      .eq("id", id)
+      .eq("landgoed_id", landgoed_id)
+      .maybeSingle();
+    if (!huidig?.geaccepteerd_op) {
+      const { data: { user } } = await supabase.auth.getUser();
+      update.geaccepteerd_door = user?.id ?? null;
+      update.geaccepteerd_op = new Date().toISOString();
+    }
+  }
+
   await moet(supabase.from("werkorder")
-    .update({ status: nieuweStatusRuw, bijgewerkt_op: new Date().toISOString() })
+    .update(update)
     .eq("id", id)
     .eq("landgoed_id", landgoed_id), "werkorder status bijwerken");
 

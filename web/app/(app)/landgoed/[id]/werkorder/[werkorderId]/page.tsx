@@ -36,7 +36,7 @@ export default async function WerkorderDetailPage({
 
   const { data: werkorder } = await supabase
     .from("werkorder")
-    .select("id, titel, omschrijving, prioriteit, status, deadline, toegewezen_aan, toegewezen_aan_naam, uitvoerder_relatie_id, kosten_verwacht, kosten_werkelijk, wacht_op_akkoord, akkoord_op, ai_voorstel, ai_voorstel_status, fotos_voor, fotos_na, stamobject_id, locatie_omschrijving, lat, lon, profiel!werkorder_toegewezen_aan_fkey(naam, email), akkoordgever:profiel!werkorder_akkoord_door_fkey(naam, email), stamobject(id, naam)")
+    .select("id, titel, omschrijving, prioriteit, status, deadline, toegewezen_aan, toegewezen_aan_naam, uitvoerder_relatie_id, kosten_verwacht, kosten_werkelijk, wacht_op_akkoord, akkoord_op, geaccepteerd_op, ai_voorstel, ai_voorstel_status, fotos_voor, fotos_na, stamobject_id, locatie_omschrijving, lat, lon, profiel!werkorder_toegewezen_aan_fkey(naam, email), akkoordgever:profiel!werkorder_akkoord_door_fkey(naam, email), acceptant:profiel!werkorder_geaccepteerd_door_fkey(naam, email), stamobject(id, naam)")
     .eq("id", werkorderId)
     .eq("landgoed_id", landgoed_id)
     .single();
@@ -125,6 +125,8 @@ export default async function WerkorderDetailPage({
   const wachtOpAkkoord = werkorder.wacht_op_akkoord === true;
   const akkoordgever = (werkorder.akkoordgever as unknown) as { naam: string | null; email: string | null } | null;
   const akkoordNaam = akkoordgever?.naam ?? akkoordgever?.email ?? null;
+  const acceptant = (werkorder.acceptant as unknown) as { naam: string | null; email: string | null } | null;
+  const acceptantNaam = acceptant?.naam ?? acceptant?.email ?? null;
 
   // De bucket "documenten" is privé, dus een pad alleen is niet te tonen: er
   // moet een tijdelijke ondertekende URL bij (zelfde aanpak als het
@@ -329,6 +331,24 @@ export default async function WerkorderDetailPage({
                 </span>
                 <span className="flex-1 text-[13.5px]">
                   <strong>€ {werkorder.kosten_werkelijk}</strong>
+                </span>
+              </div>
+            )}
+
+            {(acceptantNaam || werkorder.geaccepteerd_op) && (
+              <div className="flex flex-wrap items-center gap-x-3 py-2.5">
+                <span className="min-w-[130px] text-[12.5px]" style={{ color: "var(--text-2)" }}>
+                  Geaccepteerd door
+                </span>
+                <span className="flex-1 text-[13.5px]">
+                  {/* Via de magic link is er geen ingelogde gebruiker; dan valt
+                      de naam terug op de uitvoerder die aan de klus hangt. */}
+                  <strong>{acceptantNaam ?? uitvoerderNaam ?? "de uitvoerder"}</strong>
+                  {werkorder.geaccepteerd_op && (
+                    <span className="ml-2 text-[12px]" style={{ color: "var(--text-2)" }}>
+                      op {new Date(werkorder.geaccepteerd_op).toLocaleDateString("nl-NL")}
+                    </span>
+                  )}
                 </span>
               </div>
             )}
