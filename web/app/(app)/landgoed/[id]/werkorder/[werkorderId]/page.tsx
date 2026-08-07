@@ -42,7 +42,7 @@ export default async function WerkorderDetailPage({
 
   const { data: werkorder } = await supabase
     .from("werkorder")
-    .select("id, titel, omschrijving, prioriteit, status, deadline, wacht_reden, toegewezen_aan, toegewezen_aan_naam, kosten_verwacht, kosten_werkelijk, fotos_voor, fotos_na, profiel(naam, email)")
+    .select("id, titel, omschrijving, prioriteit, status, deadline, wacht_reden, toegewezen_aan, toegewezen_aan_naam, kosten_verwacht, kosten_werkelijk, fotos_voor, fotos_na, profiel!werkorder_toegewezen_aan_fkey(naam, email)")
     .eq("id", werkorderId)
     .eq("landgoed_id", landgoed_id)
     .single();
