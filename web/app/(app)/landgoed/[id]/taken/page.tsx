@@ -145,6 +145,9 @@ export default async function TakenPage({
                     )}
                   </div>
                 </div>
+                <a href={`/landgoed/${id}/taak/${t.id}`} className="btn btn-ghost btn-sm">
+                  Bekijk
+                </a>
                 <form action={taakAfronden}>
                   <input type="hidden" name="landgoed_id" value={id} />
                   <input type="hidden" name="id" value={t.id} />

@@ -11,6 +11,7 @@ import {
   inplanningAanMelder,
   afrondingAanMelder,
 } from "@/lib/mail";
+import { WACHT_OP_AKKOORD } from "./werkorder-constanten";
 
 function tekst(fd: FormData, k: string) {
   const v = String(fd.get(k) ?? "").trim();
@@ -434,6 +435,17 @@ const WERKORDER_STATUSSEN = [
   "gemeld", "beoordelen", "toegewezen", "in_uitvoering", "wacht_op", "klaar", "geannuleerd",
 ] as const;
 
+// Accorderen van uitgaven is voorbehouden aan de eigenaar; RLS staat rentmeester
+// wél toe werkorders te wijzigen, dus die grens moet hier expliciet gezet worden.
+// (Open punt uit hfst 9 van het bronplan: definitief bij het rollenstuk.)
+async function isEigenaar(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  landgoed_id: string,
+): Promise<boolean> {
+  const { data } = await supabase.rpc("rol_op", { doel_landgoed: landgoed_id });
+  return data === "eigenaar";
+}
+
 export async function nieuweWerkorder(fd: FormData) {
   const landgoed_id = String(fd.get("landgoed_id"));
   const titel = tekst(fd, "titel");
@@ -719,4 +731,105 @@ export async function maakKlusLink(fd: FormData) {
     .insert({ werkorder_id: id }), "klus-link aanmaken");
 
   revalidatePath(`/landgoed/${landgoed_id}/werkorder/${id}`);
+}
+
+// ── Drempelbedrag-akkoord (Werkorders_Plan_v1_0.md hfst 8) ──
+//
+// Boven het drempelbedrag van het landgoed is er een net beslismoment vóórdat
+// er geld wordt uitgegeven; daaronder handelt de beheerder zelf af. Bewust géén
+// generieke goedkeuringentabel: die bestaat nog nergens in de app, en één
+// module is te weinig om op te generaliseren. Wordt hetzelfde patroon later
+// elders nodig (subsidie, contract), dán is dat het moment.
+export async function werkorderKostenBijwerken(fd: FormData) {
+  const landgoed_id = String(fd.get("landgoed_id"));
+  const id = String(fd.get("id"));
+  const kosten = getal(fd, "kosten_verwacht");
+  const supabase = await createClient();
+
+  const { data: landgoed } = await supabase
+    .from("landgoed")
+    .select("werkorder_drempelbedrag")
+    .eq("id", landgoed_id)
+    .maybeSingle();
+  const drempel = Number(landgoed?.werkorder_drempelbedrag ?? 0);
+
+  const { data: huidig } = await supabase
+    .from("werkorder")
+    .select("status, wacht_reden")
+    .eq("id", id)
+    .eq("landgoed_id", landgoed_id)
+    .maybeSingle();
+  if (!huidig) return;
+
+  const bovenDrempel = kosten != null && Number.isFinite(kosten) && kosten > drempel;
+  const update: Record<string, unknown> = {
+    kosten_verwacht: kosten,
+    bijgewerkt_op: new Date().toISOString(),
+  };
+
+  if (bovenDrempel && huidig.status !== "klaar" && huidig.status !== "geannuleerd") {
+    update.status = "wacht_op";
+    update.wacht_reden = WACHT_OP_AKKOORD;
+  } else if (!bovenDrempel && huidig.wacht_reden === WACHT_OP_AKKOORD) {
+    // Bedrag naar beneden bijgesteld tot onder de drempel: dan is er niets meer
+    // te accorderen en mag de klus weer door.
+    update.status = "toegewezen";
+    update.wacht_reden = null;
+  }
+
+  await moet(supabase.from("werkorder")
+    .update(update)
+    .eq("id", id)
+    .eq("landgoed_id", landgoed_id), "kosten bijwerken");
+
+  revalidatePath(`/landgoed/${landgoed_id}/werkorders`);
+  revalidatePath(`/landgoed/${landgoed_id}/werkorder/${id}`);
+}
+
+export async function werkorderAkkoordGeven(fd: FormData) {
+  const landgoed_id = String(fd.get("landgoed_id"));
+  const id = String(fd.get("id"));
+  const supabase = await createClient();
+
+  if (!(await isEigenaar(supabase, landgoed_id))) {
+    throw new Error("Alleen de eigenaar kan een uitgave boven het drempelbedrag accorderen.");
+  }
+
+  await moet(supabase.from("werkorder").update({
+    status: "toegewezen",
+    wacht_reden: null,
+    bijgewerkt_op: new Date().toISOString(),
+  }).eq("id", id).eq("landgoed_id", landgoed_id), "uitgave accorderen");
+
+  // Het akkoord hoort in de tijdlijn: wie het gaf en wanneer, is precies de
+  // verantwoording die familie- en stichtingsconstructies nodig hebben.
+  const { data: { user } } = await supabase.auth.getUser();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  await (supabase as any).from("notitie").insert({
+    landgoed_id,
+    object_type: "werkorder",
+    object_id: id,
+    tekst: "Uitgave boven het drempelbedrag geaccordeerd.",
+    geschreven_door: user?.id ?? null,
+  });
+
+  revalidatePath(`/landgoed/${landgoed_id}/werkorders`);
+  revalidatePath(`/landgoed/${landgoed_id}/werkorder/${id}`);
+}
+
+export async function drempelbedragInstellen(fd: FormData) {
+  const landgoed_id = String(fd.get("landgoed_id"));
+  const bedrag = getal(fd, "drempelbedrag");
+  if (bedrag == null || !Number.isFinite(bedrag) || bedrag < 0) return;
+  const supabase = await createClient();
+
+  if (!(await isEigenaar(supabase, landgoed_id))) {
+    throw new Error("Alleen de eigenaar kan het drempelbedrag wijzigen.");
+  }
+
+  await moet(supabase.from("landgoed")
+    .update({ werkorder_drempelbedrag: bedrag })
+    .eq("id", landgoed_id), "drempelbedrag opslaan");
+
+  revalidatePath(`/landgoed/${landgoed_id}/werkorders`);
 }
