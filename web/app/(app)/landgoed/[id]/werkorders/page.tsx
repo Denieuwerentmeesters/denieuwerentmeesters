@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
-import { nieuweWerkorder, accordeerWerkorderVoorstel } from "../actions";
+import { nieuweWerkorder, accordeerWerkorderVoorstel, drempelbedragInstellen } from "../actions";
 import { ToevoegenToggle } from "@/components/ToevoegenToggle";
 
 const STATUS_LABEL: Record<string, string> = {
@@ -56,9 +56,12 @@ export default async function WerkordersPage({
 
   const { data: landgoed } = await supabase
     .from("landgoed")
-    .select("meld_token")
+    .select("meld_token, werkorder_drempelbedrag")
     .eq("id", id)
     .maybeSingle();
+
+  const { data: rol } = await supabase.rpc("rol_op", { doel_landgoed: id });
+  const isEigenaar = rol === "eigenaar";
 
   const [ledenRaw, relatiesRaw] = await Promise.all([
     supabase.from("lidmaatschap").select("gebruiker_id, profiel(id, naam, email)").eq("landgoed_id", id),
@@ -171,6 +174,27 @@ export default async function WerkordersPage({
             <p className="mt-1">
               Huurders, bewoners en anderen kunnen hiermee melden zonder account.
             </p>
+          </div>
+        )}
+
+        {isEigenaar && (
+          <div className="card mb-5 p-4">
+            <span className="label-up">Drempelbedrag voor akkoord</span>
+            <form action={drempelbedragInstellen} className="mt-2 flex flex-wrap items-end gap-3">
+              <input type="hidden" name="landgoed_id" value={id} />
+              <input
+                className="input"
+                type="number"
+                step="1"
+                min="0"
+                name="drempelbedrag"
+                defaultValue={landgoed?.werkorder_drempelbedrag ?? 500}
+              />
+              <button type="submit" className="btn btn-ghost btn-sm">Opslaan</button>
+              <span className="text-[12px]" style={{ color: "var(--text-2)" }}>
+                Boven dit bedrag wacht een klus op uw akkoord voordat er geld wordt uitgegeven.
+              </span>
+            </form>
           </div>
         )}
 

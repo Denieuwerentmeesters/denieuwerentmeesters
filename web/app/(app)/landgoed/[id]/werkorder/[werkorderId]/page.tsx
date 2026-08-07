@@ -1,6 +1,14 @@
 import { createClient } from "@/lib/supabase/server";
 import { voegNotitieToe } from "../../actions";
-import { werkorderStatusWijzigen, werkorderAfronden, maakKlusLink, werkorderToewijzen } from "../../actions";
+import {
+  werkorderStatusWijzigen,
+  werkorderAfronden,
+  maakKlusLink,
+  werkorderToewijzen,
+  werkorderKostenBijwerken,
+  werkorderAkkoordGeven,
+} from "../../actions";
+import { WACHT_OP_AKKOORD } from "../../werkorder-constanten";
 
 const STATUS_LABEL: Record<string, string> = {
   gemeld: "Gemeld",
@@ -65,6 +73,17 @@ export default async function WerkorderDetailPage({
     .eq("object_id", werkorderId)
     .order("aangemaakt_op", { ascending: true });
 
+  const { data: landgoed } = await supabase
+    .from("landgoed")
+    .select("werkorder_drempelbedrag")
+    .eq("id", landgoed_id)
+    .maybeSingle();
+
+  // De akkoord-knop is voorbehouden aan de eigenaar; de server action toetst
+  // dat nogmaals — dit bepaalt alleen of het knopje getoond wordt.
+  const { data: rol } = await supabase.rpc("rol_op", { doel_landgoed: landgoed_id });
+  const isEigenaar = rol === "eigenaar";
+
   // Voor het toewijzen-formulier: leden + contacten met een 'werkorder'-rol,
   // zelfde bron als op de lijstpagina.
   const [ledenRaw, relatiesRaw] = await Promise.all([
@@ -91,6 +110,9 @@ export default async function WerkorderDetailPage({
 
   const persoon = (werkorder.profiel as unknown) as { naam: string | null; email: string | null } | null;
   const uitvoerderNaam = persoon?.naam ?? persoon?.email ?? werkorder.toegewezen_aan_naam;
+  const drempelbedrag = Number(landgoed?.werkorder_drempelbedrag ?? 0);
+  const wachtOpAkkoord =
+    werkorder.status === "wacht_op" && werkorder.wacht_reden === WACHT_OP_AKKOORD;
   const stappen = VOLGENDE_STAPPEN[werkorder.status] ?? [];
   const kanAfronden = werkorder.status === "in_uitvoering" || werkorder.status === "toegewezen";
 
@@ -193,6 +215,49 @@ export default async function WerkorderDetailPage({
               <input type="hidden" name="goedgekeurd" value="nee" />
               <button type="submit" className="btn btn-ghost btn-sm">Terugsturen (nog niet akkoord)</button>
             </form>
+          )}
+        </div>
+
+        {/* Kosten + drempelbedrag-akkoord */}
+        <div className="card mb-5 p-5">
+          <span className="label-up">Verwachte kosten</span>
+          <form action={werkorderKostenBijwerken} className="mt-2 flex flex-wrap items-end gap-3">
+            <input type="hidden" name="landgoed_id" value={landgoed_id} />
+            <input type="hidden" name="id" value={werkorderId} />
+            <div>
+              <input
+                className="input"
+                type="number"
+                step="0.01"
+                name="kosten_verwacht"
+                defaultValue={werkorder.kosten_verwacht ?? ""}
+                placeholder="0,00"
+              />
+            </div>
+            <button type="submit" className="btn btn-ghost btn-sm">Opslaan</button>
+            <span className="text-[12px]" style={{ color: "var(--text-2)" }}>
+              Boven € {drempelbedrag} is akkoord van de eigenaar nodig.
+            </span>
+          </form>
+
+          {wachtOpAkkoord && (
+            <div className="mt-3 rounded-[8px] p-3" style={{ background: "var(--bg)" }}>
+              <div className="text-[12.5px]" style={{ color: "var(--text-2)" }}>
+                Deze klus wacht op akkoord: de verwachte kosten (€ {werkorder.kosten_verwacht})
+                liggen boven het drempelbedrag van € {drempelbedrag}.
+              </div>
+              {isEigenaar ? (
+                <form action={werkorderAkkoordGeven} className="mt-2">
+                  <input type="hidden" name="landgoed_id" value={landgoed_id} />
+                  <input type="hidden" name="id" value={werkorderId} />
+                  <button type="submit" className="btn btn-primary btn-sm">Akkoord geven</button>
+                </form>
+              ) : (
+                <p className="mt-1 text-[12px]" style={{ color: "var(--text-2)" }}>
+                  Alleen de eigenaar kan dit accorderen.
+                </p>
+              )}
+            </div>
           )}
         </div>
 
