@@ -12,9 +12,11 @@ import {
   werkorderObjectKoppelen,
 } from "../../actions";
 
+// Zelfde woorden als op het overzicht — anders heet dezelfde melding op twee
+// plekken anders.
 const STATUS_LABEL: Record<string, string> = {
-  gemeld: "Gemeld",
-  geaccepteerd: "Geaccepteerd",
+  gemeld: "Nieuw",
+  geaccepteerd: "Wordt aan gewerkt",
   afgerond: "Afgerond",
 };
 
@@ -34,7 +36,7 @@ export default async function WerkorderDetailPage({
 
   const { data: werkorder } = await supabase
     .from("werkorder")
-    .select("id, titel, omschrijving, prioriteit, status, deadline, toegewezen_aan, toegewezen_aan_naam, uitvoerder_relatie_id, kosten_verwacht, kosten_werkelijk, wacht_op_akkoord, ai_voorstel, ai_voorstel_status, fotos_voor, fotos_na, stamobject_id, locatie_omschrijving, lat, lon, profiel!werkorder_toegewezen_aan_fkey(naam, email), stamobject(id, naam)")
+    .select("id, titel, omschrijving, prioriteit, status, deadline, toegewezen_aan, toegewezen_aan_naam, uitvoerder_relatie_id, kosten_verwacht, kosten_werkelijk, wacht_op_akkoord, akkoord_op, ai_voorstel, ai_voorstel_status, fotos_voor, fotos_na, stamobject_id, locatie_omschrijving, lat, lon, profiel!werkorder_toegewezen_aan_fkey(naam, email), akkoordgever:profiel!werkorder_akkoord_door_fkey(naam, email), stamobject(id, naam)")
     .eq("id", werkorderId)
     .eq("landgoed_id", landgoed_id)
     .single();
@@ -121,6 +123,8 @@ export default async function WerkorderDetailPage({
       ? { lat: werkorder.lat as number, lon: werkorder.lon as number }
       : null;
   const wachtOpAkkoord = werkorder.wacht_op_akkoord === true;
+  const akkoordgever = (werkorder.akkoordgever as unknown) as { naam: string | null; email: string | null } | null;
+  const akkoordNaam = akkoordgever?.naam ?? akkoordgever?.email ?? null;
 
   // De bucket "documenten" is privé, dus een pad alleen is niet te tonen: er
   // moet een tijdelijke ondertekende URL bij (zelfde aanpak als het
@@ -325,6 +329,22 @@ export default async function WerkorderDetailPage({
                 </span>
                 <span className="flex-1 text-[13.5px]">
                   <strong>€ {werkorder.kosten_werkelijk}</strong>
+                </span>
+              </div>
+            )}
+
+            {!wachtOpAkkoord && akkoordNaam && (
+              <div className="flex flex-wrap items-center gap-x-3 py-2.5">
+                <span className="min-w-[130px] text-[12.5px]" style={{ color: "var(--text-2)" }}>
+                  Geaccordeerd door
+                </span>
+                <span className="flex-1 text-[13.5px]">
+                  <strong>{akkoordNaam}</strong>
+                  {werkorder.akkoord_op && (
+                    <span className="ml-2 text-[12px]" style={{ color: "var(--text-2)" }}>
+                      op {new Date(werkorder.akkoord_op).toLocaleDateString("nl-NL")}
+                    </span>
+                  )}
                 </span>
               </div>
             )}
