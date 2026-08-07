@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { UploadFormulier } from "../UploadFormulier";
-import { verwijderDocument, wijzigCategorie } from "../acties";
+import { accordeerCategorie, verwijderDocument, wijzigCategorie } from "../acties";
 import { VerwijderKnop } from "@/components/VerwijderKnop";
 import { haalNotulen } from "@/lib/notulen";
 import { NotulenOverzicht } from "@/components/NotulenOverzicht";
@@ -213,6 +213,11 @@ export default async function CategoriePagina({
                         </option>
                       ))}
                     </select>
+                    {!d.categorie_geaccordeerd && (
+                      <button type="submit" formAction={accordeerCategorie} className="btn btn-primary btn-sm">
+                        Bevestigen
+                      </button>
+                    )}
                     <button type="submit" className="btn btn-ghost btn-sm">
                       Verplaats
                     </button>
