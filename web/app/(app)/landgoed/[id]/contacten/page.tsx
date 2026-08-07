@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
-import { nieuwContact } from "./acties";
+import { nieuwContact, bevestigContact } from "./acties";
 import { bevestigExtractie, afwijsExtractie } from "../actions";
 import type { ExtractieRunRow } from "@/lib/extractie_mail";
 import { ToevoegenToggle } from "@/components/ToevoegenToggle";
@@ -102,7 +102,7 @@ export default async function ContactenPage({
       .order("naam"),
     supabase
       .from("relatie")
-      .select("id, naam, organisatie, email, telefoon, omschrijving, status, contact_rol(rol_type_id, rol_type(naam))")
+      .select("id, naam, organisatie, email, telefoon, omschrijving, status, herkomst, geaccordeerd, contact_rol(rol_type_id, rol_type(naam))")
       .eq("landgoed_id", id)
       .eq("status", filterStatus || "actief")
       .order("naam"),
@@ -115,6 +115,7 @@ export default async function ContactenPage({
   type ContactRow = {
     id: string; naam: string; organisatie: string | null; email: string | null;
     telefoon: string | null; omschrijving: string | null; status: string;
+    herkomst: string; geaccordeerd: boolean;
     contact_rol: ContactRolRow[];
   };
 
@@ -259,15 +260,19 @@ export default async function ContactenPage({
             </div>
           )}
           {contacten.map((c) => (
-            <Link
+            <div
               key={c.id}
-              href={`/landgoed/${id}/contacten/${c.id}`}
               className="flex items-center gap-3 px-5 py-3.5 transition-colors hover:bg-[var(--primary-light)]"
               style={{ borderColor: "var(--border)" }}
             >
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
-                  <span className="text-[14px] font-semibold">{c.naam}</span>
+                  <Link
+                    href={`/landgoed/${id}/contacten/${c.id}`}
+                    className="text-[14px] font-semibold hover:underline"
+                  >
+                    {c.naam}
+                  </Link>
                   {c.organisatie && (
                     <span className="text-[12px]" style={{ color: "var(--text-3)" }}>· {c.organisatie}</span>
                   )}
@@ -279,6 +284,20 @@ export default async function ContactenPage({
                 )}
               </div>
               <div className="flex shrink-0 items-center gap-1.5">
+                {/* Door de AI aangemaakt (uit een contract-pdf) en nog niet
+                    nagekeken: badge + bevestig-knop. */}
+                {c.herkomst === "ai" && !c.geaccordeerd && (
+                  <>
+                    <span className="tag tag-amber text-[11px]">Aangemaakt door AI</span>
+                    <form action={bevestigContact}>
+                      <input type="hidden" name="landgoed_id" value={id} />
+                      <input type="hidden" name="contact_id" value={c.id} />
+                      <button type="submit" className="btn btn-primary btn-sm text-[11.5px]">
+                        Bevestig
+                      </button>
+                    </form>
+                  </>
+                )}
                 {c.contact_rol.slice(0, 3).map((cr) => (
                   <span key={cr.rol_type_id} className="tag tag-gray text-[11px]">
                     {cr.rol_type?.naam ?? "—"}
@@ -289,7 +308,7 @@ export default async function ContactenPage({
                 )}
                 <span className={`tag ${STATUS_TAG[c.status] ?? "tag-gray"} text-[11px]`}>{c.status}</span>
               </div>
-            </Link>
+            </div>
           ))}
         </div>
       </div>

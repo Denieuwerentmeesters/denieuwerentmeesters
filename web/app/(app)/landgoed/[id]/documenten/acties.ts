@@ -220,6 +220,10 @@ export async function accordeerCategorie(fd: FormData) {
 
   revalidatePath(`/landgoed/${landgoed_id}/documenten`);
   revalidatePath(`/landgoed/${landgoed_id}/documenten/${categorie}`);
+  // Bevestigen kan ook vanaf de "nog in te delen"-lijst zelf (het stuk staat daar met
+  // zijn AI-voorstel als categorie, geaccordeerd=false) — die lijst moet het stuk dan
+  // ook meteen kwijt zijn, niet pas na een handmatige refresh.
+  revalidatePath(`/landgoed/${landgoed_id}/documenten/${NOG_IN_TE_DELEN}`);
 }
 
 /** Handmatig herindelen vanaf de categoriepagina. */

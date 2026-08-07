@@ -1,8 +1,14 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { nieuwContract } from "../actions";
+import { nieuwContractUitDocument } from "./acties";
 import { ToevoegenToggle } from "@/components/ToevoegenToggle";
+import ContractUploadVak from "@/components/ContractUploadVak";
 import { CONTRACT_STATUS_LABEL } from "./constanten";
+
+// De AI leest bij bulk-upload meerdere pdf's achter elkaar — dat duurt
+// langer dan de standaard serverless-limiet.
+export const maxDuration = 300;
 
 function dagenTot(datum: string | null): number | null {
   if (!datum) return null;
@@ -21,10 +27,13 @@ function euro(n: number | null) {
 
 export default async function ContractenPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ id: string }>;
+  searchParams: Promise<{ melding?: string }>;
 }) {
   const { id } = await params;
+  const { melding } = await searchParams;
   const supabase = await createClient();
 
   const { data: contracten } = await supabase
@@ -55,7 +64,21 @@ export default async function ContractenPage({
           </p>
         </header>
 
-        <ToevoegenToggle label="contract toevoegen">
+        {melding && (
+          <div
+            className="card mb-4 p-4 text-[13px]"
+            style={{ background: "var(--amber-light, #fef3c7)" }}
+          >
+            {melding}
+          </div>
+        )}
+
+        {/* AI-invoer (plak 4): sleep of kies één of meer pdf's, de AI stelt
+            per document een concept-dossier voor — accorderen doe je op de
+            dossierpagina. */}
+        <ContractUploadVak landgoedId={id} action={nieuwContractUitDocument} />
+
+        <ToevoegenToggle label="contract handmatig toevoegen" stijl="tekst">
           <form action={nieuwContract} className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3">
             <input type="hidden" name="landgoed_id" value={id} />
             <div className="sm:col-span-2 md:col-span-1">
