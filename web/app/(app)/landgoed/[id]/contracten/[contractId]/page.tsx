@@ -60,7 +60,7 @@ export default async function ContractDossierPage({
   const { data: contract } = await supabase
     .from("contract")
     .select(
-      "id, landgoed_id, titel, contractnummer, type, status, pachtvorm, looptijd_type, partij, bedrag, servicekosten, ingangsdatum, einddatum, indexatie_type, volgende_indexatie, achterstand, achterstand_notitie, notitie",
+      "id, landgoed_id, titel, contractnummer, type, status, herkomst, pachtvorm, looptijd_type, partij, bedrag, servicekosten, ingangsdatum, einddatum, indexatie_type, volgende_indexatie, achterstand, achterstand_notitie, notitie",
     )
     .eq("id", contractId)
     .maybeSingle();
@@ -274,6 +274,20 @@ export default async function ContractDossierPage({
               .join(" · ") || "Nog geen kerngegevens."}
           </p>
         </header>
+
+        {/* AI-voorstel-banner: het hele concept-dossier is een voorstel;
+            accorderen = nalopen en de status op Actief zetten. */}
+        {contract.herkomst === "ai" && contract.status === "concept" && (
+          <div
+            className="mb-6 rounded-md border px-4 py-3 text-[12.5px] font-medium"
+            style={{ background: "#FEF3C7", borderColor: "#F59E0B", color: "#92400E" }}
+          >
+            Dit dossier is een AI-voorstel uit een geüpload document (zie
+            Documenten hieronder). Controleer de velden, pas aan waar nodig en
+            zet de status op <strong>Actief</strong> om te accorderen. Wat de
+            AI niet zeker wist of niet kon koppelen, staat in de notitie.
+          </div>
+        )}
 
         {waarschuwingen.length > 0 && (
           <div
