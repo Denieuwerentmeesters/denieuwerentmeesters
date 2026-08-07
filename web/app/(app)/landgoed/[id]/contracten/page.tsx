@@ -126,18 +126,6 @@ export default async function ContractenPage({
               <label className="label-up mb-1 block">Volgende indexatie</label>
               <input className="input" type="date" name="volgende_indexatie" />
             </div>
-            <div>
-              <label className="label-up mb-1 block">Achterstand (€)</label>
-              <input className="input" name="achterstand" inputMode="decimal" placeholder="0" />
-            </div>
-            <div className="sm:col-span-2">
-              <label className="label-up mb-1 block">Notitie achterstand</label>
-              <input
-                className="input"
-                name="achterstand_notitie"
-                placeholder="bijv. herinnering gestuurd 1-6"
-              />
-            </div>
             <div className="sm:col-span-2 md:col-span-3">
               <button type="submit" className="btn btn-primary">
                 Contract toevoegen

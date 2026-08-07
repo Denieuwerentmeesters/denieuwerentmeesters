@@ -78,8 +78,9 @@ export async function bewerkContractPrijsgegevens(fd: FormData) {
         servicekosten: getal(fd, "servicekosten"),
         indexatie_type: tekst(fd, "indexatie_type"),
         volgende_indexatie: tekst(fd, "volgende_indexatie"),
-        achterstand: getal(fd, "achterstand"),
-        achterstand_notitie: tekst(fd, "achterstand_notitie"),
+        // achterstand hoort hier bewust niet meer bij: dat is een
+        // betaalstand (boekhouding), geen contractafspraak. De kolommen
+        // blijven bestaan; bestaande gegevens raken we niet aan.
       })
       .eq("id", contract_id)
       .eq("landgoed_id", landgoed_id),
