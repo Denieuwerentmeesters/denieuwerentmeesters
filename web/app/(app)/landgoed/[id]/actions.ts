@@ -850,14 +850,21 @@ export async function werkorderAkkoordGeven(fd: FormData) {
   // Het akkoord hoort in de tijdlijn: wie het gaf en wanneer, is precies de
   // verantwoording die familie- en stichtingsconstructies nodig hebben.
   const { data: { user } } = await supabase.auth.getUser();
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  await (supabase as any).from("notitie").insert({
-    landgoed_id,
-    object_type: "werkorder",
-    object_id: id,
-    tekst: "Uitgave boven het drempelbedrag geaccordeerd.",
-    geschreven_door: user?.id ?? null,
-  });
+  // Met moet(): dit is de vastlegging van een geldbesluit, die mag niet stil
+  // mislukken. Deed hij eerder wél — de constraint op notitie.object_type liet
+  // 'werkorder' niet toe (rechtgezet in migratie 0072) en de fout werd niet
+  // gecontroleerd, dus het akkoord verdween zonder spoor.
+  await moet(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (supabase as any).from("notitie").insert({
+      landgoed_id,
+      object_type: "werkorder",
+      object_id: id,
+      tekst: "Uitgave boven het drempelbedrag geaccordeerd.",
+      geschreven_door: user?.id ?? null,
+    }),
+    "akkoord vastleggen in de tijdlijn",
+  );
 
   revalidatePath(`/landgoed/${landgoed_id}/werkorders`);
   revalidatePath(`/landgoed/${landgoed_id}/werkorder/${id}`);

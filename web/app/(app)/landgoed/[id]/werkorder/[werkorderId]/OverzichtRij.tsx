@@ -39,7 +39,15 @@ export function OverzichtRij({
           {open ? "Annuleren" : "Pas aan"}
         </button>
       </div>
-      {open && <div className="mt-3">{children}</div>}
+      {/* Sluit na een succesvolle submit: submit-events uit het formulier in
+          children bubbelen hierheen. Faalt de browservalidatie, dan komt het
+          event niet en blijft het formulier open staan — zoals bedoeld.
+          Zelfde gedrag als ToevoegenToggle. */}
+      {open && (
+        <div className="mt-3" onSubmit={() => setOpen(false)}>
+          {children}
+        </div>
+      )}
     </div>
   );
 }
