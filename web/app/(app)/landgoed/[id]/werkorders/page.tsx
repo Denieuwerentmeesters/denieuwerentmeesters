@@ -46,7 +46,7 @@ export default async function WerkordersPage({
 
   const { data: werkordersRaw } = await supabase
     .from("werkorder")
-    .select("id, titel, prioriteit, status, deadline, wacht_reden, toegewezen_aan, toegewezen_aan_naam, aangemaakt_op, ai_voorstel, ai_voorstel_status, profiel!werkorder_toegewezen_aan_fkey(naam, email)")
+    .select("id, titel, prioriteit, status, deadline, wacht_reden, toegewezen_aan, toegewezen_aan_naam, aangemaakt_op, ai_voorstel, ai_voorstel_status, profiel!werkorder_toegewezen_aan_fkey(naam, email), stamobject(id, naam)")
     .eq("landgoed_id", id);
 
   const werkorders = (werkordersRaw ?? []).slice().sort((a, b) => {
@@ -71,7 +71,7 @@ export default async function WerkordersPage({
   const protocol = host.startsWith("localhost") ? "http" : "https";
   const basisUrl = `${protocol}://${host}`;
 
-  const [ledenRaw, relatiesRaw] = await Promise.all([
+  const [ledenRaw, relatiesRaw, objectenRaw] = await Promise.all([
     supabase.from("lidmaatschap").select("gebruiker_id, profiel(id, naam, email)").eq("landgoed_id", id),
     // Uitvoerders: contacten met een rol die 'werkorder' in koppelbaar_aan heeft.
     supabase
@@ -80,14 +80,23 @@ export default async function WerkordersPage({
       .eq("landgoed_id", id)
       .contains("contact_rol.rol_type.koppelbaar_aan", ["werkorder"])
       .order("naam"),
+    // Alleen geaccordeerde objecten, net als op de kaart: een voorgesteld
+    // object is nog geen feit en hoort niet als keuze in een formulier.
+    supabase
+      .from("stamobject")
+      .select("id, naam, categorie")
+      .eq("landgoed_id", id)
+      .eq("geaccordeerd", true)
+      .order("naam"),
   ]);
+  const objecten = (objectenRaw.data ?? []) as { id: string; naam: string; categorie: string }[];
 
   const leden = (ledenRaw.data ?? []).map((l) => {
     const p = (l.profiel as unknown) as { id: string; naam: string | null; email: string | null } | null;
     return { id: p?.id ?? l.gebruiker_id, naam: p?.naam ?? p?.email ?? l.gebruiker_id };
   });
   const uitvoerderOpties = ((relatiesRaw.data ?? []) as { id: string; naam: string }[]).map((r) => ({
-    waarde: `c:${r.naam}`,
+    waarde: `c:${r.id}`,
     naam: r.naam,
   }));
   const ledenOpties = leden.map((l) => ({ waarde: `u:${l.id}`, naam: l.naam }));
@@ -164,6 +173,15 @@ export default async function WerkordersPage({
               </select>
             </div>
             <div>
+              <label className="label-up mb-1 block">Object</label>
+              <select className="input" name="stamobject_id" defaultValue="">
+                <option value="">— geen —</option>
+                {objecten.map((o) => (
+                  <option key={o.id} value={o.id}>{o.naam}</option>
+                ))}
+              </select>
+            </div>
+            <div>
               <label className="label-up mb-1 block">Foto&apos;s</label>
               <input className="input" type="file" name="fotos" accept="image/*" multiple />
             </div>
@@ -221,6 +239,10 @@ export default async function WerkordersPage({
                         {STATUS_LABEL[w.status] ?? w.status}
                       </span>
                       {w.status === "wacht_op" && w.wacht_reden && <span>({w.wacht_reden})</span>}
+                      {(() => {
+                        const obj = (w.stamobject as unknown) as { id: string; naam: string } | null;
+                        return obj ? <span>📍 {obj.naam}</span> : null;
+                      })()}
                       {w.deadline && <span>Deadline {w.deadline}</span>}
                       {uitvoerderNaam && <span>👤 {uitvoerderNaam}</span>}
                       {w.prioriteit && (
