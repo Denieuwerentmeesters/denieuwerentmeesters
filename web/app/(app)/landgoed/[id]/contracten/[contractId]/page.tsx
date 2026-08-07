@@ -4,6 +4,7 @@ import { isUuid } from "@/lib/db";
 import { createClient } from "@/lib/supabase/server";
 import BestandVeld from "@/components/BestandVeld";
 import SubmitKnop from "@/components/SubmitKnop";
+import WijzigbaarFormulier from "@/components/WijzigbaarFormulier";
 import { VerwijderKnop } from "@/components/VerwijderKnop";
 import {
   CONTRACT_STATUS_LABEL,
@@ -228,6 +229,12 @@ export default async function ContractDossierPage({
   const statusLabel =
     CONTRACT_STATUS_LABEL[contract.status ?? ""] ?? contract.status ?? "—";
 
+  // Een vers AI-concept begint in de wijzig-stand met "Accepteren en
+  // opslaan": dat slaat de gecontroleerde velden op én zet de status op
+  // Actief — dat ís het accorderen. Daarbuiten staan de kerngegevens op
+  // slot tot de gebruiker bewust op Wijzigen klikt.
+  const isAiConcept = contract.herkomst === "ai" && contract.status === "concept";
+
   return (
     <div className="flex flex-col">
       <div
@@ -285,8 +292,9 @@ export default async function ContractDossierPage({
           >
             Dit dossier is een AI-voorstel uit een geüpload document (zie
             Documenten hieronder). Controleer de velden, pas aan waar nodig en
-            zet de status op <strong>Actief</strong> om te accorderen. Wat de
-            AI niet zeker wist of niet kon koppelen, staat in de notitie.
+            klik <strong>Accepteren en opslaan</strong> om te accorderen — het
+            contract wordt dan actief. Wat de AI niet zeker wist of niet kon
+            koppelen, staat in de notitie.
           </div>
         )}
 
@@ -304,12 +312,18 @@ export default async function ContractDossierPage({
         {/* ── Kerngegevens (bewerken) ── */}
         <section className="mb-7">
           <h2 className="mb-2 text-[16px] font-bold">Kerngegevens</h2>
-          <form
+          <WijzigbaarFormulier
             action={bewerkContractDossier}
-            className="card grid grid-cols-2 gap-3 p-4 md:grid-cols-4"
+            beginOpen={isAiConcept}
+            opslaanLabel={isAiConcept ? "Accepteren en opslaan" : "Opslaan"}
+            className="card p-4"
+            veldenKlasse="grid grid-cols-2 gap-3 md:grid-cols-3"
           >
             <input type="hidden" name="landgoed_id" value={id} />
             <input type="hidden" name="contract_id" value={contractId} />
+            {/* Accepteren = accorderen: de status gaat mee naar Actief.
+                De status-keuzelijst zou hier dubbelop zijn. */}
+            {isAiConcept && <input type="hidden" name="status" value="actief" />}
             <div className="col-span-2">
               <label className="label-up mb-1 block">Titel</label>
               <input className="input" name="titel" defaultValue={contract.titel} required />
@@ -323,19 +337,21 @@ export default async function ContractDossierPage({
                 defaultValue={contract.contractnummer ?? ""}
               />
             </div>
-            <div>
-              <label className="label-up mb-1 block">Status</label>
-              <select className="input" name="status" defaultValue={contract.status ?? "concept"}>
-                {Object.entries(CONTRACT_STATUS_LABEL).map(([w, l]) => (
-                  <option key={w} value={w}>
-                    {l}
-                  </option>
-                ))}
-                {contract.status && !(contract.status in CONTRACT_STATUS_LABEL) && (
-                  <option value={contract.status}>{contract.status}</option>
-                )}
-              </select>
-            </div>
+            {!isAiConcept && (
+              <div>
+                <label className="label-up mb-1 block">Status</label>
+                <select className="input" name="status" defaultValue={contract.status ?? "concept"}>
+                  {Object.entries(CONTRACT_STATUS_LABEL).map(([w, l]) => (
+                    <option key={w} value={w}>
+                      {l}
+                    </option>
+                  ))}
+                  {contract.status && !(contract.status in CONTRACT_STATUS_LABEL) && (
+                    <option value={contract.status}>{contract.status}</option>
+                  )}
+                </select>
+              </div>
+            )}
             <div>
               <label className="label-up mb-1 block">Type</label>
               <select className="input" name="type" defaultValue={contract.type ?? "pacht"}>
@@ -390,7 +406,7 @@ export default async function ContractDossierPage({
                 defaultValue={contract.einddatum ?? ""}
               />
             </div>
-            <div className="col-span-2 md:col-span-4">
+            <div className="col-span-2 md:col-span-3">
               <label className="label-up mb-1 block">Notitie</label>
               <textarea
                 className="input"
@@ -400,12 +416,7 @@ export default async function ContractDossierPage({
                 placeholder="Vrije aantekening bij dit dossier"
               />
             </div>
-            <div className="col-span-2 flex items-end gap-2 md:col-span-4">
-              <SubmitKnop className="btn btn-primary" pendingTekst="Opslaan…">
-                Opslaan
-              </SubmitKnop>
-            </div>
-          </form>
+          </WijzigbaarFormulier>
           {contract.partij && partijen.length === 0 && (
             <p className="mt-1 text-[11.5px]" style={{ color: "var(--text-3)" }}>
               Oude notatie: partij stond als tekst genoteerd (&quot;{contract.partij}&quot;) —
@@ -564,9 +575,10 @@ export default async function ContractDossierPage({
           {/* Overige prijsgegevens — hoorden eerst bij Kerngegevens, maar
               dit zijn prijszaken (wens Steven). Eigen formulier + actie,
               zodat de twee opslaan-knoppen elkaar niet overschrijven. */}
-          <form
+          <WijzigbaarFormulier
             action={bewerkContractPrijsgegevens}
-            className="card mt-3 grid grid-cols-2 gap-3 p-4 md:grid-cols-4"
+            className="card mt-3 p-4"
+            veldenKlasse="grid grid-cols-2 gap-3 md:grid-cols-4"
           >
             <input type="hidden" name="landgoed_id" value={id} />
             <input type="hidden" name="contract_id" value={contractId} />
@@ -609,7 +621,7 @@ export default async function ContractDossierPage({
                 defaultValue={contract.achterstand ?? ""}
               />
             </div>
-            <div className="col-span-2 md:col-span-3">
+            <div className="col-span-2 md:col-span-4">
               <label className="label-up mb-1 block">Notitie bij achterstand</label>
               <input
                 className="input"
@@ -618,12 +630,7 @@ export default async function ContractDossierPage({
                 placeholder="bijv. herinnering gestuurd 1-6"
               />
             </div>
-            <div className="flex items-end">
-              <SubmitKnop className="btn btn-primary btn-sm" pendingTekst="Opslaan…">
-                Opslaan
-              </SubmitKnop>
-            </div>
-          </form>
+          </WijzigbaarFormulier>
         </section>
 
         {/* ── Partijen ── */}
