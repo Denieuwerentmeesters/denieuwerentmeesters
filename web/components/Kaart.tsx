@@ -44,9 +44,11 @@ import {
   kaartGroep,
   groepeerOpties,
   ordenGebouwen,
+  ordenPercelenMetObjecten,
   haTekst,
   geomNaarLatlngs,
   maakKadastraleLaag,
+  maakStipIcoon,
 } from "@/components/kaartDelen";
 
 type PlaatsObject = KaartObject;
@@ -265,9 +267,14 @@ export default function Kaart({
   const [selectie, setSelectie] = useState<string[]>([]);
   // Beheerperceel waarvan het wijzig-formulier (naam/gebruik) openstaat.
   const [wijzigId, setWijzigId] = useState<string | null>(null);
-  const [koppelGebouwId, setKoppelGebouwId] = useState<string | null>(null);
   // De lijst kent twee tabbladen: grond (beheerpercelen) en gebouwen.
   const [lijstTab, setLijstTab] = useState<"percelen" | "gebouwen">("percelen");
+  // In-/uitklappen van onderliggende rijen (objecten onder een beheerperceel,
+  // bijgebouwen onder een hoofdgebouw). Standaard ingeklapt — overzicht eerst.
+  const [uitgeklapt, setUitgeklapt] = useState<Record<string, boolean>>({});
+  function klapOm(id: string) {
+    setUitgeklapt((prev) => ({ ...prev, [id]: !prev[id] }));
+  }
   // Deelgebruik-knop in het indeel-paneel: pas na een bewuste druk hierop
   // zijn al-ingedeelde percelen aanklikbaar om extra te koppelen.
   const [extraKoppelen, setExtraKoppelen] = useState(false);
@@ -354,6 +361,17 @@ export default function Kaart({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [geselecteerd]);
 
+  // In de invoer-modi is de zwevende beheer-tooltip ("… behoort bij
+  // beheerperceel …") vooral in de weg — die achtervolgt je terwijl je met
+  // iets anders bezig bent (wens Steven). De werk-tooltips van de bezit-laag
+  // ("nog in te delen") blijven wél zichtbaar; die horen bij die modi.
+  useEffect(() => {
+    containerRef.current?.classList.toggle(
+      "verberg-beheer-tooltips",
+      mode !== "bekijk" && mode !== "basis",
+    );
+  }, [mode]);
+
   // Kaart → lijst: klik in bekijk-modus op een vlak en de lijst springt naar
   // de bijbehorende rij (de omgekeerde richting van selecteer()). Nogmaals
   // klikken heft de selectie weer op.
@@ -371,6 +389,13 @@ export default function Kaart({
     // De rij staat mogelijk op het andere tabblad — dan eerst omschakelen.
     const o = objecten.find((x) => x.id === id);
     if (o) setLijstTab(kaartGroep(o) === "Gebouwen" ? "gebouwen" : "percelen");
+    // Zit de rij ingeklapt onder een ouder (object onder perceel, bijgebouw
+    // onder hoofdgebouw), klap die dan eerst open — anders is er niets om
+    // naartoe te scrollen. Een bijgebouw heeft ook een staatOpId, maar in de
+    // gebouwen-lijst is het hoofdgebouw de ouder.
+    const ouder =
+      o && kaartGroep(o) === "Gebouwen" ? o.hoortBijId : o?.staatOpId;
+    if (ouder) setUitgeklapt((prev) => ({ ...prev, [ouder]: true }));
     setTimeout(() => {
       document
         .getElementById(`obj-rij-${id}`)
@@ -418,7 +443,7 @@ export default function Kaart({
             aanduiding
               ? `${aanduiding} · behoort bij beheerperceel: ${o.naam}${o.gebruik ? ` (${o.gebruik})` : ""}`
               : `${o.naam}${o.gebruik ? ` · ${o.gebruik}` : ""}${o.kadastraal ? ` · ${o.kadastraal}` : ""}`,
-            { sticky: true },
+            { sticky: true, className: "beheer-tooltip" },
           );
           // Hover-oplichten alleen zolang er geen spotlight-selectie actief is.
           poly.on("mouseover", () => {
@@ -460,7 +485,7 @@ export default function Kaart({
         });
         poly.bindTooltip(
           `${o.naam}${o.gebruik ? ` · ${o.gebruik}` : ""}`,
-          { sticky: true },
+          { sticky: true, className: "beheer-tooltip" },
         );
         poly.on("click", () => toonInLijst(o.id));
         poly.addTo(groep);
@@ -470,27 +495,29 @@ export default function Kaart({
         ]);
         continue;
       }
-      // Terugval: geen contour bekend, dan een stip op het opgeslagen punt.
-      // Geprikte beheerobjecten (boom, brug…) leven hier; ze doen mee met
-      // tooltip, klik-naar-lijst en spotlight, net als de vlakken.
+      // Terugval: geen contour bekend, dan een merkje op het opgeslagen punt.
+      // Geprikte beheerobjecten (boom, brug…) leven hier: gekleurd rondje met
+      // wit pictogram per soort; groeien bij hover doet de CSS. Markers leven
+      // in Leaflets marker-pane en liggen dus vanzelf bóven de vlakken.
       if (Number.isFinite(o.lat) && Number.isFinite(o.lon)) {
-        const stip = L.circleMarker([o.lat, o.lon], {
-          radius: 6,
-          color: "#2A5C3F",
-          fillColor: "#2A5C3F",
-          fillOpacity: 0.7,
-          weight: 1.5,
+        const stip = L.marker([o.lat, o.lon], {
+          icon: maakStipIcoon(L, o.categorie),
         });
         stip.bindTooltip(`${o.naam}${o.gebruik ? ` · ${o.gebruik}` : ""}`, {
           sticky: true,
+          className: "beheer-tooltip",
         });
         stip.on("click", () => toonInLijst(o.id));
         stip.addTo(groep);
         bounds.extend([o.lat, o.lon]);
         // Spotlight/selecteer verwachten de polygon-API; een punt levert zijn
-        // eigen mini-bounds.
+        // eigen mini-bounds, en vertaalt setStyle naar marker-opacity (dimmen
+        // als iets anders de spotlight heeft).
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (stip as any).getBounds = () => L.latLngBounds([[o.lat, o.lon]]);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (stip as any).setStyle = (s: { opacity?: number }) =>
+          stip.setOpacity(s?.opacity != null && s.opacity < 1 ? 0.35 : 1);
         vlakkenRef.current.set(o.id, [
           { poly: stip, basis: { weight: 1.5, fillOpacity: 0.7 } },
         ]);
@@ -2156,23 +2183,51 @@ export default function Kaart({
                 {objecten.filter((o) => kaartGroep(o) === "Gebouwen").length})
               </button>
             </div>
-            {KAARTGROEP_LABELS.filter((l) =>
-              lijstTab === "gebouwen" ? l === "Gebouwen" : l !== "Gebouwen",
-            ).map((label) => {
-              const lijst = groepenMap.get(label)!;
-              if (lijst.length === 0) return null;
+            {(lijstTab === "gebouwen"
+              ? /* Gebouwen als clusters: bijgebouwen ingesprongen onder
+                   hun hoofdgebouw. */
+                ([["Gebouwen", ordenGebouwen(groepenMap.get("Gebouwen")!)]] as [
+                  string,
+                  { item: PlaatsObject; ingesprongen: boolean; ouderId?: string }[],
+                ][])
+              : /* Percelen: beheerperceel als hoofditem, geprikte objecten
+                   ingesprongen eronder; losse objecten apart (issue #130). */
+                (() => {
+                  const { groepen, los } = ordenPercelenMetObjecten(objecten);
+                  return [
+                    ...groepen,
+                    ...(los.length
+                      ? ([
+                          [
+                            "Losse objecten (nog niet gekoppeld)",
+                            los.map((item) => ({ item, ingesprongen: false })),
+                          ],
+                        ] as [
+                          string,
+                          { item: PlaatsObject; ingesprongen: boolean; ouderId?: string }[],
+                        ][])
+                      : []),
+                  ];
+                })()
+            ).map(([label, geordend]) => {
+              if (geordend.length === 0) return null;
               return (
                 <div key={label} className="card p-4">
                   <div className="mb-2 text-[12px] font-semibold uppercase tracking-wide" style={{ color: "var(--text-2)" }}>
-                    {label} ({lijst.length})
+                    {label} ({geordend.length})
                   </div>
                   <div className="divide-y" style={{ borderColor: "var(--border)" }}>
-                    {/* Gebouwen als clusters: bijgebouwen ingesprongen onder
-                        hun hoofdgebouw. */}
-                    {(label === "Gebouwen"
-                      ? ordenGebouwen(lijst)
-                      : lijst.map((item) => ({ item, ingesprongen: false }))
-                    ).map(({ item: o, ingesprongen }) => (
+                    {geordend
+                      .filter(
+                        (r) =>
+                          !r.ingesprongen ||
+                          (r.ouderId != null && uitgeklapt[r.ouderId]),
+                      )
+                      .map(({ item: o, ingesprongen }) => {
+                      const kinderen = geordend.filter(
+                        (r) => r.ouderId === o.id,
+                      ).length;
+                      return (
                       <div
                         key={o.id}
                         id={`obj-rij-${o.id}`}
@@ -2183,6 +2238,26 @@ export default function Kaart({
                         }}
                       >
                         <div className="flex items-center gap-3 py-2.5">
+                          {/* Pijltje voor in-/uitklappen van wat eronder
+                              hangt; rijen zonder kinderen krijgen een spacer
+                              zodat de namen uitlijnen. */}
+                          {kinderen > 0 ? (
+                            <button
+                              type="button"
+                              onClick={() => klapOm(o.id)}
+                              className="shrink-0 text-[12.5px] font-medium"
+                              style={{ color: "var(--text-2)", minWidth: 22 }}
+                              title={
+                                uitgeklapt[o.id]
+                                  ? "Klap in"
+                                  : `Toon ${kinderen} onderliggende`
+                              }
+                            >
+                              {uitgeklapt[o.id] ? "▾" : `▸ ${kinderen}`}
+                            </button>
+                          ) : (
+                            <span className="shrink-0" style={{ minWidth: 22 }} />
+                          )}
                           <button
                             type="button"
                             onClick={() => selecteer(o)}
@@ -2200,34 +2275,18 @@ export default function Kaart({
                             Details
                           </Link>
                           {/* Zelden gebruikte acties: klein en tekstueel, niet in
-                              your face (wens Steven). */}
-                          {(PERCEEL_CATS.has(o.categorie) ||
-                            GEBOUW_CATS.has(o.categorie)) && (
-                            <button
-                              type="button"
-                              className="text-[11.5px] hover:underline"
-                              style={{ color: "var(--text-2)" }}
-                              onClick={() =>
-                                setWijzigId(wijzigId === o.id ? null : o.id)
-                              }
-                            >
-                              Wijzig
-                            </button>
-                          )}
-                          {GEBOUW_CATS.has(o.categorie) && (
-                            <button
-                              type="button"
-                              className="text-[11.5px] hover:underline"
-                              style={{ color: "var(--text-2)" }}
-                              onClick={() =>
-                                setKoppelGebouwId(koppelGebouwId === o.id ? null : o.id)
-                              }
-                            >
-                              {o.staatOpId
-                                ? "Wijzig / ontkoppel perceel"
-                                : "Koppel aan perceel"}
-                            </button>
-                          )}
+                              your face (wens Steven). Ook geprikte objecten
+                              zijn te wijzigen (naam + soort). */}
+                          <button
+                            type="button"
+                            className="text-[11.5px] hover:underline"
+                            style={{ color: "var(--text-2)" }}
+                            onClick={() =>
+                              setWijzigId(wijzigId === o.id ? null : o.id)
+                            }
+                          >
+                            Wijzig
+                          </button>
                           <form action={verwijderObject} style={{ color: "var(--red)" }}>
                             <input type="hidden" name="landgoed_id" value={landgoedId} />
                             <input type="hidden" name="id" value={o.id} />
@@ -2269,21 +2328,47 @@ export default function Kaart({
                                 required
                               />
                             </div>
-                            <div>
-                              <label className="label-up mb-1 block">Gebruik</label>
-                              <select
-                                className="input"
-                                name="gebruik"
-                                defaultValue={o.gebruik ?? ""}
-                              >
-                                <option value="">— geen —</option>
-                                {gebruikOptiesVoor(o.categorie, o.gebruik).map((g) => (
-                                  <option key={g} value={g}>
-                                    {g}
-                                  </option>
-                                ))}
-                              </select>
-                            </div>
+                            {PERCEEL_CATS.has(o.categorie) ||
+                            GEBOUW_CATS.has(o.categorie) ? (
+                              <div>
+                                <label className="label-up mb-1 block">Gebruik</label>
+                                <select
+                                  className="input"
+                                  name="gebruik"
+                                  defaultValue={o.gebruik ?? ""}
+                                >
+                                  <option value="">— geen —</option>
+                                  {gebruikOptiesVoor(o.categorie, o.gebruik).map((g) => (
+                                    <option key={g} value={g}>
+                                      {g}
+                                    </option>
+                                  ))}
+                                </select>
+                              </div>
+                            ) : (
+                              /* Geprikt object: geen gebruik-veld maar de
+                                 soort (boom bleek toch een brug…). */
+                              <div>
+                                <label className="label-up mb-1 block">Soort</label>
+                                <select
+                                  className="input"
+                                  name="soort"
+                                  defaultValue={
+                                    BEHEEROBJECT_PRIK_OPTIES.some(
+                                      ([w]) => w === o.categorie,
+                                    )
+                                      ? o.categorie
+                                      : "overig"
+                                  }
+                                >
+                                  {BEHEEROBJECT_PRIK_OPTIES.map(([waarde, label]) => (
+                                    <option key={waarde} value={waarde}>
+                                      {label}
+                                    </option>
+                                  ))}
+                                </select>
+                              </div>
+                            )}
                             {/* Gebouwen-cluster: schuur/stal onder zijn
                                 hoofdgebouw hangen (één niveau diep). */}
                             {GEBOUW_CATS.has(o.categorie) && (
@@ -2309,6 +2394,37 @@ export default function Kaart({
                                         {g.naam}
                                       </option>
                                     ))}
+                                </select>
+                              </div>
+                            )}
+                            {/* Eén formulier, één Opslaan: ook de koppeling
+                                "staat op beheerperceel" hoort hier gewoon bij
+                                (gebouwen én geprikte objecten). */}
+                            {!PERCEEL_CATS.has(o.categorie) && (
+                              <div className="min-w-[220px] flex-1">
+                                <label className="label-up mb-1 block">
+                                  Staat op beheerperceel
+                                </label>
+                                <select
+                                  className="input"
+                                  name="perceel_id"
+                                  defaultValue={o.staatOpId ?? ""}
+                                >
+                                  <option value="">— geen —</option>
+                                  {groepeerOpties(
+                                    objecten.filter((p) =>
+                                      PERCEEL_CATS.has(p.categorie),
+                                    ),
+                                  ).map(([label, lijst]) => (
+                                    <optgroup key={label} label={label}>
+                                      {lijst.map((p) => (
+                                        <option key={p.id} value={p.id}>
+                                          {p.naam}
+                                          {p.gebruik ? ` (${p.gebruik})` : ""}
+                                        </option>
+                                      ))}
+                                    </optgroup>
+                                  ))}
                                 </select>
                               </div>
                             )}
@@ -2368,54 +2484,6 @@ export default function Kaart({
                               ))}
                             </div>
                           )}
-                        {koppelGebouwId === o.id && (
-                          <form
-                            action={async (fd) => {
-                              await koppelGebouwAanPerceel(fd);
-                              setKoppelGebouwId(null);
-                            }}
-                            className="flex flex-wrap items-end gap-3 pb-3"
-                          >
-                            <input type="hidden" name="landgoed_id" value={landgoedId} />
-                            <input type="hidden" name="gebouw_id" value={o.id} />
-                            <div className="min-w-[220px] flex-1">
-                              <label className="label-up mb-1 block">
-                                Staat op beheerperceel
-                              </label>
-                              <select
-                                className="input"
-                                name="perceel_id"
-                                defaultValue={o.staatOpId ?? ""}
-                              >
-                                <option value="">— geen —</option>
-                                {groepeerOpties(
-                                  objecten.filter((p) =>
-                                    PERCEEL_CATS.has(p.categorie),
-                                  ),
-                                ).map(([label, lijst]) => (
-                                  <optgroup key={label} label={label}>
-                                    {lijst.map((p) => (
-                                      <option key={p.id} value={p.id}>
-                                        {p.naam}
-                                        {p.gebruik ? ` (${p.gebruik})` : ""}
-                                      </option>
-                                    ))}
-                                  </optgroup>
-                                ))}
-                              </select>
-                            </div>
-                            <SubmitKnop className="btn btn-primary btn-sm" pendingTekst="Opslaan…">
-                              Opslaan
-                            </SubmitKnop>
-                            <button
-                              type="button"
-                              className="btn btn-ghost btn-sm"
-                              onClick={() => setKoppelGebouwId(null)}
-                            >
-                              Annuleer
-                            </button>
-                          </form>
-                        )}
                         {/* Deelgebruik: percelen die dit beheerperceel deelt
                             met een ander kunnen met een lijn gesplitst worden. */}
                         {PERCEEL_CATS.has(o.categorie) &&
@@ -2462,7 +2530,8 @@ export default function Kaart({
                             </div>
                           )}
                       </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 </div>
               );

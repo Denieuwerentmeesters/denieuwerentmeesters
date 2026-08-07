@@ -202,3 +202,32 @@ body {
   max-width: 240px;
   line-height: 1.35;
 }
+
+/* In de invoer-modi (bezit inladen, indelen, gebouwen, objecten) is de
+   zwevende beheer-tooltip vooral in de weg — de invoerpagina zet deze klasse
+   op de kaart-container zodra een invoer-modus actief is. De werk-tooltips
+   van de bezit-laag ("nog in te delen") vallen hier bewust buiten. */
+.verberg-beheer-tooltips .leaflet-tooltip.beheer-tooltip {
+  display: none;
+}
+
+/* Merkjes voor geprikte puntobjecten: gekleurd rondje met wit pictogram
+   (kleur per soort, wens Steven). Groeien bij hover — geen JS nodig. */
+.stip-merkje {
+  background: none;
+  border: none;
+}
+.stip-merkje .stip-badge {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.12s ease;
+}
+.stip-merkje:hover .stip-badge {
+  transform: scale(1.35);
+}

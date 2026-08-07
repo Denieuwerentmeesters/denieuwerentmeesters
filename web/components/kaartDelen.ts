@@ -48,6 +48,7 @@ export type KaartObject = {
 
 export function objectDetails(o: KaartObject): string {
   const isGebouw = GEBOUW_CATS.has(o.categorie);
+  const isPerceel = PERCEEL_CATS.has(o.categorie);
   const delen = isGebouw
     ? [
         o.gebruik,
@@ -58,11 +59,21 @@ export function objectDetails(o: KaartObject): string {
         o.staatOp ? `staat op beheerperceel ${o.staatOp}` : null,
         o.hoortBij ? `hoort bij ${o.hoortBij}` : null,
       ]
-    : [
-        o.gebruik,
-        o.oppervlakteHa,
-        o.kadastraal ?? "nog geen percelen gekoppeld",
-      ];
+    : isPerceel
+      ? [
+          o.gebruik,
+          o.oppervlakteHa,
+          o.kadastraal ?? "nog geen percelen gekoppeld",
+        ]
+      : [
+          // Geprikt beheerobject (boom, brug, vijver…): de kadastrale taal
+          // van beheerpercelen slaat hier nergens op — dit object staat óp
+          // een beheerperceel, of is nog los.
+          o.gebruik,
+          o.staatOp
+            ? `staat op beheerperceel ${o.staatOp}`
+            : "nog niet aan een beheerperceel gekoppeld",
+        ];
   return [o.categorie, ...delen, o.herkomstLabel].filter(Boolean).join(" · ");
 }
 
@@ -100,6 +111,59 @@ export function kleurVoorGebruik(gebruik: string | null): string {
   return GEBRUIK_KLEUR[gebruik ?? ""] ?? KLEUR_GEEN_GEBRUIK;
 }
 
+// ── Merkjes voor geprikte puntobjecten (wens Steven, 6 aug) ──
+// Kleur per soort doet de eerste herkenning op afstand; het witte pictogram
+// de tweede van dichtbij. Bewust rondjes gehouden: sterren en vijfhoeken
+// worden op kaartformaat (±12 px) onherkenbare vlekjes.
+export const OBJECT_KLEUR: Record<string, string> = {
+  boom: "#16a34a",
+  tuin: "#16a34a",
+  vijver_sloot: "#2563eb",
+  weg_pad: "#8B5E3C",
+  voetpad: "#8B5E3C",
+  fietspad: "#8B5E3C",
+  brug: "#8B5E3C",
+  hek: "#111827",
+  risicoplek: "#ea580c",
+  voorziening: "#6b7280",
+};
+
+// Simpele witte lijn-pictogrammen (viewBox 0 0 16 16).
+const STIP_GLYPH_STANDAARD =
+  '<circle cx="8" cy="8" r="2.2" fill="#fff" stroke="none"/>';
+const STIP_GLYPHS: Record<string, string> = {
+  boom: '<circle cx="8" cy="6.5" r="3.5"/><path d="M8 10v3.5"/>',
+  tuin: '<circle cx="8" cy="6.5" r="3.5"/><path d="M8 10v3.5"/>',
+  vijver_sloot:
+    '<path d="M2.5 6.5q2.75-2.6 5.5 0t5.5 0"/><path d="M2.5 10.5q2.75-2.6 5.5 0t5.5 0"/>',
+  weg_pad:
+    '<path d="M4.5 13.5c3.5-1.5 0-5 3.5-6.5s1-4.5 3.5-4.5" stroke-dasharray="2.6 2"/>',
+  voetpad:
+    '<path d="M4.5 13.5c3.5-1.5 0-5 3.5-6.5s1-4.5 3.5-4.5" stroke-dasharray="2.6 2"/>',
+  fietspad:
+    '<circle cx="4.8" cy="10.8" r="2.4"/><circle cx="11.2" cy="10.8" r="2.4"/><path d="M4.8 10.8l2.6-5.2h3.2M11.2 10.8l-1.4-5.2"/>',
+  brug: '<path d="M2 11.5h12"/><path d="M4 11.5q0-5 4-5t4 5"/>',
+  hek: '<path d="M4.5 4v8M8 4v8M11.5 4v8M3 6.5h10M3 9.5h10"/>',
+  risicoplek:
+    '<path d="M8 3.5v5.5"/><circle cx="8" cy="12" r="1.3" fill="#fff" stroke="none"/>',
+  voorziening:
+    '<circle cx="8" cy="8" r="2.8"/><path d="M8 2.5v2.2M8 11.3v2.2M2.5 8h2.2M11.3 8h2.2M4.1 4.1l1.6 1.6M10.3 10.3l1.6 1.6M11.9 4.1l-1.6 1.6M5.7 10.3l-1.6 1.6"/>',
+};
+
+// Leaflet-divIcon voor een puntobject: gekleurd rondje met wit pictogram.
+// Groeien bij hover doet de CSS (.stip-merkje:hover), geen JS nodig.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function maakStipIcoon(L: any, categorie: string) {
+  const kleur = OBJECT_KLEUR[categorie] ?? "#6b7280";
+  const glyph = STIP_GLYPHS[categorie] ?? STIP_GLYPH_STANDAARD;
+  return L.divIcon({
+    className: "stip-merkje",
+    html: `<div class="stip-badge" style="background:${kleur}"><svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${glyph}</svg></div>`,
+    iconSize: [22, 22],
+    iconAnchor: [11, 11],
+  });
+}
+
 // Eerst de grond-groepen (de beheerpercelen, per gebruik), dan pas de
 // gebouwen: "de grond, en dan wat erop staat" — zelfde denklaag als de kaart.
 export const KAARTGROEP_LABELS = [
@@ -131,7 +195,7 @@ export function kaartGroep(o: {
   if (["natuur", "natuurbeheertype", "onderhoudszone", "boom"].includes(cat)) return "Natuur";
   if (["tuin", "wandelroute", "bomenlaan", "risicoplek"].includes(cat)) return "Recreatie";
   if (["bedrijf", "werken"].includes(cat)) return "Werken";
-  if (["infrastructuur", "weg_pad", "brug", "hek", "kabel_leiding", "voorziening"].includes(cat)) return "Infrastructuur";
+  if (["infrastructuur", "weg_pad", "voetpad", "fietspad", "brug", "hek", "kabel_leiding", "voorziening"].includes(cat)) return "Infrastructuur";
   if (["water", "waterloop", "vijver_sloot"].includes(cat)) return "Water & Klimaat";
 
   // Percelen: indeling via gebruik-veld. Een woonperceel is grond en hoort
@@ -168,7 +232,7 @@ export function groepeerOpties<
 // bijgebouwen (ingesprongen). Gebouwen zonder cluster blijven gewoon staan.
 export function ordenGebouwen<T extends { id: string; hoortBijId?: string | null }>(
   lijst: T[],
-): { item: T; ingesprongen: boolean }[] {
+): { item: T; ingesprongen: boolean; ouderId?: string }[] {
   const bijgebouwenVan = new Map<string, T[]>();
   const hoofd: T[] = [];
   for (const g of lijst) {
@@ -180,14 +244,81 @@ export function ordenGebouwen<T extends { id: string; hoortBijId?: string | null
       hoofd.push(g);
     }
   }
-  const uit: { item: T; ingesprongen: boolean }[] = [];
+  const uit: { item: T; ingesprongen: boolean; ouderId?: string }[] = [];
   for (const h of hoofd) {
     uit.push({ item: h, ingesprongen: false });
     for (const b of bijgebouwenVan.get(h.id) ?? []) {
-      uit.push({ item: b, ingesprongen: true });
+      uit.push({ item: b, ingesprongen: true, ouderId: h.id });
     }
   }
   return uit;
+}
+
+// Percelen-tab (besluit 6 aug, issue #130): het beheerperceel is het
+// hoofditem; de geprikte objecten die erop staan (boom, vijver, brug…)
+// springen eronder in — zelfde taal als bijgebouwen onder hun hoofdgebouw —
+// en verhuizen mee naar de groep van hún perceel. Objecten zonder koppeling
+// komen apart terecht ("los"), zodat zichtbaar is dat daar nog iets te
+// koppelen valt.
+export function ordenPercelenMetObjecten<
+  T extends {
+    id: string;
+    naam: string;
+    categorie: string;
+    gebruik?: string | null;
+    staatOpId?: string | null;
+  },
+>(
+  objecten: T[],
+): {
+  groepen: [string, { item: T; ingesprongen: boolean; ouderId?: string }[]][];
+  los: T[];
+} {
+  const hoofd: T[] = [];
+  const perPerceel = new Map<string, T[]>();
+  const los: T[] = [];
+  for (const o of objecten) {
+    if (GEBOUW_CATS.has(o.categorie)) continue; // eigen tabblad
+    if (PERCEEL_CATS.has(o.categorie)) {
+      hoofd.push(o);
+    } else if (o.staatOpId) {
+      const lijst = perPerceel.get(o.staatOpId) ?? [];
+      lijst.push(o);
+      perPerceel.set(o.staatOpId, lijst);
+    } else {
+      los.push(o);
+    }
+  }
+  // Koppeling naar iets dat geen getoond beheerperceel is → toch los.
+  const hoofdIds = new Set(hoofd.map((h) => h.id));
+  for (const [perceelId, lijst] of [...perPerceel]) {
+    if (!hoofdIds.has(perceelId)) {
+      los.push(...lijst);
+      perPerceel.delete(perceelId);
+    }
+  }
+  const groepenMap = new Map<
+    string,
+    { item: T; ingesprongen: boolean; ouderId?: string }[]
+  >(KAARTGROEP_LABELS.map((l) => [l as string, []]));
+  for (const p of hoofd) {
+    const lijst = groepenMap.get(kaartGroep({ categorie: p.categorie, gebruik: p.gebruik }))!;
+    lijst.push({ item: p, ingesprongen: false });
+    for (const kind of (perPerceel.get(p.id) ?? []).sort((a, b) =>
+      a.naam.localeCompare(b.naam),
+    )) {
+      lijst.push({ item: kind, ingesprongen: true, ouderId: p.id });
+    }
+  }
+  return {
+    groepen: KAARTGROEP_LABELS.filter((l) => l !== "Gebouwen").map(
+      (l) => [l as string, groepenMap.get(l)!] as [
+        string,
+        { item: T; ingesprongen: boolean; ouderId?: string }[],
+      ],
+    ),
+    los,
+  };
 }
 
 export function haTekst(m2: unknown): string {
