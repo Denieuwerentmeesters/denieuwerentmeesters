@@ -51,19 +51,39 @@ export async function bewerkContractDossier(fd: FormData) {
         pachtvorm: uitLijst(tekst(fd, "pachtvorm"), PACHTVORM_LABEL),
         looptijd_type: uitLijst(tekst(fd, "looptijd_type"), LOOPTIJD_LABEL),
         // bedrag ontbreekt bewust: dat is sinds plak 2 de spiegel van de
-        // actuele geaccordeerde prijsafspraak.
-        servicekosten: getal(fd, "servicekosten"),
+        // actuele geaccordeerde prijsafspraak. De overige prijsvelden
+        // (servicekosten, indexatie, achterstand) horen bij Prijs &
+        // indexatie en hebben hun eigen formulier + actie hieronder.
         ingangsdatum: tekst(fd, "ingangsdatum"),
         einddatum: tekst(fd, "einddatum"),
-        indexatie_type: tekst(fd, "indexatie_type"),
-        volgende_indexatie: tekst(fd, "volgende_indexatie"),
-        achterstand: getal(fd, "achterstand"),
-        achterstand_notitie: tekst(fd, "achterstand_notitie"),
         notitie: tekst(fd, "notitie"),
       })
       .eq("id", contract_id)
       .eq("landgoed_id", landgoed_id),
     "contract bijwerken",
+  );
+  revalidatePath(pad(landgoed_id, contract_id));
+}
+
+// ── Overige prijsgegevens (sectie Prijs & indexatie) ──
+export async function bewerkContractPrijsgegevens(fd: FormData) {
+  const landgoed_id = String(fd.get("landgoed_id"));
+  const contract_id = String(fd.get("contract_id"));
+  if (!isUuid(contract_id)) return;
+  const supabase = await createClient();
+  await moet(
+    supabase
+      .from("contract")
+      .update({
+        servicekosten: getal(fd, "servicekosten"),
+        indexatie_type: tekst(fd, "indexatie_type"),
+        volgende_indexatie: tekst(fd, "volgende_indexatie"),
+        achterstand: getal(fd, "achterstand"),
+        achterstand_notitie: tekst(fd, "achterstand_notitie"),
+      })
+      .eq("id", contract_id)
+      .eq("landgoed_id", landgoed_id),
+    "prijsgegevens bijwerken",
   );
   revalidatePath(pad(landgoed_id, contract_id));
 }
