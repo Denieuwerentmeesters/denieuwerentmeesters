@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { OverzichtRij } from "./OverzichtRij";
 import { voegNotitieToe } from "../../actions";
 import {
   werkorderStatusWijzigen,
@@ -176,9 +177,6 @@ export default async function WerkorderDetailPage({
           )}
           <div className="mt-3 flex flex-wrap gap-4 text-[12.5px]" style={{ color: "var(--text-2)" }}>
             {werkorder.deadline && <span>Deadline: <strong>{werkorder.deadline}</strong></span>}
-            {uitvoerderNaam && <span>Uitvoerder: <strong>{uitvoerderNaam}</strong></span>}
-            {werkorder.kosten_verwacht != null && <span>Verwachte kosten: <strong>€ {werkorder.kosten_verwacht}</strong></span>}
-            {werkorder.kosten_werkelijk != null && <span>Werkelijke kosten: <strong>€ {werkorder.kosten_werkelijk}</strong></span>}
             {werkorder.locatie_omschrijving && (
               <span>Locatie: <strong>{werkorder.locatie_omschrijving}</strong></span>
             )}
@@ -192,7 +190,160 @@ export default async function WerkorderDetailPage({
                 📍 Toon op kaart
               </a>
             )}
+          </div>
 
+          {/* Overzichtsblok: alles wat aan deze melding vastligt, op één plek en
+              per regel aan te passen. Vervangt de losse kaarten verderop, die
+              zichtbaar bleven ook als er niets meer te kiezen viel. */}
+          <div className="mt-4 divide-y" style={{ borderColor: "var(--border)" }}>
+            <OverzichtRij
+              label="Object"
+              waarde={gekoppeldObject?.naam ?? null}
+              leeg="Niet gekoppeld"
+              extra={
+                gekoppeldObject ? (
+                  <a
+                    href={`/landgoed/${landgoed_id}/object/${gekoppeldObject.id}`}
+                    className="text-[12px] hover:underline"
+                    style={{ color: "var(--text-2)" }}
+                  >
+                    naar objectdossier →
+                  </a>
+                ) : null
+              }
+            >
+              <form action={werkorderObjectKoppelen} className="flex flex-wrap items-end gap-3">
+                <input type="hidden" name="landgoed_id" value={landgoed_id} />
+                <input type="hidden" name="id" value={werkorderId} />
+                <select className="input" name="stamobject_id" defaultValue={werkorder.stamobject_id ?? ""}>
+                  <option value="">— geen —</option>
+                  {objecten.map((o) => (
+                    <option key={o.id} value={o.id}>{o.naam}</option>
+                  ))}
+                </select>
+                <button type="submit" className="btn btn-primary btn-sm">Opslaan</button>
+                <span className="basis-full text-[12px]" style={{ color: "var(--text-2)" }}>
+                  Koppelen zorgt dat deze klus meetelt in de onderhoudshistorie van het object.
+                </span>
+              </form>
+            </OverzichtRij>
+
+            <OverzichtRij
+              label="Uitvoerder"
+              waarde={uitvoerderNaam ?? null}
+              leeg="Nog niemand"
+            >
+              {toonVoorstel && (
+                <div className="mb-3 rounded-[8px] p-3 text-[12.5px]" style={{ background: "var(--bg)" }}>
+                  <div style={{ color: "var(--text-2)" }}>
+                    → AI-voorstel ({voorstel!.urgentie}):{" "}
+                    {voorgesteldeNaam ? <strong>{voorgesteldeNaam}</strong> : <strong>geen uitvoerder voorgesteld</strong>}
+                    {" — "}
+                    {voorstel!.toelichting}
+                  </div>
+                  {voorgesteldeNaam && (
+                    <form action={accordeerWerkorderVoorstel} className="mt-2">
+                      <input type="hidden" name="landgoed_id" value={landgoed_id} />
+                      <input type="hidden" name="id" value={werkorderId} />
+                      <button type="submit" className="btn btn-primary btn-sm">
+                        Akkoord — {voorgesteldeNaam}
+                      </button>
+                    </form>
+                  )}
+                </div>
+              )}
+              <form action={werkorderToewijzen} className="flex flex-wrap items-end gap-3">
+                <input type="hidden" name="landgoed_id" value={landgoed_id} />
+                <input type="hidden" name="id" value={werkorderId} />
+                <select className="input" name="toegewezen_aan" defaultValue="">
+                  <option value="">— niemand —</option>
+                  {ledenOpties.length > 0 && (
+                    <optgroup label="Gebruikers">
+                      {ledenOpties.map((l) => (
+                        <option key={l.waarde} value={l.waarde}>{l.naam}</option>
+                      ))}
+                    </optgroup>
+                  )}
+                  {uitvoerderOpties.length > 0 && (
+                    <optgroup label="Uitvoerders">
+                      {uitvoerderOpties.map((u) => (
+                        <option key={u.waarde} value={u.waarde}>{u.naam}</option>
+                      ))}
+                    </optgroup>
+                  )}
+                  {overigeContacten.length > 0 && (
+                    <optgroup label="Overige contacten">
+                      {overigeContacten.map((c) => (
+                        <option key={c.waarde} value={c.waarde}>{c.naam}</option>
+                      ))}
+                    </optgroup>
+                  )}
+                </select>
+                <button type="submit" className="btn btn-primary btn-sm">Opslaan</button>
+                {alleRelaties.length === 0 && (
+                  <span className="basis-full text-[12px]" style={{ color: "var(--text-2)" }}>
+                    Nog geen contacten op dit landgoed. Voeg er een toe bij Contacten.
+                  </span>
+                )}
+              </form>
+            </OverzichtRij>
+
+            <OverzichtRij
+              label="Verwachte kosten"
+              waarde={werkorder.kosten_verwacht != null ? `€ ${werkorder.kosten_verwacht}` : null}
+              leeg="Niet ingeschat"
+            >
+              <form action={werkorderKostenBijwerken} className="flex flex-wrap items-end gap-3">
+                <input type="hidden" name="landgoed_id" value={landgoed_id} />
+                <input type="hidden" name="id" value={werkorderId} />
+                <input
+                  className="input"
+                  type="number"
+                  step="0.01"
+                  name="kosten_verwacht"
+                  defaultValue={werkorder.kosten_verwacht ?? ""}
+                  placeholder="0,00"
+                />
+                <button type="submit" className="btn btn-primary btn-sm">Opslaan</button>
+                <span className="basis-full text-[12px]" style={{ color: "var(--text-2)" }}>
+                  Tot en met € {drempelbedrag} mag zonder akkoord worden uitgevoerd; daarboven
+                  moet de eigenaar eerst goedkeuren.
+                </span>
+              </form>
+            </OverzichtRij>
+
+            {werkorder.kosten_werkelijk != null && (
+              <div className="flex flex-wrap items-center gap-x-3 py-2.5">
+                <span className="min-w-[130px] text-[12.5px]" style={{ color: "var(--text-2)" }}>
+                  Werkelijke kosten
+                </span>
+                <span className="flex-1 text-[13.5px]">
+                  <strong>€ {werkorder.kosten_werkelijk}</strong>
+                </span>
+              </div>
+            )}
+
+            {wachtOpAkkoord && (
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-2 py-2.5">
+                <span className="min-w-[130px] text-[12.5px]" style={{ color: "var(--text-2)" }}>
+                  Akkoord
+                </span>
+                <span className="flex-1 text-[13.5px]">
+                  <span className="tag tag-red">wacht op akkoord van de eigenaar</span>
+                </span>
+                {isEigenaar ? (
+                  <form action={werkorderAkkoordGeven}>
+                    <input type="hidden" name="landgoed_id" value={landgoed_id} />
+                    <input type="hidden" name="id" value={werkorderId} />
+                    <button type="submit" className="btn btn-primary btn-sm">Akkoord geven</button>
+                  </form>
+                ) : (
+                  <span className="text-[12px]" style={{ color: "var(--text-2)" }}>
+                    Alleen de eigenaar kan dit accorderen.
+                  </span>
+                )}
+              </div>
+            )}
           </div>
 
           {fotosVoor.length > 0 && (
@@ -265,146 +416,6 @@ export default async function WerkorderDetailPage({
               <input type="hidden" name="heropenen" value="ja" />
               <button type="submit" className="btn btn-ghost btn-sm">Heropenen</button>
             </form>
-          )}
-        </div>
-
-        {/* Object uit de stamgegevens — hier ontstaat de onderhoudshistorie */}
-        <div className="card mb-5 p-5">
-          <span className="label-up">Object</span>
-          <form action={werkorderObjectKoppelen} className="mt-2 flex flex-wrap items-end gap-3">
-            <input type="hidden" name="landgoed_id" value={landgoed_id} />
-            <input type="hidden" name="id" value={werkorderId} />
-            <select className="input" name="stamobject_id" defaultValue={werkorder.stamobject_id ?? ""}>
-              <option value="">— geen —</option>
-              {objecten.map((o) => (
-                <option key={o.id} value={o.id}>{o.naam}</option>
-              ))}
-            </select>
-            <button type="submit" className="btn btn-ghost btn-sm">Opslaan</button>
-            {gekoppeldObject && (
-              <a href={`/landgoed/${landgoed_id}/object/${gekoppeldObject.id}`} className="btn btn-ghost btn-sm">
-                Naar objectdossier
-              </a>
-            )}
-          </form>
-          <p className="mt-2 text-[12px]" style={{ color: "var(--text-2)" }}>
-            Koppelen zorgt dat deze klus meetelt in de onderhoudshistorie van het object.
-          </p>
-        </div>
-
-        {/* Kosten + drempelbedrag-akkoord */}
-        <div className="card mb-5 p-5">
-          <span className="label-up">Verwachte kosten</span>
-          <form action={werkorderKostenBijwerken} className="mt-2 flex flex-wrap items-end gap-3">
-            <input type="hidden" name="landgoed_id" value={landgoed_id} />
-            <input type="hidden" name="id" value={werkorderId} />
-            <div>
-              <input
-                className="input"
-                type="number"
-                step="0.01"
-                name="kosten_verwacht"
-                defaultValue={werkorder.kosten_verwacht ?? ""}
-                placeholder="0,00"
-              />
-            </div>
-            <button type="submit" className="btn btn-ghost btn-sm">Opslaan</button>
-            <span className="text-[12px]" style={{ color: "var(--text-2)" }}>
-              Boven € {drempelbedrag} is akkoord van de eigenaar nodig.
-            </span>
-          </form>
-
-          {wachtOpAkkoord && (
-            <div className="mt-3 rounded-[8px] p-3" style={{ background: "var(--bg)" }}>
-              <div className="text-[12.5px]" style={{ color: "var(--text-2)" }}>
-                Deze klus wacht op akkoord: de verwachte kosten (€ {werkorder.kosten_verwacht})
-                liggen boven het drempelbedrag van € {drempelbedrag}.
-              </div>
-              {isEigenaar ? (
-                <form action={werkorderAkkoordGeven} className="mt-2">
-                  <input type="hidden" name="landgoed_id" value={landgoed_id} />
-                  <input type="hidden" name="id" value={werkorderId} />
-                  <button type="submit" className="btn btn-primary btn-sm">Akkoord geven</button>
-                </form>
-              ) : (
-                <p className="mt-1 text-[12px]" style={{ color: "var(--text-2)" }}>
-                  Alleen de eigenaar kan dit accorderen.
-                </p>
-              )}
-            </div>
-          )}
-        </div>
-
-        {/* Toewijzen — het "Aanpassen"-spoor vanuit de triage komt hier uit */}
-        <div className="card mb-5 p-5">
-          <span className="label-up">Uitvoerder</span>
-          {toonVoorstel && (
-            <div className="mt-2 rounded-[8px] p-3 text-[12.5px]" style={{ background: "var(--bg)" }}>
-              <div style={{ color: "var(--text-2)" }}>
-                → AI-voorstel ({voorstel!.urgentie}):{" "}
-                {voorgesteldeNaam ? <strong>{voorgesteldeNaam}</strong> : <strong>geen uitvoerder voorgesteld</strong>}
-                {" — "}
-                {voorstel!.toelichting}
-              </div>
-              {voorgesteldeNaam && (
-                <form action={accordeerWerkorderVoorstel} className="mt-2">
-                  <input type="hidden" name="landgoed_id" value={landgoed_id} />
-                  <input type="hidden" name="id" value={werkorderId} />
-                  <button type="submit" className="btn btn-primary btn-sm">
-                    Akkoord — {voorgesteldeNaam}
-                  </button>
-                </form>
-              )}
-            </div>
-          )}
-          <form action={werkorderToewijzen} className="mt-2 flex flex-wrap items-end gap-3">
-            <input type="hidden" name="landgoed_id" value={landgoed_id} />
-            <input type="hidden" name="id" value={werkorderId} />
-            <div>
-              <select className="input" name="toegewezen_aan" defaultValue="">
-                <option value="">— niemand —</option>
-                {ledenOpties.length > 0 && (
-                  <optgroup label="Gebruikers">
-                    {ledenOpties.map((l) => (
-                      <option key={l.waarde} value={l.waarde}>{l.naam}</option>
-                    ))}
-                  </optgroup>
-                )}
-                {uitvoerderOpties.length > 0 && (
-                  <optgroup label="Uitvoerders">
-                    {uitvoerderOpties.map((u) => (
-                      <option key={u.waarde} value={u.waarde}>{u.naam}</option>
-                    ))}
-                  </optgroup>
-                )}
-                {overigeContacten.length > 0 && (
-                  <optgroup label="Overige contacten">
-                    {overigeContacten.map((c) => (
-                      <option key={c.waarde} value={c.waarde}>{c.naam}</option>
-                    ))}
-                  </optgroup>
-                )}
-              </select>
-            </div>
-            <button type="submit" className="btn btn-primary btn-sm">
-              {uitvoerderNaam ? "Wijzigen" : "Toewijzen"}
-            </button>
-            {uitvoerderNaam && (
-              <span className="text-[12.5px]" style={{ color: "var(--text-2)" }}>
-                Nu: <strong>{uitvoerderNaam}</strong>
-              </span>
-            )}
-          </form>
-          {alleRelaties.length === 0 && (
-            <p className="mt-2 text-[12px]" style={{ color: "var(--text-2)" }}>
-              Nog geen contacten op dit landgoed. Voeg er een toe bij Contacten.
-            </p>
-          )}
-          {alleRelaties.length > 0 && uitvoerderOpties.length === 0 && (
-            <p className="mt-2 text-[12px]" style={{ color: "var(--text-2)" }}>
-              Tip: geef een contact de rol &quot;Onderhoud&quot; of &quot;Beheerder / tuinman&quot;,
-              dan staat het als vaste uitvoerder bovenaan.
-            </p>
           )}
         </div>
 
