@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
-import { nieuweWerkorder, accordeerWerkorderVoorstel, verwerpWerkorderVoorstel } from "../actions";
+import { nieuweWerkorder, accordeerWerkorderVoorstel } from "../actions";
 import { ToevoegenToggle } from "@/components/ToevoegenToggle";
 
 const STATUS_LABEL: Record<string, string> = {
@@ -76,9 +76,18 @@ export default async function WerkordersPage({
     return { id: p?.id ?? l.gebruiker_id, naam: p?.naam ?? p?.email ?? l.gebruiker_id };
   });
   const uitvoerderOpties = ((relatiesRaw.data ?? []) as { id: string; naam: string }[]).map((r) => ({
-    value: `c:${r.naam}`,
+    waarde: `c:${r.naam}`,
     naam: r.naam,
   }));
+  const ledenOpties = leden.map((l) => ({ waarde: `u:${l.id}`, naam: l.naam }));
+
+  // Vertaalt de "u:<uuid>"/"c:<naam>"-waarde uit het AI-voorstel naar een naam,
+  // zodat het triage-blok toont wíe er wordt voorgesteld in plaats van alleen
+  // "Akkoord" — blind akkoord geven op een onzichtbare keuze is geen keuze.
+  const naamVoorWaarde = (waarde: string | null) =>
+    waarde
+      ? ([...ledenOpties, ...uitvoerderOpties].find((o) => o.waarde === waarde)?.naam ?? null)
+      : null;
 
   return (
     <div className="flex flex-col">
@@ -137,7 +146,7 @@ export default async function WerkordersPage({
                 {uitvoerderOpties.length > 0 && (
                   <optgroup label="Uitvoerders">
                     {uitvoerderOpties.map((r) => (
-                      <option key={r.value} value={r.value}>{r.naam}</option>
+                      <option key={r.waarde} value={r.waarde}>{r.naam}</option>
                     ))}
                   </optgroup>
                 )}
@@ -198,25 +207,39 @@ export default async function WerkordersPage({
                     </div>
                   </div>
                 </div>
-                {toonTriage && (
-                  <div className="ml-0 rounded-[8px] p-3 text-[12.5px]" style={{ background: "var(--bg)" }}>
-                    <span style={{ color: "var(--text-2)" }}>
-                      → AI-voorstel ({voorstel.urgentie}): {voorstel.toelichting}
-                    </span>
-                    <div className="mt-2 flex gap-2">
-                      <form action={accordeerWerkorderVoorstel}>
-                        <input type="hidden" name="landgoed_id" value={id} />
-                        <input type="hidden" name="id" value={w.id} />
-                        <button type="submit" className="btn btn-primary btn-sm">Akkoord</button>
-                      </form>
-                      <form action={verwerpWerkorderVoorstel}>
-                        <input type="hidden" name="landgoed_id" value={id} />
-                        <input type="hidden" name="id" value={w.id} />
-                        <button type="submit" className="btn btn-ghost btn-sm">Aanpassen</button>
-                      </form>
+                {toonTriage && (() => {
+                  const voorgesteld = naamVoorWaarde(voorstel.uitvoerder_waarde);
+                  return (
+                    <div className="rounded-[8px] p-3 text-[12.5px]" style={{ background: "var(--bg)" }}>
+                      <div style={{ color: "var(--text-2)" }}>
+                        → AI-voorstel ({voorstel.urgentie}):{" "}
+                        {voorgesteld ? <strong>{voorgesteld}</strong> : <strong>geen uitvoerder voorgesteld</strong>}
+                        {" — "}
+                        {voorstel.toelichting}
+                      </div>
+                      <div className="mt-2 flex flex-wrap items-center gap-2">
+                        {/* Akkoord alleen als er iets is om akkoord op te geven:
+                            zonder voorgestelde uitvoerder zou de klus op
+                            "Toegewezen" komen met niemand erop. */}
+                        {voorgesteld && (
+                          <form action={accordeerWerkorderVoorstel}>
+                            <input type="hidden" name="landgoed_id" value={id} />
+                            <input type="hidden" name="id" value={w.id} />
+                            <button type="submit" className="btn btn-primary btn-sm">
+                              Akkoord — {voorgesteld}
+                            </button>
+                          </form>
+                        )}
+                        <a
+                          href={`/landgoed/${id}/werkorder/${w.id}`}
+                          className={`btn btn-sm ${voorgesteld ? "btn-ghost" : "btn-primary"}`}
+                        >
+                          Aanpassen
+                        </a>
+                      </div>
                     </div>
-                  </div>
-                )}
+                  );
+                })()}
               </div>
             );
           })}
