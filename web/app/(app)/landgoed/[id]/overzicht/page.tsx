@@ -34,6 +34,7 @@ export default async function OverzichtPage({
     alleTagken,
     ledenRaw,
     relatiesRaw,
+    openKlussen,
   ] = await Promise.all([
     supabase
       .from("taak")
@@ -92,6 +93,14 @@ export default async function OverzichtPage({
       .select("id, naam")
       .eq("landgoed_id", id)
       .order("naam"),
+    // Werkorders: "openstaande klussen verschijnen op het dashboard en in de
+    // agenda" (Werkorders_Plan_v1_0.md hfst 7). Afgerond/geannuleerd hoort daar
+    // niet meer bij.
+    supabase
+      .from("werkorder")
+      .select("id, titel, status, deadline")
+      .eq("landgoed_id", id)
+      .not("status", "in", "(klaar,geannuleerd)"),
   ]);
 
   // Kalender events
@@ -113,6 +122,15 @@ export default async function OverzichtPage({
   for (const v of vergaderingen.data ?? []) {
     if (v.datum)
       events.push({ datum: v.datum, titel: v.titel, soort: "vergadering", href: `/landgoed/${id}/vergaderingen` });
+  }
+  for (const k of (openKlussen.data ?? []) as { id: string; titel: string; deadline: string | null }[]) {
+    if (k.deadline)
+      events.push({
+        datum: k.deadline,
+        titel: k.titel,
+        soort: "klus",
+        href: `/landgoed/${id}/werkorder/${k.id}`,
+      });
   }
 
   // Leden voor dropdown
@@ -158,8 +176,18 @@ export default async function OverzichtPage({
     });
   }
 
+  // "Wat loopt achter": een klus met een verstreken deadline vraagt aandacht.
+  const klussen = (openKlussen.data ?? []) as { id: string; deadline: string | null }[];
+  const klussenAchter = klussen.filter((k) => k.deadline && k.deadline < vandaag).length;
+
   const kpis = [
     { label: "Open taken", waarde: openTaken.count ?? 0, href: `/landgoed/${id}/overzicht` },
+    {
+      label: klussenAchter > 0 ? "Klussen (loopt achter)" : "Open klussen",
+      waarde: klussenAchter > 0 ? klussenAchter : klussen.length,
+      href: `/landgoed/${id}/werkorders`,
+      let: klussenAchter > 0,
+    },
     { label: "Contacten", waarde: contacten.count ?? 0, href: `/landgoed/${id}/contacten` },
     { label: "Contracten", waarde: contracten.count ?? 0, href: `/landgoed/${id}/contracten` },
     {
@@ -190,7 +218,7 @@ export default async function OverzichtPage({
         </header>
 
         {/* KPI tegels */}
-        <div className="mb-8 grid grid-cols-2 gap-4 lg:grid-cols-4">
+        <div className="mb-8 grid grid-cols-2 gap-4 lg:grid-cols-5">
           {kpis.map((k) => (
             <Link key={k.label} href={k.href} className="card block p-5">
               <div className="label-up mb-2">{k.label}</div>

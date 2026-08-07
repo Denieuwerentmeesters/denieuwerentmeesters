@@ -15,6 +15,13 @@ export async function meldWerkorderPubliek(
   const titel = String(fd.get("titel") ?? "").trim();
   if (!titel) return { ok: false, fout: "Vul in wat er aan de hand is." };
 
+  const getal = (k: string) => {
+    const v = String(fd.get(k) ?? "").trim();
+    if (v === "") return null;
+    const n = Number(v);
+    return Number.isFinite(n) ? n : null;
+  };
+
   const supabase = await createClient();
   const { error } = await supabase.rpc("meld_werkorder_publiek", {
     p_token: token,
@@ -22,6 +29,9 @@ export async function meldWerkorderPubliek(
     p_omschrijving: String(fd.get("omschrijving") ?? ""),
     p_melder_naam: String(fd.get("melder_naam") ?? ""),
     p_melder_email: String(fd.get("melder_email") ?? ""),
+    p_locatie: String(fd.get("locatie_omschrijving") ?? ""),
+    p_lat: getal("lat"),
+    p_lon: getal("lon"),
   });
 
   if (error) return { ok: false, fout: "Melding versturen is niet gelukt. Probeer het opnieuw." };

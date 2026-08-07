@@ -499,6 +499,7 @@ export async function nieuweWerkorder(fd: FormData) {
     deadline: tekst(fd, "deadline"),
     soort: tekst(fd, "soort"),
     stamobject_id: tekst(fd, "stamobject_id"),
+    locatie_omschrijving: tekst(fd, "locatie_omschrijving"),
     ...toewijzing,
     status: "gemeld",
     aangemaakt_door: user?.id ?? null,
@@ -510,6 +511,19 @@ export async function nieuweWerkorder(fd: FormData) {
     if (paden.length > 0) {
       await moet(supabase.from("werkorder").update({ fotos_voor: paden }).eq("id", nieuw.id), "foto's koppelen");
     }
+  }
+
+  // GPS-punt apart wegschrijven: PostGIS-geometrie kan niet via een gewone
+  // insert, en de WGS84→RD-transformatie hoort in de database (migratie 0068).
+  const lat = getal(fd, "lat");
+  const lon = getal(fd, "lon");
+  if (nieuw.id && lat != null && lon != null && Number.isFinite(lat) && Number.isFinite(lon)) {
+    const { error } = await supabase.rpc("werkorder_punt_zetten", {
+      p_werkorder_id: nieuw.id,
+      p_lat: lat,
+      p_lon: lon,
+    });
+    if (error) console.error("[werkorder] locatie vastleggen mislukt:", error.message);
   }
 
   if (nieuw.id) {

@@ -22,6 +22,9 @@ export default async function KlusPage({
         deadline: string | null;
         prioriteit: string | null;
         fotos_voor: string[] | null;
+        locatie_omschrijving: string | null;
+        lat: number | null;
+        lon: number | null;
       }
     | undefined;
 
@@ -47,6 +50,19 @@ export default async function KlusPage({
         <div className="mt-3 flex flex-wrap gap-4 text-[12.5px]" style={{ color: "var(--text-2)" }}>
           {klus.deadline && <span>Graag vóór: <strong>{klus.deadline}</strong></span>}
           {klus.prioriteit && <span>Prioriteit: <strong>{klus.prioriteit}</strong></span>}
+          {klus.locatie_omschrijving && (
+            <span>Locatie: <strong>{klus.locatie_omschrijving}</strong></span>
+          )}
+          {klus.lat != null && klus.lon != null && (
+            <a
+              href={`https://www.google.com/maps?q=${klus.lat},${klus.lon}`}
+              target="_blank"
+              rel="noreferrer"
+              className="hover:underline"
+            >
+              📍 Route hierheen
+            </a>
+          )}
           {klus.fotos_voor && klus.fotos_voor.length > 0 && (
             <span>{klus.fotos_voor.length} foto{klus.fotos_voor.length !== 1 ? "'s" : ""} bij de melding</span>
           )}

@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { MeldlinkKaart } from "./MeldlinkKaart";
 import { nieuweWerkorder, accordeerWerkorderVoorstel, drempelbedragInstellen } from "../actions";
 import { ToevoegenToggle } from "@/components/ToevoegenToggle";
+import { LocatieVeld } from "@/components/LocatieVeld";
 
 const STATUS_LABEL: Record<string, string> = {
   gemeld: "Gemeld",
@@ -159,6 +160,7 @@ export default async function WerkordersPage({
                 )}
               </select>
             </div>
+            <LocatieVeld />
             <div>
               <label className="label-up mb-1 block">Object</label>
               <select className="input" name="stamobject_id" defaultValue="">

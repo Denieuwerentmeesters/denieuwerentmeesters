@@ -32,7 +32,7 @@ export default async function WerkorderDetailPage({
 
   const { data: werkorder } = await supabase
     .from("werkorder")
-    .select("id, titel, omschrijving, prioriteit, status, deadline, toegewezen_aan, toegewezen_aan_naam, uitvoerder_relatie_id, kosten_verwacht, kosten_werkelijk, wacht_op_akkoord, fotos_voor, fotos_na, stamobject_id, profiel!werkorder_toegewezen_aan_fkey(naam, email), stamobject(id, naam)")
+    .select("id, titel, omschrijving, prioriteit, status, deadline, toegewezen_aan, toegewezen_aan_naam, uitvoerder_relatie_id, kosten_verwacht, kosten_werkelijk, wacht_op_akkoord, fotos_voor, fotos_na, stamobject_id, locatie_omschrijving, lat, lon, profiel!werkorder_toegewezen_aan_fkey(naam, email), stamobject(id, naam)")
     .eq("id", werkorderId)
     .eq("landgoed_id", landgoed_id)
     .single();
@@ -101,6 +101,10 @@ export default async function WerkorderDetailPage({
   const uitvoerderNaam = persoon?.naam ?? persoon?.email ?? werkorder.toegewezen_aan_naam;
   const drempelbedrag = Number(landgoed?.werkorder_drempelbedrag ?? 0);
   const gekoppeldObject = (werkorder.stamobject as unknown) as { id: string; naam: string } | null;
+  const punt =
+    werkorder.lat != null && werkorder.lon != null
+      ? { lat: werkorder.lat as number, lon: werkorder.lon as number }
+      : null;
   const wachtOpAkkoord = werkorder.wacht_op_akkoord === true;
 
   return (
@@ -134,6 +138,20 @@ export default async function WerkorderDetailPage({
             {uitvoerderNaam && <span>Uitvoerder: <strong>{uitvoerderNaam}</strong></span>}
             {werkorder.kosten_verwacht != null && <span>Verwachte kosten: <strong>€ {werkorder.kosten_verwacht}</strong></span>}
             {werkorder.kosten_werkelijk != null && <span>Werkelijke kosten: <strong>€ {werkorder.kosten_werkelijk}</strong></span>}
+            {werkorder.locatie_omschrijving && (
+              <span>Locatie: <strong>{werkorder.locatie_omschrijving}</strong></span>
+            )}
+            {punt && (
+              <a
+                href={`https://www.google.com/maps?q=${punt.lat},${punt.lon}`}
+                target="_blank"
+                rel="noreferrer"
+                className="hover:underline"
+              >
+                📍 Toon op kaart
+              </a>
+            )}
+
           </div>
 
           {werkorder.fotos_voor?.length > 0 && (
