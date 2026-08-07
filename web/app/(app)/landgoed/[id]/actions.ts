@@ -11,7 +11,6 @@ import {
   inplanningAanMelder,
   afrondingAanMelder,
 } from "@/lib/mail";
-import { WACHT_OP_AKKOORD } from "./werkorder-constanten";
 
 function tekst(fd: FormData, k: string) {
   const v = String(fd.get(k) ?? "").trim();
@@ -469,9 +468,9 @@ export async function nieuwContract(fd: FormData) {
 }
 
 // ── Werkorders ──
-const WERKORDER_STATUSSEN = [
-  "gemeld", "beoordelen", "toegewezen", "in_uitvoering", "wacht_op", "klaar", "geannuleerd",
-] as const;
+// Drie statussen, meer heeft de praktijk niet nodig: iemand meldt iets, degene
+// die het oppakt accepteert, en als het klaar is wordt de melding gesloten.
+const WERKORDER_STATUSSEN = ["gemeld", "geaccepteerd", "afgerond"] as const;
 
 // Accorderen van uitgaven is voorbehouden aan de eigenaar; RLS staat rentmeester
 // wél toe werkorders te wijzigen, dus die grens moet hier expliciet gezet worden.
@@ -579,7 +578,6 @@ async function stelWerkorderRoutingVoorEnBewaar(
   await moet(supabase.from("werkorder").update({
     ai_voorstel: voorstel,
     ai_voorstel_status: "voorgesteld",
-    status: "beoordelen",
   }).eq("id", werkorder_id), "AI-voorstel opslaan");
 }
 
@@ -599,14 +597,13 @@ export async function accordeerWerkorderVoorstel(fd: FormData) {
   const toewijzing = await werkorderToewijzing(supabase, landgoed_id, voorstel?.uitvoerder_waarde ?? null);
 
   // Zonder uitvoerder is er niets om aan toe te wijzen: dan alleen het voorstel
-  // afvinken en de klus op 'beoordelen' laten staan. Anders zou de lijst
-  // "Toegewezen" tonen terwijl er niemand op de klus staat.
+  // afvinken en de klus op 'gemeld' laten staan.
   const heeftUitvoerder = Boolean(toewijzing.toegewezen_aan || toewijzing.toegewezen_aan_naam);
 
   await moet(supabase.from("werkorder").update({
     ...toewijzing,
     ai_voorstel_status: "geaccordeerd",
-    ...(heeftUitvoerder ? { status: "toegewezen" } : {}),
+    // Toewijzen is nog geen accepteren: dat doet de uitvoerder zelf.
     bijgewerkt_op: new Date().toISOString(),
   }).eq("id", id).eq("landgoed_id", landgoed_id), "AI-voorstel accorderen");
 
@@ -634,7 +631,7 @@ export async function werkorderToewijzen(fd: FormData) {
     // Wijkt de beheerder af van het voorstel, dan is dat voorstel afgewezen —
     // dat is precies het signaal waar de AI later van kan leren.
     ai_voorstel_status: "afgewezen",
-    ...(heeftUitvoerder ? { status: "toegewezen" } : {}),
+    // Toewijzen is nog geen accepteren: dat doet de uitvoerder zelf.
     bijgewerkt_op: new Date().toISOString(),
   }).eq("id", id).eq("landgoed_id", landgoed_id), "werkorder toewijzen");
 
@@ -655,22 +652,12 @@ export async function werkorderStatusWijzigen(fd: FormData) {
   if (!WERKORDER_STATUSSEN.includes(nieuweStatusRuw as (typeof WERKORDER_STATUSSEN)[number])) return;
   const supabase = await createClient();
 
-  const update: Record<string, unknown> = {
-    status: nieuweStatusRuw,
-    bijgewerkt_op: new Date().toISOString(),
-  };
-  if (nieuweStatusRuw === "wacht_op") {
-    update.wacht_reden = tekst(fd, "wacht_reden");
-  } else {
-    update.wacht_reden = null;
-  }
-
   await moet(supabase.from("werkorder")
-    .update(update)
+    .update({ status: nieuweStatusRuw, bijgewerkt_op: new Date().toISOString() })
     .eq("id", id)
     .eq("landgoed_id", landgoed_id), "werkorder status bijwerken");
 
-  if (nieuweStatusRuw === "toegewezen") {
+  if (nieuweStatusRuw === "geaccepteerd") {
     await berichtAanMelder(supabase, landgoed_id, id, "inplanning");
   }
 
@@ -717,16 +704,17 @@ async function berichtAanMelder(
   }
 }
 
-// Het controlemoment uit hfst 3: beheerder keurt "klaar" goed of stuurt terug.
+// De melding sluiten. Eventueel met de werkelijke kosten en foto's van het
+// resultaat erbij — allebei optioneel, want vaak is "het is gedaan" genoeg.
 export async function werkorderAfronden(fd: FormData) {
   const landgoed_id = String(fd.get("landgoed_id"));
   const id = String(fd.get("id"));
-  const goedgekeurd = String(fd.get("goedgekeurd")) === "ja";
+  const heropenen = String(fd.get("heropenen")) === "ja";
   const supabase = await createClient();
 
   const fotos = (fd.getAll("fotos_na") as File[]).filter((f) => f && f.size > 0);
   const update: Record<string, unknown> = {
-    status: goedgekeurd ? "klaar" : "toegewezen",
+    status: heropenen ? "geaccepteerd" : "afgerond",
     bijgewerkt_op: new Date().toISOString(),
   };
   if (fotos.length > 0) {
@@ -740,7 +728,7 @@ export async function werkorderAfronden(fd: FormData) {
     .eq("id", id)
     .eq("landgoed_id", landgoed_id), "werkorder afronden");
 
-  if (goedgekeurd) {
+  if (!heropenen) {
     await berichtAanMelder(supabase, landgoed_id, id, "afronding");
   }
 
@@ -807,30 +795,24 @@ export async function werkorderKostenBijwerken(fd: FormData) {
 
   const { data: huidig } = await supabase
     .from("werkorder")
-    .select("status, wacht_reden")
+    .select("status")
     .eq("id", id)
     .eq("landgoed_id", landgoed_id)
     .maybeSingle();
   if (!huidig) return;
 
-  const bovenDrempel = kosten != null && Number.isFinite(kosten) && kosten > drempel;
-  const update: Record<string, unknown> = {
-    kosten_verwacht: kosten,
-    bijgewerkt_op: new Date().toISOString(),
-  };
-
-  if (bovenDrempel && huidig.status !== "klaar" && huidig.status !== "geannuleerd") {
-    update.status = "wacht_op";
-    update.wacht_reden = WACHT_OP_AKKOORD;
-  } else if (!bovenDrempel && huidig.wacht_reden === WACHT_OP_AKKOORD) {
-    // Bedrag naar beneden bijgesteld tot onder de drempel: dan is er niets meer
-    // te accorderen en mag de klus weer door.
-    update.status = "toegewezen";
-    update.wacht_reden = null;
-  }
+  // Het akkoord staat los van de voortgang: een klus kan geaccepteerd zijn én
+  // nog op akkoord voor de uitgave wachten. Een afgeronde klus hoeft niet
+  // alsnog geaccordeerd te worden.
+  const bovenDrempel =
+    kosten != null && Number.isFinite(kosten) && kosten > drempel && huidig.status !== "afgerond";
 
   await moet(supabase.from("werkorder")
-    .update(update)
+    .update({
+      kosten_verwacht: kosten,
+      wacht_op_akkoord: bovenDrempel,
+      bijgewerkt_op: new Date().toISOString(),
+    })
     .eq("id", id)
     .eq("landgoed_id", landgoed_id), "kosten bijwerken");
 
@@ -848,8 +830,7 @@ export async function werkorderAkkoordGeven(fd: FormData) {
   }
 
   await moet(supabase.from("werkorder").update({
-    status: "toegewezen",
-    wacht_reden: null,
+    wacht_op_akkoord: false,
     bijgewerkt_op: new Date().toISOString(),
   }).eq("id", id).eq("landgoed_id", landgoed_id), "uitgave accorderen");
 

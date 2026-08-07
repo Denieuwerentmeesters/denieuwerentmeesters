@@ -9,36 +9,17 @@ import {
   werkorderAkkoordGeven,
   werkorderObjectKoppelen,
 } from "../../actions";
-import { WACHT_OP_AKKOORD } from "../../werkorder-constanten";
 
 const STATUS_LABEL: Record<string, string> = {
   gemeld: "Gemeld",
-  beoordelen: "Beoordelen",
-  toegewezen: "Toegewezen",
-  in_uitvoering: "In uitvoering",
-  wacht_op: "Wacht op…",
-  klaar: "Klaar",
-  geannuleerd: "Geannuleerd",
+  geaccepteerd: "Geaccepteerd",
+  afgerond: "Afgerond",
 };
 
 const STATUS_TAG: Record<string, string> = {
   gemeld: "tag-blue",
-  beoordelen: "tag-amber",
-  toegewezen: "tag-blue",
-  in_uitvoering: "tag-amber",
-  wacht_op: "tag-red",
-  klaar: "tag-green",
-  geannuleerd: "tag-gray",
-};
-
-// Volgende-stap-knoppen per status — houdt het statusmodel bewaakt vanuit de UI
-// (de server action bewaakt het nogmaals, dit is alleen het gemak).
-const VOLGENDE_STAPPEN: Record<string, { status: string; label: string }[]> = {
-  gemeld: [{ status: "beoordelen", label: "In beoordeling nemen" }],
-  beoordelen: [{ status: "toegewezen", label: "Toewijzen" }],
-  toegewezen: [{ status: "in_uitvoering", label: "Start uitvoering" }, { status: "wacht_op", label: "Wacht op…" }],
-  in_uitvoering: [{ status: "wacht_op", label: "Wacht op…" }],
-  wacht_op: [{ status: "toegewezen", label: "Verder (akkoord/materiaal binnen)" }],
+  geaccepteerd: "tag-amber",
+  afgerond: "tag-green",
 };
 
 export default async function WerkorderDetailPage({
@@ -51,7 +32,7 @@ export default async function WerkorderDetailPage({
 
   const { data: werkorder } = await supabase
     .from("werkorder")
-    .select("id, titel, omschrijving, prioriteit, status, deadline, wacht_reden, toegewezen_aan, toegewezen_aan_naam, uitvoerder_relatie_id, kosten_verwacht, kosten_werkelijk, fotos_voor, fotos_na, stamobject_id, locatie_omschrijving, lat, lon, profiel!werkorder_toegewezen_aan_fkey(naam, email), stamobject(id, naam)")
+    .select("id, titel, omschrijving, prioriteit, status, deadline, toegewezen_aan, toegewezen_aan_naam, uitvoerder_relatie_id, kosten_verwacht, kosten_werkelijk, wacht_op_akkoord, fotos_voor, fotos_na, stamobject_id, locatie_omschrijving, lat, lon, profiel!werkorder_toegewezen_aan_fkey(naam, email), stamobject(id, naam)")
     .eq("id", werkorderId)
     .eq("landgoed_id", landgoed_id)
     .single();
@@ -124,10 +105,7 @@ export default async function WerkorderDetailPage({
     werkorder.lat != null && werkorder.lon != null
       ? { lat: werkorder.lat as number, lon: werkorder.lon as number }
       : null;
-  const wachtOpAkkoord =
-    werkorder.status === "wacht_op" && werkorder.wacht_reden === WACHT_OP_AKKOORD;
-  const stappen = VOLGENDE_STAPPEN[werkorder.status] ?? [];
-  const kanAfronden = werkorder.status === "in_uitvoering" || werkorder.status === "toegewezen";
+  const wachtOpAkkoord = werkorder.wacht_op_akkoord === true;
 
   return (
     <div className="flex flex-col">
@@ -173,9 +151,7 @@ export default async function WerkorderDetailPage({
                 📍 Toon op kaart
               </a>
             )}
-            {werkorder.status === "wacht_op" && werkorder.wacht_reden && (
-              <span>Reden: <strong>{werkorder.wacht_reden}</strong></span>
-            )}
+
           </div>
 
           {werkorder.fotos_voor?.length > 0 && (
@@ -189,57 +165,38 @@ export default async function WerkorderDetailPage({
             </div>
           )}
 
-          {/* Statusknoppen */}
-          {stappen.length > 0 && (
-            <div className="mt-4 flex flex-wrap gap-2">
-              {stappen.map((s) => (
-                <form key={s.status} action={werkorderStatusWijzigen}>
-                  <input type="hidden" name="landgoed_id" value={landgoed_id} />
-                  <input type="hidden" name="id" value={werkorderId} />
-                  <input type="hidden" name="status" value={s.status} />
-                  {s.status === "wacht_op" ? (
-                    <div className="flex items-center gap-2">
-                      <input className="input" name="wacht_reden" placeholder="Reden (materiaal, offerte, …)" />
-                      <button type="submit" className="btn btn-ghost btn-sm">{s.label}</button>
-                    </div>
-                  ) : (
-                    <button type="submit" className="btn btn-primary btn-sm">{s.label}</button>
-                  )}
-                </form>
-              ))}
-              <form action={werkorderStatusWijzigen}>
-                <input type="hidden" name="landgoed_id" value={landgoed_id} />
-                <input type="hidden" name="id" value={werkorderId} />
-                <input type="hidden" name="status" value="geannuleerd" />
-                <button type="submit" className="btn btn-ghost btn-sm btn-danger">Annuleren</button>
-              </form>
-            </div>
+          {/* Eén knop per moment: accepteren, en daarna afronden. */}
+          {werkorder.status === "gemeld" && (
+            <form action={werkorderStatusWijzigen} className="mt-4">
+              <input type="hidden" name="landgoed_id" value={landgoed_id} />
+              <input type="hidden" name="id" value={werkorderId} />
+              <input type="hidden" name="status" value="geaccepteerd" />
+              <button type="submit" className="btn btn-primary btn-sm">Accepteren</button>
+            </form>
           )}
 
-          {/* Afronden (controlemoment) */}
-          {kanAfronden && (
+          {werkorder.status === "geaccepteerd" && (
             <form action={werkorderAfronden} className="mt-4 flex flex-wrap items-end gap-3 border-t pt-4" style={{ borderColor: "var(--border)" }}>
               <input type="hidden" name="landgoed_id" value={landgoed_id} />
               <input type="hidden" name="id" value={werkorderId} />
               <div>
-                <label className="label-up mb-1 block">Werkelijke kosten</label>
+                <label className="label-up mb-1 block">Werkelijke kosten (optioneel)</label>
                 <input className="input" type="number" step="0.01" name="kosten_werkelijk" />
               </div>
               <div>
-                <label className="label-up mb-1 block">Foto&apos;s na afronding</label>
+                <label className="label-up mb-1 block">Foto&apos;s achteraf (optioneel)</label>
                 <input className="input" type="file" name="fotos_na" accept="image/*" multiple />
               </div>
-              <button type="submit" name="goedgekeurd" value="ja" className="btn btn-primary btn-sm">
-                Afronden
-              </button>
+              <button type="submit" className="btn btn-primary btn-sm">Afronden</button>
             </form>
           )}
-          {werkorder.status === "klaar" && (
+
+          {werkorder.status === "afgerond" && (
             <form action={werkorderAfronden} className="mt-4 border-t pt-4" style={{ borderColor: "var(--border)" }}>
               <input type="hidden" name="landgoed_id" value={landgoed_id} />
               <input type="hidden" name="id" value={werkorderId} />
-              <input type="hidden" name="goedgekeurd" value="nee" />
-              <button type="submit" className="btn btn-ghost btn-sm">Terugsturen (nog niet akkoord)</button>
+              <input type="hidden" name="heropenen" value="ja" />
+              <button type="submit" className="btn btn-ghost btn-sm">Heropenen</button>
             </form>
           )}
         </div>
