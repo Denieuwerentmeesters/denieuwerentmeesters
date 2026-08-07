@@ -42,6 +42,12 @@ export default async function AgendaItemDetailPage({
       </div>
 
       <div className="p-7">
+        <div className="mb-4">
+          <a href={`/landgoed/${landgoed_id}/agenda`} className="btn btn-ghost btn-sm">
+            ← Alle agendapunten
+          </a>
+        </div>
+
         <div className="card mb-5 p-5">
           <h1 className="text-[20px] font-bold">{item.titel}</h1>
           {item.omschrijving && (

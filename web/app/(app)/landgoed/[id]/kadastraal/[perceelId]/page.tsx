@@ -90,10 +90,9 @@ export default async function KadastraalDetailPage({
       >
         <Link
           href={`/landgoed/${id}/kaart${terugNaarInvoer ? "/invoer" : ""}`}
-          className="text-[12.5px]"
-          style={{ color: "var(--text-2)" }}
+          className="btn btn-ghost btn-sm"
         >
-          ← Terug naar {terugNaarInvoer ? "invoerpagina" : "kaart"}
+          ← Terug naar {terugNaarInvoer ? "de invoerpagina" : "de kaart"}
         </Link>
       </div>
 

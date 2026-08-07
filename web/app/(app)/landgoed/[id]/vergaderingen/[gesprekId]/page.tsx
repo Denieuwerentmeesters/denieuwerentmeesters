@@ -98,6 +98,12 @@ export default async function GesprekDetailPage({
       </div>
 
       <div className="p-7 flex flex-col gap-6">
+        <div>
+          <a href={`/landgoed/${id}/vergaderingen`} className="btn btn-ghost btn-sm">
+            ← Alle vergaderingen
+          </a>
+        </div>
+
         {/* Header — titel is klikbaar om te hernoemen */}
         <div className="flex items-start justify-between gap-4 flex-wrap">
           <div>
