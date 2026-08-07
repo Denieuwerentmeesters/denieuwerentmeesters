@@ -3,6 +3,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { isUuid, moet } from "@/lib/db";
 import { revalidatePath } from "next/cache";
+import { stelWerkorderRoutingVoor } from "@/lib/ai";
 
 function tekst(fd: FormData, k: string) {
   const v = String(fd.get(k) ?? "").trim();
@@ -455,7 +456,100 @@ export async function nieuweWerkorder(fd: FormData) {
     }
   }
 
+  if (nieuw.id) {
+    await stelWerkorderRoutingVoorEnBewaar(supabase, landgoed_id, nieuw.id, {
+      titel,
+      omschrijving: tekst(fd, "omschrijving"),
+      soort: tekst(fd, "soort"),
+    });
+  }
+
   revalidatePath(`/landgoed/${landgoed_id}/werkorders`);
+}
+
+// Verzamelt de beschikbare uitvoerders (leden + contacten met rol 'werkorder'),
+// vraagt het AI-routeringsvoorstel en schrijft dat weg als vóórstel — nooit als
+// directe toewijzing (projectbrede regel, zie lib/ai.ts).
+async function stelWerkorderRoutingVoorEnBewaar(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  landgoed_id: string,
+  werkorder_id: string,
+  bron: { titel: string; omschrijving: string | null; soort: string | null },
+) {
+  const [ledenRaw, relatiesRaw] = await Promise.all([
+    supabase.from("lidmaatschap").select("gebruiker_id, profiel(naam, email)").eq("landgoed_id", landgoed_id),
+    supabase
+      .from("relatie")
+      .select("naam, contact_rol!inner(rol_type!inner(koppelbaar_aan))")
+      .eq("landgoed_id", landgoed_id)
+      .contains("contact_rol.rol_type.koppelbaar_aan", ["werkorder"]),
+  ]);
+
+  const beschikbareUitvoerders = [
+    ...(ledenRaw.data ?? []).map((l) => {
+      const p = (l.profiel as unknown) as { naam: string | null; email: string | null } | null;
+      return { waarde: `u:${l.gebruiker_id}`, naam: p?.naam ?? p?.email ?? l.gebruiker_id };
+    }),
+    ...((relatiesRaw.data ?? []) as { naam: string }[]).map((r) => ({
+      waarde: `c:${r.naam}`,
+      naam: r.naam,
+    })),
+  ];
+
+  const voorstel = await stelWerkorderRoutingVoor({
+    titel: bron.titel,
+    omschrijving: bron.omschrijving,
+    soort: bron.soort,
+    stamobjectNaam: null,
+    beschikbareUitvoerders,
+  });
+  if (!voorstel) return; // geen API-key of geen bruikbaar voorstel: blijft op 'gemeld'
+
+  await moet(supabase.from("werkorder").update({
+    ai_voorstel: voorstel,
+    ai_voorstel_status: "voorgesteld",
+    status: "beoordelen",
+  }).eq("id", werkorder_id), "AI-voorstel opslaan");
+}
+
+// ── Werkorders: AI-voorstel accorderen/verwerpen (voorstel->akkoord-patroon) ──
+export async function accordeerWerkorderVoorstel(fd: FormData) {
+  const landgoed_id = String(fd.get("landgoed_id"));
+  const id = String(fd.get("id"));
+  const supabase = await createClient();
+
+  const { data: werkorder } = await supabase
+    .from("werkorder")
+    .select("ai_voorstel")
+    .eq("id", id)
+    .eq("landgoed_id", landgoed_id)
+    .single();
+  const voorstel = werkorder?.ai_voorstel as { uitvoerder_waarde: string | null } | null;
+  const toewijzing = await veiligeToewijzing(supabase, landgoed_id, voorstel?.uitvoerder_waarde ?? null);
+
+  await moet(supabase.from("werkorder").update({
+    ...toewijzing,
+    ai_voorstel_status: "geaccordeerd",
+    status: "toegewezen",
+    bijgewerkt_op: new Date().toISOString(),
+  }).eq("id", id).eq("landgoed_id", landgoed_id), "AI-voorstel accorderen");
+
+  revalidatePath(`/landgoed/${landgoed_id}/werkorders`);
+  revalidatePath(`/landgoed/${landgoed_id}/werkorder/${id}`);
+}
+
+export async function verwerpWerkorderVoorstel(fd: FormData) {
+  const landgoed_id = String(fd.get("landgoed_id"));
+  const id = String(fd.get("id"));
+  const supabase = await createClient();
+
+  await moet(supabase.from("werkorder").update({
+    ai_voorstel_status: "afgewezen",
+    bijgewerkt_op: new Date().toISOString(),
+  }).eq("id", id).eq("landgoed_id", landgoed_id), "AI-voorstel verwerpen");
+
+  revalidatePath(`/landgoed/${landgoed_id}/werkorders`);
+  revalidatePath(`/landgoed/${landgoed_id}/werkorder/${id}`);
 }
 
 // Bewaakt geldige overgangen zodat een gemanipuleerd formulier een werkorder

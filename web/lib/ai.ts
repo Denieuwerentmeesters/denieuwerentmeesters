@@ -913,3 +913,69 @@ export async function classificeerDocument(bron: {
       );
   return normaliseerClassificatie(ruw);
 }
+
+// ── Werkorders: AI-routeringsvoorstel (Werkorders_Plan_v1_0.md hfst 5) ──
+//
+// Bij elke nieuwe melding doet de AI een voorstel voor uitvoerder + urgentie op
+// basis van titel, omschrijving, object en de beschikbare uitvoerders. Net als
+// bij classificeerDocument is dit ALTIJD een voorstel: de aanroepende server
+// action schrijft het weg als ai_voorstel/ai_voorstel_status='voorgesteld' en
+// vult toegewezen_aan pas na een expliciete akkoordklik van de beheerder — nooit
+// automatisch.
+export type WerkorderRoutingVoorstel = {
+  uitvoerder_waarde: string | null; // "u:<uuid>" of "c:<naam>" — direct bruikbaar in veiligeToewijzing
+  urgentie: "hoog" | "middel" | "laag";
+  toelichting: string; // één zin Nederlands
+};
+
+const WERKORDER_ROUTING_SYSTEEM =
+  "Je stelt een uitvoerder en urgentie voor bij een melding op een Nederlands " +
+  "landgoed. Je kiest UITSLUITEND uit de meegegeven lijst met beschikbare " +
+  "uitvoerders — verzin nooit een naam of uuid die niet in die lijst staat.\n\n" +
+  "HARDE REGELS:\n" +
+  "1. Kun je met redelijke zekerheid geen passende uitvoerder bepalen (te vage " +
+  "melding, geen duidelijke match met specialisme of eerdere historie), geef dan " +
+  "uitvoerder_waarde: null. Liever geen voorstel dan een gok.\n" +
+  "2. urgentie is hoog/middel/laag: hoog bij veiligheid, uitval van basisvoorzieningen " +
+  "(cv, water, elektra) of gevaar voor mens/dier; laag bij cosmetisch of seizoenswerk " +
+  "zonder deadline; anders middel.\n" +
+  "3. toelichting is één zin Nederlands die de keuze uitlegt aan de beheerder, " +
+  "bijvoorbeeld op basis van eerdere klussen bij dit object of dit type werk.\n" +
+  "4. Antwoord UITSLUITEND met JSON: {uitvoerder_waarde, urgentie, toelichting}.";
+
+function normaliseerWerkorderRouting(
+  ruw: WerkorderRoutingVoorstel | null,
+  geldigeWaarden: Set<string>,
+): WerkorderRoutingVoorstel | null {
+  if (!ruw || typeof ruw.toelichting !== "string") return null;
+  const urgentie =
+    ruw.urgentie === "hoog" || ruw.urgentie === "laag" ? ruw.urgentie : "middel";
+  const uitvoerder_waarde =
+    typeof ruw.uitvoerder_waarde === "string" && geldigeWaarden.has(ruw.uitvoerder_waarde)
+      ? ruw.uitvoerder_waarde
+      : null;
+  return { uitvoerder_waarde, urgentie, toelichting: ruw.toelichting.trim() };
+}
+
+export async function stelWerkorderRoutingVoor(bron: {
+  titel: string;
+  omschrijving: string | null;
+  soort: string | null;
+  stamobjectNaam: string | null;
+  beschikbareUitvoerders: { waarde: string; naam: string; toelichting?: string }[];
+}): Promise<WerkorderRoutingVoorstel | null> {
+  if (bron.beschikbareUitvoerders.length === 0) return null;
+  const lijst = bron.beschikbareUitvoerders
+    .map((u) => `- ${u.waarde} — ${u.naam}${u.toelichting ? ` (${u.toelichting})` : ""}`)
+    .join("\n");
+  const prompt =
+    `Titel van de melding: ${bron.titel}\n` +
+    `Omschrijving: ${bron.omschrijving ?? "(geen)"}\n` +
+    `Soort werk: ${bron.soort ?? "(onbekend)"}\n` +
+    `Object: ${bron.stamobjectNaam ?? "(niet gekoppeld)"}\n\n` +
+    `Beschikbare uitvoerders:\n${lijst}\n\n` +
+    "Geef je voorstel.";
+  const ruw = await vraagJson<WerkorderRoutingVoorstel>(WERKORDER_ROUTING_SYSTEEM, prompt);
+  const geldigeWaarden = new Set(bron.beschikbareUitvoerders.map((u) => u.waarde));
+  return normaliseerWerkorderRouting(ruw, geldigeWaarden);
+}
