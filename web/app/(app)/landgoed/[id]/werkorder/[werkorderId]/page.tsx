@@ -1,6 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { voegNotitieToe } from "../../actions";
-import { werkorderStatusWijzigen, werkorderAfronden, maakKlusLink } from "../../actions";
+import { werkorderStatusWijzigen, werkorderAfronden, maakKlusLink, werkorderToewijzen } from "../../actions";
 
 const STATUS_LABEL: Record<string, string> = {
   gemeld: "Gemeld",
@@ -64,6 +64,26 @@ export default async function WerkorderDetailPage({
     .eq("object_type", "werkorder")
     .eq("object_id", werkorderId)
     .order("aangemaakt_op", { ascending: true });
+
+  // Voor het toewijzen-formulier: leden + contacten met een 'werkorder'-rol,
+  // zelfde bron als op de lijstpagina.
+  const [ledenRaw, relatiesRaw] = await Promise.all([
+    supabase.from("lidmaatschap").select("gebruiker_id, profiel(id, naam, email)").eq("landgoed_id", landgoed_id),
+    supabase
+      .from("relatie")
+      .select("id, naam, contact_rol!inner(rol_type!inner(koppelbaar_aan))")
+      .eq("landgoed_id", landgoed_id)
+      .contains("contact_rol.rol_type.koppelbaar_aan", ["werkorder"])
+      .order("naam"),
+  ]);
+  const ledenOpties = (ledenRaw.data ?? []).map((l) => {
+    const p = (l.profiel as unknown) as { id: string; naam: string | null; email: string | null } | null;
+    return { waarde: `u:${p?.id ?? l.gebruiker_id}`, naam: p?.naam ?? p?.email ?? l.gebruiker_id };
+  });
+  const uitvoerderOpties = ((relatiesRaw.data ?? []) as { id: string; naam: string }[]).map((r) => ({
+    waarde: `c:${r.naam}`,
+    naam: r.naam,
+  }));
 
   if (!werkorder) {
     return <div className="p-7">Melding/klus niet gevonden.</div>;
@@ -173,6 +193,48 @@ export default async function WerkorderDetailPage({
               <input type="hidden" name="goedgekeurd" value="nee" />
               <button type="submit" className="btn btn-ghost btn-sm">Terugsturen (nog niet akkoord)</button>
             </form>
+          )}
+        </div>
+
+        {/* Toewijzen — het "Aanpassen"-spoor vanuit de triage komt hier uit */}
+        <div className="card mb-5 p-5">
+          <span className="label-up">Uitvoerder</span>
+          <form action={werkorderToewijzen} className="mt-2 flex flex-wrap items-end gap-3">
+            <input type="hidden" name="landgoed_id" value={landgoed_id} />
+            <input type="hidden" name="id" value={werkorderId} />
+            <div>
+              <select className="input" name="toegewezen_aan" defaultValue="">
+                <option value="">— niemand —</option>
+                {ledenOpties.length > 0 && (
+                  <optgroup label="Gebruikers">
+                    {ledenOpties.map((l) => (
+                      <option key={l.waarde} value={l.waarde}>{l.naam}</option>
+                    ))}
+                  </optgroup>
+                )}
+                {uitvoerderOpties.length > 0 && (
+                  <optgroup label="Uitvoerders">
+                    {uitvoerderOpties.map((u) => (
+                      <option key={u.waarde} value={u.waarde}>{u.naam}</option>
+                    ))}
+                  </optgroup>
+                )}
+              </select>
+            </div>
+            <button type="submit" className="btn btn-primary btn-sm">
+              {uitvoerderNaam ? "Wijzigen" : "Toewijzen"}
+            </button>
+            {uitvoerderNaam && (
+              <span className="text-[12.5px]" style={{ color: "var(--text-2)" }}>
+                Nu: <strong>{uitvoerderNaam}</strong>
+              </span>
+            )}
+          </form>
+          {uitvoerderOpties.length === 0 && (
+            <p className="mt-2 text-[12px]" style={{ color: "var(--text-2)" }}>
+              Nog geen externe uitvoerders. Geef een contact de rol &quot;Onderhoud&quot; of
+              &quot;Beheerder / tuinman&quot; om het hier te kunnen kiezen.
+            </p>
           )}
         </div>
 

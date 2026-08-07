@@ -4,6 +4,13 @@ import { createClient } from "@/lib/supabase/server";
 import { isUuid, moet } from "@/lib/db";
 import { revalidatePath } from "next/cache";
 import { stelWerkorderRoutingVoor } from "@/lib/ai";
+import {
+  mailBeschikbaar,
+  verstuurMail,
+  bevestigingAanMelder,
+  inplanningAanMelder,
+  afrondingAanMelder,
+} from "@/lib/mail";
 
 function tekst(fd: FormData, k: string) {
   const v = String(fd.get(k) ?? "").trim();
@@ -527,26 +534,49 @@ export async function accordeerWerkorderVoorstel(fd: FormData) {
   const voorstel = werkorder?.ai_voorstel as { uitvoerder_waarde: string | null } | null;
   const toewijzing = await veiligeToewijzing(supabase, landgoed_id, voorstel?.uitvoerder_waarde ?? null);
 
+  // Zonder uitvoerder is er niets om aan toe te wijzen: dan alleen het voorstel
+  // afvinken en de klus op 'beoordelen' laten staan. Anders zou de lijst
+  // "Toegewezen" tonen terwijl er niemand op de klus staat.
+  const heeftUitvoerder = Boolean(toewijzing.toegewezen_aan || toewijzing.toegewezen_aan_naam);
+
   await moet(supabase.from("werkorder").update({
     ...toewijzing,
     ai_voorstel_status: "geaccordeerd",
-    status: "toegewezen",
+    ...(heeftUitvoerder ? { status: "toegewezen" } : {}),
     bijgewerkt_op: new Date().toISOString(),
   }).eq("id", id).eq("landgoed_id", landgoed_id), "AI-voorstel accorderen");
+
+  if (heeftUitvoerder) {
+    await berichtAanMelder(supabase, landgoed_id, id, "inplanning");
+  }
 
   revalidatePath(`/landgoed/${landgoed_id}/werkorders`);
   revalidatePath(`/landgoed/${landgoed_id}/werkorder/${id}`);
 }
 
-export async function verwerpWerkorderVoorstel(fd: FormData) {
+// Handmatig toewijzen — het "Aanpassen"-spoor uit de triage. Zonder dit was
+// verwerpen een doodlopende weg: het voorstel verdween en er was daarna nergens
+// meer een plek om alsnog iemand op de klus te zetten.
+export async function werkorderToewijzen(fd: FormData) {
   const landgoed_id = String(fd.get("landgoed_id"));
   const id = String(fd.get("id"));
   const supabase = await createClient();
 
+  const toewijzing = await veiligeToewijzing(supabase, landgoed_id, tekst(fd, "toegewezen_aan"));
+  const heeftUitvoerder = Boolean(toewijzing.toegewezen_aan || toewijzing.toegewezen_aan_naam);
+
   await moet(supabase.from("werkorder").update({
+    ...toewijzing,
+    // Wijkt de beheerder af van het voorstel, dan is dat voorstel afgewezen —
+    // dat is precies het signaal waar de AI later van kan leren.
     ai_voorstel_status: "afgewezen",
+    ...(heeftUitvoerder ? { status: "toegewezen" } : {}),
     bijgewerkt_op: new Date().toISOString(),
-  }).eq("id", id).eq("landgoed_id", landgoed_id), "AI-voorstel verwerpen");
+  }).eq("id", id).eq("landgoed_id", landgoed_id), "werkorder toewijzen");
+
+  if (heeftUitvoerder) {
+    await berichtAanMelder(supabase, landgoed_id, id, "inplanning");
+  }
 
   revalidatePath(`/landgoed/${landgoed_id}/werkorders`);
   revalidatePath(`/landgoed/${landgoed_id}/werkorder/${id}`);
@@ -576,8 +606,51 @@ export async function werkorderStatusWijzigen(fd: FormData) {
     .eq("id", id)
     .eq("landgoed_id", landgoed_id), "werkorder status bijwerken");
 
+  if (nieuweStatusRuw === "toegewezen") {
+    await berichtAanMelder(supabase, landgoed_id, id, "inplanning");
+  }
+
   revalidatePath(`/landgoed/${landgoed_id}/werkorders`);
   revalidatePath(`/landgoed/${landgoed_id}/werkorder/${id}`);
+}
+
+// Stuurt de melder een statusbericht (hfst 6: drie momenten). Bewust
+// fire-and-forget: een mailfout mag de statuswijziging nooit blokkeren, dus
+// geen `moet()` en geen throw. Zonder RESEND_API_KEY doet dit niets.
+async function berichtAanMelder(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  landgoed_id: string,
+  werkorder_id: string,
+  moment: "ontvangst" | "inplanning" | "afronding",
+) {
+  if (!mailBeschikbaar()) return;
+  try {
+    const { data: werkorder } = await supabase
+      .from("werkorder")
+      .select("titel, deadline, melder_email")
+      .eq("id", werkorder_id)
+      .eq("landgoed_id", landgoed_id)
+      .maybeSingle();
+    if (!werkorder?.melder_email) return;
+
+    const { data: landgoed } = await supabase
+      .from("landgoed")
+      .select("naam")
+      .eq("id", landgoed_id)
+      .maybeSingle();
+    const naam = landgoed?.naam ?? "het landgoed";
+
+    const bericht =
+      moment === "ontvangst"
+        ? bevestigingAanMelder(werkorder.titel, naam)
+        : moment === "inplanning"
+          ? inplanningAanMelder(werkorder.titel, naam, werkorder.deadline)
+          : afrondingAanMelder(werkorder.titel, naam);
+
+    await verstuurMail({ aan: werkorder.melder_email, ...bericht });
+  } catch (e) {
+    console.error("[werkorder] statusbericht mislukt:", e instanceof Error ? e.message : String(e));
+  }
 }
 
 // Het controlemoment uit hfst 3: beheerder keurt "klaar" goed of stuurt terug.
@@ -602,6 +675,10 @@ export async function werkorderAfronden(fd: FormData) {
     .update(update)
     .eq("id", id)
     .eq("landgoed_id", landgoed_id), "werkorder afronden");
+
+  if (goedgekeurd) {
+    await berichtAanMelder(supabase, landgoed_id, id, "afronding");
+  }
 
   revalidatePath(`/landgoed/${landgoed_id}/werkorders`);
   revalidatePath(`/landgoed/${landgoed_id}/werkorder/${id}`);
