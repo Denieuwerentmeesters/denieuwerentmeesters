@@ -1,4 +1,6 @@
+import { headers } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
+import { MeldlinkKaart } from "./MeldlinkKaart";
 import { nieuweWerkorder, accordeerWerkorderVoorstel, drempelbedragInstellen } from "../actions";
 import { ToevoegenToggle } from "@/components/ToevoegenToggle";
 
@@ -62,6 +64,12 @@ export default async function WerkordersPage({
 
   const { data: rol } = await supabase.rpc("rol_op", { doel_landgoed: id });
   const isEigenaar = rol === "eigenaar";
+
+  // Volledige URL, want een kaal pad is niet te delen met een huurder.
+  const kop = await headers();
+  const host = kop.get("host") ?? "";
+  const protocol = host.startsWith("localhost") ? "http" : "https";
+  const basisUrl = `${protocol}://${host}`;
 
   const [ledenRaw, relatiesRaw] = await Promise.all([
     supabase.from("lidmaatschap").select("gebruiker_id, profiel(id, naam, email)").eq("landgoed_id", id),
@@ -166,15 +174,7 @@ export default async function WerkordersPage({
         </ToevoegenToggle>
 
         {landgoed?.meld_token && (
-          <div className="card mb-5 p-4 text-[12.5px]" style={{ color: "var(--text-2)" }}>
-            <span className="label-up">Meldlink om te delen</span>
-            <div className="mt-1 break-all font-mono text-[12px]" style={{ color: "var(--text)" }}>
-              /melden/{landgoed.meld_token}
-            </div>
-            <p className="mt-1">
-              Huurders, bewoners en anderen kunnen hiermee melden zonder account.
-            </p>
-          </div>
+          <MeldlinkKaart url={`${basisUrl}/melden/${landgoed.meld_token}`} />
         )}
 
         {isEigenaar && (
@@ -230,6 +230,11 @@ export default async function WerkordersPage({
                       )}
                     </div>
                   </div>
+                  {/* Expliciete actieknop naast de titel-link: een titel die
+                      toevallig klikbaar is, is geen zichtbare uitweg. */}
+                  <a href={`/landgoed/${id}/werkorder/${w.id}`} className="btn btn-ghost btn-sm">
+                    Bekijk
+                  </a>
                 </div>
                 {toonTriage && (() => {
                   const voorgesteld = naamVoorWaarde(voorstel.uitvoerder_waarde);
