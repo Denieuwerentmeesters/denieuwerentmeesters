@@ -44,6 +44,16 @@ export default async function ContactDetailPage({
 
   if (!contact) notFound();
 
+  // Wat ligt er bij dit contact? Kan alleen sinds de werkorder een échte
+  // verwijzing naar de relatie heeft (uitvoerder_relatie_id, migratie 0067) —
+  // op een losse naam valt niet betrouwbaar te filteren.
+  const { data: klussen } = await supabase
+    .from("werkorder")
+    .select("id, titel, status, deadline, aangemaakt_op")
+    .eq("landgoed_id", id)
+    .eq("uitvoerder_relatie_id", contactId)
+    .order("aangemaakt_op", { ascending: false });
+
   type RolRow = { id: string; notitie: string | null; rol_type_id: string; rol_type: { id: string; naam: string; groep: string } | null };
   const rollen = (contact.contact_rol ?? []) as unknown as RolRow[];
   const alleRolTypen = rolTypen ?? [];
@@ -149,6 +159,29 @@ export default async function ContactDetailPage({
             </form>
           </details>
         </section>
+
+        {/* Meldingen & klussen die bij dit contact liggen */}
+        {(klussen ?? []).length > 0 && (
+          <section className="card mb-5 p-5">
+            <div className="mb-3 text-[13px] font-semibold">Meldingen &amp; klussen</div>
+            <div className="divide-y" style={{ borderColor: "var(--border)" }}>
+              {(klussen ?? []).map((k) => (
+                <div key={k.id} className="flex items-center gap-3 py-2.5">
+                  <div className="flex-1">
+                    <div className="text-[13.5px] font-semibold">{k.titel}</div>
+                    <div className="mt-0.5 flex flex-wrap gap-2 text-[12px]" style={{ color: "var(--text-2)" }}>
+                      <span>{k.status}</span>
+                      {k.deadline && <span>Deadline {k.deadline}</span>}
+                    </div>
+                  </div>
+                  <a href={`/landgoed/${id}/werkorder/${k.id}`} className="btn btn-ghost btn-sm">
+                    Bekijk
+                  </a>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
 
         {/* Contactgegevens bewerken */}
         <section className="card p-5">

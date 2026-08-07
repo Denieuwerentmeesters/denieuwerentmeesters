@@ -7,6 +7,7 @@ import {
   werkorderToewijzen,
   werkorderKostenBijwerken,
   werkorderAkkoordGeven,
+  werkorderObjectKoppelen,
 } from "../../actions";
 import { WACHT_OP_AKKOORD } from "../../werkorder-constanten";
 
@@ -50,7 +51,7 @@ export default async function WerkorderDetailPage({
 
   const { data: werkorder } = await supabase
     .from("werkorder")
-    .select("id, titel, omschrijving, prioriteit, status, deadline, wacht_reden, toegewezen_aan, toegewezen_aan_naam, kosten_verwacht, kosten_werkelijk, fotos_voor, fotos_na, profiel!werkorder_toegewezen_aan_fkey(naam, email)")
+    .select("id, titel, omschrijving, prioriteit, status, deadline, wacht_reden, toegewezen_aan, toegewezen_aan_naam, uitvoerder_relatie_id, kosten_verwacht, kosten_werkelijk, fotos_voor, fotos_na, stamobject_id, profiel!werkorder_toegewezen_aan_fkey(naam, email), stamobject(id, naam)")
     .eq("id", werkorderId)
     .eq("landgoed_id", landgoed_id)
     .single();
@@ -86,7 +87,7 @@ export default async function WerkorderDetailPage({
 
   // Voor het toewijzen-formulier: leden + contacten met een 'werkorder'-rol,
   // zelfde bron als op de lijstpagina.
-  const [ledenRaw, relatiesRaw] = await Promise.all([
+  const [ledenRaw, relatiesRaw, objectenRaw] = await Promise.all([
     supabase.from("lidmaatschap").select("gebruiker_id, profiel(id, naam, email)").eq("landgoed_id", landgoed_id),
     supabase
       .from("relatie")
@@ -94,13 +95,20 @@ export default async function WerkorderDetailPage({
       .eq("landgoed_id", landgoed_id)
       .contains("contact_rol.rol_type.koppelbaar_aan", ["werkorder"])
       .order("naam"),
+    supabase
+      .from("stamobject")
+      .select("id, naam")
+      .eq("landgoed_id", landgoed_id)
+      .eq("geaccordeerd", true)
+      .order("naam"),
   ]);
+  const objecten = (objectenRaw.data ?? []) as { id: string; naam: string }[];
   const ledenOpties = (ledenRaw.data ?? []).map((l) => {
     const p = (l.profiel as unknown) as { id: string; naam: string | null; email: string | null } | null;
     return { waarde: `u:${p?.id ?? l.gebruiker_id}`, naam: p?.naam ?? p?.email ?? l.gebruiker_id };
   });
   const uitvoerderOpties = ((relatiesRaw.data ?? []) as { id: string; naam: string }[]).map((r) => ({
-    waarde: `c:${r.naam}`,
+    waarde: `c:${r.id}`,
     naam: r.naam,
   }));
 
@@ -111,6 +119,7 @@ export default async function WerkorderDetailPage({
   const persoon = (werkorder.profiel as unknown) as { naam: string | null; email: string | null } | null;
   const uitvoerderNaam = persoon?.naam ?? persoon?.email ?? werkorder.toegewezen_aan_naam;
   const drempelbedrag = Number(landgoed?.werkorder_drempelbedrag ?? 0);
+  const gekoppeldObject = (werkorder.stamobject as unknown) as { id: string; naam: string } | null;
   const wachtOpAkkoord =
     werkorder.status === "wacht_op" && werkorder.wacht_reden === WACHT_OP_AKKOORD;
   const stappen = VOLGENDE_STAPPEN[werkorder.status] ?? [];
@@ -216,6 +225,30 @@ export default async function WerkorderDetailPage({
               <button type="submit" className="btn btn-ghost btn-sm">Terugsturen (nog niet akkoord)</button>
             </form>
           )}
+        </div>
+
+        {/* Object uit de stamgegevens — hier ontstaat de onderhoudshistorie */}
+        <div className="card mb-5 p-5">
+          <span className="label-up">Object</span>
+          <form action={werkorderObjectKoppelen} className="mt-2 flex flex-wrap items-end gap-3">
+            <input type="hidden" name="landgoed_id" value={landgoed_id} />
+            <input type="hidden" name="id" value={werkorderId} />
+            <select className="input" name="stamobject_id" defaultValue={werkorder.stamobject_id ?? ""}>
+              <option value="">— geen —</option>
+              {objecten.map((o) => (
+                <option key={o.id} value={o.id}>{o.naam}</option>
+              ))}
+            </select>
+            <button type="submit" className="btn btn-ghost btn-sm">Opslaan</button>
+            {gekoppeldObject && (
+              <a href={`/landgoed/${landgoed_id}/object/${gekoppeldObject.id}`} className="btn btn-ghost btn-sm">
+                Naar objectdossier
+              </a>
+            )}
+          </form>
+          <p className="mt-2 text-[12px]" style={{ color: "var(--text-2)" }}>
+            Koppelen zorgt dat deze klus meetelt in de onderhoudshistorie van het object.
+          </p>
         </div>
 
         {/* Kosten + drempelbedrag-akkoord */}

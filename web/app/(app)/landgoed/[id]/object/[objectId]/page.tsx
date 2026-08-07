@@ -286,6 +286,16 @@ export default async function ObjectDetailPage({
     }),
   );
 
+  // Onderhoudshistorie: alle klussen die aan dit object hangen. Dit is waar de
+  // werkorders-module zijn waarde voor het objectdossier bewijst — het
+  // materiaal waar MJOP, verzekeraar en subsidiegever later om vragen.
+  const { data: klussen } = await supabase
+    .from("werkorder")
+    .select("id, titel, status, deadline, kosten_werkelijk, aangemaakt_op")
+    .eq("landgoed_id", id)
+    .eq("stamobject_id", objectId)
+    .order("aangemaakt_op", { ascending: false });
+
   const oppervlakte = oppervlakteTekst(object.categorie, kenmerken.oppervlakte_m2);
 
   return (
@@ -889,6 +899,33 @@ export default async function ObjectDetailPage({
               </div>
             </form>
           </details>
+        </section>
+
+        {/* ── Meldingen & klussen (onderhoudshistorie) ── */}
+        <section className="mb-8">
+          <h2 className="mb-2 text-[16px] font-bold">Meldingen &amp; klussen</h2>
+          <div className="card divide-y" style={{ borderColor: "var(--border)" }}>
+            {(klussen ?? []).length === 0 && (
+              <div className="p-4 text-[13px]" style={{ color: "var(--text-2)" }}>
+                Nog geen klussen op dit object.
+              </div>
+            )}
+            {(klussen ?? []).map((k) => (
+              <div key={k.id} className="flex items-center gap-3 px-4 py-3">
+                <div className="flex-1">
+                  <div className="text-[14px] font-semibold">{k.titel}</div>
+                  <div className="mt-0.5 flex flex-wrap gap-2 text-[12px]" style={{ color: "var(--text-2)" }}>
+                    <span>{k.status}</span>
+                    {k.kosten_werkelijk != null && <span>€ {k.kosten_werkelijk}</span>}
+                    <span>{new Date(k.aangemaakt_op).toLocaleDateString("nl-NL")}</span>
+                  </div>
+                </div>
+                <a href={`/landgoed/${id}/werkorder/${k.id}`} className="btn btn-ghost btn-sm">
+                  Bekijk
+                </a>
+              </div>
+            ))}
+          </div>
         </section>
 
         {/* ── Documenten ── */}

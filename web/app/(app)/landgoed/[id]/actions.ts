@@ -66,6 +66,44 @@ async function veiligeToewijzing(
   return leeg;
 }
 
+// ── Hulp: toewijzing voor werkorders ──
+// Als veiligeToewijzing, maar met een échte verwijzing naar het contact
+// (uitvoerder_relatie_id) in plaats van alleen een naam. Werkorders gebruiken
+// daarom "c:<uuid>" waar taken/agenda "c:<naam>" gebruiken; het contact moet
+// van dít landgoed zijn, anders wordt de toewijzing genegeerd.
+async function werkorderToewijzing(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  landgoed_id: string,
+  waarde: string | null,
+): Promise<{
+  toegewezen_aan: string | null;
+  toegewezen_aan_naam: string | null;
+  uitvoerder_relatie_id: string | null;
+}> {
+  const leeg = { toegewezen_aan: null, toegewezen_aan_naam: null, uitvoerder_relatie_id: null };
+  if (!waarde) return leeg;
+
+  if (waarde.startsWith("c:")) {
+    const idOfNaam = waarde.slice(2);
+    if (isUuid(idOfNaam)) {
+      const { data: contact } = await supabase
+        .from("relatie")
+        .select("id, naam")
+        .eq("id", idOfNaam)
+        .eq("landgoed_id", landgoed_id)
+        .maybeSingle();
+      return contact
+        ? { toegewezen_aan: null, toegewezen_aan_naam: contact.naam, uitvoerder_relatie_id: contact.id }
+        : leeg;
+    }
+    // Vangnet voor oudere formulieren die nog "c:<naam>" sturen.
+    return { toegewezen_aan: null, toegewezen_aan_naam: idOfNaam, uitvoerder_relatie_id: null };
+  }
+
+  const basis = await veiligeToewijzing(supabase, landgoed_id, waarde);
+  return { ...basis, uitvoerder_relatie_id: null };
+}
+
 // ── Hulp: meerdere foto's uploaden ──
 async function uploadFotos(
   supabase: Awaited<ReturnType<typeof createClient>>,
@@ -451,7 +489,7 @@ export async function nieuweWerkorder(fd: FormData) {
   const titel = tekst(fd, "titel");
   if (!titel) return;
   const supabase = await createClient();
-  const toewijzing = await veiligeToewijzing(supabase, landgoed_id, tekst(fd, "toegewezen_aan"));
+  const toewijzing = await werkorderToewijzing(supabase, landgoed_id, tekst(fd, "toegewezen_aan"));
   const { data: { user } } = await supabase.auth.getUser();
 
   const nieuw = await moet(supabase.from("werkorder").insert({
@@ -499,7 +537,7 @@ async function stelWerkorderRoutingVoorEnBewaar(
     supabase.from("lidmaatschap").select("gebruiker_id, profiel(naam, email)").eq("landgoed_id", landgoed_id),
     supabase
       .from("relatie")
-      .select("naam, contact_rol!inner(rol_type!inner(koppelbaar_aan))")
+      .select("id, naam, contact_rol!inner(rol_type!inner(koppelbaar_aan))")
       .eq("landgoed_id", landgoed_id)
       .contains("contact_rol.rol_type.koppelbaar_aan", ["werkorder"]),
   ]);
@@ -509,8 +547,8 @@ async function stelWerkorderRoutingVoorEnBewaar(
       const p = (l.profiel as unknown) as { naam: string | null; email: string | null } | null;
       return { waarde: `u:${l.gebruiker_id}`, naam: p?.naam ?? p?.email ?? l.gebruiker_id };
     }),
-    ...((relatiesRaw.data ?? []) as { naam: string }[]).map((r) => ({
-      waarde: `c:${r.naam}`,
+    ...((relatiesRaw.data ?? []) as { id: string; naam: string }[]).map((r) => ({
+      waarde: `c:${r.id}`,
       naam: r.naam,
     })),
   ];
@@ -544,7 +582,7 @@ export async function accordeerWerkorderVoorstel(fd: FormData) {
     .eq("landgoed_id", landgoed_id)
     .single();
   const voorstel = werkorder?.ai_voorstel as { uitvoerder_waarde: string | null } | null;
-  const toewijzing = await veiligeToewijzing(supabase, landgoed_id, voorstel?.uitvoerder_waarde ?? null);
+  const toewijzing = await werkorderToewijzing(supabase, landgoed_id, voorstel?.uitvoerder_waarde ?? null);
 
   // Zonder uitvoerder is er niets om aan toe te wijzen: dan alleen het voorstel
   // afvinken en de klus op 'beoordelen' laten staan. Anders zou de lijst
@@ -574,7 +612,7 @@ export async function werkorderToewijzen(fd: FormData) {
   const id = String(fd.get("id"));
   const supabase = await createClient();
 
-  const toewijzing = await veiligeToewijzing(supabase, landgoed_id, tekst(fd, "toegewezen_aan"));
+  const toewijzing = await werkorderToewijzing(supabase, landgoed_id, tekst(fd, "toegewezen_aan"));
   const heeftUitvoerder = Boolean(toewijzing.toegewezen_aan || toewijzing.toegewezen_aan_naam);
 
   await moet(supabase.from("werkorder").update({
@@ -832,4 +870,38 @@ export async function drempelbedragInstellen(fd: FormData) {
     .eq("id", landgoed_id), "drempelbedrag opslaan");
 
   revalidatePath(`/landgoed/${landgoed_id}/werkorders`);
+}
+
+// Koppelt de werkorder aan een object uit de stamgegevens. Dit is wat het
+// objectdossier zijn onderhoudshistorie geeft ("alles wat er aan Woning A is
+// gedaan") — precies het materiaal waar MJOP, verzekeraar en subsidiegever
+// later om vragen.
+export async function werkorderObjectKoppelen(fd: FormData) {
+  const landgoed_id = String(fd.get("landgoed_id"));
+  const id = String(fd.get("id"));
+  const ruw = tekst(fd, "stamobject_id");
+  const supabase = await createClient();
+
+  // Alleen een geaccordeerd object van dit landgoed; anders zou een aangepast
+  // formulier de werkorder aan andermans object kunnen hangen.
+  let stamobject_id: string | null = null;
+  if (ruw && isUuid(ruw)) {
+    const { data: object } = await supabase
+      .from("stamobject")
+      .select("id")
+      .eq("id", ruw)
+      .eq("landgoed_id", landgoed_id)
+      .eq("geaccordeerd", true)
+      .maybeSingle();
+    if (object) stamobject_id = ruw;
+  }
+
+  await moet(supabase.from("werkorder")
+    .update({ stamobject_id, bijgewerkt_op: new Date().toISOString() })
+    .eq("id", id)
+    .eq("landgoed_id", landgoed_id), "object koppelen");
+
+  revalidatePath(`/landgoed/${landgoed_id}/werkorders`);
+  revalidatePath(`/landgoed/${landgoed_id}/werkorder/${id}`);
+  if (stamobject_id) revalidatePath(`/landgoed/${landgoed_id}/object/${stamobject_id}`);
 }
