@@ -824,6 +824,9 @@ export async function werkorderKostenBijwerken(fd: FormData) {
     .update({
       kosten_verwacht: kosten,
       wacht_op_akkoord: bovenDrempel,
+      // Een eerder akkoord gold voor het oude bedrag; komt er een nieuw bedrag
+      // boven de drempel, dan moet er opnieuw worden goedgekeurd.
+      ...(bovenDrempel ? { akkoord_door: null, akkoord_op: null } : {}),
       bijgewerkt_op: new Date().toISOString(),
     })
     .eq("id", id)
@@ -842,14 +845,20 @@ export async function werkorderAkkoordGeven(fd: FormData) {
     throw new Error("Alleen de eigenaar kan een uitgave boven het drempelbedrag accorderen.");
   }
 
+  const { data: { user } } = await supabase.auth.getUser();
+
+  // Wie en wanneer als vaste velden, niet alleen als tekst in de tijdlijn: dat
+  // is de eerste vraag die bij een uitgave gesteld wordt, en zo staat het
+  // bovenaan de melding in plaats van verstopt tussen de notities.
   await moet(supabase.from("werkorder").update({
     wacht_op_akkoord: false,
+    akkoord_door: user?.id ?? null,
+    akkoord_op: new Date().toISOString(),
     bijgewerkt_op: new Date().toISOString(),
   }).eq("id", id).eq("landgoed_id", landgoed_id), "uitgave accorderen");
 
-  // Het akkoord hoort in de tijdlijn: wie het gaf en wanneer, is precies de
-  // verantwoording die familie- en stichtingsconstructies nodig hebben.
-  const { data: { user } } = await supabase.auth.getUser();
+  // Daarnaast blijft het akkoord in de tijdlijn staan, zodat de volgorde van
+  // gebeurtenissen op één plek leesbaar blijft.
   // Met moet(): dit is de vastlegging van een geldbesluit, die mag niet stil
   // mislukken. Deed hij eerder wél — de constraint op notitie.object_type liet
   // 'werkorder' niet toe (rechtgezet in migratie 0072) en de fout werd niet
