@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
-import { nieuweWerkorder } from "../actions";
+import { nieuweWerkorder, accordeerWerkorderVoorstel, verwerpWerkorderVoorstel } from "../actions";
 import { ToevoegenToggle } from "@/components/ToevoegenToggle";
 
 const STATUS_LABEL: Record<string, string> = {
@@ -44,7 +44,7 @@ export default async function WerkordersPage({
 
   const { data: werkordersRaw } = await supabase
     .from("werkorder")
-    .select("id, titel, prioriteit, status, deadline, wacht_reden, toegewezen_aan, toegewezen_aan_naam, aangemaakt_op, profiel(naam, email)")
+    .select("id, titel, prioriteit, status, deadline, wacht_reden, toegewezen_aan, toegewezen_aan_naam, aangemaakt_op, ai_voorstel, ai_voorstel_status, profiel(naam, email)")
     .eq("landgoed_id", id);
 
   const werkorders = (werkordersRaw ?? []).slice().sort((a, b) => {
@@ -156,26 +156,49 @@ export default async function WerkordersPage({
           {werkorders.map((w) => {
             const persoon = (w.profiel as unknown) as { naam: string | null; email: string | null } | null;
             const uitvoerderNaam = persoon?.naam ?? persoon?.email ?? w.toegewezen_aan_naam;
+            const voorstel = w.ai_voorstel as { uitvoerder_waarde: string | null; urgentie: string; toelichting: string } | null;
+            const toonTriage = w.status === "beoordelen" && w.ai_voorstel_status === "voorgesteld" && voorstel;
             return (
-              <div key={w.id} className="flex items-center gap-3 px-5 py-3.5" style={{ borderColor: "var(--border)" }}>
-                <div className="flex-1">
-                  <a href={`/landgoed/${id}/werkorder/${w.id}`} className="text-[14px] font-semibold hover:underline">
-                    {w.titel}
-                  </a>
-                  <div className="mt-0.5 flex flex-wrap items-center gap-2 text-[12px]" style={{ color: "var(--text-2)" }}>
-                    <span className={`tag ${STATUS_TAG[w.status] ?? "tag-gray"}`}>
-                      {STATUS_LABEL[w.status] ?? w.status}
-                    </span>
-                    {w.status === "wacht_op" && w.wacht_reden && <span>({w.wacht_reden})</span>}
-                    {w.deadline && <span>Deadline {w.deadline}</span>}
-                    {uitvoerderNaam && <span>👤 {uitvoerderNaam}</span>}
-                    {w.prioriteit && (
-                      <span className={`tag ${w.prioriteit === "hoog" ? "tag-red" : "tag-gray"}`}>
-                        {w.prioriteit}
+              <div key={w.id} className="flex flex-col gap-2 px-5 py-3.5" style={{ borderColor: "var(--border)" }}>
+                <div className="flex items-center gap-3">
+                  <div className="flex-1">
+                    <a href={`/landgoed/${id}/werkorder/${w.id}`} className="text-[14px] font-semibold hover:underline">
+                      {w.titel}
+                    </a>
+                    <div className="mt-0.5 flex flex-wrap items-center gap-2 text-[12px]" style={{ color: "var(--text-2)" }}>
+                      <span className={`tag ${STATUS_TAG[w.status] ?? "tag-gray"}`}>
+                        {STATUS_LABEL[w.status] ?? w.status}
                       </span>
-                    )}
+                      {w.status === "wacht_op" && w.wacht_reden && <span>({w.wacht_reden})</span>}
+                      {w.deadline && <span>Deadline {w.deadline}</span>}
+                      {uitvoerderNaam && <span>👤 {uitvoerderNaam}</span>}
+                      {w.prioriteit && (
+                        <span className={`tag ${w.prioriteit === "hoog" ? "tag-red" : "tag-gray"}`}>
+                          {w.prioriteit}
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </div>
+                {toonTriage && (
+                  <div className="ml-0 rounded-[8px] p-3 text-[12.5px]" style={{ background: "var(--bg)" }}>
+                    <span style={{ color: "var(--text-2)" }}>
+                      → AI-voorstel ({voorstel.urgentie}): {voorstel.toelichting}
+                    </span>
+                    <div className="mt-2 flex gap-2">
+                      <form action={accordeerWerkorderVoorstel}>
+                        <input type="hidden" name="landgoed_id" value={id} />
+                        <input type="hidden" name="id" value={w.id} />
+                        <button type="submit" className="btn btn-primary btn-sm">Akkoord</button>
+                      </form>
+                      <form action={verwerpWerkorderVoorstel}>
+                        <input type="hidden" name="landgoed_id" value={id} />
+                        <input type="hidden" name="id" value={w.id} />
+                        <button type="submit" className="btn btn-ghost btn-sm">Aanpassen</button>
+                      </form>
+                    </div>
+                  </div>
+                )}
               </div>
             );
           })}
