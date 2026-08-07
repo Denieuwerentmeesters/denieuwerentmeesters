@@ -29,12 +29,18 @@ export default async function LandgoedLayout({
     .maybeSingle();
   if (!landgoed) redirect("/landgoederen");
 
-  // Open taken + inbox-voorstellen voor badges.
+  // Open taken + inbox-voorstellen + werkorders die aandacht vragen voor badges.
   const { count: openTaken } = await supabase
     .from("taak")
     .select("id", { count: "exact", head: true })
     .eq("landgoed_id", id)
     .eq("status", "open");
+
+  const { count: openWerkorders } = await supabase
+    .from("werkorder")
+    .select("id", { count: "exact", head: true })
+    .eq("landgoed_id", id)
+    .in("status", ["gemeld", "beoordelen"]);
 
   const { count: inboxConcept } = await supabase
     .from("inbound_extractie")
@@ -53,6 +59,8 @@ export default async function LandgoedLayout({
     // "Kaart" = de kijk-pagina; invoeren gebeurt op /kaart/invoer (bereikbaar
     // via "Pas de kaart aan" en via het profiel).
     { href: `/landgoed/${id}/kaart`,     label: "Kaart",      icon: "kaart",       group: "Menu", exact: true },
+    { href: `/landgoed/${id}/werkorders`, label: "Meldingen & klussen", icon: "werkorders", group: "Menu",
+      badge: openWerkorders ?? undefined, badgeKleur: (openWerkorders ?? 0) > 0 ? "oranje" : "grijs" },
     // ── Communicatie ──
     { href: `/landgoed/${id}/inbox`,     label: "Inbox",      icon: "inbox",       group: "Communicatie",
       badge: inboxConcept ?? undefined, badgeKleur: (inboxConcept ?? 0) > 0 ? "rood" : "grijs" },
