@@ -1,6 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { voegNotitieToe } from "../../actions";
-import { werkorderStatusWijzigen, werkorderAfronden } from "../../actions";
+import { werkorderStatusWijzigen, werkorderAfronden, maakKlusLink } from "../../actions";
 
 const STATUS_LABEL: Record<string, string> = {
   gemeld: "Gemeld",
@@ -46,6 +46,16 @@ export default async function WerkorderDetailPage({
     .eq("id", werkorderId)
     .eq("landgoed_id", landgoed_id)
     .single();
+
+  // Alleen nog geldige links tonen — een verlopen link is geen link meer.
+  const { data: klusLinks } = await supabase
+    .from("werkorder_toegangstoken")
+    .select("token, verloopt_op")
+    .eq("werkorder_id", werkorderId)
+    .gt("verloopt_op", new Date().toISOString())
+    .order("aangemaakt_op", { ascending: false })
+    .limit(1);
+  const klusLink = (klusLinks ?? [])[0];
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data: notities } = await (supabase as any)
@@ -164,6 +174,31 @@ export default async function WerkorderDetailPage({
               <button type="submit" className="btn btn-ghost btn-sm">Terugsturen (nog niet akkoord)</button>
             </form>
           )}
+        </div>
+
+        {/* Magic link voor de externe uitvoerder */}
+        <div className="card mb-5 p-5">
+          <span className="label-up">Link voor de uitvoerder</span>
+          {klusLink ? (
+            <>
+              <div className="mt-1 break-all font-mono text-[12px]">/klus/{klusLink.token}</div>
+              <p className="mt-1 text-[12px]" style={{ color: "var(--text-2)" }}>
+                Hiermee kan een externe uitvoerder zonder account de status bijwerken en een nieuw
+                punt melden. Geldig tot {new Date(klusLink.verloopt_op).toLocaleDateString("nl-NL")}.
+              </p>
+            </>
+          ) : (
+            <p className="mt-1 text-[12.5px]" style={{ color: "var(--text-2)" }}>
+              Nog geen link aangemaakt.
+            </p>
+          )}
+          <form action={maakKlusLink} className="mt-3">
+            <input type="hidden" name="landgoed_id" value={landgoed_id} />
+            <input type="hidden" name="id" value={werkorderId} />
+            <button type="submit" className="btn btn-ghost btn-sm">
+              {klusLink ? "Nieuwe link maken" : "Link maken"}
+            </button>
+          </form>
         </div>
 
         {/* Tijdlijn / notities */}
