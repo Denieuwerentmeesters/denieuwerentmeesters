@@ -5,6 +5,7 @@ import {
   werkorderAfronden,
   maakKlusLink,
   werkorderToewijzen,
+  accordeerWerkorderVoorstel,
   werkorderKostenBijwerken,
   werkorderAkkoordGeven,
   werkorderObjectKoppelen,
@@ -32,7 +33,7 @@ export default async function WerkorderDetailPage({
 
   const { data: werkorder } = await supabase
     .from("werkorder")
-    .select("id, titel, omschrijving, prioriteit, status, deadline, toegewezen_aan, toegewezen_aan_naam, uitvoerder_relatie_id, kosten_verwacht, kosten_werkelijk, wacht_op_akkoord, fotos_voor, fotos_na, stamobject_id, locatie_omschrijving, lat, lon, profiel!werkorder_toegewezen_aan_fkey(naam, email), stamobject(id, naam)")
+    .select("id, titel, omschrijving, prioriteit, status, deadline, toegewezen_aan, toegewezen_aan_naam, uitvoerder_relatie_id, kosten_verwacht, kosten_werkelijk, wacht_op_akkoord, ai_voorstel, ai_voorstel_status, fotos_voor, fotos_na, stamobject_id, locatie_omschrijving, lat, lon, profiel!werkorder_toegewezen_aan_fkey(naam, email), stamobject(id, naam)")
     .eq("id", werkorderId)
     .eq("landgoed_id", landgoed_id)
     .single();
@@ -106,6 +107,17 @@ export default async function WerkorderDetailPage({
       ? { lat: werkorder.lat as number, lon: werkorder.lon as number }
       : null;
   const wachtOpAkkoord = werkorder.wacht_op_akkoord === true;
+
+  // AI-routeringsvoorstel: stond eerst in de lijst, maar die is nu een
+  // overzicht zonder knoppen. Het voorstel hoort dus hier, waar je de melding
+  // toch al opent om hem op te pakken.
+  const voorstel = werkorder.ai_voorstel as
+    | { uitvoerder_waarde: string | null; urgentie: string; toelichting: string }
+    | null;
+  const toonVoorstel = werkorder.ai_voorstel_status === "voorgesteld" && voorstel;
+  const voorgesteldeNaam = voorstel?.uitvoerder_waarde
+    ? ([...ledenOpties, ...uitvoerderOpties].find((o) => o.waarde === voorstel.uitvoerder_waarde)?.naam ?? null)
+    : null;
 
   return (
     <div className="flex flex-col">
@@ -271,6 +283,25 @@ export default async function WerkorderDetailPage({
         {/* Toewijzen — het "Aanpassen"-spoor vanuit de triage komt hier uit */}
         <div className="card mb-5 p-5">
           <span className="label-up">Uitvoerder</span>
+          {toonVoorstel && (
+            <div className="mt-2 rounded-[8px] p-3 text-[12.5px]" style={{ background: "var(--bg)" }}>
+              <div style={{ color: "var(--text-2)" }}>
+                → AI-voorstel ({voorstel!.urgentie}):{" "}
+                {voorgesteldeNaam ? <strong>{voorgesteldeNaam}</strong> : <strong>geen uitvoerder voorgesteld</strong>}
+                {" — "}
+                {voorstel!.toelichting}
+              </div>
+              {voorgesteldeNaam && (
+                <form action={accordeerWerkorderVoorstel} className="mt-2">
+                  <input type="hidden" name="landgoed_id" value={landgoed_id} />
+                  <input type="hidden" name="id" value={werkorderId} />
+                  <button type="submit" className="btn btn-primary btn-sm">
+                    Akkoord — {voorgesteldeNaam}
+                  </button>
+                </form>
+              )}
+            </div>
+          )}
           <form action={werkorderToewijzen} className="mt-2 flex flex-wrap items-end gap-3">
             <input type="hidden" name="landgoed_id" value={landgoed_id} />
             <input type="hidden" name="id" value={werkorderId} />
