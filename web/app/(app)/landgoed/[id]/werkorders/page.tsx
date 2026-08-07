@@ -44,7 +44,7 @@ export default async function WerkordersPage({
 
   const { data: werkordersRaw } = await supabase
     .from("werkorder")
-    .select("id, titel, prioriteit, status, deadline, wacht_reden, toegewezen_aan, toegewezen_aan_naam, aangemaakt_op, ai_voorstel, ai_voorstel_status, profiel(naam, email)")
+    .select("id, titel, prioriteit, status, deadline, wacht_reden, toegewezen_aan, toegewezen_aan_naam, aangemaakt_op, ai_voorstel, ai_voorstel_status, profiel!werkorder_toegewezen_aan_fkey(naam, email)")
     .eq("landgoed_id", id);
 
   const werkorders = (werkordersRaw ?? []).slice().sort((a, b) => {
