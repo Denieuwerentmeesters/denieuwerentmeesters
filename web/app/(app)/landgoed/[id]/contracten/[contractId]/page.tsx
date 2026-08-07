@@ -281,6 +281,16 @@ export default async function ContractDossierPage({
   );
   const prijsInvulwaarde = contract.bedrag ?? aiPrijsVoorstel?.bedrag ?? "";
 
+  // Standaarddatum voor de indexatie: de vastgelegde volgende indexatie,
+  // en anders een jaar na de ingangsdatum van het contract (wens Steven).
+  const jaarNaIngang = (() => {
+    if (!contract.ingangsdatum) return "";
+    const d = new Date(`${contract.ingangsdatum}T12:00:00Z`);
+    d.setUTCFullYear(d.getUTCFullYear() + 1);
+    return d.toISOString().slice(0, 10);
+  })();
+  const indexatiePerStandaard = contract.volgende_indexatie ?? jaarNaIngang;
+
   return (
     <div className="flex flex-col">
       <div
@@ -703,7 +713,7 @@ export default async function ContractDossierPage({
                     className="input"
                     type="date"
                     name="ingangsdatum"
-                    defaultValue={contract.volgende_indexatie ?? ""}
+                    defaultValue={indexatiePerStandaard}
                     required
                   />
                 </div>
