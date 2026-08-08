@@ -83,12 +83,22 @@ export default async function ContactenPage({
   searchParams,
 }: {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ status?: string; rol?: string }>;
+  searchParams: Promise<{
+    status?: string;
+    rol?: string;
+    q?: string;
+    sorteer?: string;
+    richting?: string;
+  }>;
 }) {
   const { id } = await params;
   const sp = await searchParams;
   const filterStatus = sp.status ?? "actief";
   const filterRol = sp.rol ?? "";
+  const zoek = (sp.q ?? "").trim();
+  const SORTEERBAAR = ["contact", "rollen", "status", "tedoen"];
+  const sorteer = SORTEERBAAR.includes(sp.sorteer ?? "") ? sp.sorteer! : "contact";
+  const richting = sp.richting === "neer" ? "neer" : "op";
 
   const supabase = await createClient();
 
@@ -124,11 +134,39 @@ export default async function ContactenPage({
   };
 
   const alleBinnenStatus = (contactenRes.data ?? []) as unknown as ContactRow[];
-  const contacten = filterRol
+  const naRol = filterRol
     ? alleBinnenStatus.filter((c) =>
         c.contact_rol.some((cr) => cr.rol_type_id === filterRol)
       )
     : alleBinnenStatus;
+
+  // Zoeken en sorteren in het geheugen — klein register, alle kolommen
+  // sorteerbaar (zelfde recept als het contractenregister).
+  const zoekLc = zoek.toLowerCase();
+  const rolTekst = (c: ContactRow) =>
+    c.contact_rol
+      .map((cr) => cr.rol_type?.naam ?? "")
+      .sort()
+      .join(", ");
+  const vergelijk: Record<string, (a: ContactRow, b: ContactRow) => number> = {
+    contact: (a, b) => a.naam.localeCompare(b.naam, "nl"),
+    rollen: (a, b) => rolTekst(a).localeCompare(rolTekst(b), "nl"),
+    status: (a, b) => a.status.localeCompare(b.status, "nl"),
+    // "Nog te doen": onbevestigde AI-contacten eerst.
+    tedoen: (a, b) =>
+      Number(b.herkomst === "ai" && !b.geaccordeerd) -
+      Number(a.herkomst === "ai" && !a.geaccordeerd),
+  };
+  const contacten = (
+    zoekLc
+      ? naRol.filter((c) =>
+          [c.naam, c.organisatie, c.email, c.telefoon, c.omschrijving].some((v) =>
+            (v ?? "").toLowerCase().includes(zoekLc),
+          ),
+        )
+      : [...naRol]
+  ).sort(vergelijk[sorteer]);
+  if (richting === "neer") contacten.reverse();
 
   // Alleen rollen die binnen deze status echt voorkomen als filterpil.
   const rollenInGebruik = new Map<string, string>();
@@ -148,13 +186,45 @@ export default async function ContactenPage({
   ];
 
   const basisPad = `/landgoed/${id}/contacten`;
-  function filterHref(nieuweStatus: string, nieuweRol: string) {
-    const q = new URLSearchParams();
-    if (nieuweStatus) q.set("status", nieuweStatus);
-    if (nieuweRol) q.set("rol", nieuweRol);
-    const s = q.toString();
-    return s ? `${basisPad}?${s}` : basisPad;
+  // Eén href-bouwer: wat je niet meegeeft blijft staan; "" wist expliciet.
+  function bouwHref(over: {
+    status?: string;
+    rol?: string;
+    q?: string;
+    sorteer?: string;
+    richting?: string;
+  }) {
+    const qd = new URLSearchParams();
+    const s = over.status ?? filterStatus;
+    if (s) qd.set("status", s);
+    const r = over.rol ?? filterRol;
+    if (r) qd.set("rol", r);
+    const z = over.q ?? zoek;
+    if (z) qd.set("q", z);
+    const so = over.sorteer ?? sorteer;
+    if (so !== "contact") qd.set("sorteer", so);
+    const ri = over.richting ?? richting;
+    if (ri !== "op") qd.set("richting", ri);
+    const str = qd.toString();
+    return str ? `${basisPad}?${str}` : basisPad;
   }
+  function filterHref(nieuweStatus: string, nieuweRol: string) {
+    return bouwHref({ status: nieuweStatus, rol: nieuweRol });
+  }
+  function sorteerHref(kolom: string) {
+    return bouwHref({
+      sorteer: kolom,
+      richting: sorteer === kolom && richting === "op" ? "neer" : "op",
+    });
+  }
+  const sorteerKop = (kolom: string, label: string, klasse: string) => (
+    <th className={`label-up py-3 font-semibold ${klasse}`}>
+      <Link href={sorteerHref(kolom)} className="inline-flex items-center gap-1 hover:underline">
+        {label}
+        {sorteer === kolom && <span>{richting === "op" ? "↑" : "↓"}</span>}
+      </Link>
+    </th>
+  );
   const pil = (actief: boolean) =>
     `rounded-full border px-3 py-1 text-[12px] font-medium transition-colors ${
       actief
@@ -227,6 +297,29 @@ export default async function ContactenPage({
                 ))}
             </>
           )}
+          {/* Zoekveld: Enter zoekt; filters en sortering reizen mee. */}
+          <form method="get" className="ml-auto flex items-center gap-2">
+            {filterStatus && <input type="hidden" name="status" value={filterStatus} />}
+            {filterRol && <input type="hidden" name="rol" value={filterRol} />}
+            {sorteer !== "contact" && <input type="hidden" name="sorteer" value={sorteer} />}
+            {richting !== "op" && <input type="hidden" name="richting" value={richting} />}
+            <input
+              className="input py-1 text-[12.5px]"
+              style={{ height: "auto", width: 220 }}
+              name="q"
+              defaultValue={zoek}
+              placeholder="Zoek op naam, e-mail, organisatie…"
+            />
+            {zoek && (
+              <Link
+                href={bouwHref({ q: "" })}
+                className="text-[12px] underline"
+                style={{ color: "var(--text-2)" }}
+              >
+                wis
+              </Link>
+            )}
+          </form>
         </div>
 
         {/* Het register zelf. */}
@@ -234,17 +327,17 @@ export default async function ContactenPage({
           <table className="w-full text-left text-[13px]">
             <thead>
               <tr style={{ borderBottom: "1px solid var(--border)" }}>
-                <th className="label-up px-5 py-3 font-semibold">Contact</th>
-                <th className="label-up px-3 py-3 font-semibold">Rollen</th>
-                <th className="label-up px-3 py-3 font-semibold">Status</th>
-                <th className="label-up px-5 py-3 font-semibold">Nog te doen</th>
+                {sorteerKop("contact", "Contact", "px-5")}
+                {sorteerKop("rollen", "Rollen", "px-3")}
+                {sorteerKop("status", "Status", "px-3")}
+                {sorteerKop("tedoen", "Nog te doen", "px-5")}
               </tr>
             </thead>
             <tbody>
               {contacten.length === 0 && (
                 <tr>
                   <td colSpan={4} className="px-5 py-5 text-[13px]" style={{ color: "var(--text-2)" }}>
-                    Geen contacten gevonden.
+                    Geen contacten gevonden{zoek ? ` voor “${zoek}”` : ""}.
                   </td>
                 </tr>
               )}
