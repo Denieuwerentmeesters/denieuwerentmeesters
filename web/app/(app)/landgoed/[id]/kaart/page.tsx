@@ -22,11 +22,22 @@ export default async function KaartPage({
   return (
     <div className="flex flex-col">
       <div
-        className="bg-white px-7 py-4"
+        className="flex items-center justify-between gap-3 bg-white px-7 py-4"
         style={{ borderBottom: "1px solid var(--border)" }}
       >
         <div className="text-[12.5px]" style={{ color: "var(--text-2)" }}>
           Kaart
+        </div>
+        {/* Eén kaartafdeling, twee standen: beheer (kleur = gebruik) en
+            contracten (kleur = soort, rand = aflooptermijn). */}
+        <div className="flex gap-2">
+          <span className="btn btn-primary btn-sm">Beheer</span>
+          <Link
+            href={`/landgoed/${id}/contracten/kaart`}
+            className="btn btn-ghost btn-sm"
+          >
+            Contracten
+          </Link>
         </div>
       </div>
 
