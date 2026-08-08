@@ -6,6 +6,7 @@ import { moet } from "@/lib/db";
 import mammoth from "mammoth";
 import heicConvert from "heic-convert";
 import { bepaalBestandsSoort } from "@/lib/contracten/bestanden";
+import { normaliseerContactNaam } from "@/lib/contacten/namen";
 import {
   contractExtractieBeschikbaar,
   extraheerContract,
@@ -94,8 +95,9 @@ export async function nieuwContractUitDocument(fd: FormData) {
       .eq("landgoed_id", landgoed_id),
   ]);
   const relatieVanNaam = new Map(
-    (relaties ?? []).map((r) => [String(r.naam).toLowerCase().trim(), r.id as string]),
+    (relaties ?? []).map((r) => [normaliseerContactNaam(String(r.naam)), r.id as string]),
   );
+  const bekendeNamen = (relaties ?? []).map((r) => String(r.naam));
   const perceelVanAanduiding = new Map(
     (percelen ?? []).map((p) => [
       normaliseerAanduiding(String(p.kadastrale_aanduiding)),
@@ -120,6 +122,7 @@ export async function nieuwContractUitDocument(fd: FormData) {
           gebruikerId: gebruiker.user?.id ?? null,
           files,
           relatieVanNaam,
+          bekendeNamen,
           perceelVanAanduiding,
         }),
       );
@@ -162,6 +165,7 @@ async function verwerkContractBestanden({
   gebruikerId,
   files,
   relatieVanNaam,
+  bekendeNamen,
   perceelVanAanduiding,
 }: {
   supabase: SupabaseClient;
@@ -169,6 +173,7 @@ async function verwerkContractBestanden({
   gebruikerId: string | null;
   files: File[];
   relatieVanNaam: Map<string, string>;
+  bekendeNamen: string[];
   perceelVanAanduiding: Map<string, string>;
 }): Promise<string> {
   // 1. Elk bestand eerst leesbaar maken voor de AI (vóór de upload — een
@@ -214,7 +219,7 @@ async function verwerkContractBestanden({
     extractieFout = "AI niet beschikbaar (geen sleutel ingesteld)";
   } else {
     try {
-      voorstel = await extraheerContract(bronnen);
+      voorstel = await extraheerContract(bronnen, { bekendeNamen });
     } catch (e) {
       extractieFout = e instanceof Error ? e.message : String(e);
     }
@@ -233,7 +238,7 @@ async function verwerkContractBestanden({
   // relatieVanNaam, zodat een tweede document in dezelfde beurt dezelfde
   // partij niet nóg eens aanmaakt.
   const ongematchtePartijen = (voorstel?.partijen ?? []).filter(
-    (p) => !relatieVanNaam.has(p.naam.toLowerCase().trim()),
+    (p) => !relatieVanNaam.has(normaliseerContactNaam(p.naam)),
   );
   if (ongematchtePartijen.length) {
     const { data: rolTypen } = await supabase
@@ -259,7 +264,7 @@ async function verwerkContractBestanden({
           .single(),
         "contact aanmaken",
       );
-      relatieVanNaam.set(p.naam.toLowerCase().trim(), contact.id as string);
+      relatieVanNaam.set(normaliseerContactNaam(p.naam), contact.id as string);
       // Rol als contactrol meegeven als die als rol-type bestaat (bv.
       // 'pachter') — puur gemak, geen harde eis.
       const rolTypeId = rolTypeVanNaam.get(p.rol);
@@ -338,7 +343,7 @@ async function verwerkContractBestanden({
   // 5. Gematchte partijen en percelen koppelen (alleen bestaande
   //    registraties — de rest staat in de notitie).
   for (const p of voorstel?.partijen ?? []) {
-    const relatie_id = relatieVanNaam.get(p.naam.toLowerCase().trim());
+    const relatie_id = relatieVanNaam.get(normaliseerContactNaam(p.naam));
     if (!relatie_id) continue;
     await moet(
       supabase.from("contract_partij").upsert(

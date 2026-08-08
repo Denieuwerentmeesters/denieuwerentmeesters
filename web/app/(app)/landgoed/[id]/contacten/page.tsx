@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
-import { nieuwContact, bevestigContact } from "./acties";
+import { nieuwContact, bevestigContact, voegContactSamen } from "./acties";
 import { bevestigExtractie, afwijsExtractie } from "../actions";
 import type { ExtractieRunRow } from "@/lib/extractie_mail";
 import { ToevoegenToggle } from "@/components/ToevoegenToggle";
@@ -294,6 +294,32 @@ export default async function ContactenPage({
                       <input type="hidden" name="contact_id" value={c.id} />
                       <button type="submit" className="btn btn-primary btn-sm text-[11.5px]">
                         Bevestig
+                      </button>
+                    </form>
+                    {/* Blijkt het een dubbele van een bestaand contact
+                        (andere schrijfwijze): samenvoegen — koppelingen
+                        verhuizen mee, de dubbele verdwijnt. */}
+                    <form action={voegContactSamen} className="flex items-center gap-1">
+                      <input type="hidden" name="landgoed_id" value={id} />
+                      <input type="hidden" name="contact_id" value={c.id} />
+                      <select
+                        className="input text-[11.5px] py-1"
+                        style={{ height: "auto", maxWidth: 170 }}
+                        name="doel_contact_id"
+                        defaultValue=""
+                        required
+                      >
+                        <option value="">— is dezelfde als… —</option>
+                        {contacten
+                          .filter((ander) => ander.id !== c.id)
+                          .map((ander) => (
+                            <option key={ander.id} value={ander.id}>
+                              {ander.naam}
+                            </option>
+                          ))}
+                      </select>
+                      <button type="submit" className="btn btn-ghost btn-sm text-[11.5px]">
+                        Voeg samen
                       </button>
                     </form>
                   </>

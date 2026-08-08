@@ -142,12 +142,23 @@ export function maakContentBlokken(bronnen: ExtractieBron[]) {
 // de aanroeper toont die eerlijk (bron-storing is geen "geen resultaat").
 export async function extraheerContract(
   bronnen: ExtractieBron[],
+  opties?: {
+    // Namen van bestaande contacten: vindt de AI een partij die daarmee
+    // overeenkomt (ook bij een andere schrijfwijze, bv. "Mts." vs
+    // "Maatschap"), dan gebruikt hij exact de bestaande schrijfwijze —
+    // zo ontstaan geen dubbele contacten.
+    bekendeNamen?: string[];
+  },
 ): Promise<ContractVoorstel> {
   const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY! });
-  const prompt =
+  let prompt =
     bronnen.length > 1
       ? `Je krijgt ${bronnen.length} bestanden die samen één contract vormen (bijvoorbeeld een hoofdovereenkomst met bijlagen of allonges, of een contract dat per pagina gefotografeerd is). Lees ze in samenhang als één geheel; bij tegenstrijdigheden geldt het meest recente of specifieke stuk en noem je de tegenstrijdigheid bij "onzekerheden".\n\n${PROMPT}`
       : PROMPT;
+  const bekend = (opties?.bekendeNamen ?? []).filter(Boolean).slice(0, 200);
+  if (bekend.length) {
+    prompt += `\n\nDeze contacten bestaan al in het systeem: ${bekend.join("; ")}. Is een partij uit het document duidelijk een van hen (ook bij een afwijkende schrijfwijze of afkorting, zoals "Mts." voor "Maatschap"), gebruik dan bij "naam" exact de bestaande schrijfwijze uit deze lijst.`;
+  }
   const res = await client.messages.create({
     model: MODEL,
     max_tokens: 2000,
