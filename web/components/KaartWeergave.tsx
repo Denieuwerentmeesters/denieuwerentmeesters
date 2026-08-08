@@ -488,6 +488,27 @@ export default function KaartWeergave({
     setFilterGebruik((huidig) => (huidig === gebruik ? null : gebruik));
   }
 
+  // Hele groep in één klik aan of uit (wens Steven): staat alles al aan,
+  // dan gaat de groep uit; anders komt de rest erbij.
+  function selecteerGroep(ids: string[]) {
+    setFilterGebruik(null);
+    setSelectie((prev) => {
+      const allesAan = ids.every((id) => prev.includes(id));
+      return allesAan
+        ? prev.filter((id) => !ids.includes(id))
+        : [...prev, ...ids.filter((id) => !prev.includes(id))];
+    });
+  }
+
+  function selecteerKadGroep(ids: string[]) {
+    setKadSelectie((prev) => {
+      const allesAan = ids.every((id) => prev.includes(id));
+      return allesAan
+        ? prev.filter((id) => !ids.includes(id))
+        : [...prev, ...ids.filter((id) => !prev.includes(id))];
+    });
+  }
+
   // Lijst-groepen (zelfde kopjes en volgorde als de invoerpagina).
   const groepenMap = new Map<KaartGroepLabel, KaartObject[]>(
     KAARTGROEP_LABELS.map((l) => [l, []]),
@@ -637,11 +658,23 @@ export default function KaartWeergave({
           {kadastraal ? (
             /* Kadastrale weergave: alle percelen plat onder elkaar. */
             <div className="card p-4">
-              <div
-                className="mb-2 text-[12px] font-semibold uppercase tracking-wide"
-                style={{ color: "var(--text-2)" }}
-              >
-                Kadastrale percelen ({bezit.length})
+              <div className="mb-2 flex items-center justify-between gap-3">
+                <span
+                  className="text-[12px] font-semibold uppercase tracking-wide"
+                  style={{ color: "var(--text-2)" }}
+                >
+                  Kadastrale percelen ({bezit.length})
+                </span>
+                <button
+                  type="button"
+                  onClick={() => selecteerKadGroep(bezit.map((p) => p.id))}
+                  className="shrink-0 text-[11.5px] underline"
+                  style={{ color: "var(--text-2)" }}
+                >
+                  {bezit.every((p) => kadSelectie.includes(p.id))
+                    ? "alles uit"
+                    : "alles aan"}
+                </button>
               </div>
               <div className="divide-y" style={{ borderColor: "var(--border)" }}>
                 {bezit.map((p) => (
@@ -734,13 +767,34 @@ export default function KaartWeergave({
                   })()
               ).map(([label, geordend]) => {
               if (geordend.length === 0) return null;
+              // Groepsknop pakt de hoofditems; wat ingesprongen (en vaak
+              // ingeklapt) eronder hangt, blijft buiten de selectie.
+              const hoofdIds = geordend
+                .filter((r) => !r.ingesprongen)
+                .map((r) => r.item.id);
+              const groepAan = hoofdIds.every((x) => selectie.includes(x));
               return (
                 <div key={label} className="card p-4">
-                  <div
-                    className="mb-2 text-[12px] font-semibold uppercase tracking-wide"
-                    style={{ color: "var(--text-2)" }}
-                  >
-                    {label} ({geordend.length})
+                  <div className="mb-2 flex items-center justify-between gap-3">
+                    <span
+                      className="text-[12px] font-semibold uppercase tracking-wide"
+                      style={{ color: "var(--text-2)" }}
+                    >
+                      {label} ({geordend.length})
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => selecteerGroep(hoofdIds)}
+                      className="shrink-0 text-[11.5px] underline"
+                      style={{ color: "var(--text-2)" }}
+                      title={
+                        groepAan
+                          ? "Haal de hele groep van de kaart"
+                          : "Licht de hele groep op de kaart op"
+                      }
+                    >
+                      {groepAan ? "alles uit" : "alles aan"}
+                    </button>
                   </div>
                   <div className="divide-y" style={{ borderColor: "var(--border)" }}>
                     {geordend
