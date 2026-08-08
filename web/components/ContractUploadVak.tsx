@@ -15,9 +15,14 @@ const MAX_AANTAL = 5;
 export default function ContractUploadVak({
   landgoedId,
   action,
+  compact = false,
 }: {
   landgoedId: string;
   action: (fd: FormData) => Promise<void>;
+  // compact: smalle strook i.p.v. groot vak — voor het register, waar de
+  // contractenlijst de hoofdrol heeft (wens Steven). Slepen en kiezen
+  // blijven allebei gewoon werken.
+  compact?: boolean;
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [bestanden, setBestanden] = useState<File[]>([]);
@@ -60,7 +65,7 @@ export default function ContractUploadVak({
   }
 
   return (
-    <form action={action} className="card mb-4 p-4">
+    <form action={action} className={compact ? "card mb-3 p-3" : "card mb-4 p-4"}>
       <input type="hidden" name="landgoed_id" value={landgoedId} />
       <input
         ref={inputRef}
@@ -75,7 +80,7 @@ export default function ContractUploadVak({
         }}
       />
 
-      <div className="label-up mb-2">Nieuw contract uit document (AI)</div>
+      {!compact && <div className="label-up mb-2">Nieuw contract uit document (AI)</div>}
 
       {/* De dropzone: klikken of slepen. */}
       <div
@@ -95,23 +100,44 @@ export default function ContractUploadVak({
           setSleep(false);
           voegToe(e.dataTransfer.files);
         }}
-        className="flex cursor-pointer flex-col items-center gap-2 rounded-md border-2 border-dashed px-6 py-8 text-center"
+        className={
+          compact
+            ? "flex cursor-pointer flex-wrap items-center gap-3 rounded-md border-2 border-dashed px-4 py-2.5"
+            : "flex cursor-pointer flex-col items-center gap-2 rounded-md border-2 border-dashed px-6 py-8 text-center"
+        }
         style={{
           borderColor: sleep ? "var(--primary)" : "var(--border)",
           background: sleep ? "var(--primary-light)" : undefined,
         }}
       >
-        <div className="text-[14px] font-semibold">
-          Sleep hier één of meer contracten in
-        </div>
-        <div className="text-[12.5px]" style={{ color: "var(--text-2)" }}>
-          of
-        </div>
-        <span className="btn btn-primary btn-sm">Kies bestanden</span>
-        <div className="text-[11.5px]" style={{ color: "var(--text-3)" }}>
-          Pdf, Word (docx) of een scan/foto (jpg, png, heic) — maximaal{" "}
-          {MAX_AANTAL} bestanden van {MAX_MB} MB per keer.
-        </div>
+        {compact ? (
+          <>
+            <span className="text-[13px] font-semibold">
+              Nieuw contract? Sleep het hierin
+            </span>
+            <span className="text-[12px]" style={{ color: "var(--text-2)" }}>
+              of
+            </span>
+            <span className="btn btn-primary btn-sm">Kies bestanden</span>
+            <span className="text-[11.5px]" style={{ color: "var(--text-3)" }}>
+              pdf, Word of scan/foto · de AI zet het klaar als concept-dossier
+            </span>
+          </>
+        ) : (
+          <>
+            <div className="text-[14px] font-semibold">
+              Sleep hier één of meer contracten in
+            </div>
+            <div className="text-[12.5px]" style={{ color: "var(--text-2)" }}>
+              of
+            </div>
+            <span className="btn btn-primary btn-sm">Kies bestanden</span>
+            <div className="text-[11.5px]" style={{ color: "var(--text-3)" }}>
+              Pdf, Word (docx) of een scan/foto (jpg, png, heic) — maximaal{" "}
+              {MAX_AANTAL} bestanden van {MAX_MB} MB per keer.
+            </div>
+          </>
+        )}
       </div>
 
       {melding && (
