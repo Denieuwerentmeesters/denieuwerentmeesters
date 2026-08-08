@@ -17,6 +17,7 @@ export default function WijzigbaarFormulier({
   opslaanLabel = "Opslaan",
   veldenKlasse,
   className,
+  formId,
   children,
 }: {
   action: (fd: FormData) => Promise<void>;
@@ -25,6 +26,9 @@ export default function WijzigbaarFormulier({
   opslaanLabel?: string;
   veldenKlasse?: string;
   className?: string;
+  // Optioneel id op het formulier, zodat een knop elders op de pagina
+  // (form="…") ditzelfde formulier kan versturen.
+  formId?: string;
   children: React.ReactNode;
 }) {
   const [open, setOpen] = useState(beginOpen);
@@ -49,7 +53,7 @@ export default function WijzigbaarFormulier({
   return (
     // Sluit optimistisch bij submit (zelfde patroon als ToevoegenToggle):
     // de pagina herlaadt de verse waarden na de server action.
-    <form action={action} className={className} onSubmit={() => setOpen(false)}>
+    <form id={formId} action={action} className={className} onSubmit={() => setOpen(false)}>
       <div className={veldenKlasse}>{children}</div>
       <div className="mt-3 flex items-center gap-2">
         <SubmitKnop className="btn btn-primary" pendingTekst="Opslaan…">
