@@ -45,6 +45,17 @@ function euro(n: unknown): string | null {
   }).format(x);
 }
 
+// Beginhoogte van het notitieveld: groeit mee met de inhoud (AI-notities
+// zijn soms lang), binnen redelijke grenzen. Moderne browsers rekken
+// daarnaast live mee via field-sizing:content.
+function notitieRegels(tekst: string | null): number {
+  if (!tekst) return 3;
+  const geschat = tekst
+    .split("\n")
+    .reduce((n, regel) => n + Math.max(1, Math.ceil(regel.length / 90)), 0);
+  return Math.min(12, Math.max(3, geschat));
+}
+
 function haTekst(m2: unknown): string | null {
   const n = Number(m2);
   if (!Number.isFinite(n)) return null;
@@ -568,9 +579,9 @@ export default async function ContractDossierPage({
             <div className="col-span-2">
               <label className="label-up mb-1 block">Notitie</label>
               <textarea
-                className="input"
+                className="input [field-sizing:content]"
                 name="notitie"
-                rows={3}
+                rows={notitieRegels(contract.notitie)}
                 defaultValue={contract.notitie ?? ""}
                 placeholder="Vrije aantekening bij dit dossier"
               />
