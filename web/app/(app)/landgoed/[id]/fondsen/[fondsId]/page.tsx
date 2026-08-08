@@ -259,11 +259,11 @@ export default async function FondsDetail({
                   {stapels.wij.map((v) => (
                     <li key={v.id} className="card p-2.5 text-[13px]">
                       <div className="font-medium">{v.omschrijving}</div>
-                      <div className="mt-0.5 text-[12px]" style={{ color: "var(--text-3)" }}>
+                      <div className="mt-0.5 text-[12px]" style={{ color: "var(--text-2)" }}>
                         {GENERATOR_LABELS[v.vereiste_type] ?? "opstellen"} ·{" "}
                         {FASE_LABELS[v.fase] ?? v.fase} · {v.verplichtheid}
                       </div>
-                      <div className="mt-1 text-[12px]" style={{ color: "var(--text-3)" }}>
+                      <div className="mt-1 text-[12px]" style={{ color: "var(--text-2)" }}>
                         Genereren volgt in een latere versie.
                       </div>
                     </li>
@@ -292,12 +292,12 @@ export default async function FondsDetail({
                           <span className="font-medium">{v.omschrijving}</span>
                           {tag?.label && <span className={`tag ${tag.cls}`}>{tag.label}</span>}
                         </div>
-                        <div className="mt-0.5 text-[12px]" style={{ color: "var(--text-3)" }}>
+                        <div className="mt-0.5 text-[12px]" style={{ color: "var(--text-2)" }}>
                           {FASE_LABELS[v.fase] ?? v.fase} · {v.verplichtheid}
                           {v.doorlooptijd_indicatie && ` · duurt ${v.doorlooptijd_indicatie}`}
                         </div>
                         {d?.toelichting && (
-                          <div className="mt-1 text-[12px]" style={{ color: "var(--text-3)" }}>
+                          <div className="mt-1 text-[12px]" style={{ color: "var(--text-2)" }}>
                             {d.toelichting}
                           </div>
                         )}
