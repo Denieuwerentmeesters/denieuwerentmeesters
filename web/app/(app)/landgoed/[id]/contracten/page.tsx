@@ -42,7 +42,14 @@ export default async function ContractenPage({
   searchParams,
 }: {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ melding?: string; type?: string; status?: string }>;
+  searchParams: Promise<{
+    melding?: string;
+    type?: string;
+    status?: string;
+    q?: string;
+    sorteer?: string;
+    richting?: string;
+  }>;
 }) {
   const { id } = await params;
   const sp = await searchParams;
@@ -50,6 +57,10 @@ export default async function ContractenPage({
   const filterType = sp.type && sp.type in CONTRACT_TYPE_LABEL ? sp.type : "";
   const filterStatus =
     sp.status && sp.status in CONTRACT_STATUS_LABEL ? sp.status : "";
+  const zoek = (sp.q ?? "").trim();
+  const SORTEERBAAR = ["contract", "type", "prijs", "status", "afloop"];
+  const sorteer = SORTEERBAAR.includes(sp.sorteer ?? "") ? sp.sorteer! : "afloop";
+  const richting = sp.richting === "neer" ? "neer" : "op";
   const supabase = await createClient();
 
   let query = supabase
@@ -73,14 +84,70 @@ export default async function ContractenPage({
     (r) => r.afloop && r.afloop.oordeel !== "rustig" && r.status !== "beeindigd",
   ).length;
 
+  // Zoeken (titel, nummer, partij) en sorteren gebeuren in het geheugen —
+  // het register is klein en zo blijven alle kolommen sorteerbaar.
+  const zoekLc = zoek.toLowerCase();
+  const vergelijk: Record<string, (a: (typeof rijen)[number], b: (typeof rijen)[number]) => number> = {
+    contract: (a, b) => a.titel.localeCompare(b.titel, "nl"),
+    type: (a, b) => String(a.type ?? "").localeCompare(String(b.type ?? ""), "nl"),
+    prijs: (a, b) =>
+      (a.bedrag == null ? Number.POSITIVE_INFINITY : Number(a.bedrag)) -
+      (b.bedrag == null ? Number.POSITIVE_INFINITY : Number(b.bedrag)),
+    status: (a, b) => String(a.status ?? "").localeCompare(String(b.status ?? ""), "nl"),
+    afloop: (a, b) => (a.einddatum ?? "9999").localeCompare(b.einddatum ?? "9999"),
+  };
+  const getoond = (
+    zoekLc
+      ? rijen.filter((r) =>
+          [r.titel, r.contractnummer, r.partij].some((v) =>
+            (v ?? "").toLowerCase().includes(zoekLc),
+          ),
+        )
+      : [...rijen]
+  ).sort(vergelijk[sorteer]);
+  if (richting === "neer") getoond.reverse();
+
   const basisPad = `/landgoed/${id}/contracten`;
-  function filterHref(nieuwType: string, nieuwStatus: string) {
-    const q = new URLSearchParams();
-    if (nieuwType) q.set("type", nieuwType);
-    if (nieuwStatus) q.set("status", nieuwStatus);
-    const s = q.toString();
-    return s ? `${basisPad}?${s}` : basisPad;
+  // Eén href-bouwer voor filters, zoeken en sorteren: wat je niet
+  // meegeeft blijft staan; "" wist expliciet.
+  function bouwHref(over: {
+    type?: string;
+    status?: string;
+    q?: string;
+    sorteer?: string;
+    richting?: string;
+  }) {
+    const qd = new URLSearchParams();
+    const t = over.type ?? filterType;
+    if (t) qd.set("type", t);
+    const s = over.status ?? filterStatus;
+    if (s) qd.set("status", s);
+    const z = over.q ?? zoek;
+    if (z) qd.set("q", z);
+    const so = over.sorteer ?? sorteer;
+    if (so !== "afloop") qd.set("sorteer", so);
+    const ri = over.richting ?? richting;
+    if (ri !== "op") qd.set("richting", ri);
+    const str = qd.toString();
+    return str ? `${basisPad}?${str}` : basisPad;
   }
+  function filterHref(nieuwType: string, nieuwStatus: string) {
+    return bouwHref({ type: nieuwType, status: nieuwStatus });
+  }
+  function sorteerHref(kolom: string) {
+    return bouwHref({
+      sorteer: kolom,
+      richting: sorteer === kolom && richting === "op" ? "neer" : "op",
+    });
+  }
+  const sorteerKop = (kolom: string, label: string, klasse: string) => (
+    <th className={`label-up py-3 font-semibold ${klasse}`}>
+      <Link href={sorteerHref(kolom)} className="inline-flex items-center gap-1 hover:underline">
+        {label}
+        {sorteer === kolom && <span>{richting === "op" ? "↑" : "↓"}</span>}
+      </Link>
+    </th>
+  );
   const pil = (actief: boolean) =>
     `rounded-full border px-3 py-1 text-[12px] font-medium transition-colors ${
       actief
@@ -161,6 +228,29 @@ export default async function ContractenPage({
               {l}
             </Link>
           ))}
+          {/* Zoekveld: Enter zoekt; filters en sortering reizen mee. */}
+          <form method="get" className="ml-auto flex items-center gap-2">
+            {filterType && <input type="hidden" name="type" value={filterType} />}
+            {filterStatus && <input type="hidden" name="status" value={filterStatus} />}
+            {sorteer !== "afloop" && <input type="hidden" name="sorteer" value={sorteer} />}
+            {richting !== "op" && <input type="hidden" name="richting" value={richting} />}
+            <input
+              className="input py-1 text-[12.5px]"
+              style={{ height: "auto", width: 220 }}
+              name="q"
+              defaultValue={zoek}
+              placeholder="Zoek op titel, nummer of partij…"
+            />
+            {zoek && (
+              <Link
+                href={bouwHref({ q: "" })}
+                className="text-[12px] underline"
+                style={{ color: "var(--text-2)" }}
+              >
+                wis
+              </Link>
+            )}
+          </form>
         </div>
 
         {/* Het register zelf: gesorteerd op einddatum, met de aflooptermijn
@@ -169,26 +259,32 @@ export default async function ContractenPage({
           <table className="w-full text-left text-[13px]">
             <thead>
               <tr style={{ borderBottom: "1px solid var(--border)" }}>
-                <th className="label-up px-5 py-3 font-semibold">Contract</th>
-                <th className="label-up px-3 py-3 font-semibold">Type</th>
-                <th className="label-up px-3 py-3 font-semibold">Prijs</th>
-                <th className="label-up px-3 py-3 font-semibold">Status</th>
-                <th className="label-up px-5 py-3 font-semibold">Loopt af</th>
+                {sorteerKop("contract", "Contract", "px-5")}
+                {sorteerKop("type", "Type", "px-3")}
+                {sorteerKop("prijs", "Prijs", "px-3")}
+                {sorteerKop("status", "Status", "px-3")}
+                {sorteerKop("afloop", "Loopt af", "px-5")}
               </tr>
             </thead>
             <tbody>
-              {rijen.length === 0 && (
+              {getoond.length === 0 && (
                 <tr>
                   <td
                     colSpan={5}
                     className="px-5 py-5 text-[13px]"
                     style={{ color: "var(--text-2)" }}
                   >
-                    Geen contracten{filterType || filterStatus ? " binnen dit filter" : ""}.
+                    Geen contracten
+                    {zoek
+                      ? ` gevonden voor “${zoek}”`
+                      : filterType || filterStatus
+                        ? " binnen dit filter"
+                        : ""}
+                    .
                   </td>
                 </tr>
               )}
-              {rijen.map((c) => (
+              {getoond.map((c) => (
                 <tr
                   key={c.id}
                   className="align-top"
