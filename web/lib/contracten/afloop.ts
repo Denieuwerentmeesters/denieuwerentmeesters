@@ -1,7 +1,8 @@
 // Wanneer verdient een aflopend contract aandacht? (wens Steven):
-// kortlopende contracten (looptijd korter dan drie jaar, bv. teeltpacht of
+// kortlopende contracten (looptijd korter dan twee jaar, bv. teeltpacht of
 // eenjarige geliberaliseerde pacht) een half jaar van tevoren, langlopende
 // een jaar van tevoren. Puur en apart, zodat de tests hem direct raken.
+// Geldt overal: register én contractenkaart.
 
 const DAG_MS = 86_400_000;
 
@@ -12,7 +13,7 @@ export function verlengtermijnDagen(
   if (ingangsdatum) {
     const looptijdJaren =
       (Date.parse(einddatum) - Date.parse(ingangsdatum)) / (365.25 * DAG_MS);
-    if (looptijdJaren < 3) return 182;
+    if (looptijdJaren < 2) return 182;
   }
   // Onbekende ingangsdatum: behandel als langlopend — liever te vroeg
   // gewaarschuwd dan te laat.
