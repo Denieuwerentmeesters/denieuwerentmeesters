@@ -26,6 +26,7 @@ import {
   uploadDocumentBijContract,
   ontkoppelDocumentVanContract,
   nieuwePrijsafspraak,
+  bewerkPrijsafspraak,
   maakIndexatieVoorstel,
   accordeerPrijsvoorstel,
   wijsAfPrijsvoorstel,
@@ -355,7 +356,7 @@ export default async function ContractDossierPage({
           >
             Dit dossier is een AI-voorstel uit een geüpload document (zie
             Documenten hieronder). Controleer de velden, pas aan waar nodig en
-            klik <strong>Accepteren en opslaan</strong> om te accorderen — het
+            klik <strong>Akkoord en opslaan</strong> om te accorderen — het
             contract wordt dan actief. Wat de AI niet zeker wist of niet kon
             koppelen, staat in de notitie.
           </div>
@@ -378,7 +379,7 @@ export default async function ContractDossierPage({
           <WijzigbaarFormulier
             action={bewerkContractDossier}
             beginOpen={isAiConcept}
-            opslaanLabel={isAiConcept ? "Accepteren en opslaan" : "Opslaan"}
+            opslaanLabel={isAiConcept ? "Akkoord en opslaan" : "Opslaan"}
             formId="kerngegevens-formulier"
             className="card p-4"
             veldenKlasse="grid grid-cols-2 gap-3 md:grid-cols-3"
@@ -681,6 +682,56 @@ export default async function ContractDossierPage({
                         <span style={{ color: "var(--red)" }}>verwijder</span>
                       </VerwijderKnop>
                     </form>
+                    {/* Corrigeren van een regel (verkeerd gelezen bedrag,
+                        typefout) — géén heronderhandeling: die maakt juist
+                        een nieuwe regel via de tekstlink hieronder. */}
+                    <details className="w-full">
+                      <summary
+                        className="cursor-pointer text-[11.5px] underline"
+                        style={{ color: "var(--text-2)" }}
+                      >
+                        wijzig
+                      </summary>
+                      <form
+                        action={bewerkPrijsafspraak}
+                        className="mt-2 flex flex-wrap items-end gap-3"
+                      >
+                        <input type="hidden" name="landgoed_id" value={id} />
+                        <input type="hidden" name="contract_id" value={contractId} />
+                        <input type="hidden" name="afspraak_id" value={p.id} />
+                        <div style={{ maxWidth: 140 }}>
+                          <label className="label-up mb-1 block">Bedrag (€/jaar)</label>
+                          <input
+                            className="input"
+                            name="bedrag"
+                            inputMode="decimal"
+                            defaultValue={p.bedrag ?? ""}
+                            required
+                          />
+                        </div>
+                        <div>
+                          <label className="label-up mb-1 block">Geldig vanaf</label>
+                          <input
+                            className="input"
+                            type="date"
+                            name="geldig_van"
+                            defaultValue={p.geldig_van ?? ""}
+                            required
+                          />
+                        </div>
+                        <div className="min-w-[140px] flex-1">
+                          <label className="label-up mb-1 block">Toelichting</label>
+                          <input
+                            className="input"
+                            name="toelichting"
+                            defaultValue={p.toelichting ?? ""}
+                          />
+                        </div>
+                        <SubmitKnop className="btn btn-primary btn-sm" pendingTekst="Opslaan…">
+                          Opslaan
+                        </SubmitKnop>
+                      </form>
+                    </details>
                   </>
                 )}
               </div>
