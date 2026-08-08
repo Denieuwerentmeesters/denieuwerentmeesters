@@ -208,7 +208,15 @@ export default async function ContractenKaartPage({
           </p>
         </header>
 
-        <ContractenKaart landgoedId={id} contracten={contracten} />
+        <ContractenKaart
+          landgoedId={id}
+          contracten={contracten}
+          bezit={(perceelData ?? []).map((p) => ({
+            id: p.id as string,
+            aanduiding: p.kadastrale_aanduiding as string,
+            geom: p.geom_3857 as unknown,
+          }))}
+        />
       </div>
     </div>
   );

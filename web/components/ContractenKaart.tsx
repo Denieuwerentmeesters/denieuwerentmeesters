@@ -8,7 +8,12 @@ import "leaflet/dist/leaflet.css";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import type { Map as LMap } from "leaflet";
-import { PDOK_TILES, KADASTER_WMS, geomNaarLatlngs } from "@/components/kaartDelen";
+import {
+  PDOK_TILES,
+  KADASTER_WMS,
+  geomNaarLatlngs,
+  maakKadastraleLaag,
+} from "@/components/kaartDelen";
 import { afloopTekst } from "@/lib/contracten/afloop";
 
 export type ContractOpKaart = {
@@ -58,9 +63,13 @@ function euro(n: number | null) {
 export default function ContractenKaart({
   landgoedId,
   contracten,
+  bezit,
 }: {
   landgoedId: string;
   contracten: ContractOpKaart[];
+  // Alle kadastrale percelen van het landgoed — als aanvinkbare onderlaag,
+  // zodat je ziet welke percelen wél en niet onder een contract vallen.
+  bezit: { id: string; aanduiding: string; geom: unknown }[];
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<LMap | null>(null);
@@ -75,8 +84,13 @@ export default function ContractenKaart({
     >
   >(new Map());
   const selectieRef = useRef<string | null>(null);
+  // De kadastrale onderlaag (gedeelde bouwsteen met de beheerkaart).
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const kadLaagRef = useRef<any>(null);
+  const werkLabelsBijRef = useRef<(() => void) | null>(null);
 
   const [selectie, setSelectie] = useState<string | null>(null);
+  const [toonKadastraal, setToonKadastraal] = useState(false);
 
   const opKaart = contracten.filter((c) => c.vormen.length || c.punten.length);
   const nietOpKaart = contracten.filter(
@@ -212,6 +226,14 @@ export default function ContractenKaart({
         if (lagen.length) lagenRef.current.set(c.id, lagen);
       }
       if (bounds.isValid()) map.fitBounds(bounds.pad(0.15));
+
+      // De kadastrale onderlaag klaarzetten (aan/uit doet het effect
+      // hieronder); labels schalen mee met het zoomniveau.
+      const kad = maakKadastraleLaag(L, bezit);
+      kadLaagRef.current = kad.groep;
+      werkLabelsBijRef.current = () => kad.werkLabelsBij(map);
+      map.on("zoomend", () => werkLabelsBijRef.current?.());
+
       // Klik op de lege kaart: spotlight uit.
       map.on("click", () => {
         if (selectieRef.current) selecteer(selectieRef.current);
@@ -225,8 +247,34 @@ export default function ContractenKaart({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Kadastrale onderlaag aan/uit; de contractvlakken blijven bovenop.
+  useEffect(() => {
+    const map = mapRef.current;
+    const laag = kadLaagRef.current;
+    if (!map || !laag) return;
+    if (toonKadastraal) {
+      laag.addTo(map);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      laag.eachLayer((l: any) => l.bringToBack?.());
+      werkLabelsBijRef.current?.();
+    } else if (map.hasLayer(laag)) {
+      map.removeLayer(laag);
+    }
+  }, [toonKadastraal]);
+
   return (
     <div className="flex flex-col gap-3">
+      {/* De kadastrale onderlaag: zien welke percelen wél en niet onder een
+          contract vallen. */}
+      <label className="flex cursor-pointer items-center gap-2 text-[13px]">
+        <input
+          type="checkbox"
+          checked={toonKadastraal}
+          onChange={(e) => setToonKadastraal(e.target.checked)}
+        />
+        Kadastrale percelen eronder tonen (alle perceelnummers)
+      </label>
+
       {/* Legenda: soorten + wat de randkleur betekent. */}
       <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-[12.5px]">
         {soorten.map(([key, label]) => (
