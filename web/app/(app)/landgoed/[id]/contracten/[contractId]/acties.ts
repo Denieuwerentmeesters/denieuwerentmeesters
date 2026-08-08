@@ -358,6 +358,50 @@ export async function nieuwePrijsafspraak(fd: FormData) {
   revalidatePath(pad(landgoed_id, contract_id));
 }
 
+// Een bestaande prijsregel corrigeren (verkeerd gelezen bedrag, typefout
+// in de datum) — dit is bewust iets anders dan een heronderhandeling:
+// corrigeren past de regel zelf aan, heronderhandelen maakt een nieuwe.
+export async function bewerkPrijsafspraak(fd: FormData) {
+  const landgoed_id = String(fd.get("landgoed_id"));
+  const contract_id = String(fd.get("contract_id"));
+  const afspraak_id = String(fd.get("afspraak_id"));
+  const bedrag = getal(fd, "bedrag");
+  const geldig_van = tekst(fd, "geldig_van");
+  if (!isUuid(afspraak_id) || bedrag == null || !Number.isFinite(bedrag) || !geldig_van)
+    return;
+  const supabase = await createClient();
+  const { data: oud } = await supabase
+    .from("contract_prijsafspraak")
+    .select("id, geldig_van")
+    .eq("id", afspraak_id)
+    .eq("landgoed_id", landgoed_id)
+    .maybeSingle();
+  if (!oud) return;
+
+  await moet(
+    supabase
+      .from("contract_prijsafspraak")
+      .update({ bedrag, geldig_van, toelichting: tekst(fd, "toelichting") })
+      .eq("id", afspraak_id),
+    "prijsregel corrigeren",
+  );
+  // Schuift de ingangsdatum, dan schuift de afsluitdatum van de
+  // voorafgaande periode mee — zo blijft de historie sluitend.
+  if (geldig_van !== oud.geldig_van) {
+    await moet(
+      supabase
+        .from("contract_prijsafspraak")
+        .update({ geldig_tot: dagErvoor(geldig_van) })
+        .eq("contract_id", contract_id)
+        .eq("status", "geaccordeerd")
+        .eq("geldig_tot", dagErvoor(String(oud.geldig_van))),
+      "voorafgaande periode meeschuiven",
+    );
+  }
+  await zetHuidigePrijs(supabase, landgoed_id, contract_id);
+  revalidatePath(pad(landgoed_id, contract_id));
+}
+
 export async function maakIndexatieVoorstel(fd: FormData) {
   const landgoed_id = String(fd.get("landgoed_id"));
   const contract_id = String(fd.get("contract_id"));
