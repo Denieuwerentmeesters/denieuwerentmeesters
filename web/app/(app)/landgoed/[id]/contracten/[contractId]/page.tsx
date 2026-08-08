@@ -368,6 +368,7 @@ export default async function ContractDossierPage({
             action={bewerkContractDossier}
             beginOpen={isAiConcept}
             opslaanLabel={isAiConcept ? "Accepteren en opslaan" : "Opslaan"}
+            formId="kerngegevens-formulier"
             className="card p-4"
             veldenKlasse="grid grid-cols-2 gap-3 md:grid-cols-3"
             weergave={
@@ -801,43 +802,48 @@ export default async function ContractDossierPage({
               </div>
             ))}
           </div>
-          <form action={koppelPartij} className="card flex flex-wrap items-end gap-3 p-4">
-            <input type="hidden" name="landgoed_id" value={id} />
-            <input type="hidden" name="contract_id" value={contractId} />
-            <div className="min-w-[220px] flex-1">
-              <label className="label-up mb-1 block">Contact</label>
-              <select className="input" name="relatie_id" defaultValue="" required>
-                <option value="">— kies contact —</option>
-                {(alleRelaties ?? []).map((r) => (
-                  <option key={r.id} value={r.id}>
-                    {r.naam}
-                    {r.type ? ` (${r.type})` : ""}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label className="label-up mb-1 block">Rol</label>
-              <select
-                className="input"
-                name="rol"
-                defaultValue={standaardRolVoorType(contract.type)}
-              >
-                {Object.entries(PARTIJ_ROL_LABEL).map(([w, l]) => (
-                  <option key={w} value={w}>
-                    {l}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <SubmitKnop className="btn btn-primary" pendingTekst="Koppelen…">
-              Koppel partij
-            </SubmitKnop>
-          </form>
-          <p className="mt-1 text-[11.5px]" style={{ color: "var(--text-3)" }}>
-            Nieuwe contacten maak je aan op de contactenpagina; hier koppel je ze
-            aan het dossier.
-          </p>
+          {/* Koppelen is de uitzondering (de AI vult dit normaal al) —
+              daarom een bescheiden tekstlink i.p.v. een permanent
+              formulier (wens Steven). */}
+          <ToevoegenToggle label="partij koppelen" stijl="tekst">
+            <form action={koppelPartij} className="flex flex-wrap items-end gap-3">
+              <input type="hidden" name="landgoed_id" value={id} />
+              <input type="hidden" name="contract_id" value={contractId} />
+              <div className="min-w-[220px] flex-1">
+                <label className="label-up mb-1 block">Contact</label>
+                <select className="input" name="relatie_id" defaultValue="" required>
+                  <option value="">— kies contact —</option>
+                  {(alleRelaties ?? []).map((r) => (
+                    <option key={r.id} value={r.id}>
+                      {r.naam}
+                      {r.type ? ` (${r.type})` : ""}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="label-up mb-1 block">Rol</label>
+                <select
+                  className="input"
+                  name="rol"
+                  defaultValue={standaardRolVoorType(contract.type)}
+                >
+                  {Object.entries(PARTIJ_ROL_LABEL).map(([w, l]) => (
+                    <option key={w} value={w}>
+                      {l}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <SubmitKnop className="btn btn-primary" pendingTekst="Koppelen…">
+                Koppel partij
+              </SubmitKnop>
+              <p className="w-full text-[11.5px]" style={{ color: "var(--text-3)" }}>
+                Nieuwe contacten maak je aan op de contactenpagina; hier koppel
+                je ze aan het dossier.
+              </p>
+            </form>
+          </ToevoegenToggle>
         </section>
 
         {/* ── Objecten: waar rust dit contract op ── */}
@@ -889,9 +895,10 @@ export default async function ContractDossierPage({
               );
             })}
           </div>
+          <ToevoegenToggle label="perceel, gebouw of eenheid koppelen" stijl="tekst">
           <form
             action={koppelContractObject}
-            className="card flex flex-wrap items-end gap-3 p-4"
+            className="flex flex-wrap items-end gap-3"
           >
             <input type="hidden" name="landgoed_id" value={id} />
             <input type="hidden" name="contract_id" value={contractId} />
@@ -935,11 +942,13 @@ export default async function ContractDossierPage({
             <SubmitKnop className="btn btn-primary" pendingTekst="Koppelen…">
               Koppel
             </SubmitKnop>
+            <p className="w-full text-[11.5px]" style={{ color: "var(--text-3)" }}>
+              Pacht rust juridisch op kadastrale percelen; huur op
+              gebruikseenheden of gebouwen. Beide kanten tonen dit dossier
+              terug.
+            </p>
           </form>
-          <p className="mt-1 text-[11.5px]" style={{ color: "var(--text-3)" }}>
-            Pacht rust juridisch op kadastrale percelen; huur op gebruikseenheden
-            of gebouwen. Beide kanten tonen dit dossier straks terug.
-          </p>
+          </ToevoegenToggle>
         </section>
 
         {/* ── Documenten ── */}
@@ -970,25 +979,48 @@ export default async function ContractDossierPage({
               </div>
             ))}
           </div>
-          <form
-            action={uploadDocumentBijContract}
-            className="card flex flex-wrap items-end gap-3 p-4"
-          >
-            <input type="hidden" name="landgoed_id" value={id} />
-            <input type="hidden" name="contract_id" value={contractId} />
-            <div className="min-w-[200px] flex-1">
-              <label className="label-up mb-1 block">Titel (optioneel)</label>
-              <input className="input" name="titel" placeholder="Bijv. Getekend pachtcontract" />
-            </div>
-            <div>
-              <label className="label-up mb-1 block">Bestand</label>
-              <BestandVeld maxMb={10} />
-            </div>
-            <SubmitKnop className="btn btn-primary" pendingTekst="Uploaden…">
-              Uploaden & koppelen
-            </SubmitKnop>
-          </form>
+          <ToevoegenToggle label="document toevoegen" stijl="tekst">
+            <form
+              action={uploadDocumentBijContract}
+              className="flex flex-wrap items-end gap-3"
+            >
+              <input type="hidden" name="landgoed_id" value={id} />
+              <input type="hidden" name="contract_id" value={contractId} />
+              <div className="min-w-[200px] flex-1">
+                <label className="label-up mb-1 block">Titel (optioneel)</label>
+                <input className="input" name="titel" placeholder="Bijv. Getekend pachtcontract" />
+              </div>
+              <div>
+                <label className="label-up mb-1 block">Bestand</label>
+                <BestandVeld maxMb={10} />
+              </div>
+              <SubmitKnop className="btn btn-primary" pendingTekst="Uploaden…">
+                Uploaden & koppelen
+              </SubmitKnop>
+            </form>
+          </ToevoegenToggle>
         </section>
+
+        {/* ── Afronden: het hele dossier akkoord en terug naar het register.
+            De knop verstuurt het kerngegevens-formulier (form-attribuut),
+            dus correcties dáár gaan gewoon mee. ── */}
+        {isAiConcept && (
+          <div className="mb-7">
+            <button
+              type="submit"
+              form="kerngegevens-formulier"
+              name="daarna"
+              value="overzicht"
+              className="btn btn-primary"
+            >
+              Akkoord en opslaan
+            </button>
+            <p className="mt-1 text-[11.5px]" style={{ color: "var(--text-3)" }}>
+              Accepteert het dossier (status wordt Actief, inclusief de prijs)
+              en brengt je terug naar het contractenoverzicht.
+            </p>
+          </div>
+        )}
 
         {/* ── Verwijderen ── */}
         <form action={verwijderContract}>

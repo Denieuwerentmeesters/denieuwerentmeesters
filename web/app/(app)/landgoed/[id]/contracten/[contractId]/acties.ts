@@ -68,6 +68,12 @@ export async function bewerkContractDossier(fd: FormData) {
   );
   await syncPrijsUitKerngegevens(supabase, landgoed_id, contract_id, fd);
   revalidatePath(pad(landgoed_id, contract_id));
+  // De groene "Akkoord en opslaan" onderaan het dossier stuurt daarna=
+  // overzicht mee: na het accepteren ga je terug naar het register.
+  if (String(fd.get("daarna") ?? "") === "overzicht") {
+    revalidatePath(`/landgoed/${landgoed_id}/contracten`);
+    redirect(`/landgoed/${landgoed_id}/contracten`);
+  }
 }
 
 // De prijs in het kerngegevens-formulier voedt het prijsverloop:
