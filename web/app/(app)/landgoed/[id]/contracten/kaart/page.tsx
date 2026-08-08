@@ -178,7 +178,7 @@ export default async function ContractenKaartPage({
   return (
     <div className="flex flex-col">
       <div
-        className="bg-white px-7 py-4"
+        className="flex items-center justify-between gap-3 bg-white px-7 py-4"
         style={{ borderBottom: "1px solid var(--border)" }}
       >
         <Link
@@ -188,6 +188,14 @@ export default async function ContractenKaartPage({
         >
           ← Terug naar contracten
         </Link>
+        {/* Eén kaartafdeling, twee standen — zelfde schakelaar als op de
+            beheerkaart. */}
+        <div className="flex gap-2">
+          <Link href={`/landgoed/${id}/kaart`} className="btn btn-ghost btn-sm">
+            Beheer
+          </Link>
+          <span className="btn btn-primary btn-sm">Contracten</span>
+        </div>
       </div>
 
       <div className="p-7">
