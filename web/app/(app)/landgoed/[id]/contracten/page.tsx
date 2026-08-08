@@ -100,12 +100,17 @@ export default async function ContractenPage({
       </div>
 
       <div className="p-7">
-        <header className="mb-5">
-          <h1 className="text-[22px] font-bold">Contracten</h1>
-          <p className="mt-1 text-[13px]" style={{ color: "var(--text-2)" }}>
-            Pacht, erfpacht, huur en beheer — met signalering op einddatum en
-            indexatie.
-          </p>
+        <header className="mb-5 flex flex-wrap items-start justify-between gap-3">
+          <div>
+            <h1 className="text-[22px] font-bold">Contracten</h1>
+            <p className="mt-1 text-[13px]" style={{ color: "var(--text-2)" }}>
+              Pacht, erfpacht, huur en beheer — met signalering op einddatum en
+              indexatie.
+            </p>
+          </div>
+          <Link href={`${basisPad}/kaart`} className="btn btn-ghost btn-sm">
+            Bekijk op de kaart
+          </Link>
         </header>
 
         {melding && (

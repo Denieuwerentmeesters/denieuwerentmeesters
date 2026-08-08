@@ -6,11 +6,13 @@ import {
 } from "@/lib/contracten/afloop";
 
 describe("verlengtermijnDagen", () => {
-  it("kortlopend contract (< 3 jaar): half jaar van tevoren", () => {
+  it("kortlopend contract (< 2 jaar): half jaar van tevoren", () => {
     expect(verlengtermijnDagen("2026-05-01", "2028-04-30")).toBe(182);
   });
   it("langlopend contract: een jaar van tevoren", () => {
     expect(verlengtermijnDagen("2020-01-01", "2032-01-01")).toBe(365);
+    // drie jaar is al langlopend
+    expect(verlengtermijnDagen("2026-01-01", "2029-01-01")).toBe(365);
   });
   it("onbekende ingangsdatum telt als langlopend", () => {
     expect(verlengtermijnDagen(null, "2030-01-01")).toBe(365);
